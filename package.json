@@ -26,6 +26,7 @@
     "express": "^4.16.3",
     "inquirer": "^6.0.0",
     "meow": "^5.0.0",
+    "ngrok": "^3.0.1",
     "node-env-run": "^3.0.2",
     "twilio": "^3.18.0"
   },
