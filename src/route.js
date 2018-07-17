@@ -13,12 +13,12 @@ function constructEvent(req) {
   return { ...req.query, ...req.body };
 }
 
-function constructContext(config) {
+function constructContext({ url, env }) {
   function getTwilioClient() {
     return twilio(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
   }
-  const DOMAIN_NAME = config.url;
-  return { ...process.env, DOMAIN_NAME, getTwilioClient };
+  const DOMAIN_NAME = url;
+  return { ...env, DOMAIN_NAME, getTwilioClient };
 }
 
 function constructGlobalScope() {
@@ -69,7 +69,7 @@ function functionToRoute(fn, config) {
     const event = constructEvent(req);
     debug('Event for %s: %o', req.path, event);
     const context = constructContext(config);
-    // debug('Context for %s: %o', req.path, context);
+    debug('Context for %s: %o', req.path, context);
 
     function callback(err, responseObject) {
       debug('Function execution %s finished', req.path);

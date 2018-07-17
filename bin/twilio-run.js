@@ -11,6 +11,7 @@ const { readFileSync } = require('fs');
 const dotenv = require('dotenv');
 const { stripIndent } = require('common-tags');
 const logSymbols = require('log-symbols');
+const debug = require('debug')('twilio-run:cli');
 
 const cli = meow(
   chalk`
@@ -18,7 +19,8 @@ const cli = meow(
     $ twilio-run [dir]
 
   {bold Options}
-    --env, -e [/path/to/.env] Loads .env file
+    --load-local-env, -f Includes the local environment variables
+    --env, -e [/path/to/.env] Loads .env file, overrides local env variables
     --port, -p <port> Override default port of 3000
     --ngrok [subdomain] Uses ngrok to create an outfacing url
   
@@ -43,6 +45,10 @@ const cli = meow(
 `,
   {
     flags: {
+      loadLocalEnv: {
+        type: 'boolean',
+        alias: 'f'
+      },
       env: {
         type: 'string',
         alias: 'e'
@@ -97,37 +103,52 @@ function printInfo(url) {
 }
 
 (async function() {
+  let baseDir = undefined;
+  if (cli.input[0]) {
+    baseDir = cli.input[0];
+    debug('Set base directory to "%s"', baseDir);
+  }
+
+  let env = {};
+  if (cli.flags.loadLocalEnv) {
+    debug('Loading local environment variables');
+    env = { ...process.env };
+  }
+
   if (typeof cli.flags.env !== 'undefined') {
     const envFilePath = cli.flags.env.length === 0 ? '.env' : cli.flags.env;
-    const envContent = readFileSync(
-      resolve(process.cwd(), envFilePath),
-      'utf8'
-    );
-    const envValues = dotenv.parse(envContent);
-    setEnvironmentVariables(envValues, true);
+    try {
+      const fullEnvPath = resolve(baseDir || process.cwd(), envFilePath);
+      debug(`Read .env file at "%s"`, fullEnvPath);
+      const envContent = readFileSync(fullEnvPath, 'utf8');
+      const envValues = dotenv.parse(envContent);
+      for (const [key, val] of Object.entries(envValues)) {
+        env[key] = val;
+      }
+    } catch (err) {
+      console.error(logSymbols.error, 'Failed to read .env file');
+    }
   }
 
   let port = process.env.PORT || 3000;
   if (typeof cli.flags.port !== 'undefined') {
     port = parseInt(cli.flags.port, 10);
-  }
-
-  let baseDir = undefined;
-  if (cli.input[0]) {
-    baseDir = cli.input[0];
+    debug('Overriding port via command-line flag to %d', port);
   }
 
   let url = `http://localhost:${port}`;
   if (typeof cli.flags.ngrok !== 'undefined') {
+    debug('Starting ngrok tunnel');
     const ngrokConfig = { addr: port };
     if (cli.flags.ngrok.length > 0) {
       ngrokConfig.subdomain = cli.flags.ngrok;
     }
 
     url = await require('ngrok').connect(ngrokConfig);
+    debug('ngrok tunnel URL: %s', url);
   }
 
-  const app = await runServer(port, { baseDir, url });
+  const app = await runServer(port, { baseDir, url, env });
   printInfo(url);
 })().catch(err => {
   console.error(err);
