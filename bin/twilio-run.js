@@ -10,6 +10,7 @@ const { setEnvironmentVariables } = require('node-env-run/dist/lib/utils');
 const { readFileSync } = require('fs');
 const dotenv = require('dotenv');
 const { stripIndent } = require('common-tags');
+const logSymbols = require('log-symbols');
 
 const cli = meow(
   chalk`
@@ -57,6 +58,44 @@ const cli = meow(
   }
 );
 
+function printInfo(url) {
+  const info = [];
+
+  const functions = Runtime.getFunctions();
+  if (functions === null) {
+    info.push(`
+      ${logSymbols.warning} No functions directory found
+    `);
+  } else {
+    const fnInfo = Object.keys(functions)
+      .map(name => {
+        const fnName = basename(name, '.js');
+        return `=> ${url}/${fnName}`;
+      })
+      .join('\n');
+    info.push(chalk`
+      {green Twilio functions available at:}
+      ${fnInfo}
+    `);
+  }
+
+  const assets = Runtime.getAssets();
+  if (assets === null) {
+    info.push(`
+      ${logSymbols.warning} No assets directory found
+    `);
+  } else {
+    const assetInfo = Object.keys(assets)
+      .map(asset => `=> ${url}/${asset}`)
+      .join('\n');
+    info.push(chalk`
+      {green Assets available:}
+      ${assetInfo}
+    `);
+  }
+  console.log(boxen(stripIndent`${info.join('\n')}`, { padding: 1 }));
+}
+
 (async function() {
   if (typeof cli.flags.env !== 'undefined') {
     const envFilePath = cli.flags.env.length === 0 ? '.env' : cli.flags.env;
@@ -89,26 +128,7 @@ const cli = meow(
   }
 
   const app = await runServer(port, { baseDir, url });
-
-  const functions = Runtime.getFunctions();
-  const fnInfo = Object.keys(functions)
-    .map(name => {
-      const fnName = basename(name, '.js');
-      return `=> ${url}/${fnName}`;
-    })
-    .join('\n');
-  const assets = Runtime.getAssets();
-  const assetInfo = Object.keys(assets)
-    .map(asset => `=> ${url}/${asset}`)
-    .join('\n');
-  const msg = chalk`
-    {green Twilio functions available at:}
-    ${fnInfo}
-
-    {green Assets available:}
-    ${assetInfo}
-    `;
-  console.log(boxen(stripIndent`${msg}`, { padding: 1 }));
+  printInfo(url);
 })().catch(err => {
   console.error(err);
 });

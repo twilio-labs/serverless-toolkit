@@ -4,6 +4,8 @@ const {
   MessagingResponse,
   FaxResponse
 } = require('twilio').twiml;
+const debug = require('debug')('twilio-run:route');
+
 const { Response } = require('./internal/response');
 const Runtime = require('./internal/runtime');
 
@@ -13,7 +15,7 @@ function constructEvent(req) {
 
 function constructContext(config) {
   function getTwilioClient() {
-    return twilio();
+    return twilio(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
   }
   const DOMAIN_NAME = config.url;
   return { ...process.env, DOMAIN_NAME, getTwilioClient };
@@ -25,10 +27,8 @@ function constructGlobalScope() {
 }
 
 function handleError(err, res) {
-  if (typeof err === 'string') {
-    res.status(500).send(err);
-    return;
-  }
+  res.status(500);
+  res.send(err);
 }
 
 function isTwiml(obj) {
@@ -41,20 +41,24 @@ function isTwiml(obj) {
 function handleSuccess(responseObject, res) {
   res.status(200);
   if (typeof responseObject === 'string') {
+    debug('Sending basic string response');
     res.send(responseObject);
     return;
   }
 
   if (isTwiml(responseObject)) {
+    debug('Sending TwiML response as XML string');
     res.type('text/xml').send(responseObject.toString());
     return;
   }
 
   if (responseObject instanceof Response) {
+    debug('Sending custom response');
     responseObject.applyToExpressResponse(res);
     return;
   }
 
+  debug('Sending JSON response');
   res.send(responseObject);
 }
 
@@ -63,9 +67,12 @@ function functionToRoute(fn, config) {
 
   return function twilioFunctionHandler(req, res) {
     const event = constructEvent(req);
+    debug('Event for %s: %o', req.path, event);
     const context = constructContext(config);
+    // debug('Context for %s: %o', req.path, context);
 
     function callback(err, responseObject) {
+      debug('Function execution %s finished', req.path);
       if (err) {
         handleError(err, res);
         return;
@@ -73,6 +80,7 @@ function functionToRoute(fn, config) {
       handleSuccess(responseObject, res);
     }
 
+    debug('Calling function for %s', req.path);
     fn(context, event, callback);
   };
 }

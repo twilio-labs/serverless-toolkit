@@ -1,6 +1,7 @@
 const express = require('express');
 const { urlencoded } = require('body-parser');
 const path = require('path');
+const debug = require('debug')('twilio-run:server');
 
 const { functionToRoute } = require('./route');
 const { getPaths } = require('./internal/runtime-paths');
@@ -12,6 +13,7 @@ function runServer(port = DEFAULT_PORT, config) {
     baseDir: process.cwd(),
     ...config
   };
+  debug('Starting server with config: %o', config);
 
   return new Promise((resolve, reject) => {
     try {
@@ -19,6 +21,7 @@ function runServer(port = DEFAULT_PORT, config) {
       const app = express();
       app.use(urlencoded({ extended: false }));
 
+      debug('Serving assets from directory "%s"', ASSETS_PATH);
       app.use(express.static(ASSETS_PATH));
       app.set('port', port);
       app.all('/:name', (req, res) => {
@@ -27,14 +30,16 @@ function runServer(port = DEFAULT_PORT, config) {
           `${req.params.name}.js`
         );
         try {
+          debug('Load & route to function at "%s"', functionPath);
           const twilioFunction = require(functionPath).handler;
           functionToRoute(twilioFunction, config)(req, res);
         } catch (err) {
-          console.error(err);
+          debug('Failed to retrieve function. %O', err);
           res.status(404).send(`Could not find function ${functionPath}`);
         }
       });
 
+      debug('Start express server on port %d', port);
       app.listen(port, () => resolve(app));
     } catch (err) {
       reject(err);
