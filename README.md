@@ -49,6 +49,45 @@ Examples
   # Loads environment variables from .env file
 ```
 
+## 🔬 API
+
+The module also exposes two functions that you can use outside of the CLI tool:
+
+### `runDevServer(port: number, baseDir: string)`
+
+This allows you to trigger running an express server that will expose all functions and assets. Example:
+
+```js
+const { runDevServer } = require('twilio-run');
+
+runDevServer(9000)
+  .then(app => {
+    console.log(`Server is running on port ${app.get('port')})`);
+  })
+  .catch(err => {
+    console.error('Something failed');
+  });
+```
+
+### `handleToExpressRoute(functionHandle: Function)`
+
+You can take the `handler` function of a Twilio Function file and expose it in an existing Express server. Example:
+
+```js
+const express = require('express');
+const bodyParser = require('body-parser');
+const { handlerToExpressRoute } = require('twilio-run');
+
+const { handler } = require('./path/to/function.js');
+
+const app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.all(handlerToExpressRoute(handler));
+
+app.listen(3000, () => console.log('Server running on port 3000'));
+```
+
 ## 💞 Contributing
 
 💖 Please be aware that this project has a [Code of Conduct](CODE_OF_CONDUCT.md) 💖
@@ -84,6 +123,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
 <!-- prettier-ignore -->
 | [<img src="https://avatars3.githubusercontent.com/u/1505101?v=4" width="100px;"/><br /><sub><b>Dominik Kundel</b></sub>](https://dkundel.com)<br />[💻](https://github.com/dkundel/twilio-run/commits?author=dkundel "Code") |
 | :---: |
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
