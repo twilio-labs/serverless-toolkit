@@ -1,8 +1,9 @@
+[![npm](https://img.shields.io/npm/v/twilio-run.svg?style=flat-square)](https://npmjs.com/packages/twilio-run) [![npm](https://img.shields.io/npm/dt/twilio-run.svg?style=flat-square)](https://npmjs.com/packages/twilio-run) [![npm](https://img.shields.io/npm/l/twilio-run.svg?style=flat-square)](/LICENSE) <!--[![Build Status](https://travis-ci.org/dkundel/twilio-run.svg?branch=master)](https://travis-ci.org/dkundel/twilio-run)-->
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
 
-# `twilio-run`
+# ☁️ `twilio-run` ☁️
 
-☁️ CLI tool to run Twilio Functions locally for development
+> CLI tool to run [Twilio Functions](https://twilio.com/functions) locally for development
 
 ## 📦 Installation
 
@@ -29,7 +30,8 @@ $ npx twilio-run
     $ twilio-run [dir]
 
   Options
-    --env, -e [/path/to/.env] Loads .env file
+    --load-local-env, -f Includes the local environment variables
+    --env, -e [/path/to/.env] Loads .env file, overrides local env variables
     --port, -p <port> Override default port of 3000
     --ngrok [subdomain] Uses ngrok to create an outfacing url
 
@@ -57,7 +59,7 @@ $ npx twilio-run
 
 The module also exposes two functions that you can use outside of the CLI tool:
 
-### `runDevServer(port: number, baseDir: string)`
+#### `runDevServer(port: number, baseDir: string): Promise<Express.Application>`
 
 This allows you to trigger running an express server that will expose all functions and assets. Example:
 
@@ -73,7 +75,7 @@ runDevServer(9000)
   });
 ```
 
-### `handleToExpressRoute(functionHandle: Function)`
+##### `handleToExpressRoute(handler: TwilioHandlerFunction): Express.RequestHandler`
 
 You can take the `handler` function of a Twilio Function file and expose it in an existing Express server. Example:
 
