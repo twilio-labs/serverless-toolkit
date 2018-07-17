@@ -31,5 +31,12 @@
   },
   "devDependencies": {
     "all-contributors-cli": "^5.3.0"
-  }
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "LICENSE",
+    "README.md",
+    "index.js"
+  ]
 }
