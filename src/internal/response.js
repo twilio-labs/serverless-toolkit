@@ -18,6 +18,9 @@ class Response {
 
   setHeaders(headersObject) {
     debug('Setting headers to: %O', headersObject);
+    if (typeof headersObject !== 'object') {
+      return;
+    }
     this.headers = headersObject;
   }
 

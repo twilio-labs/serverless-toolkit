@@ -85,4 +85,12 @@ function functionToRoute(fn, config) {
   };
 }
 
-module.exports = { functionToRoute };
+module.exports = {
+  functionToRoute,
+  constructEvent,
+  constructContext,
+  constructGlobalScope,
+  handleError,
+  handleSuccess,
+  isTwiml
+};
