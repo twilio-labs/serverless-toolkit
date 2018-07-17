@@ -11,11 +11,11 @@ function constructEvent(req) {
   return { ...req.query, ...req.body };
 }
 
-function constructContext() {
+function constructContext(config) {
   function getTwilioClient() {
     return twilio();
   }
-  const DOMAIN_NAME = `http://localhost:${process.env.PORT}`;
+  const DOMAIN_NAME = config.url;
   return { ...process.env, DOMAIN_NAME, getTwilioClient };
 }
 
@@ -58,12 +58,12 @@ function handleSuccess(responseObject, res) {
   res.send(responseObject);
 }
 
-function functionToRoute(fn) {
+function functionToRoute(fn, config) {
   constructGlobalScope();
 
   return function twilioFunctionHandler(req, res) {
     const event = constructEvent(req);
-    const context = constructContext();
+    const context = constructContext(config);
 
     function callback(err, responseObject) {
       if (err) {

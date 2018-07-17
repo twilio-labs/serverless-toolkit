@@ -19,6 +19,7 @@ const cli = meow(
   {bold Options}
     --env, -e [/path/to/.env] Loads .env file
     --port, -p <port> Override default port of 3000
+    --ngrok [subdomain] Uses ngrok to create an outfacing url
   
   {bold Examples}
     $ {cyan twilio-run}
@@ -35,6 +36,9 @@ const cli = meow(
 
     $ {cyan twilio-run} --env
     # Loads environment variables from .env file
+
+    $ {cyan twilio-run} --ngrok
+    # Exposes the Twilio functions via ngrok to share them
 `,
   {
     flags: {
@@ -45,53 +49,66 @@ const cli = meow(
       port: {
         type: 'string',
         alias: 'p'
+      },
+      ngrok: {
+        type: 'string'
       }
     }
   }
 );
 
-if (typeof cli.flags.env !== 'undefined') {
-  const envFilePath = cli.flags.env.length === 0 ? '.env' : cli.flags.env;
-  const envContent = readFileSync(resolve(process.cwd(), envFilePath), 'utf8');
-  const envValues = dotenv.parse(envContent);
-  setEnvironmentVariables(envValues, true);
-}
+(async function() {
+  if (typeof cli.flags.env !== 'undefined') {
+    const envFilePath = cli.flags.env.length === 0 ? '.env' : cli.flags.env;
+    const envContent = readFileSync(
+      resolve(process.cwd(), envFilePath),
+      'utf8'
+    );
+    const envValues = dotenv.parse(envContent);
+    setEnvironmentVariables(envValues, true);
+  }
 
-let port = process.env.PORT;
-if (typeof cli.flags.port !== 'undefined') {
-  port = parseInt(cli.flags.port, 10);
-}
+  let port = process.env.PORT || 3000;
+  if (typeof cli.flags.port !== 'undefined') {
+    port = parseInt(cli.flags.port, 10);
+  }
 
-let baseDir = undefined;
-if (cli.input[0]) {
-  baseDir = cli.input[0];
-}
+  let baseDir = undefined;
+  if (cli.input[0]) {
+    baseDir = cli.input[0];
+  }
 
-runServer(port, baseDir)
-  .then(app => {
-    const port = app.get('port');
-    const url = `http://localhost:${port}`;
+  let url = `http://localhost:${port}`;
+  if (typeof cli.flags.ngrok !== 'undefined') {
+    const ngrokConfig = { addr: port };
+    if (cli.flags.ngrok.length > 0) {
+      ngrokConfig.subdomain = cli.flags.ngrok;
+    }
 
-    const functions = Runtime.getFunctions();
-    const fnInfo = Object.keys(functions)
-      .map(name => {
-        const fnName = basename(name, '.js');
-        return `=> ${url}/${fnName}`;
-      })
-      .join('\n');
-    const assets = Runtime.getAssets();
-    const assetInfo = Object.keys(assets)
-      .map(asset => `=> ${url}/${asset}`)
-      .join('\n');
-    const msg = chalk`
+    url = await require('ngrok').connect(ngrokConfig);
+  }
+
+  const app = await runServer(port, { baseDir, url });
+
+  const functions = Runtime.getFunctions();
+  const fnInfo = Object.keys(functions)
+    .map(name => {
+      const fnName = basename(name, '.js');
+      return `=> ${url}/${fnName}`;
+    })
+    .join('\n');
+  const assets = Runtime.getAssets();
+  const assetInfo = Object.keys(assets)
+    .map(asset => `=> ${url}/${asset}`)
+    .join('\n');
+  const msg = chalk`
     {green Twilio functions available at:}
     ${fnInfo}
 
     {green Assets available:}
     ${assetInfo}
     `;
-    console.log(boxen(stripIndent`${msg}`, { padding: 1 }));
-  })
-  .catch(err => {
-    console.error(err);
-  });
+  console.log(boxen(stripIndent`${msg}`, { padding: 1 }));
+})().catch(err => {
+  console.error(err);
+});

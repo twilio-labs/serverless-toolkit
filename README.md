@@ -23,30 +23,34 @@ $ npx twilio-run
 ## 📖 Usage
 
 ```
-CLI tool to run Twilio Functions locally for development
+  CLI tool to run Twilio Functions locally for development
 
-Usage
-  $ twilio-run [dir]
+  Usage
+    $ twilio-run [dir]
 
-Options
-  --env, -e [/path/to/.env] Loads .env file
-  --port, -p <port> Override default port of 3000
+  Options
+    --env, -e [/path/to/.env] Loads .env file
+    --port, -p <port> Override default port of 3000
+    --ngrok [subdomain] Uses ngrok to create an outfacing url
 
-Examples
-  $ twilio-run
-  # Serves all functions in current functions sub directory
+  Examples
+    $ twilio-run
+    # Serves all functions in current functions sub directory
 
-  $ twilio-run demo
-  # Serves all functions in demo/functions
+    $ twilio-run demo
+    # Serves all functions in demo/functions
 
-  $ PORT=9000 twilio-run
-  # Serves functions on port 9000
+    $ PORT=9000 twilio-run
+    # Serves functions on port 9000
 
-  $ twilio-run --port=4200
-  # Serves functions on port 4200
+    $ twilio-run --port=4200
+    # Serves functions on port 4200
 
-  $ twilio-run --env
-  # Loads environment variables from .env file
+    $ twilio-run --env
+    # Loads environment variables from .env file
+
+    $ twilio-run --ngrok
+    # Exposes the Twilio functions via ngrok to share them
 ```
 
 ## 🔬 API
