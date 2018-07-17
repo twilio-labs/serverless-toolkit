@@ -6,7 +6,6 @@ const chalk = require('chalk');
 const { runServer } = require('../src/server');
 const Runtime = require('../src/internal/runtime');
 const { resolve, basename } = require('path');
-const { setEnvironmentVariables } = require('node-env-run/dist/lib/utils');
 const { readFileSync } = require('fs');
 const dotenv = require('dotenv');
 const { stripIndent } = require('common-tags');
