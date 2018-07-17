@@ -7,7 +7,9 @@
   "description": "CLI tool to run Twilio Functions locally for development",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node bin/twilio-run.js example",
+    "contrib:add": "all-contributors add",
+    "contrib:generate": "all-contributors generate"
   },
   "keywords": [
     "twilio",
@@ -26,5 +28,8 @@
     "meow": "^5.0.0",
     "node-env-run": "^3.0.2",
     "twilio": "^3.18.0"
+  },
+  "devDependencies": {
+    "all-contributors-cli": "^5.3.0"
   }
 }
