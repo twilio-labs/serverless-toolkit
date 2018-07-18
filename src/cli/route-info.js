@@ -40,6 +40,13 @@ function getRouteInfo({ url }) {
     `);
   }
 
+  if (url.includes('ngrok.io')) {
+    info.push(chalk`
+      {green ngrok request inspector available:}
+      => http://127.0.0.1:4040/
+    `);
+  }
+
   return stripIndent`${info.join('\n')}`;
 }
 
