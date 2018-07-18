@@ -85,6 +85,7 @@ async function getConfigFromCli(cli) {
   config.detailedLogs = cli.flags.detailedLogs;
   config.live = cli.flags.live;
   config.logs = cli.flags.logs;
+  config.appName = cli.pkg.name;
 
   return config;
 }

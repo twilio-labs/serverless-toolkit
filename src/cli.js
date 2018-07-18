@@ -13,6 +13,7 @@ const cli = meow(meowConfig.usage, meowConfig.config);
 async function run() {
   const config = await getConfigFromCli(cli);
   debug('Determined configuration: %o', config);
+  process.title = config.appName;
 
   if (config.inspect) {
     debug(
