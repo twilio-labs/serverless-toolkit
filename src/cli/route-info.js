@@ -32,7 +32,7 @@ function getRouteInfo({ url }) {
     `);
   } else {
     const assetInfo = Object.keys(assets)
-      .map(asset => `=> ${url}/${asset}`)
+      .map(asset => `=> ${url}/assets/${asset}`)
       .join('\n');
     info.push(chalk`
       {green Assets available:}

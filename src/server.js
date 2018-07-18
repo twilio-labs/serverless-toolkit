@@ -41,7 +41,7 @@ function runServer(port = DEFAULT_PORT, config) {
       }
 
       debug('Serving assets from directory "%s"', ASSETS_PATH);
-      app.use(express.static(ASSETS_PATH));
+      app.use('/assets', express.static(ASSETS_PATH));
       app.set('port', port);
       app.all('/:name', (req, res) => {
         const functionPath = path.resolve(
