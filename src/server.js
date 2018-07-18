@@ -5,7 +5,22 @@ const debug = require('debug')('twilio-run:server');
 
 const { functionToRoute } = require('./route');
 const { getPaths } = require('./internal/runtime-paths');
+const { createLogger } = require('./internal/request-logger');
 const DEFAULT_PORT = process.env.PORT || 3000;
+
+function requireUncached(module) {
+  delete require.cache[require.resolve(module)];
+  return require(module);
+}
+
+function loadTwilioFunction(fnPath, config) {
+  if (config.live) {
+    debug('Uncached loading of %s', fnPath);
+    return requireUncached(fnPath).handler;
+  } else {
+    return require(fnPath).handler;
+  }
+}
 
 function runServer(port = DEFAULT_PORT, config) {
   config = {
@@ -21,6 +36,10 @@ function runServer(port = DEFAULT_PORT, config) {
       const app = express();
       app.use(urlencoded({ extended: false }));
 
+      if (config.logs) {
+        app.use(createLogger(config));
+      }
+
       debug('Serving assets from directory "%s"', ASSETS_PATH);
       app.use(express.static(ASSETS_PATH));
       app.set('port', port);
@@ -31,7 +50,7 @@ function runServer(port = DEFAULT_PORT, config) {
         );
         try {
           debug('Load & route to function at "%s"', functionPath);
-          const twilioFunction = require(functionPath).handler;
+          const twilioFunction = loadTwilioFunction(functionPath, config);
           functionToRoute(twilioFunction, config)(req, res);
         } catch (err) {
           debug('Failed to retrieve function. %O', err);

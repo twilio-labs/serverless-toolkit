@@ -82,6 +82,9 @@ async function getConfigFromCli(cli) {
   config.env = getEnvironment(cli, config.baseDir);
   config.port = getPort(cli);
   config.url = await getUrl(cli, config.port);
+  config.detailedLogs = cli.flags.detailedLogs;
+  config.live = cli.flags.live;
+  config.logs = cli.flags.logs;
 
   return config;
 }
