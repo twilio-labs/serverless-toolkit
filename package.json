@@ -16,6 +16,14 @@
     "twilio-functions",
     "serverless"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dkundel/twilio-run.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dkundel/twilio-run/issues",
+    "email": "dkundel@twilio.com"
+  },
   "author": "Dominik Kundel <dkundel@twilio.com>",
   "license": "MIT",
   "dependencies": {
