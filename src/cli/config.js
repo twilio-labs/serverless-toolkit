@@ -44,7 +44,7 @@ function getEnvironment(cli, baseDir) {
       const envContent = readFileSync(fullEnvPath, 'utf8');
       const envValues = dotenv.parse(envContent);
       for (const [key, val] of Object.entries(envValues)) {
-        env[key] = val;
+        process.env[key] = val;
       }
     } catch (err) {
       console.error(logSymbols.error, 'Failed to read .env file');
