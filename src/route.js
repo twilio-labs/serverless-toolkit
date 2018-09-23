@@ -17,7 +17,7 @@ function constructContext({ url, env }) {
   function getTwilioClient() {
     return twilio(env.ACCOUNT_SID, env.AUTH_TOKEN);
   }
-  const DOMAIN_NAME = url;
+  const DOMAIN_NAME = url.replace(/^https?:\/\//, '');
   return { ...env, DOMAIN_NAME, getTwilioClient };
 }
 

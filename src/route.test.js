@@ -117,7 +117,7 @@ describe('constructContext function', () => {
       },
     };
     const context = constructContext(config);
-    expect(context.DOMAIN_NAME).toBe('http://localhost:8000');
+    expect(context.DOMAIN_NAME).toBe('localhost:8000');
     expect(context.ACCOUNT_SID).toBe('ACxxxxxxxxxxx');
     expect(context.AUTH_TOKEN).toBe('xyz');
     expect(typeof context.getTwilioClient).toBe('function');
