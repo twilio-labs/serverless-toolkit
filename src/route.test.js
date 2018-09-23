@@ -1,7 +1,7 @@
 const {
   VoiceResponse,
   MessagingResponse,
-  FaxResponse
+  FaxResponse,
 } = require('twilio').twiml;
 const {
   handleError,
@@ -9,7 +9,7 @@ const {
   constructEvent,
   isTwiml,
   constructContext,
-  constructGlobalScope
+  constructGlobalScope,
 } = require('./route');
 const { Response } = require('./internal/response');
 const Runtime = require('./internal/runtime');
@@ -30,11 +30,11 @@ describe('constructEvent function', () => {
   test('merges query and body', () => {
     const event = constructEvent({
       body: {
-        Body: 'Hello'
+        Body: 'Hello',
       },
       query: {
-        index: 5
-      }
+        index: 5,
+      },
     });
     expect(event).toEqual({ Body: 'Hello', index: 5 });
   });
@@ -42,12 +42,12 @@ describe('constructEvent function', () => {
   test('overrides query with body', () => {
     const event = constructEvent({
       body: {
-        Body: 'Bye'
+        Body: 'Bye',
       },
       query: {
         Body: 'Hello',
-        From: '+123456789'
-      }
+        From: '+123456789',
+      },
     });
     expect(event).toEqual({ Body: 'Bye', From: '+123456789' });
   });
@@ -57,8 +57,8 @@ describe('constructEvent function', () => {
       body: {},
       query: {
         Body: 'Hello',
-        From: '+123456789'
-      }
+        From: '+123456789',
+      },
     });
     expect(event).toEqual({ Body: 'Hello', From: '+123456789' });
   });
@@ -67,9 +67,9 @@ describe('constructEvent function', () => {
     const event = constructEvent({
       body: {
         Body: 'Hello',
-        From: '+123456789'
+        From: '+123456789',
       },
-      query: {}
+      query: {},
     });
     expect(event).toEqual({ Body: 'Hello', From: '+123456789' });
   });
@@ -77,7 +77,7 @@ describe('constructEvent function', () => {
   test('handles both empty', () => {
     const event = constructEvent({
       body: {},
-      query: {}
+      query: {},
     });
     expect(event).toEqual({});
   });
@@ -113,8 +113,8 @@ describe('constructContext function', () => {
       url: 'http://localhost:8000',
       env: {
         ACCOUNT_SID: 'ACxxxxxxxxxxx',
-        AUTH_TOKEN: 'xyz'
-      }
+        AUTH_TOKEN: 'xyz',
+      },
     };
     const context = constructContext(config);
     expect(context.DOMAIN_NAME).toBe('http://localhost:8000');
@@ -124,19 +124,17 @@ describe('constructContext function', () => {
   });
 
   test('getTwilioClient calls twilio constructor', () => {
-    const BACKUP_ACCOUNT_SID = process.env.ACCOUNT_SID;
-    const BACKUP_AUTH_TOKEN = process.env.AUTH_TOKEN;
-    process.env.ACCOUNT_SID = 'ACxxxxx';
-    process.env.AUTH_TOKEN = 'xyz';
+    const ACCOUNT_SID = 'ACxxxxx';
+    const AUTH_TOKEN = 'xyz';
 
-    const config = { url: 'http://localhost:8000', env: '' };
+    const config = {
+      url: 'http://localhost:8000',
+      env: { ACCOUNT_SID, AUTH_TOKEN },
+    };
     const context = constructContext(config);
     const twilioFn = require('twilio');
     context.getTwilioClient();
     expect(twilioFn).toHaveBeenCalledWith('ACxxxxx', 'xyz');
-
-    process.env.ACCOUNT_SID = BACKUP_ACCOUNT_SID;
-    process.env.AUTH_TOKEN = BACKUP_AUTH_TOKEN;
   });
 });
 
@@ -190,13 +188,13 @@ describe('handleSuccess function', () => {
     resp.setBody({ data: 'Something' });
     resp.setStatusCode(418);
     resp.setHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     });
     handleSuccess(resp, mockResponse);
     expect(mockResponse.status).toHaveBeenCalledWith(418);
     expect(mockResponse.send).toHaveBeenCalledWith({ data: 'Something' });
     expect(mockResponse.set).toHaveBeenCalledWith({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     });
     expect(mockResponse.type).not.toHaveBeenCalled();
   });
