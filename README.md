@@ -127,7 +127,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
-| [<img src="https://avatars3.githubusercontent.com/u/1505101?v=4" width="100px;"/><br /><sub><b>Dominik Kundel</b></sub>](https://dkundel.com)<br />[💻](https://github.com/dkundel/twilio-run/commits?author=dkundel "Code") | [<img src="https://avatars1.githubusercontent.com/u/41997517?v=4" width="100px;"/><br /><sub><b>dbbidclips</b></sub>](https://github.com/dbbidclips)<br />[💻](https://github.com/dkundel/twilio-run/commits?author=dbbidclips "Code") |
+| [<img src="https://avatars3.githubusercontent.com/u/1505101?v=4" width="100px;"/><br /><sub><b>Dominik Kundel</b></sub>](https://dkundel.com)<br />[💻](https://github.com/dkundel/twilio-run/commits?author=dkundel "Code") | [<img src="https://avatars1.githubusercontent.com/u/41997517?v=4" width="100px;"/><br /><sub><b>dbbidclips</b></sub>](https://github.com/dbbidclips)<br />[💻](https://github.com/dkundel/twilio-run/commits?author=dbbidclips "Code") [🐛](https://github.com/dkundel/twilio-run/issues?q=author%3Adbbidclips "Bug reports") |
 | :---: | :---: |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
