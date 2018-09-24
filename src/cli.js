@@ -2,7 +2,7 @@ const meow = require('meow');
 const boxen = require('boxen');
 const debug = require('debug')('twilio-run:cli');
 
-const { runServer } = require('./server');
+const { createServer } = require('./server');
 const { startInspector } = require('./utils/inspector');
 const meowConfig = require('./cli/meow-config');
 const { getConfigFromCli } = require('./cli/config');
@@ -23,9 +23,15 @@ async function run() {
     startInspector(config.inspect.hostPort, config.inspect.break);
   }
 
-  const app = await runServer(config.port, config);
-  const info = getRouteInfo(config);
-  console.log(boxen(info, { padding: 1 }));
+  const app = createServer(config.port, config);
+  debug('Start server on port %d', config.port);
+  return new Promise(resolve => {
+    app.listen(config.port, () => {
+      const info = getRouteInfo(config);
+      console.log(boxen(info, { padding: 1 }));
+      resolve(app);
+    });
+  });
 }
 
 module.exports = { run };
