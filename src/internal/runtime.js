@@ -44,7 +44,7 @@ function getFunctions() {
   const functions = {};
   for (const path of files) {
     const filename = basename(path);
-    functions[filename] = { path };
+    functions[filename] = { path: `${FUNCTIONS_PATH}/${filename}` };;
   }
   debug('Found the following functions available: %O', functions);
   return functions;
