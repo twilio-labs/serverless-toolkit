@@ -2,7 +2,7 @@ const twilio = require('twilio');
 const {
   VoiceResponse,
   MessagingResponse,
-  FaxResponse
+  FaxResponse,
 } = require('twilio').twiml;
 const debug = require('debug')('twilio-run:route');
 
@@ -15,9 +15,9 @@ function constructEvent(req) {
 
 function constructContext({ url, env }) {
   function getTwilioClient() {
-    return twilio(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
+    return twilio(env.ACCOUNT_SID, env.AUTH_TOKEN);
   }
-  const DOMAIN_NAME = url;
+  const DOMAIN_NAME = url.replace(/^https?:\/\//, '');
   return { ...env, DOMAIN_NAME, getTwilioClient };
 }
 
@@ -92,5 +92,5 @@ module.exports = {
   constructGlobalScope,
   handleError,
   handleSuccess,
-  isTwiml
+  isTwiml,
 };

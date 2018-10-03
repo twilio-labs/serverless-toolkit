@@ -17,6 +17,25 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "dbbidclips",
+      "name": "dbbidclips",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/41997517?v=4",
+      "profile": "https://github.com/dbbidclips",
+      "contributions": [
+        "code",
+        "bug"
+      ]
+    },
+    {
+      "login": "ShelbyZ",
+      "name": "Shelby Hagman",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1033099?v=4",
+      "profile": "https://shagman.codes",
+      "contributions": [
+        "bug"
+      ]
     }
   ]
 }
