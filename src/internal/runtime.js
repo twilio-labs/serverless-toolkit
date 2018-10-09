@@ -50,9 +50,13 @@ function getFunctions() {
   return functions;
 }
 
-function getSync({ serviceName = 'default' }) {
-  const client = twilio(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
-  return client.sync.services(serviceName);
+function create({ env }) {
+  function getSync({ serviceName = 'default' }) {
+    const client = twilio(env.ACCOUNT_SID, env.AUTH_TOKEN);
+    return client.sync.services(serviceName);
+  }
+
+  return { getSync, getAssets, getFunctions };
 }
 
-module.exports = { getSync, getAssets, getFunctions };
+module.exports = { create };

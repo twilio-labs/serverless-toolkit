@@ -21,9 +21,9 @@ function constructContext({ url, env }) {
   return { ...env, DOMAIN_NAME, getTwilioClient };
 }
 
-function constructGlobalScope() {
+function constructGlobalScope(config) {
   global['Twilio'] = { ...twilio, Response };
-  global['Runtime'] = Runtime;
+  global['Runtime'] = Runtime.create(config);
 }
 
 function handleError(err, res) {
@@ -63,7 +63,7 @@ function handleSuccess(responseObject, res) {
 }
 
 function functionToRoute(fn, config) {
-  constructGlobalScope();
+  constructGlobalScope(config);
 
   return function twilioFunctionHandler(req, res) {
     const event = constructEvent(req);
