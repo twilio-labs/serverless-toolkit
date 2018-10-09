@@ -27,7 +27,7 @@ function getAssets() {
   const assets = {};
   for (const path of files) {
     const filename = basename(path);
-    assets[filename] = { path };
+    assets[filename] = { path: ASSETS_PATH+'/'+filename };
   }
   debug('Found the following assets available: %O', assets);
   return assets;
