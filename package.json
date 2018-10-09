@@ -1,6 +1,6 @@
 {
   "name": "twilio-run",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0-beta.3",
   "bin": {
     "twilio-run": "./bin/twilio-run.js"
   },
