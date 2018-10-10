@@ -1,5 +1,5 @@
 const twilio = require('twilio');
-const { basename } = require('path');
+const { basename, join } = require('path');
 const { readdirSync } = require('fs');
 const debug = require('debug')('twilio-run:runtime');
 
@@ -27,7 +27,7 @@ function getAssets() {
   const assets = {};
   for (const path of files) {
     const filename = basename(path);
-    assets[filename] = { path };
+    assets[filename] = { path: join(ASSETS_PATH, filename) };
   }
   debug('Found the following assets available: %O', assets);
   return assets;
@@ -44,7 +44,7 @@ function getFunctions() {
   const functions = {};
   for (const path of files) {
     const filename = basename(path);
-    functions[filename] = { path: `${FUNCTIONS_PATH}/${filename}` };;
+    functions[filename] = { path: join(FUNCTIONS_PATH, filename) };
   }
   debug('Found the following functions available: %O', functions);
   return functions;
