@@ -37,6 +37,15 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "jsjoeio",
+      "name": "JavaScript Joe",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/3806031?v=4",
+      "profile": "https://joeprevite.com/",
+      "contributions": [
+        "bug"
+      ]
     }
   ]
 }
