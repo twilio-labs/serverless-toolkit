@@ -11,5 +11,8 @@
   "license": "MIT",
   "devDependencies": {
     "jest": "^24.0.0"
+  },
+  "dependencies": {
+    "inquirer": "^6.2.1"
   }
 }
