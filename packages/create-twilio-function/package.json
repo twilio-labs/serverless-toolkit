@@ -10,7 +10,8 @@
   "author": "Phil Nash <philnash@twilio.com> (http://philna.sh)",
   "license": "MIT",
   "devDependencies": {
-    "jest": "^24.0.0"
+    "jest": "^24.0.0",
+    "mock-fs": "^4.7.0"
   },
   "dependencies": {
     "inquirer": "^6.2.1"
