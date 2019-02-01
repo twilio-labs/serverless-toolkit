@@ -1,15 +1,20 @@
 const fs = require('fs');
 const { promisify } = require('util');
 const mkdir = promisify(fs.mkdir);
-const writeFile = promisify(fs.writeFile);
 const open = promisify(fs.open);
 const write = promisify(fs.write);
 
-async function createDirectory(path, dirName) {
+function createDirectory(path, dirName) {
   return mkdir(path + '/' + dirName).catch(() => {});
 }
 
-async function createPackageJSON(path, name) {
+function createFile(fullPath, content) {
+  return open(fullPath, 'wx').then(fd => {
+    return write(fd, content);
+  });
+}
+
+function createPackageJSON(path, name) {
   const fullPath = `${path}/package.json`;
   const packageJSON = JSON.stringify({
     name: name,
@@ -23,9 +28,29 @@ async function createPackageJSON(path, name) {
       'twilio-run': '^1.0.0-beta.4'
     }
   });
-  return open(fullPath, 'wx').then(fd => {
-    return write(fd, packageJSON);
-  });
+  return createFile(fullPath, packageJSON);
 }
 
-module.exports = { createDirectory, createPackageJSON };
+function createExampleFunction(path) {
+  const content = `exports.handler = function(event, context, callback) {
+    const twiml = new Twilio.twiml.VoiceResponse();
+    twiml.say("Hello World!");
+    callback(null, twiml);
+  };`;
+  const fullPath = `${path}/example.js`;
+  return createFile(fullPath, content);
+}
+
+function createEnvFile(path, { accountSid, authToken }) {
+  const fullPath = `${path}/.env`;
+  const content = `ACCOUNT_SID=${accountSid}
+  AUTH_TOKEN=${authToken}`;
+  return createFile(fullPath, content);
+}
+
+module.exports = {
+  createDirectory,
+  createPackageJSON,
+  createExampleFunction,
+  createEnvFile
+};
