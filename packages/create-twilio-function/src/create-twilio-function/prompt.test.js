@@ -1,8 +1,6 @@
 const { promptForAccountDetails } = require('./prompt');
 const inquirer = require('inquirer');
 
-jest.mock('inquirer');
-
 describe('promptForAccountDetails', () => {
   beforeEach(() => jest.clearAllMocks());
 
