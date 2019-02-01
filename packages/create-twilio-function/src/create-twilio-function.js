@@ -6,6 +6,9 @@ const {
   createGitignore,
   createPackageJSON
 } = require('./create-twilio-function/create-files');
+const {
+  installDependencies
+} = require('./create-twilio-function/install-dependencies');
 const { promisify } = require('util');
 const access = promisify(require('fs').access);
 
@@ -18,9 +21,11 @@ async function createTwilioFunction(config) {
       );
     })
     .catch(async () => {
+      // Get account sid and auth token
       accountDetails = await promptForAccountDetails(config);
       config = { ...accountDetails, ...config };
 
+      // Scaffold project
       await createDirectory(config.path, config.name);
       await createDirectory(projectDir, 'functions');
       await createDirectory(projectDir, 'assets');
@@ -31,6 +36,9 @@ async function createTwilioFunction(config) {
       await createGitignore(projectDir);
       await createExampleFunction(`${projectDir}/functions`);
       await createPackageJSON(projectDir, config.name);
+
+      // Install dependencies with npm
+      await installDependencies(projectDir);
     });
 }
 
