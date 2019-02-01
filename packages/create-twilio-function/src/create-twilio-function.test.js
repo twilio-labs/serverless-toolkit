@@ -53,4 +53,22 @@ describe('createTwilioFunction', () => {
     const example = await stat(`./scratch/${name}/functions/example.js`);
     expect(example.isFile());
   });
+
+  it("doesn't scaffold if the target folder name already exists", async () => {
+    const name = 'test-function';
+    await mkdir('./scratch/test-function');
+    console.log = jest.fn();
+
+    await createTwilioFunction({ name, path: './scratch' });
+
+    expect.assertions(2);
+
+    expect(console.log).toHaveBeenCalledTimes(1);
+
+    try {
+      await stat(`./scratch/${name}/package.json`);
+    } catch (e) {
+      expect(e.toString()).toMatch('no such file or directory');
+    }
+  });
 });

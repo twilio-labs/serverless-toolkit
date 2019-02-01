@@ -35,10 +35,10 @@ function createPackageJSON(path, name) {
 
 function createExampleFunction(path) {
   const content = `exports.handler = function(event, context, callback) {
-    const twiml = new Twilio.twiml.VoiceResponse();
-    twiml.say("Hello World!");
-    callback(null, twiml);
-  };`;
+  const twiml = new Twilio.twiml.VoiceResponse();
+  twiml.say("Hello World!");
+  callback(null, twiml);
+};`;
   const fullPath = `${path}/example.js`;
   return createFile(fullPath, content);
 }
@@ -46,7 +46,7 @@ function createExampleFunction(path) {
 function createEnvFile(path, { accountSid, authToken }) {
   const fullPath = `${path}/.env`;
   const content = `ACCOUNT_SID=${accountSid}
-  AUTH_TOKEN=${authToken}`;
+AUTH_TOKEN=${authToken}`;
   return createFile(fullPath, content);
 }
 
