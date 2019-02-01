@@ -10,6 +10,7 @@ const { promisify } = require('util');
 const rimraf = promisify(require('rimraf'));
 const mkdir = promisify(fs.mkdir);
 const readFile = promisify(fs.readFile);
+const stat = promisify(fs.stat);
 
 beforeAll(async () => {
   await rimraf('./scratch');
@@ -23,17 +24,17 @@ afterEach(async () => {
   await rimraf('./scratch');
 });
 
-describe('createDirectory', () => {
+describe('createDirectory', async () => {
   test('it creates a new directory with the project name', async () => {
     await createDirectory('./scratch', 'test-project');
-    const dir = fs.statSync('./scratch/test-project');
+    const dir = await stat('./scratch/test-project');
     expect(dir.isDirectory());
   });
 
   test("it doesn't create a directory if it exists", async () => {
-    fs.mkdirSync('./scratch/test-project');
+    await mkdir('./scratch/test-project');
     await createDirectory('./scratch', 'test-project');
-    const dir = fs.statSync('./scratch/test-project');
+    const dir = await stat('./scratch/test-project');
     expect(dir.isDirectory());
   });
 });
@@ -41,9 +42,9 @@ describe('createDirectory', () => {
 describe('createPackageJSON', () => {
   test('it creates a new package.json file with the name of the project', async () => {
     await createPackageJSON('./scratch', 'project-name');
-    const file = fs.statSync('./scratch/package.json');
+    const file = await stat('./scratch/package.json');
     expect(file.isFile());
-    const packageJSON = JSON.parse(fs.readFileSync('./scratch/package.json'));
+    const packageJSON = JSON.parse(await readFile('./scratch/package.json'));
     expect(packageJSON.name).toEqual('project-name');
   });
 
@@ -61,9 +62,9 @@ describe('createPackageJSON', () => {
 describe('createExampleFunction', () => {
   test('it creates a new example function', async () => {
     await createExampleFunction('./scratch');
-    const file = fs.statSync('./scratch/example.js');
+    const file = await stat('./scratch/example.js');
     expect(file.isFile());
-    const contents = fs.readFileSync('./scratch/example.js', {
+    const contents = await readFile('./scratch/example.js', {
       encoding: 'utf-8'
     });
     expect(contents).toMatch('Twilio.twiml.VoiceResponse');
@@ -86,9 +87,9 @@ describe('createEnvFile', () => {
       accountSid: 'AC123',
       authToken: 'qwerty123456'
     });
-    const file = fs.statSync('./scratch/.env');
+    const file = await stat('./scratch/.env');
     expect(file.isFile());
-    const contents = fs.readFileSync('./scratch/.env', { encoding: 'utf-8' });
+    const contents = await readFile('./scratch/.env', { encoding: 'utf-8' });
     expect(contents).toMatch('ACCOUNT_SID=AC123');
     expect(contents).toMatch('AUTH_TOKEN=qwerty123456');
   });
@@ -110,7 +111,7 @@ describe('createEnvFile', () => {
 describe('createGitignore', () => {
   test('it creates a new .gitignore file', async () => {
     await createGitignore('./scratch');
-    const file = fs.statSync('./scratch/.gitignore');
+    const file = await stat('./scratch/.gitignore');
     expect(file.isFile());
     const contents = await readFile('./scratch/.gitignore', {
       encoding: 'utf-8'
