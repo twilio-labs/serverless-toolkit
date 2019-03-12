@@ -36,12 +36,12 @@ create-twilio-function <name>
 
 Creates a new Twilio Function project
 
-Arguments:
-name  The name of your project directory.
+Positionals:
+  name  The name of your project directory.                             [string]
 
 Options:
-  --accountSid, -a  The Account SID for your Twilio account
-  --authToken, -a   The Auth Token for your Twilio account
+  --accountSid, -a  The Account SID for your Twilio account             [string]
+  --authToken, -a   The Auth Token for your Twilio account              [string]
   -h, --help        Show help                                          [boolean]
   -v, --version     Show version number                                [boolean]
 ```
@@ -52,19 +52,25 @@ Any help contributing to this project is welcomed. Make sure you read and agree 
 
 1. Fork the project
 2. Clone the fork like so:
+
 ```bash
 git clone git@github.com:YOUR_USERNAME/create-twilio-function.git
 ```
+
 3. Install the dependencies
+
 ```bash
 cd create-twilio-function
 npm install
 ```
+
 4. Make your changes
 5. Test your changes with
+
 ```bash
 npm test
 ```
+
 6. Commit your changes and open a pull request
 
 ## LICENSE
