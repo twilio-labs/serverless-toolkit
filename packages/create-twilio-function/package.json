@@ -1,13 +1,26 @@
 {
   "name": "create-twilio-function",
   "version": "0.1.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A CLI tool to generate a new Twilio Function using that can be run locally with twilio-run.",
+  "bin": "./bin/create-twilio-function",
+  "main": "./src/create-twilio-function.js",
   "scripts": {
     "test": "jest"
   },
-  "keywords": [],
+  "keywords": [
+    "twilio",
+    "twilio-functions",
+    "serverless"
+  ],
   "author": "Phil Nash <philnash@twilio.com> (http://philna.sh)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/philnash/create-twilio-function.git"
+  },
+  "homepage": "https://github.com/philnash/create-twilio-function",
+  "bugs": {
+    "url": "https://github.com/philnash/create-twilio-function/issues"
+  },
   "license": "MIT",
   "devDependencies": {
     "jest": "^24.0.0",
@@ -17,5 +30,13 @@
     "execa": "^1.0.0",
     "inquirer": "^6.2.1",
     "yargs": "^12.0.5"
-  }
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "templates/"
+  ]
 }
