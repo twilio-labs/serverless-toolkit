@@ -31,11 +31,14 @@ describe('createDirectory', async () => {
     expect(dir.isDirectory());
   });
 
-  test("it doesn't create a directory if it exists", async () => {
+  test('it throws an error if the directory exists', async () => {
     await mkdir('./scratch/test-project');
-    await createDirectory('./scratch', 'test-project');
-    const dir = await stat('./scratch/test-project');
-    expect(dir.isDirectory());
+    expect.assertions(1);
+    try {
+      await createDirectory('./scratch', 'test-project');
+    } catch (e) {
+      expect(e.toString()).toMatch('EEXIST');
+    }
   });
 });
 

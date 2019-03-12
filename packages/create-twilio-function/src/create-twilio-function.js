@@ -14,32 +14,30 @@ const access = promisify(require('fs').access);
 
 async function createTwilioFunction(config) {
   const projectDir = `${config.path}/${config.name}`;
-  return access(projectDir)
-    .then(() => {
-      console.log(
-        `A directory called '${name}' already exists. Please create your function in a new directory.`
-      );
-    })
-    .catch(async () => {
-      // Get account sid and auth token
-      accountDetails = await promptForAccountDetails(config);
-      config = { ...accountDetails, ...config };
+  try {
+    await createDirectory(config.path, config.name);
+    // Get account sid and auth token
+    accountDetails = await promptForAccountDetails(config);
+    config = { ...accountDetails, ...config };
 
-      // Scaffold project
-      await createDirectory(config.path, config.name);
-      await createDirectory(projectDir, 'functions');
-      await createDirectory(projectDir, 'assets');
-      await createEnvFile(projectDir, {
-        accountSid: config.accountSid,
-        authToken: config.authToken
-      });
-      await createGitignore(projectDir);
-      await createExampleFunction(`${projectDir}/functions`);
-      await createPackageJSON(projectDir, config.name);
-
-      // Install dependencies with npm
-      await installDependencies(projectDir);
+    // Scaffold project
+    await createDirectory(projectDir, 'functions');
+    await createDirectory(projectDir, 'assets');
+    await createEnvFile(projectDir, {
+      accountSid: config.accountSid,
+      authToken: config.authToken
     });
+    await createGitignore(projectDir);
+    await createExampleFunction(`${projectDir}/functions`);
+    await createPackageJSON(projectDir, config.name);
+
+    // Install dependencies with npm
+    await installDependencies(projectDir);
+  } catch (e) {
+    console.log(
+      `A directory called '${name}' already exists. Please create your function in a new directory.`
+    );
+  }
 }
 
 module.exports = createTwilioFunction;
