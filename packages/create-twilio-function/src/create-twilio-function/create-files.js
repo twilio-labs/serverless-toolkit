@@ -7,7 +7,7 @@ const write = promisify(fs.write);
 const readFile = promisify(fs.readFile);
 
 function createDirectory(path, dirName) {
-  return mkdir(path + '/' + dirName).catch(() => {});
+  return mkdir(path + '/' + dirName);
 }
 
 function createFile(fullPath, content) {
