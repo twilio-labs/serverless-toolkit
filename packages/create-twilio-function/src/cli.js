@@ -1,11 +1,13 @@
 const yargs = require('yargs');
 const createTwilioFunction = require('./create-twilio-function');
 
-function cli() {
+function cli(cwd) {
   yargs.help();
   yargs.alias('h', 'help');
   yargs.version();
   yargs.alias('v', 'version');
+
+  yargs.default('path', process.cwd);
 
   yargs.usage('Creates a new Twilio Function project');
   yargs.command(
