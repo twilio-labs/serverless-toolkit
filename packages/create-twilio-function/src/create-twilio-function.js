@@ -35,7 +35,9 @@ async function createTwilioFunction(config) {
     await installDependencies(projectDir);
   } catch (e) {
     console.log(
-      `A directory called '${name}' already exists. Please create your function in a new directory.`
+      `A directory called '${
+        config.name
+      }' already exists. Please create your function in a new directory.`
     );
   }
 }
