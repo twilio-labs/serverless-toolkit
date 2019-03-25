@@ -19,15 +19,20 @@ function cli(cwd) {
         type: 'string'
       });
       command.options({
-        accountSid: {
+        'account-sid': {
           alias: 'a',
           describe: 'The Account SID for your Twilio account',
           type: 'string'
         },
-        authToken: {
+        'auth-token': {
           alias: 't',
           describe: 'Your Twilio account Auth Token',
           type: 'string'
+        },
+        'skip-credentials': {
+          describe: "Don't ask for Twilio account credentials",
+          type: 'boolean',
+          default: false
         }
       });
     },
