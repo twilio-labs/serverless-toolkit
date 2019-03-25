@@ -24,7 +24,7 @@ afterEach(async () => {
   await rimraf('./scratch');
 });
 
-describe('createDirectory', async () => {
+describe('createDirectory', () => {
   test('it creates a new directory with the project name', async () => {
     await createDirectory('./scratch', 'test-project');
     const dir = await stat('./scratch/test-project');
