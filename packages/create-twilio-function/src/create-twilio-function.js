@@ -9,8 +9,6 @@ const {
 const {
   installDependencies
 } = require('./create-twilio-function/install-dependencies');
-const { promisify } = require('util');
-const access = promisify(require('fs').access);
 
 async function createTwilioFunction(config) {
   const projectDir = `${config.path}/${config.name}`;
