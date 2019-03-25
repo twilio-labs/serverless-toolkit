@@ -1,17 +1,16 @@
-const execa = require('execa');
+const pkgInstall = require('pkg-install');
 const { installDependencies } = require('./install-dependencies');
 
-jest.mock('execa');
+jest.mock('pkg-install');
 
 describe('installDependencies', () => {
   test('it calls `npm install` in the target directory', async () => {
-    execa.mockResolvedValue({ stdout: 'done' });
+    pkgInstall.projectInstall.mockResolvedValue({ stdout: 'done' });
 
     await installDependencies('./scratch');
 
-    expect(execa).toHaveBeenCalledWith('npm', ['install'], {
-      cwd: './scratch',
-      shell: process.env.SHELL
+    expect(pkgInstall.projectInstall).toHaveBeenCalledWith({
+      cwd: './scratch'
     });
   });
 });

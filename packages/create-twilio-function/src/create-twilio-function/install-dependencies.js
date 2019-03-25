@@ -1,8 +1,8 @@
-const execa = require('execa');
+const { projectInstall } = require('pkg-install');
 
 async function installDependencies(targetDirectory) {
-  const options = { cwd: targetDirectory, shell: process.env.SHELL };
-  const { stdout } = await execa('npm', ['install'], options);
+  const options = { cwd: targetDirectory };
+  const { stdout } = await projectInstall(options);
   return stdout;
 }
 
