@@ -9,6 +9,7 @@ const {
 const {
   installDependencies
 } = require('./create-twilio-function/install-dependencies');
+const ora = require('ora');
 
 async function createTwilioFunction(config) {
   const projectDir = `${config.path}/${config.name}`;
@@ -19,6 +20,7 @@ async function createTwilioFunction(config) {
     config = { ...accountDetails, ...config };
 
     // Scaffold project
+    const spinner = ora('Creating project directories and files').start();
     await createDirectory(projectDir, 'functions');
     await createDirectory(projectDir, 'assets');
     await createEnvFile(projectDir, {
@@ -28,9 +30,12 @@ async function createTwilioFunction(config) {
     await createGitignore(projectDir);
     await createExampleFunction(`${projectDir}/functions`);
     await createPackageJSON(projectDir, config.name);
+    spinner.succeed();
 
     // Install dependencies with npm
+    spinner.start('Installing dependencies');
     await installDependencies(projectDir);
+    spinner.succeed();
   } catch (e) {
     console.log(
       `A directory called '${
