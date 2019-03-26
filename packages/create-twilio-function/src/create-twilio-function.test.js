@@ -3,6 +3,7 @@ const {
   installDependencies
 } = require('./create-twilio-function/install-dependencies');
 const inquirer = require('inquirer');
+const ora = require('ora');
 const fs = require('fs');
 const { promisify } = require('util');
 const rimraf = promisify(require('rimraf'));
@@ -10,6 +11,15 @@ const mkdir = promisify(fs.mkdir);
 const stat = promisify(fs.stat);
 
 jest.mock('inquirer');
+jest.mock('ora');
+ora.mockImplementation(() => {
+  const spinner = {
+    start: () => spinner,
+    succeed: () => spinner
+  };
+  return spinner;
+});
+
 jest.mock('./create-twilio-function/install-dependencies.js', () => {
   return { installDependencies: jest.fn() };
 });
