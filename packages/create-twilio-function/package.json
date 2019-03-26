@@ -24,9 +24,11 @@
   "license": "MIT",
   "devDependencies": {
     "jest": "^24.5.0",
+    "nock": "^10.0.6",
     "rimraf": "^2.6.3"
   },
   "dependencies": {
+    "gitignore": "^0.6.0",
     "inquirer": "^6.2.2",
     "ora": "^3.2.0",
     "pkg-install": "^1.0.0",

@@ -1,4 +1,4 @@
-// const nock = require('nock');
+const nock = require('nock');
 const createGitignore = require('./create-gitignore');
 const { promisify } = require('util');
 const rimraf = promisify(require('rimraf'));
@@ -13,6 +13,9 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   await mkdir('./scratch');
+  nock('https://raw.githubusercontent.com')
+    .get('/github/gitignore/master/Node.gitignore')
+    .reply(200, '*.log\n.env');
 });
 
 afterEach(async () => {
@@ -28,6 +31,7 @@ describe('createGitignore', () => {
       encoding: 'utf-8'
     });
     expect(contents).toMatch('*.log');
+    expect(contents).toMatch('.env');
   });
 
   test('it rejects if there is already a .gitignore file', async () => {
