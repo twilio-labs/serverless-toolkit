@@ -20,16 +20,21 @@ async function createTwilioFunction(config) {
     config = { ...accountDetails, ...config };
 
     // Scaffold project
-    const spinner = ora('Creating project directories and files').start();
+    const spinner = ora();
+    spinner.start('Creating project directories and files');
     await createDirectory(projectDir, 'functions');
     await createDirectory(projectDir, 'assets');
     await createEnvFile(projectDir, {
       accountSid: config.accountSid,
       authToken: config.authToken
     });
-    await createGitignore(projectDir);
     await createExampleFunction(`${projectDir}/functions`);
     await createPackageJSON(projectDir, config.name);
+    spinner.succeed();
+
+    // Download .gitignore file from https://github.com/github/gitignore/
+    spinner.start('Downloading .gitignore file');
+    await createGitignore(projectDir);
     spinner.succeed();
 
     // Install dependencies with npm
