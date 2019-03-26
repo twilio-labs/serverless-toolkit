@@ -3,9 +3,9 @@ const {
   createDirectory,
   createEnvFile,
   createExampleFunction,
-  createGitignore,
   createPackageJSON
 } = require('./create-twilio-function/create-files');
+const createGitignore = require('./create-twilio-function/create-gitignore');
 const {
   installDependencies
 } = require('./create-twilio-function/install-dependencies');
