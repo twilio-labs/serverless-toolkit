@@ -1,10 +1,8 @@
 const fs = require('fs');
-const path = require('path');
 const { promisify } = require('util');
 const mkdir = promisify(fs.mkdir);
 const open = promisify(fs.open);
 const write = promisify(fs.write);
-const readFile = promisify(fs.readFile);
 
 function createDirectory(path, dirName) {
   return mkdir(path + '/' + dirName);
@@ -50,16 +48,9 @@ AUTH_TOKEN=${authToken}`;
   return createFile(fullPath, content);
 }
 
-async function createGitignore(dirPath) {
-  const fullPath = `${dirPath}/.gitignore`;
-  const content = await readFile(`${__dirname}/../../templates/.gitignore`);
-  return createFile(fullPath, content);
-}
-
 module.exports = {
   createDirectory,
   createPackageJSON,
   createExampleFunction,
-  createEnvFile,
-  createGitignore
+  createEnvFile
 };

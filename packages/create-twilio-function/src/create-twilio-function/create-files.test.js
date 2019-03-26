@@ -2,8 +2,7 @@ const {
   createPackageJSON,
   createDirectory,
   createExampleFunction,
-  createEnvFile,
-  createGitignore
+  createEnvFile
 } = require('./create-files');
 const fs = require('fs');
 const { promisify } = require('util');
@@ -105,28 +104,6 @@ describe('createEnvFile', () => {
         accountSid: 'AC123',
         authToken: 'qwerty123456'
       });
-    } catch (e) {
-      expect(e.toString()).toMatch('file already exists');
-    }
-  });
-});
-
-describe('createGitignore', () => {
-  test('it creates a new .gitignore file', async () => {
-    await createGitignore('./scratch');
-    const file = await stat('./scratch/.gitignore');
-    expect(file.isFile());
-    const contents = await readFile('./scratch/.gitignore', {
-      encoding: 'utf-8'
-    });
-    expect(contents).toMatch('*.log');
-  });
-
-  test('it rejects if there is already a .gitignore file', async () => {
-    fs.closeSync(fs.openSync('./scratch/.gitignore', 'w'));
-    expect.assertions(1);
-    try {
-      await createGitignore('./scratch');
     } catch (e) {
       expect(e.toString()).toMatch('file already exists');
     }
