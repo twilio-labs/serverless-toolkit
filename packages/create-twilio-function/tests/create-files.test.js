@@ -3,7 +3,7 @@ const {
   createDirectory,
   createExampleFunction,
   createEnvFile
-} = require('./create-files');
+} = require('../src/create-twilio-function/create-files');
 const fs = require('fs');
 const { promisify } = require('util');
 const rimraf = promisify(require('rimraf'));

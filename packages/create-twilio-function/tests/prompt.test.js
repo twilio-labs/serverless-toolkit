@@ -1,4 +1,6 @@
-const { promptForAccountDetails } = require('./prompt');
+const {
+  promptForAccountDetails
+} = require('../src/create-twilio-function/prompt');
 const inquirer = require('inquirer');
 
 describe('promptForAccountDetails', () => {

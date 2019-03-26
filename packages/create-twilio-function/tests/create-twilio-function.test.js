@@ -1,7 +1,7 @@
-const createTwilioFunction = require('./create-twilio-function');
+const createTwilioFunction = require('../src/create-twilio-function');
 const {
   installDependencies
-} = require('./create-twilio-function/install-dependencies');
+} = require('../src/create-twilio-function/install-dependencies');
 const inquirer = require('inquirer');
 const ora = require('ora');
 const fs = require('fs');
@@ -20,7 +20,7 @@ ora.mockImplementation(() => {
   return spinner;
 });
 
-jest.mock('./create-twilio-function/install-dependencies.js', () => {
+jest.mock('../src/create-twilio-function/install-dependencies.js', () => {
   return { installDependencies: jest.fn() };
 });
 

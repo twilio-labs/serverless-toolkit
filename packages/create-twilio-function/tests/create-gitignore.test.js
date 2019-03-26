@@ -1,5 +1,5 @@
 const nock = require('nock');
-const createGitignore = require('./create-gitignore');
+const createGitignore = require('../src/create-twilio-function/create-gitignore');
 const { promisify } = require('util');
 const rimraf = promisify(require('rimraf'));
 const fs = require('fs');
