@@ -2,6 +2,8 @@
 
 A command line tool to setup a new [Twilio Function](https://www.twilio.com/docs/api/runtime/functions) with local testing using [`twilio-run`](https://github.com/dkundel/twilio-run).
 
+[![Build Status](https://travis-ci.org/philnash/create-twilio-function.svg?branch=master)](https://travis-ci.org/philnash/create-twilio-function) [![Maintainability](https://api.codeclimate.com/v1/badges/e5a8bfd53740478460e0/maintainability)](https://codeclimate.com/github/philnash/create-twilio-function/maintainability)
+
 ## Usage
 
 There are a number of ways to use this tool. The quickest and easiest is with `npm init`:
@@ -40,10 +42,13 @@ Positionals:
   name  The name of your project directory.                             [string]
 
 Options:
-  --accountSid, -a  The Account SID for your Twilio account             [string]
-  --authToken, -a   The Auth Token for your Twilio account              [string]
-  -h, --help        Show help                                          [boolean]
-  -v, --version     Show version number                                [boolean]
+  --account-sid, -a   The Account SID for your Twilio account           [string]
+  --auth-token, -t    Your Twilio account Auth Token                    [string]
+  --skip-credentials  Don't ask for Twilio account credentials
+                                                      [boolean] [default: false]
+  -h, --help          Show help                                        [boolean]
+  -v, --version       Show version number                              [boolean]
+  --path                                                        [default: (cwd)]
 ```
 
 ## Contributing

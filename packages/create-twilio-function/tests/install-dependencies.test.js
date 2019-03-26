@@ -1,5 +1,7 @@
 const pkgInstall = require('pkg-install');
-const { installDependencies } = require('./install-dependencies');
+const {
+  installDependencies
+} = require('../src/create-twilio-function/install-dependencies');
 
 jest.mock('pkg-install');
 
