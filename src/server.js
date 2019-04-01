@@ -34,6 +34,9 @@ function createServer(port = DEFAULT_PORT, config) {
   const app = express();
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
+  app.get('/favicon.ico', (req, res) => {
+    res.redirect('https://www.twilio.com/marketing/bundles/marketing/img/favicons/favicon.ico')
+  });
 
   if (config.logs) {
     app.use(createLogger(config));
