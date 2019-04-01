@@ -55,8 +55,8 @@ function getEnvironment(cli, baseDir) {
 
 function getBaseDirectory(cli) {
   let baseDir = process.cwd();
-  if (cli.input[0]) {
-    baseDir = cli.input[0];
+  if (cli.dir) {
+    baseDir = cli.dir;
     debug('Set base directory based on input to "%s"', baseDir);
   }
   return baseDir;
@@ -85,7 +85,7 @@ async function getConfigFromCli(cli) {
   config.detailedLogs = cli.flags.detailedLogs;
   config.live = cli.flags.live;
   config.logs = cli.flags.logs;
-  config.appName = cli.pkg.name;
+  config.appName = 'twilio-run';
 
   return config;
 }

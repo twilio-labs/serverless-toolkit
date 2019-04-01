@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
 require('../src/cli')
-  .run()
+  .run(process.argv)
   .catch(err => console.error(err));

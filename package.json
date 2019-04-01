@@ -37,9 +37,9 @@
     "express": "^4.16.3",
     "inquirer": "^6.0.0",
     "log-symbols": "^2.2.0",
-    "meow": "^5.0.0",
     "ngrok": "^3.0.1",
-    "twilio": "^3.18.0"
+    "twilio": "^3.18.0",
+    "yargs": "^13.2.2"
   },
   "devDependencies": {
     "all-contributors-cli": "^5.3.0",
