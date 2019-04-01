@@ -4,14 +4,20 @@ const { stripIndent } = require('common-tags');
 function simpleLogs(req, res) {
   const contentType = res.get('Content-Type');
   const responseCode =
-    res.statusCode >= 300
-      ? chalk`{white.bgRed ${res.statusCode}}`
-      : chalk`{white.bgGreen ${res.statusCode}}`;
-  const msg = chalk`
+    res.statusCode >= 400
+      ? chalk`{black.bgRed ${res.statusCode}}`
+      : res.statusCode < 300
+      ? chalk`{black.bgGreen ${res.statusCode}}`
+      : chalk`{black.bgYellow ${res.statusCode}}`;
+  let msg = chalk`
   ${responseCode} {bold ${req.method}} ${
     req.originalUrl
-  } │ {dim Response Type ${contentType}}
-  `;
+  }`;
+
+  if (contentType) {
+    msg += chalk` │ {dim Response Type ${contentType}}`
+  }
+
   return stripIndent`${msg}`;
 }
 
