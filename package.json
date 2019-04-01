@@ -2,6 +2,7 @@
   "name": "twilio-run",
   "version": "1.0.0-beta.4",
   "bin": {
+    "twilio-functions": "./bin/twilio-run.js",
     "twilio-run": "./bin/twilio-run.js"
   },
   "description": "CLI tool to run Twilio Functions locally for development",
