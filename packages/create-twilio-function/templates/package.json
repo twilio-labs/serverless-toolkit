@@ -7,6 +7,6 @@
     "start": "twilio-run --env"
   },
   "devDependencies": {
-    "twilio-run": "^1.0.0-beta.4"
+    "twilio-run": "^1.0.1"
   }
 }
