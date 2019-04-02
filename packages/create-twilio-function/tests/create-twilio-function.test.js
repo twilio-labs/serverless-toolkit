@@ -75,13 +75,13 @@ describe('createTwilioFunction', () => {
   it("doesn't scaffold if the target folder name already exists", async () => {
     const name = 'test-function';
     await mkdir('./scratch/test-function');
-    console.log = jest.fn();
+    console.error = jest.fn();
 
     await createTwilioFunction({ name, path: './scratch' });
 
     expect.assertions(2);
 
-    expect(console.log).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledTimes(1);
 
     try {
       await stat(`./scratch/${name}/package.json`);

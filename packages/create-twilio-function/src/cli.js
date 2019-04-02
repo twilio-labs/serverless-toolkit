@@ -30,7 +30,14 @@ function cli(cwd) {
           type: 'string'
         },
         'skip-credentials': {
-          describe: "Don't ask for Twilio account credentials",
+          describe:
+            "Don't ask for Twilio account credentials or import them from the environment",
+          type: 'boolean',
+          default: false
+        },
+        'import-credentials': {
+          describe:
+            'Import credentials from the environment variables TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN',
           type: 'boolean',
           default: false
         }
