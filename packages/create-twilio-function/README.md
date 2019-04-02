@@ -39,15 +39,18 @@ create-twilio-function <name>
 Creates a new Twilio Function project
 
 Positionals:
-  name  The name of your project directory.                             [string]
+  name  Name of your project.                                           [string]
 
 Options:
-  --account-sid, -a   The Account SID for your Twilio account           [string]
-  --auth-token, -t    Your Twilio account Auth Token                    [string]
-  --skip-credentials  Don't ask for Twilio account credentials
+  --account-sid, -a     The Account SID for your Twilio account         [string]
+  --auth-token, -t      Your Twilio account Auth Token                  [string]
+  --skip-credentials    Don't ask for Twilio account credentials or import them
+                        from the environment          [boolean] [default: false]
+  --import-credentials  Import credentials from the environment variables
+                        TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN
                                                       [boolean] [default: false]
-  -h, --help          Show help                                        [boolean]
-  -v, --version       Show version number                              [boolean]
+  -h, --help            Show help                                      [boolean]
+  -v, --version         Show version number                            [boolean]
   --path                                                        [default: (cwd)]
 ```
 
