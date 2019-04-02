@@ -6,6 +6,7 @@ const {
   createPackageJSON
 } = require('./create-twilio-function/create-files');
 const createGitignore = require('./create-twilio-function/create-gitignore');
+const importCredentials = require('./create-twilio-function/import-credentials');
 const {
   installDependencies
 } = require('./create-twilio-function/install-dependencies');
@@ -17,7 +18,7 @@ async function createTwilioFunction(config) {
   try {
     await createDirectory(config.path, config.name);
   } catch (e) {
-    console.log(
+    console.error(
       `A directory called '${
         config.name
       }' already exists. Please create your function in a new directory.`
@@ -26,7 +27,10 @@ async function createTwilioFunction(config) {
   }
 
   // Get account sid and auth token
-  accountDetails = await promptForAccountDetails(config);
+  let accountDetails = await importCredentials(config);
+  if (Object.keys(accountDetails).length === 0) {
+    accountDetails = await promptForAccountDetails(config);
+  }
   config = { ...accountDetails, ...config };
 
   // Scaffold project
