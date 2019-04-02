@@ -4,6 +4,7 @@ const {
 } = require('../src/create-twilio-function/install-dependencies');
 const inquirer = require('inquirer');
 const ora = require('ora');
+const boxen = require('boxen');
 const fs = require('fs');
 const { promisify } = require('util');
 const rimraf = promisify(require('rimraf'));
@@ -12,6 +13,9 @@ const stat = promisify(fs.stat);
 
 jest.mock('inquirer');
 jest.mock('ora');
+jest.mock('boxen', () => {
+  return () => 'success message';
+});
 ora.mockImplementation(() => {
   const spinner = {
     start: () => spinner,
@@ -19,10 +23,10 @@ ora.mockImplementation(() => {
   };
   return spinner;
 });
-
 jest.mock('../src/create-twilio-function/install-dependencies.js', () => {
   return { installDependencies: jest.fn() };
 });
+console.log = jest.fn();
 
 beforeAll(async () => {
   await rimraf('./scratch');
@@ -46,6 +50,7 @@ describe('createTwilioFunction', () => {
         authToken: 'test-auth-token'
       })
     );
+
     const name = 'test-function';
     await createTwilioFunction({ name, path: './scratch' });
 
@@ -70,6 +75,8 @@ describe('createTwilioFunction', () => {
     expect(example.isFile());
 
     expect(installDependencies).toHaveBeenCalledWith(`./scratch/${name}`);
+
+    expect(console.log).toHaveBeenCalledWith('success message');
   });
 
   it("doesn't scaffold if the target folder name already exists", async () => {
@@ -79,9 +86,10 @@ describe('createTwilioFunction', () => {
 
     await createTwilioFunction({ name, path: './scratch' });
 
-    expect.assertions(2);
+    expect.assertions(3);
 
     expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.log).not.toHaveBeenCalled();
 
     try {
       await stat(`./scratch/${name}/package.json`);

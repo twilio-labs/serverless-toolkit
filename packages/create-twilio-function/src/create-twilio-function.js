@@ -10,7 +10,9 @@ const importCredentials = require('./create-twilio-function/import-credentials')
 const {
   installDependencies
 } = require('./create-twilio-function/install-dependencies');
+const successMessage = require('./create-twilio-function/success-message');
 const ora = require('ora');
+const boxen = require('boxen');
 
 async function createTwilioFunction(config) {
   const projectDir = `${config.path}/${config.name}`;
@@ -55,6 +57,12 @@ async function createTwilioFunction(config) {
   spinner.start('Installing dependencies');
   await installDependencies(projectDir);
   spinner.succeed();
+
+  // Success message
+
+  console.log(
+    boxen(await successMessage(config), { padding: 1, borderStyle: 'round' })
+  );
 }
 
 module.exports = createTwilioFunction;
