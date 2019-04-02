@@ -88,6 +88,7 @@ function getBaseDirectoryPath() {
 async function handler(flags) {
   if (flags.list) {
     await listTemplates();
+    process.exit(0);
   }
 
   flags = await getMissingInfo(flags);
