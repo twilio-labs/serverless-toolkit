@@ -7,7 +7,7 @@ function cli(cwd) {
   yargs.version();
   yargs.alias('v', 'version');
 
-  yargs.default('path', process.cwd);
+  yargs.default('path', cwd);
 
   yargs.usage('Creates a new Twilio Function project');
   yargs.command(
