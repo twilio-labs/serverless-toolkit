@@ -1,5 +1,13 @@
 const inquirer = require('inquirer');
 
+function validateAccountSid(input) {
+  if (input.startsWith('AC') || input === '') {
+    return true;
+  } else {
+    return 'An Account SID starts with "AC".';
+  }
+}
+
 async function promptForAccountDetails(config) {
   if (config.skipCredentials) return {};
   const questions = [];
@@ -9,9 +17,7 @@ async function promptForAccountDetails(config) {
       name: 'accountSid',
       message: 'Twilio Account SID',
       validate: input => {
-        return input.startsWith('AC') || input === ''
-          ? true
-          : 'An Account SID starts with "AC".';
+        return validateAccountSid(input);
       }
     });
   }
