@@ -110,9 +110,10 @@ function optionBuilder(yargs) {
       'Creates a basic reply SMS template as hello-world function'
     )
     .example('$0 new --list', 'Lists all available templates')
-    .option('--list', {
+    .option('list', {
       type: 'boolean',
-      describe: 'List available templates. Will not create one',
+      alias: 'l',
+      describe: chalk`List available templates. Will {bold not} create a new function`,
     });
 }
 
