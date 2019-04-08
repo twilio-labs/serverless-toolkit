@@ -14,6 +14,7 @@ async function run() {
   const config = await getConfigFromCli(cli);
   debug('Determined configuration: %o', config);
   process.title = config.appName;
+  process.env = { ...process.env, ...config.env }
 
   if (config.inspect) {
     debug(
