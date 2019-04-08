@@ -26,7 +26,7 @@ function createServer(port = DEFAULT_PORT, config) {
   config = {
     url: `http://localhost:${port}`,
     baseDir: process.cwd(),
-    ...config
+    ...config,
   };
   debug('Starting server with config: %o', config);
 
@@ -35,7 +35,9 @@ function createServer(port = DEFAULT_PORT, config) {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
   app.get('/favicon.ico', (req, res) => {
-    res.redirect('https://www.twilio.com/marketing/bundles/marketing/img/favicons/favicon.ico')
+    res.redirect(
+      'https://www.twilio.com/marketing/bundles/marketing/img/favicons/favicon.ico'
+    );
   });
 
   if (config.logs) {
