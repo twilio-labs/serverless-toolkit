@@ -1,4 +1,12 @@
+
+
 # `@twilio-labs/serverless-api`
+
+##  ⚠️ **IMPORTANT**
+
+This is a module for an experimental API that is still in preview mode. 
+
+You won't be able to use this library unless you have been granted prior access to the underlying API.
 
 ## Installation
 
