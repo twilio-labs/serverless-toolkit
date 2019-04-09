@@ -41,7 +41,6 @@
   },
   "files": [
     "bin/",
-    "src/",
-    "templates/"
+    "src/"
   ]
 }
