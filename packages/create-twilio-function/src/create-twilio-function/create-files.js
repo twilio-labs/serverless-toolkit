@@ -16,18 +16,22 @@ function createFile(fullPath, content) {
 
 function createPackageJSON(path, name) {
   const fullPath = `${path}/package.json`;
-  const packageJSON = JSON.stringify({
-    name: name,
-    version: '0.0.0',
-    private: true,
-    scripts: {
-      test: 'echo "Error: no test specified" && exit 1',
-      start: 'twilio-run --env'
+  const packageJSON = JSON.stringify(
+    {
+      name: name,
+      version: '0.0.0',
+      private: true,
+      scripts: {
+        test: 'echo "Error: no test specified" && exit 1',
+        start: 'twilio-run --env'
+      },
+      devDependencies: {
+        'twilio-run': '^1.0.0-beta.4'
+      }
     },
-    devDependencies: {
-      'twilio-run': '^1.0.0-beta.4'
-    }
-  });
+    null,
+    2
+  );
   return createFile(fullPath, packageJSON);
 }
 

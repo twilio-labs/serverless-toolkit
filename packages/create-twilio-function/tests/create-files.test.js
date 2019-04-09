@@ -72,7 +72,7 @@ describe('createExampleFunction', () => {
     expect(contents).toMatch('Twilio.twiml.VoiceResponse');
   });
 
-  test('it rejects if there is already a package.json', async () => {
+  test('it rejects if there is already an example function', async () => {
     fs.closeSync(fs.openSync('./scratch/example.js', 'w'));
     expect.assertions(1);
     try {
