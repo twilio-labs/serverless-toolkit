@@ -1,12 +1,36 @@
 {
-  "name": "serverless-api",
+  "name": "@twilio-labs/serverless-api",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "API-wrapper for the Twilio Serverless API",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "prepare": "npm run build"
   },
-  "keywords": [],
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "twilio",
+    "serverless"
+  ],
   "author": "Dominik Kundel <hi@dominik.dev> (https://dkundel.com)",
-  "license": "MIT"
+  "license": "MIT",
+  "files": [
+    "dist/",
+    "README.md"
+  ],
+  "devDependencies": {
+    "@types/debug": "^4.1.3",
+    "typescript": "^3.4.2"
+  },
+  "dependencies": {
+    "@types/got": "^9.4.1",
+    "@types/node": "^11.13.2",
+    "debug": "^4.1.1",
+    "got": "^9.6.0",
+    "type-fest": "^0.3.0"
+  }
 }
