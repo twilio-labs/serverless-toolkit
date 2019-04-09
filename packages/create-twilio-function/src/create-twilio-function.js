@@ -3,7 +3,8 @@ const {
   createDirectory,
   createEnvFile,
   createExampleFunction,
-  createPackageJSON
+  createPackageJSON,
+  createNvmrcFile
 } = require('./create-twilio-function/create-files');
 const createGitignore = require('./create-twilio-function/create-gitignore');
 const importCredentials = require('./create-twilio-function/import-credentials');
@@ -44,6 +45,7 @@ async function createTwilioFunction(config) {
     accountSid: config.accountSid,
     authToken: config.authToken
   });
+  await createNvmrcFile(projectDir);
   await createExampleFunction(`${projectDir}/functions`);
   await createPackageJSON(projectDir, config.name);
   spinner.succeed();

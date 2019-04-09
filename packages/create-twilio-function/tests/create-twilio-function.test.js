@@ -58,6 +58,8 @@ describe('createTwilioFunction', () => {
     expect(dir.isDirectory());
     const env = await stat(`./scratch/${name}/.env`);
     expect(env.isFile());
+    const nvmrc = await stat(`./scratch/${name}/.nvmrc`);
+    expect(nvmrc.isFile());
 
     const packageJSON = await stat(`./scratch/${name}/package.json`);
     expect(packageJSON.isFile());
