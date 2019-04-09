@@ -1,3 +1,4 @@
+const versions = require('./versions');
 const fs = require('fs');
 const { promisify } = require('util');
 const mkdir = promisify(fs.mkdir);
@@ -26,8 +27,9 @@ function createPackageJSON(path, name) {
         start: 'twilio-run --env'
       },
       devDependencies: {
-        'twilio-run': '^1.0.0-beta.4'
-      }
+        'twilio-run': versions.twilioRun
+      },
+      engines: { node: versions.node }
     },
     null,
     2
@@ -52,9 +54,16 @@ AUTH_TOKEN=${authToken}`;
   return createFile(fullPath, content);
 }
 
+function createNvmrcFile(path) {
+  const fullPath = `${path}/.nvmrc`;
+  const content = versions.node;
+  return createFile(fullPath, content);
+}
+
 module.exports = {
   createDirectory,
   createPackageJSON,
   createExampleFunction,
-  createEnvFile
+  createEnvFile,
+  createNvmrcFile
 };

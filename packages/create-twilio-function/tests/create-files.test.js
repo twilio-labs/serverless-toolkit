@@ -2,8 +2,10 @@ const {
   createPackageJSON,
   createDirectory,
   createExampleFunction,
-  createEnvFile
+  createEnvFile,
+  createNvmrcFile
 } = require('../src/create-twilio-function/create-files');
+const versions = require('../src/create-twilio-function/versions');
 const fs = require('fs');
 const { promisify } = require('util');
 const rimraf = promisify(require('rimraf'));
@@ -48,6 +50,10 @@ describe('createPackageJSON', () => {
     expect(file.isFile());
     const packageJSON = JSON.parse(await readFile('./scratch/package.json'));
     expect(packageJSON.name).toEqual('project-name');
+    expect(packageJSON.engines.node).toEqual(versions.node);
+    expect(packageJSON.devDependencies['twilio-run']).toEqual(
+      versions.twilioRun
+    );
   });
 
   test('it rejects if there is already a package.json', async () => {
@@ -104,6 +110,26 @@ describe('createEnvFile', () => {
         accountSid: 'AC123',
         authToken: 'qwerty123456'
       });
+    } catch (e) {
+      expect(e.toString()).toMatch('file already exists');
+    }
+  });
+});
+
+describe('createNvmrcFile', () => {
+  test('it creates a new .nvmrc file', async () => {
+    await createNvmrcFile('./scratch');
+    const file = await stat('./scratch/.nvmrc');
+    expect(file.isFile());
+    const contents = await readFile('./scratch/.nvmrc', { encoding: 'utf-8' });
+    expect(contents).toMatch(versions.node);
+  });
+
+  test('it rejects if there is already an .nvmrc file', async () => {
+    fs.closeSync(fs.openSync('./scratch/.nvmrc', 'w'));
+    expect.assertions(1);
+    try {
+      await createNvmrcFile('./scratch');
     } catch (e) {
       expect(e.toString()).toMatch('file already exists');
     }
