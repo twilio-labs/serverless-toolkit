@@ -1,35 +1,16 @@
 const pkgInstall = require('pkg-install');
 const dotenv = require('dotenv');
-const fs = require('fs');
 const chalk = require('chalk');
 const got = require('got');
 const Listr = require('listr');
 const path = require('path');
-const { promisify } = require('util');
 
-const access = promisify(fs.access);
-const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
-
-async function fileExists(filePath) {
-  try {
-    await access(filePath, fs.constants.R_OK | fs.constants.W_OK);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function downloadFile(contentUrl, targetPath) {
-  return new Promise((resolve, reject) => {
-    const writeStream = fs.createWriteStream(targetPath);
-    got
-      .stream(contentUrl)
-      .on('response', resolve)
-      .on('error', reject)
-      .pipe(writeStream);
-  });
-}
+const {
+  writeFile,
+  fileExists,
+  downloadFile,
+  readFile,
+} = require('../utils/fs');
 
 async function writeEnvFile(contentUrl, targetDir, functionName) {
   const envFilePath = path.join(targetDir, '.env');
@@ -129,4 +110,5 @@ async function writeFiles(files, targetDir, functionName) {
 
 module.exports = {
   writeFiles,
+  fileExists,
 };
