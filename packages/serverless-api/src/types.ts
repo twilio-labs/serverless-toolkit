@@ -42,7 +42,15 @@ export type RawFunctionWithPath = FileInfo & {
   functionPath: string;
 };
 
+export type RawAssetWithPath = FileInfo & {
+  assetPath: string;
+};
+
 export type FunctionResource = RawFunctionWithPath & {
+  sid: string;
+};
+
+export type AssetResource = RawAssetWithPath & {
   sid: string;
 };
 

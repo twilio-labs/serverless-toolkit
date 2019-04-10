@@ -4,6 +4,8 @@ export enum DeployStatus {
   READING_FILESYSTEM = 'reading-filesystem',
   CREATING_FUNCTIONS = 'creating-functions',
   UPLOADING_FUNCTIONS = 'uploading-functions',
+  CREATING_ASSETS = 'creating-assets',
+  UPLOADING_ASSETS = 'uploading-assets',
   BUILDING = 'building',
   SETTING_VARIABLES = 'setting-variables',
   TIMED_OUT = 'timed-out',

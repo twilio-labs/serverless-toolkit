@@ -2,6 +2,7 @@ import events from 'events';
 import got from 'got';
 import path from 'path';
 import { DeployStatus } from './consts';
+import { getOrCreateAssetResources, uploadAsset } from './internals/assets';
 import {
   activateBuild,
   triggerBuild,
@@ -139,10 +140,9 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
     );
     const { sid: environmentSid, domain_name: domain } = environment;
 
-    this.emit('status-update', {
-      status: DeployStatus.READING_FILESYSTEM,
-      message: 'Gathering Functions and Assets to deploy',
-    });
+    //
+    // Functions
+    //
 
     this.emit('status-update', {
       status: DeployStatus.CREATING_FUNCTIONS,
@@ -164,14 +164,37 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
       })
     );
 
+    //
+    // Assets
+    //
+
+    this.emit('status-update', {
+      status: DeployStatus.CREATING_ASSETS,
+      message: `Creating ${assets.length} Assets`,
+    });
+    const assetResources = await getOrCreateAssetResources(
+      assets,
+      serviceSid,
+      this.client
+    );
+
+    this.emit('status-update', {
+      status: DeployStatus.UPLOADING_ASSETS,
+      message: `Uploading ${assets.length} Assets`,
+    });
+    const assetVersions = await Promise.all(
+      assetResources.map(asset => {
+        return uploadAsset(asset, serviceSid as string, this.client);
+      })
+    );
+
     this.emit('status-update', {
       status: DeployStatus.BUILDING,
       message: 'Waiting for deployment.',
     });
     const dependencies = getDependencies(config.pkgJson);
     const build = await triggerBuild(
-      functionVersions,
-      dependencies,
+      { functionVersions, dependencies, assetVersions },
       serviceSid,
       this.client
     );
@@ -208,6 +231,12 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
   }
 
   async deployLocalProject(deployConfig: DeployLocalProjectConfig) {
+    this.emit('status-update', {
+      status: DeployStatus.READING_FILESYSTEM,
+      message: 'Gathering Functions and Assets to deploy',
+    });
+
+    console.log(deployConfig);
     const { functions, assets } = await getListOfFunctionsAndAssets(
       deployConfig.cwd
     );
