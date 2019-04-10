@@ -39,3 +39,19 @@ export type BuildStatus =
 export interface BuildResource extends ResourceBase {
   status: BuildStatus;
 }
+
+export interface VariableResource extends ResourceBase {
+  date_updated: string;
+  environment_sid: string;
+  value: string;
+  account_sid: string;
+  url: string;
+  key: string;
+  sid: string;
+  date_created: string;
+  service_sid: string;
+}
+
+export interface VariableList {
+  variables: VariableResource[];
+}
