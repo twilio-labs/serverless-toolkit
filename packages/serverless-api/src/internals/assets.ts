@@ -120,6 +120,11 @@ export async function uploadAsset(
 
   const version = await createAssetVersion(asset, serviceSid, client);
   const { pre_signed_upload_url: awsData } = version;
-  const awsResult = await uploadToAws(awsData.url, awsData.kmsARN, content);
+  const awsResult = await uploadToAws(
+    awsData.url,
+    awsData.kmsARN,
+    content,
+    asset.name
+  );
   return version.sid;
 }
