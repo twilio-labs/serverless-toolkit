@@ -6,7 +6,7 @@ const { resolve, basename } = require('path');
 const cheerio = require('cheerio');
 const { readdirSync } = require('fs');
 
-const TEST_DIR = resolve(__dirname, '../fixtures');
+const TEST_DIR = resolve(__dirname, '../../fixtures');
 const TEST_FUNCTIONS_DIR = resolve(TEST_DIR, 'functions');
 const TEST_ENV = {};
 
