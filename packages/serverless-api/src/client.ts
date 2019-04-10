@@ -18,7 +18,12 @@ import {
   EnvironmentResource,
   ServiceResource,
 } from './serverless-api-types';
-import { ClientConfig, DeployLocalProjectConfig, GotClient } from './types';
+import {
+  ClientConfig,
+  DeployLocalProjectConfig,
+  DeployProjectConfig,
+  GotClient,
+} from './types';
 import { getDirContent } from './utils/fs';
 
 function getClient(config: ClientConfig): GotClient {
@@ -92,27 +97,35 @@ async function getListOfFunctionsAndAssets(cwd: string) {
 
 export class TwilioServerlessApiClient extends events.EventEmitter {
   private config: ClientConfig;
+  private client: GotClient;
 
   constructor(config: ClientConfig) {
     super();
     this.config = config;
+    this.client = getClient(config);
+    this.deployProject = this.deployProject.bind(this);
     this.deployLocalProject = this.deployLocalProject.bind(this);
   }
 
-  async deployLocalProject(deployConfig: DeployLocalProjectConfig) {
+  getClient(): GotClient {
+    return this.client;
+  }
+
+  async deployProject(deployConfig: DeployProjectConfig) {
     const config = {
       ...this.config,
       ...deployConfig,
     };
 
-    const client = getClient(this.config);
+    const { functions, assets } = config;
+
     let serviceSid = config.serviceSid;
     if (!serviceSid) {
       this.emit('status-update', {
         status: DeployStatus.CREATING_SERVICE,
         message: 'Creating Service',
       });
-      serviceSid = await createService(config.projectName, client);
+      serviceSid = await createService(config.projectName, this.client);
     }
 
     this.emit('status-update', {
@@ -122,7 +135,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
     const environment = await getOrCreateEnvironment(
       config.functionsEnv,
       serviceSid,
-      client
+      this.client
     );
     const { sid: environmentSid, domain_name: domain } = environment;
 
@@ -130,7 +143,6 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
       status: DeployStatus.READING_FILESYSTEM,
       message: 'Gathering Functions and Assets to deploy',
     });
-    const { functions, assets } = await getListOfFunctionsAndAssets(config.cwd);
 
     this.emit('status-update', {
       status: DeployStatus.CREATING_FUNCTIONS,
@@ -139,16 +151,16 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
     const functionResources = await getOrCreateFunctionResources(
       functions,
       serviceSid,
-      client
+      this.client
     );
 
     this.emit('status-update', {
       status: DeployStatus.UPLOADING_FUNCTIONS,
       message: `Uploading ${functions.length} Functions`,
     });
-    const versions = await Promise.all(
+    const functionVersions = await Promise.all(
       functionResources.map(fn => {
-        return uploadFunction(fn, serviceSid as string, client);
+        return uploadFunction(fn, serviceSid as string, this.client);
       })
     );
 
@@ -158,12 +170,12 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
     });
     const dependencies = getDependencies(config.pkgJson);
     const build = await triggerBuild(
-      versions,
+      functionVersions,
       dependencies,
       serviceSid,
-      client
+      this.client
     );
-    await waitForSuccessfulBuild(build.sid, serviceSid, client, this);
+    await waitForSuccessfulBuild(build.sid, serviceSid, this.client, this);
 
     this.emit('status-update', {
       status: DeployStatus.SETTING_VARIABLES,
@@ -173,14 +185,14 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
       config.env,
       environmentSid,
       serviceSid,
-      client
+      this.client
     );
 
     this.emit('status-update', {
       status: DeployStatus.ACTIVATING_DEPLOYMENT,
       message: 'Activating deployment',
     });
-    await activateBuild(build.sid, environmentSid, serviceSid, client);
+    await activateBuild(build.sid, environmentSid, serviceSid, this.client);
 
     this.emit('status', {
       status: DeployStatus.DONE,
@@ -193,6 +205,21 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
       domain,
       functionResources,
     };
+  }
+
+  async deployLocalProject(deployConfig: DeployLocalProjectConfig) {
+    const { functions, assets } = await getListOfFunctionsAndAssets(
+      deployConfig.cwd
+    );
+
+    const config = {
+      ...this.config,
+      ...deployConfig,
+      functions,
+      assets,
+    };
+
+    return this.deployProject(config);
   }
 }
 
