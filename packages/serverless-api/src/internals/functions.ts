@@ -102,7 +102,7 @@ async function createFunctionVersion(
     return (resp.body as unknown) as VersionResource;
   } catch (err) {
     log(err);
-    throw new Error('Failed to upload Function');
+    throw new Error(`Failed to upload Function ${fn.functionPath}`);
   }
 }
 
@@ -123,6 +123,11 @@ export async function uploadFunction(
 
   const version = await createFunctionVersion(fn, serviceSid, client);
   const { pre_signed_upload_url: awsData } = version;
-  const awsResult = await uploadToAws(awsData.url, awsData.kmsARN, content);
+  const awsResult = await uploadToAws(
+    awsData.url,
+    awsData.kmsARN,
+    content,
+    fn.name
+  );
   return version.sid;
 }
