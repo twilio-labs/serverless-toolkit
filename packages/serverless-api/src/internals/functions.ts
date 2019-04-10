@@ -1,13 +1,18 @@
 import debug from 'debug';
-import path from 'path';
+import path, { extname } from 'path';
 import {
   FunctionApiResource,
   FunctionList,
   VersionResource,
 } from '../serverless-api-types';
-import { FunctionResource, GotClient, RawFunctionWithPath } from '../types';
+import {
+  FileInfo,
+  FunctionResource,
+  GotClient,
+  RawFunctionWithPath,
+} from '../types';
 import { uploadToAws } from '../utils/aws-upload';
-import { FileInfo, readFile } from '../utils/fs';
+import { readFile } from '../utils/fs';
 
 const log = debug('twilio-serverless-api/functions');
 
@@ -106,7 +111,16 @@ export async function uploadFunction(
   serviceSid: string,
   client: GotClient
 ) {
-  const content = await readFile(fn.path, 'utf8');
+  let content: Buffer | string | undefined;
+  if (typeof fn.content !== 'undefined') {
+    content = fn.content;
+  } else if (typeof fn.path !== 'undefined') {
+    const encoding = extname(fn.path) === '.js' ? 'utf8' : undefined;
+    content = await readFile(fn.path, encoding);
+  } else {
+    throw new Error('Missing either content or path for file');
+  }
+
   const version = await createFunctionVersion(fn, serviceSid, client);
   const { pre_signed_upload_url: awsData } = version;
   const awsResult = await uploadToAws(awsData.url, awsData.kmsARN, content);

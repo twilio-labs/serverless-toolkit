@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { promisify } from 'util';
+import { FileInfo } from '../types';
 
 export const access = promisify(fs.access);
 export const readFile = promisify(fs.readFile);
@@ -15,11 +16,6 @@ export async function fileExists(filePath: string) {
   } catch (err) {
     return false;
   }
-}
-
-export interface FileInfo {
-  name: string;
-  path: string;
 }
 
 export async function getDirContent(

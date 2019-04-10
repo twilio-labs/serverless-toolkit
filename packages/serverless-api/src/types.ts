@@ -1,5 +1,4 @@
 import { PackageJson } from 'type-fest';
-import { FileInfo } from './utils/fs';
 import got = require('got');
 
 export type EnvironmentVariables = {
@@ -11,9 +10,7 @@ export type ClientConfig = {
   authToken: string;
 };
 
-export type DeployLocalProjectConfig = ClientConfig & {
-  cwd: string;
-  envPath: string;
+type DeployProjectConfigBase = {
   env: EnvironmentVariables;
   serviceSid?: string;
   pkgJson: PackageJson;
@@ -21,15 +18,33 @@ export type DeployLocalProjectConfig = ClientConfig & {
   functionsEnv: string;
 };
 
+export type FileInfo = {
+  name: string;
+  path?: string;
+  content?: string | Buffer;
+};
+
+export type DeployProjectConfig = ClientConfig &
+  DeployProjectConfigBase & {
+    functions: FileInfo[];
+    assets: FileInfo[];
+  };
+
+export type DeployLocalProjectConfig = ClientConfig &
+  DeployProjectConfigBase & {
+    cwd: string;
+    envPath: string;
+  };
+
 export type GotClient = typeof got;
 
-export interface RawFunctionWithPath extends FileInfo {
+export type RawFunctionWithPath = FileInfo & {
   functionPath: string;
-}
+};
 
-export interface FunctionResource extends RawFunctionWithPath {
+export type FunctionResource = RawFunctionWithPath & {
   sid: string;
-}
+};
 
 export type Dependency = {
   name: string;
