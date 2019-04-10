@@ -1,5 +1,7 @@
+export type Sid = string;
+
 export interface ResourceBase {
-  sid: string;
+  sid: Sid;
 }
 
 export interface FunctionApiResource extends ResourceBase {
@@ -8,6 +10,14 @@ export interface FunctionApiResource extends ResourceBase {
 
 export interface FunctionList {
   functions: FunctionApiResource[];
+}
+
+export interface AssetApiResource extends ResourceBase {
+  friendly_name: string;
+}
+
+export interface AssetList {
+  assets: AssetApiResource[];
 }
 
 export interface ServiceResource extends ResourceBase {}

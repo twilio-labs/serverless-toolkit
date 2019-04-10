@@ -1,6 +1,7 @@
 import querystring from 'querystring';
+import { JsonObject } from 'type-fest';
 import { DeployStatus } from '../consts';
-import { BuildResource } from '../serverless-api-types';
+import { BuildResource, Sid } from '../serverless-api-types';
 import { Dependency, GotClient } from '../types';
 import { sleep } from '../utils/sleep';
 
@@ -15,24 +16,40 @@ async function getBuildStatus(
   return (resp.body as unknown) as BuildResource;
 }
 
+export type BuildConfig = {
+  dependencies?: Dependency[];
+  functionVersions?: Sid[];
+  assetVersions?: Sid[];
+};
+
 export async function triggerBuild(
-  functionVersionSids: string[],
-  dependencies: Dependency[],
+  { functionVersions, dependencies, assetVersions }: BuildConfig,
   serviceSid: string,
   client: GotClient
 ) {
   try {
-    const dependencyString = `"${JSON.stringify(dependencies)}"`;
+    const body: JsonObject = {};
+
+    if (Array.isArray(dependencies) && dependencies.length > 0) {
+      const dependencyString = `"${JSON.stringify(dependencies)}"`;
+      body.Dependencies = dependencyString;
+    }
+
+    if (Array.isArray(functionVersions) && functionVersions.length > 0) {
+      body.FunctionVersions = functionVersions;
+    }
+
+    if (Array.isArray(assetVersions) && assetVersions.length > 0) {
+      body.AssetVersions = assetVersions;
+    }
+
     const resp = await client.post(`/Services/${serviceSid}/Builds`, {
       // @ts-ignore
       json: false,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: querystring.stringify({
-        FunctionVersions: functionVersionSids,
-        Dependencies: dependencyString,
-      }),
+      body: querystring.stringify(body),
     });
     return JSON.parse(resp.body);
   } catch (err) {
