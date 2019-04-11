@@ -10,11 +10,8 @@ export async function uploadToAws(
 ) {
   let contentType: string | undefined;
 
-  console.log(name);
   if (typeof content !== 'string') {
-    console.log('Hey there');
     const type = fileType(content);
-    console.log(type);
     if (type) {
       contentType = type.mime;
     }
@@ -24,7 +21,6 @@ export async function uploadToAws(
     contentType = mime.contentType(name) || undefined;
   }
 
-  console.log(contentType);
   const resp = await got.put(url, {
     headers: {
       'x-amz-server-side-encryption': 'aws:kms',
