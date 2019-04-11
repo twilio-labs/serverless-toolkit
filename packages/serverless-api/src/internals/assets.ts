@@ -1,5 +1,5 @@
 import debug from 'debug';
-import path, { extname } from 'path';
+import { extname } from 'path';
 import {
   AssetApiResource,
   AssetList,
@@ -7,7 +7,7 @@ import {
 } from '../serverless-api-types';
 import { AssetResource, FileInfo, GotClient, RawAssetWithPath } from '../types';
 import { uploadToAws } from '../utils/aws-upload';
-import { readFile } from '../utils/fs';
+import { getPathAndAccessFromFileInfo, readFile } from '../utils/fs';
 
 const log = debug('twilio-serverless-api/assets');
 
@@ -45,18 +45,17 @@ export async function getOrCreateAssetResources(
   const assetsToCreate: RawAssetWithPath[] = [];
 
   assets.forEach(asset => {
-    const assetPath = `/${path
-      .basename(asset.name, '.js')
-      .replace(/\s/g, '-')}`;
+    const { path: assetPath, access } = getPathAndAccessFromFileInfo(asset);
     const existingAsset = existingAssets.find(
       x => asset.name === x.friendly_name
     );
     if (!existingAsset) {
-      assetsToCreate.push({ ...asset, assetPath });
+      assetsToCreate.push({ ...asset, assetPath, access });
     } else {
       output.push({
         ...asset,
         assetPath,
+        access,
         sid: existingAsset.sid,
       });
     }
@@ -91,7 +90,7 @@ async function createAssetVersion(
         form: true,
         body: {
           Path: asset.assetPath,
-          Visibility: 'public',
+          Visibility: asset.access,
         },
       }
     );

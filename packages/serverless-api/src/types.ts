@@ -1,5 +1,6 @@
 import { PackageJson } from 'type-fest';
 import { Sid } from './serverless-api-types';
+import { AccessOptions } from './utils/fs';
 import got = require('got');
 
 export type EnvironmentVariables = {
@@ -41,10 +42,12 @@ export type GotClient = typeof got;
 
 export type RawFunctionWithPath = FileInfo & {
   functionPath: string;
+  access: AccessOptions;
 };
 
 export type RawAssetWithPath = FileInfo & {
   assetPath: string;
+  access: AccessOptions;
 };
 
 export type FunctionResource = RawFunctionWithPath & {
