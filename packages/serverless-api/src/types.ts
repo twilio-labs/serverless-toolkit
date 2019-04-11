@@ -1,4 +1,5 @@
 import { PackageJson } from 'type-fest';
+import { Sid } from './serverless-api-types';
 import got = require('got');
 
 export type EnvironmentVariables = {
@@ -62,4 +63,13 @@ export type Dependency = {
 export type Variable = {
   key: string;
   value: string;
+};
+
+export type DeployResult = {
+  serviceSid: Sid;
+  environmentSid: Sid;
+  buildSid: Sid;
+  domain: string;
+  functionResources: FunctionResource[];
+  assetResources: AssetResource[];
 };
