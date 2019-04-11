@@ -1,12 +1,13 @@
 import fs from 'fs';
 import path from 'path';
+import recursiveReadDir from 'recursive-readdir';
 import { promisify } from 'util';
 import { FileInfo } from '../types';
 
 export const access = promisify(fs.access);
 export const readFile = promisify(fs.readFile);
 export const writeFile = promisify(fs.writeFile);
-export const readdir = promisify(fs.readdir);
+export const readDir = promisify(recursiveReadDir);
 export const stat = promisify(fs.stat);
 
 export async function fileExists(filePath: string) {
@@ -18,25 +19,63 @@ export async function fileExists(filePath: string) {
   }
 }
 
+export type AccessOptions = 'private' | 'protected' | 'public';
+export type ResourcePathAndAccess = {
+  path: string;
+  access: AccessOptions;
+};
+
+export function getPathAndAccessFromFileInfo(
+  file: FileInfo,
+  ignoreExtension?: string
+): ResourcePathAndAccess {
+  const relativePath = path.dirname(file.name);
+
+  let access: AccessOptions = 'public';
+  const ext = path.extname(file.name);
+  let baseName = path.basename(file.name, ext);
+  if (file.name.includes(`.protected${ext}`)) {
+    access = 'protected';
+  } else if (file.name.includes(`.private${ext}`)) {
+    access = 'private';
+  }
+  baseName = baseName.replace(`.${access}`, '');
+
+  let resourcePath = `/` + path.join(relativePath, baseName);
+  if (ext !== ignoreExtension) {
+    resourcePath += ext;
+  }
+  resourcePath = resourcePath.replace(/\s/g, '-');
+
+  return {
+    path: resourcePath,
+    access,
+  };
+}
+
 export async function getDirContent(
   dir: string,
   ext?: string
 ): Promise<FileInfo[]> {
-  const rawFiles = await readdir(dir);
+  const rawFiles: string[] = (await readDir(dir)) as string[];
   const unfilteredFiles: (FileInfo | undefined)[] = await Promise.all(
-    rawFiles.map(async (file: string) => {
-      const filePath = path.join(dir, file);
+    rawFiles.map(async (filePath: string) => {
+      if (!path.isAbsolute(filePath)) {
+        filePath = path.join(dir, filePath);
+      }
+
       const entry = await stat(filePath);
       if (!entry.isFile()) {
         return undefined;
       }
 
-      if (ext && path.extname(file) !== ext) {
+      if (ext && path.extname(filePath) !== ext) {
         return undefined;
       }
 
+      const name = path.relative(dir, filePath);
       return {
-        name: file,
+        name: name,
         path: filePath,
       };
     })
@@ -51,6 +90,7 @@ module.exports = {
   fileExists,
   readFile,
   writeFile,
-  readdir,
+  readDir,
   getDirContent,
+  getPathAndAccessFromFileInfo,
 };

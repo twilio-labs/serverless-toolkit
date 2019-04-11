@@ -1,5 +1,5 @@
 import debug from 'debug';
-import path, { extname } from 'path';
+import { extname } from 'path';
 import {
   FunctionApiResource,
   FunctionList,
@@ -12,7 +12,7 @@ import {
   RawFunctionWithPath,
 } from '../types';
 import { uploadToAws } from '../utils/aws-upload';
-import { readFile } from '../utils/fs';
+import { getPathAndAccessFromFileInfo, readFile } from '../utils/fs';
 
 const log = debug('twilio-serverless-api/functions');
 
@@ -50,16 +50,18 @@ export async function getOrCreateFunctionResources(
   const functionsToCreate: RawFunctionWithPath[] = [];
 
   functions.forEach(fn => {
-    const functionPath = `/${path
-      .basename(fn.name, '.js')
-      .replace(/\s/g, '-')}`;
+    const { path: functionPath, access } = getPathAndAccessFromFileInfo(
+      fn,
+      '.js'
+    );
     const existingFn = existingFunctions.find(f => fn.name === f.friendly_name);
     if (!existingFn) {
-      functionsToCreate.push({ ...fn, functionPath });
+      functionsToCreate.push({ ...fn, functionPath, access });
     } else {
       output.push({
         ...fn,
         functionPath,
+        access,
         sid: existingFn.sid,
       });
     }
@@ -87,6 +89,13 @@ async function createFunctionVersion(
   serviceSid: string,
   client: GotClient
 ) {
+  if (fn.access === 'private') {
+    throw new Error(`Function ${fn.functionPath} cannnot be "private". 
+Please rename the file "${fn.name}" to "${fn.name.replace(
+      '.private.',
+      '.protected.'
+    )}" or deploy it as an asset.`);
+  }
   try {
     const resp = await client.post(
       `/Services/${serviceSid}/Functions/${fn.sid}/Versions`,
@@ -94,7 +103,7 @@ async function createFunctionVersion(
         form: true,
         body: {
           Path: fn.functionPath,
-          Visibility: 'public',
+          Visibility: fn.access,
         },
       }
     );
