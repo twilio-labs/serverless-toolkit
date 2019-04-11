@@ -1,6 +1,6 @@
 {
   "name": "twilio-run",
-  "version": "2.0.0-alpha.3",
+  "version": "2.0.0-alpha.4",
   "bin": {
     "twilio-functions": "./bin/twilio-run.js",
     "twilio-run": "./bin/twilio-run.js"
