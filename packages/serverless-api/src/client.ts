@@ -1,4 +1,5 @@
 import events from 'events';
+import fs from 'fs';
 import got from 'got';
 import path from 'path';
 import { DeployStatus } from './consts';
@@ -88,9 +89,34 @@ async function getOrCreateEnvironment(
   }
 }
 
+async function getFirstMatchingDirectory(
+  basePath: string,
+  directories: string[]
+): Promise<string> {
+  for (let dir of directories) {
+    const fullPath = path.join(basePath, dir);
+
+    try {
+      const fStat = fs.statSync(fullPath);
+      if (fStat.isDirectory()) {
+        return fullPath;
+      }
+    } catch (err) {
+      continue;
+    }
+  }
+
+  throw new Error(
+    `Could not find any of these directories "${directories.join('", "')}"`
+  );
+}
+
 async function getListOfFunctionsAndAssets(cwd: string) {
-  const functionsDir = path.join(cwd, 'functions');
-  const assetsDir = path.join(cwd, 'assets');
+  const functionsDir = await getFirstMatchingDirectory(cwd, [
+    'functions',
+    'src',
+  ]);
+  const assetsDir = await getFirstMatchingDirectory(cwd, ['assets', 'static']);
 
   const functions = await getDirContent(functionsDir, '.js');
   const assets = await getDirContent(assetsDir);
