@@ -91,6 +91,17 @@ function logError(msg) {
   console.error(chalk`{red.bold ERROR} ${msg}`);
 }
 
+function sortByAccess(resA, resB) {
+  if (resA.access === resB.access) {
+    if (resA.functionPath) {
+      return resA.functionPath.localeCompare(resB.functionPath);
+    } else if (resA.assetPath) {
+      return resA.assetPath.localeCompare(resB.assetPath);
+    }
+  }
+  return resA.access.localeCompare(resB.access);
+}
+
 function printDeployedResources(config, output) {
   console.log(
     chalk`
@@ -107,8 +118,13 @@ function printDeployedResources(config, output) {
   );
   if (output.functionResources) {
     const functionMessage = output.functionResources
+      .sort(sortByAccess)
       .map(fn => {
-        return chalk`   {dim https://${output.domain}}${fn.functionPath}`;
+        const accessPrefix =
+          fn.access !== 'public' ? chalk`{bold [${fn.access}]} ` : '';
+        return chalk`   ${accessPrefix}{dim https://${output.domain}}${
+          fn.functionPath
+        }`;
       })
       .join('\n');
     console.log(chalk.bold('Functions:'));
@@ -117,8 +133,13 @@ function printDeployedResources(config, output) {
 
   if (output.assetResources) {
     const assetMessage = output.assetResources
+      .sort(sortByAccess)
       .map(fn => {
-        return chalk`   {dim https://${output.domain}}${fn.assetPath}`;
+        const accessPrefix =
+          fn.access !== 'public' ? chalk`{bold [${fn.access}]} ` : '';
+        return chalk`   ${accessPrefix}{dim https://${output.domain}}${
+          fn.assetPath
+        }`;
       })
       .join('\n');
 
