@@ -21,7 +21,8 @@
   "license": "MIT",
   "files": [
     "dist/",
-    "README.md"
+    "README.md",
+    "scripts/"
   ],
   "devDependencies": {
     "@types/debug": "^4.1.3",
