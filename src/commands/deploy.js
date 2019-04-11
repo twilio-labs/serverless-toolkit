@@ -23,10 +23,14 @@ async function getFunctionServiceSid(cwd) {
   }
 }
 
-async function saveFunctionServiceSid(cwd, serviceSid) {
+async function saveLatestDeploymentData(cwd, serviceSid, buildSid) {
   const configPath = path.join(cwd, '.twilio-functions');
   if (!(await fileExists(configPath))) {
-    const output = JSON.stringify({ serviceSid }, null, 2);
+    const output = JSON.stringify(
+      { serviceSid, latestBuild: buildSid },
+      null,
+      2
+    );
     return writeFile(configPath, output, 'utf8');
   }
 
@@ -66,9 +70,9 @@ async function getConfigFromFlags(flags) {
 
   const env = {
     ...localEnv,
-    ACCOUNT_SID: undefined,
-    AUTH_TOKEN: undefined,
   };
+  delete env.ACCOUNT_SID;
+  delete env.AUTH_TOKEN;
 
   return {
     cwd,
@@ -87,13 +91,55 @@ function logError(msg) {
   console.error(chalk`{red.bold ERROR} ${msg}`);
 }
 
-function printDeployedFunctions(output) {
-  const msg = output.functionResources
-    .map(fn => {
-      return `| https://${output.domain}${fn.functionPath}`;
-    })
-    .join('\n');
-  console.log('\n' + msg);
+function printDeployedResources(config, output) {
+  console.log(
+    chalk`
+{bold Deployment Details}
+⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺
+{bold Domain:} ${output.domain}
+{bold Service:}
+   ${config.projectName} {dim (${output.serviceSid})}
+{bold Environment:}
+   ${config.functionsEnv} {dim (${output.environmentSid})} 
+{bold Build SID:}
+   ${output.buildSid}
+  `.trim()
+  );
+  if (output.functionResources) {
+    const functionMessage = output.functionResources
+      .map(fn => {
+        return chalk`   {dim https://${output.domain}}${fn.functionPath}`;
+      })
+      .join('\n');
+    console.log(chalk.bold('Functions:'));
+    console.log(functionMessage);
+  }
+
+  if (output.assetResources) {
+    const assetMessage = output.assetResources
+      .map(fn => {
+        return chalk`   {dim https://${output.domain}}${fn.assetPath}`;
+      })
+      .join('\n');
+
+    console.log(chalk.bold('Assets:'));
+    console.log(assetMessage);
+  }
+}
+
+function printConfigInfo(config) {
+  console.log(
+    chalk`
+Deploying functions & assets to Twilio Serverless
+
+{bold Account}\t\t${config.accountSid}
+{bold Project Name}\t${config.projectName}
+{bold Environment}\t${config.functionsEnv}
+{bold Root Directory}\t${config.cwd}
+{bold Dependencies}\t${Object.keys(config.pkgJson.dependencies).join(', ')}
+{bold Env Variables}\t${Object.keys(config.env).join(', ')}
+`
+  );
 }
 
 async function handler(flags) {
@@ -111,17 +157,20 @@ async function handler(flags) {
     process.exit(1);
   }
 
+  printConfigInfo(config);
+
   const spinner = ora('Deploying Function').start();
   try {
     const client = new TwilioServerlessApiClient(config);
     client.on('status-update', evt => {
-      spinner.text = evt.message;
+      spinner.text = evt.message + '\n';
     });
-    const result = await client.deployLocalProject();
-    spinner.succeed('Project successfully deployed');
-    printDeployedFunctions(result);
-    const { serviceSid } = result;
-    await saveFunctionServiceSid(config.cwd, serviceSid);
+    const result = await client.deployLocalProject(config);
+    spinner.text = 'Project successfully deployed\n';
+    spinner.succeed();
+    printDeployedResources(config, result);
+    const { serviceSid, buildSid } = result;
+    await saveLatestDeploymentData(config.cwd, serviceSid, buildSid);
   } catch (err) {
     log(err);
     spinner.fail(err.message);
