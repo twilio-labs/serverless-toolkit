@@ -23,6 +23,7 @@ import {
   ClientConfig,
   DeployLocalProjectConfig,
   DeployProjectConfig,
+  DeployResult,
   GotClient,
 } from './types';
 import { getDirContent } from './utils/fs';
@@ -112,7 +113,9 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
     return this.client;
   }
 
-  async deployProject(deployConfig: DeployProjectConfig) {
+  async deployProject(
+    deployConfig: DeployProjectConfig
+  ): Promise<DeployResult> {
     const config = {
       ...this.config,
       ...deployConfig,
@@ -227,16 +230,18 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
       buildSid: build.sid,
       domain,
       functionResources,
+      assetResources,
     };
   }
 
-  async deployLocalProject(deployConfig: DeployLocalProjectConfig) {
+  async deployLocalProject(
+    deployConfig: DeployLocalProjectConfig
+  ): Promise<DeployResult> {
     this.emit('status-update', {
       status: DeployStatus.READING_FILESYSTEM,
       message: 'Gathering Functions and Assets to deploy',
     });
 
-    console.log(deployConfig);
     const { functions, assets } = await getListOfFunctionsAndAssets(
       deployConfig.cwd
     );
