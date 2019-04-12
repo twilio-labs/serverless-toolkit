@@ -36,10 +36,18 @@ async function saveLatestDeploymentData(cwd, serviceSid, buildSid) {
 
   try {
     const twilioConfig = JSON.parse(await readFile(configPath, 'utf8'));
-    const output = JSON.stringify({ ...twilioConfig, serviceSid });
+    const output = JSON.stringify({
+      ...twilioConfig,
+      serviceSid,
+      latestBuild: buildSid,
+    });
     return writeFile(configPath, output, 'utf8');
   } catch (err) {
-    const output = JSON.stringify({ serviceSid }, null, 2);
+    const output = JSON.stringify(
+      { serviceSid, latestBuild: buildSid },
+      null,
+      2
+    );
     return writeFile(configPath, output, 'utf8');
   }
 }
@@ -184,6 +192,13 @@ async function handler(flags) {
     process.exit(1);
   }
 
+  if (!config.accountSid || !config.authToken) {
+    logError(
+      'Please enter ACCOUNT_SID and AUTH_TOKEN in your .env file or specify them via the command-line.'
+    );
+    process.exit(1);
+  }
+
   printConfigInfo(config);
 
   const spinner = ora('Deploying Function').start();
@@ -201,6 +216,7 @@ async function handler(flags) {
   } catch (err) {
     log(err);
     spinner.fail(err.message);
+    process.exit(1);
   }
 }
 
