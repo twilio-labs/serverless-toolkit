@@ -1,3 +1,4 @@
+import debug from 'debug';
 import events from 'events';
 import fs from 'fs';
 import got from 'got';
@@ -29,6 +30,8 @@ import {
 } from './types';
 import { getDirContent } from './utils/fs';
 
+const log = debug('twilio-serverless-api/client');
+
 function getClient(config: ClientConfig): GotClient {
   // @ts-ignore
   const client = got.extend({
@@ -59,6 +62,7 @@ async function createService(
 
     return service.sid;
   } catch (err) {
+    log('%O', err);
     throw new Error(`Failed to create service with name ${projectName}`);
   }
 }
@@ -79,13 +83,18 @@ async function getOrCreateEnvironment(
     });
     return (resp.body as unknown) as EnvironmentResource;
   } catch (err) {
-    const resp = await client.get(`/Services/${serviceSid}/Environments`);
-    const content = (resp.body as unknown) as EnvironmentList;
-    const env = content.environments.find(e => e.unique_name === uniqueName);
-    if (!env) {
-      throw new Error('Failed to create environment');
+    try {
+      const resp = await client.get(`/Services/${serviceSid}/Environments`);
+      const content = (resp.body as unknown) as EnvironmentList;
+      const env = content.environments.find(e => e.unique_name === uniqueName);
+      if (!env) {
+        throw new Error('Failed to create environment');
+      }
+      return env;
+    } catch (err) {
+      log('%O', err);
+      throw err;
     }
-    return env;
   }
 }
 

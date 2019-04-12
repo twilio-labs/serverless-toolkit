@@ -1,3 +1,4 @@
+import debug from 'debug';
 import querystring from 'querystring';
 import { JsonObject } from 'type-fest';
 import { DeployStatus } from '../consts';
@@ -7,13 +8,20 @@ import { sleep } from '../utils/sleep';
 
 import events = require('events');
 
+const log = debug('twilio-serverless-api/builds');
+
 async function getBuildStatus(
   buildSid: string,
   serviceSid: string,
   client: GotClient
 ) {
-  const resp = await client.get(`/Services/${serviceSid}/Builds/${buildSid}`);
-  return (resp.body as unknown) as BuildResource;
+  try {
+    const resp = await client.get(`/Services/${serviceSid}/Builds/${buildSid}`);
+    return (resp.body as unknown) as BuildResource;
+  } catch (err) {
+    log('%O', err);
+    throw err;
+  }
 }
 
 export type BuildConfig = {
@@ -53,7 +61,8 @@ export async function triggerBuild(
     });
     return JSON.parse(resp.body);
   } catch (err) {
-    console.error(err);
+    log('%O', err);
+    throw err;
   }
 }
 
@@ -100,14 +109,19 @@ export async function activateBuild(
   serviceSid: string,
   client: GotClient
 ): Promise<any> {
-  const resp = await client.post(
-    `/Services/${serviceSid}/Environments/${environmentSid}/Deployments`,
-    {
-      form: true,
-      body: {
-        BuildSid: buildSid,
-      },
-    }
-  );
-  return resp.body;
+  try {
+    const resp = await client.post(
+      `/Services/${serviceSid}/Environments/${environmentSid}/Deployments`,
+      {
+        form: true,
+        body: {
+          BuildSid: buildSid,
+        },
+      }
+    );
+    return resp.body;
+  } catch (err) {
+    log('%O', err);
+    throw err;
+  }
 }

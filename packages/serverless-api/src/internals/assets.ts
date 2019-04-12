@@ -25,14 +25,20 @@ async function createAssetResource(
     });
     return (resp.body as unknown) as AssetApiResource;
   } catch (err) {
+    log('%O', err);
     throw new Error(`Failed to create "${name}" asset`);
   }
 }
 
 async function getAssetResources(serviceSid: string, client: GotClient) {
-  const resp = await client.get(`/Services/${serviceSid}/Assets`);
-  const content = (resp.body as unknown) as AssetList;
-  return content.assets;
+  try {
+    const resp = await client.get(`/Services/${serviceSid}/Assets`);
+    const content = (resp.body as unknown) as AssetList;
+    return content.assets;
+  } catch (err) {
+    log('%O', err);
+    throw err;
+  }
 }
 
 export async function getOrCreateAssetResources(
@@ -97,7 +103,7 @@ async function createAssetVersion(
 
     return (resp.body as unknown) as VersionResource;
   } catch (err) {
-    log(err);
+    log('%O', err);
     throw new Error('Failed to upload Asset');
   }
 }
