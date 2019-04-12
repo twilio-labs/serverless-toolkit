@@ -149,7 +149,13 @@ function printDeployedResources(config, output) {
 }
 
 function printConfigInfo(config) {
+  let dependencyString = '';
+  if (config.pkgJson && config.pkgJson.dependencies) {
+    dependencyString = Object.keys(config.pkgJson.dependencies).join(', ');
+  }
+
   console.log(
+    // @ts-ignore
     chalk`
 Deploying functions & assets to Twilio Serverless
 
@@ -157,7 +163,7 @@ Deploying functions & assets to Twilio Serverless
 {bold Project Name}\t${config.projectName}
 {bold Environment}\t${config.functionsEnv}
 {bold Root Directory}\t${config.cwd}
-{bold Dependencies}\t${Object.keys(config.pkgJson.dependencies).join(', ')}
+{bold Dependencies}\t${dependencyString}
 {bold Env Variables}\t${Object.keys(config.env).join(', ')}
 `
   );
