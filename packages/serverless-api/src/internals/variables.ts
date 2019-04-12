@@ -1,5 +1,8 @@
+import debug from 'debug';
 import { VariableList, VariableResource } from '../serverless-api-types';
 import { EnvironmentVariables, GotClient, Variable } from '../types';
+
+const log = debug('twilio-serverless-api/variables');
 
 async function registerVariableInEnvironment(
   key: string,
@@ -8,17 +11,22 @@ async function registerVariableInEnvironment(
   serviceSid: string,
   client: GotClient
 ): Promise<VariableResource> {
-  const resp = await client.post(
-    `/Services/${serviceSid}/Environments/${environmentSid}/Variables`,
-    {
-      form: true,
-      body: {
-        Key: key,
-        Value: value,
-      },
-    }
-  );
-  return (resp.body as unknown) as VariableResource;
+  try {
+    const resp = await client.post(
+      `/Services/${serviceSid}/Environments/${environmentSid}/Variables`,
+      {
+        form: true,
+        body: {
+          Key: key,
+          Value: value,
+        },
+      }
+    );
+    return (resp.body as unknown) as VariableResource;
+  } catch (err) {
+    log('%O', err);
+    throw err;
+  }
 }
 
 async function updateVariableInEnvironment(
@@ -29,17 +37,22 @@ async function updateVariableInEnvironment(
   serviceSid: string,
   client: GotClient
 ): Promise<VariableResource> {
-  const resp = await client.post(
-    `/Services/${serviceSid}/Environments/${environmentSid}/Variables/${variableSid}`,
-    {
-      form: true,
-      body: {
-        Key: key,
-        Value: value,
-      },
-    }
-  );
-  return (resp.body as unknown) as VariableResource;
+  try {
+    const resp = await client.post(
+      `/Services/${serviceSid}/Environments/${environmentSid}/Variables/${variableSid}`,
+      {
+        form: true,
+        body: {
+          Key: key,
+          Value: value,
+        },
+      }
+    );
+    return (resp.body as unknown) as VariableResource;
+  } catch (err) {
+    log('%O', err);
+    throw err;
+  }
 }
 
 async function getVariablesForEnvironment(
@@ -47,11 +60,16 @@ async function getVariablesForEnvironment(
   serviceSid: string,
   client: GotClient
 ): Promise<VariableResource[]> {
-  const resp = await client.get(
-    `/Services/${serviceSid}/Environments/${environmentSid}/Variables`
-  );
-  const { variables } = (resp.body as unknown) as VariableList;
-  return variables;
+  try {
+    const resp = await client.get(
+      `/Services/${serviceSid}/Environments/${environmentSid}/Variables`
+    );
+    const { variables } = (resp.body as unknown) as VariableList;
+    return variables;
+  } catch (err) {
+    log('%O', err);
+    throw err;
+  }
 }
 
 function convertToVariableArray(env: EnvironmentVariables): Variable[] {

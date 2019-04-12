@@ -30,14 +30,20 @@ async function createFunctionResource(
     });
     return (resp.body as unknown) as FunctionApiResource;
   } catch (err) {
+    log('%O', err);
     throw new Error(`Failed to create "${name}" function`);
   }
 }
 
 async function getFunctionResources(serviceSid: string, client: GotClient) {
-  const resp = await client.get(`/Services/${serviceSid}/Functions`);
-  const content = (resp.body as unknown) as FunctionList;
-  return content.functions;
+  try {
+    const resp = await client.get(`/Services/${serviceSid}/Functions`);
+    const content = (resp.body as unknown) as FunctionList;
+    return content.functions;
+  } catch (err) {
+    log('%O', err);
+    throw err;
+  }
 }
 
 export async function getOrCreateFunctionResources(
@@ -110,7 +116,7 @@ Please rename the file "${fn.name}" to "${fn.name.replace(
 
     return (resp.body as unknown) as VersionResource;
   } catch (err) {
-    log(err);
+    log('%O', err);
     throw new Error(`Failed to upload Function ${fn.functionPath}`);
   }
 }
