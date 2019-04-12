@@ -60,7 +60,9 @@ export async function getOrCreateFunctionResources(
       fn,
       '.js'
     );
-    const existingFn = existingFunctions.find(f => fn.name === f.friendly_name);
+    const existingFn = existingFunctions.find(
+      f => functionPath === f.friendly_name
+    );
     if (!existingFn) {
       functionsToCreate.push({ ...fn, functionPath, access });
     } else {
@@ -76,7 +78,7 @@ export async function getOrCreateFunctionResources(
   const createdFunctions = await Promise.all(
     functionsToCreate.map(async fn => {
       const newFunction = await createFunctionResource(
-        fn.name,
+        fn.functionPath,
         serviceSid,
         client
       );

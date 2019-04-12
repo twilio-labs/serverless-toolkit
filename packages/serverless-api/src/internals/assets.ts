@@ -53,7 +53,7 @@ export async function getOrCreateAssetResources(
   assets.forEach(asset => {
     const { path: assetPath, access } = getPathAndAccessFromFileInfo(asset);
     const existingAsset = existingAssets.find(
-      x => asset.name === x.friendly_name
+      x => assetPath === x.friendly_name
     );
     if (!existingAsset) {
       assetsToCreate.push({ ...asset, assetPath, access });
@@ -70,7 +70,7 @@ export async function getOrCreateAssetResources(
   const createdAssets = await Promise.all(
     assetsToCreate.map(async asset => {
       const newAsset = await createAssetResource(
-        asset.name,
+        asset.assetPath,
         serviceSid,
         client
       );
