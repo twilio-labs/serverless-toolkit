@@ -15,12 +15,9 @@ import {
   getOrCreateFunctionResources,
   uploadFunction,
 } from './internals/functions';
+import { createService, findServiceSid } from './internals/services';
 import { setEnvironmentVariables } from './internals/variables';
-import {
-  EnvironmentList,
-  EnvironmentResource,
-  ServiceResource,
-} from './serverless-api-types';
+import { EnvironmentList, EnvironmentResource } from './serverless-api-types';
 import {
   ClientConfig,
   DeployLocalProjectConfig,
@@ -43,28 +40,6 @@ function getClient(config: ClientConfig): GotClient {
     },
   });
   return client;
-}
-
-async function createService(
-  projectName: string,
-  client: GotClient
-): Promise<string> {
-  try {
-    const resp = await client.post('/Services', {
-      form: true,
-      body: {
-        UniqueName: projectName,
-        FriendlyName: projectName,
-        IncludeCrendentials: true,
-      },
-    });
-    const service = (resp.body as unknown) as ServiceResource;
-
-    return service.sid;
-  } catch (err) {
-    log('%O', err);
-    throw new Error(`Failed to create service with name ${projectName}`);
-  }
 }
 
 async function getOrCreateEnvironment(
@@ -164,7 +139,34 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
         status: DeployStatus.CREATING_SERVICE,
         message: 'Creating Service',
       });
-      serviceSid = await createService(config.projectName, this.client);
+      try {
+        serviceSid = await createService(config.projectName, this.client);
+      } catch (err) {
+        const alternativeServiceSid = await findServiceSid(
+          config.projectName,
+          this.client
+        );
+        if (alternativeServiceSid === null) {
+          throw err;
+        }
+        if (config.overrideExistingService || config.force) {
+          serviceSid = alternativeServiceSid;
+        } else {
+          const error = new Error(
+            `Project with name "${
+              config.projectName
+            }" already exists with SID "${alternativeServiceSid}".`
+          );
+          error.name = 'conflicting-servicename';
+          Object.defineProperty(err, 'serviceSid', {
+            value: alternativeServiceSid,
+          });
+          Object.defineProperty(err, 'projectName', {
+            value: config.projectName,
+          });
+          throw error;
+        }
+      }
     }
 
     this.emit('status-update', {
