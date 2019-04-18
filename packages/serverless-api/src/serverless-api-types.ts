@@ -20,7 +20,13 @@ export interface AssetList {
   assets: AssetApiResource[];
 }
 
-export interface ServiceResource extends ResourceBase {}
+export interface ServiceResource extends ResourceBase {
+  unique_name: string;
+}
+
+export interface ServiceList {
+  services: ServiceResource[];
+}
 
 export interface EnvironmentResource extends ResourceBase {
   unique_name: string;

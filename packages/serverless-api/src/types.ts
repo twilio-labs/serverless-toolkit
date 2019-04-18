@@ -18,6 +18,8 @@ type DeployProjectConfigBase = {
   pkgJson: PackageJson;
   projectName: string;
   functionsEnv: string;
+  force: boolean;
+  overrideExistingService: boolean;
 };
 
 export type FileInfo = {
