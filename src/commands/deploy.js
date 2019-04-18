@@ -3,6 +3,7 @@ const chalk = require('chalk');
 const dotenv = require('dotenv');
 const ora = require('ora');
 const log = require('debug')('twilio-run:deploy');
+const { stripIndent } = require('common-tags');
 
 const { TwilioServerlessApiClient } = require('@twilio-labs/serverless-api');
 
@@ -90,6 +91,8 @@ async function getConfigFromFlags(flags) {
     env,
     serviceSid,
     pkgJson,
+    overrideExistingProject: flags.overrideExistingProject,
+    force: flags.force,
     projectName: flags.projectName || pkgJson.name,
     functionsEnv: flags.functionsEnv,
   };
@@ -177,6 +180,26 @@ Deploying functions & assets to Twilio Serverless
   );
 }
 
+function handleError(err, spinner, flags) {
+  log(err);
+  if (err.name === 'conflicting-servicename') {
+    spinner.fail(err.message);
+    console.log(stripIndent`
+      Here are a few ways to solve this problem:
+      - Rename your project in the package.json "name" property
+      - Pass an explicit name to your deployment
+        > ${flags.$0} deploy -n my-new-service-name
+      - Deploy to the existing service with the name "${err.projectName}"
+        > ${flags.$0} deploy --override-existing-project
+      - Run deployment in force mode
+        > ${flags.$0} deploy --force
+    `);
+  } else {
+    spinner.fail(err.message);
+  }
+  process.exit(1);
+}
+
 async function handler(flags) {
   let config;
   try {
@@ -214,9 +237,7 @@ async function handler(flags) {
     const { serviceSid, buildSid } = result;
     await saveLatestDeploymentData(config.cwd, serviceSid, buildSid);
   } catch (err) {
-    log(err);
-    spinner.fail(err.message);
-    process.exit(1);
+    handleError(err, spinner, flags);
   }
 }
 
@@ -261,6 +282,17 @@ function optionBuilder(yargs) {
       type: 'string',
       describe:
         'Path to .env file. If none, the local .env in the current working directory is used.',
+    })
+    .option('override-existing-project', {
+      type: 'boolean',
+      describe:
+        'Deploys project to existing service if a naming conflict has been found.',
+      default: false,
+    })
+    .option('force', {
+      type: 'boolean',
+      describe: 'Will run deployment in force mode. Can be dangerous.',
+      default: false,
     });
 }
 
