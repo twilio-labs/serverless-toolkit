@@ -8,50 +8,10 @@ const { stripIndent } = require('common-tags');
 const { TwilioServerlessApiClient } = require('@twilio-labs/serverless-api');
 
 const { fileExists, readFile, writeFile } = require('../utils/fs');
-
-async function getFunctionServiceSid(cwd) {
-  const configPath = path.join(cwd, '.twilio-functions');
-  if (!(await fileExists(configPath))) {
-    return undefined;
-  }
-
-  try {
-    const twilioConfig = JSON.parse(await readFile(configPath, 'utf8'));
-    return twilioConfig.serviceSid;
-  } catch (err) {
-    log('Could not find local config');
-    return undefined;
-  }
-}
-
-async function saveLatestDeploymentData(cwd, serviceSid, buildSid) {
-  const configPath = path.join(cwd, '.twilio-functions');
-  if (!(await fileExists(configPath))) {
-    const output = JSON.stringify(
-      { serviceSid, latestBuild: buildSid },
-      null,
-      2
-    );
-    return writeFile(configPath, output, 'utf8');
-  }
-
-  try {
-    const twilioConfig = JSON.parse(await readFile(configPath, 'utf8'));
-    const output = JSON.stringify({
-      ...twilioConfig,
-      serviceSid,
-      latestBuild: buildSid,
-    });
-    return writeFile(configPath, output, 'utf8');
-  } catch (err) {
-    const output = JSON.stringify(
-      { serviceSid, latestBuild: buildSid },
-      null,
-      2
-    );
-    return writeFile(configPath, output, 'utf8');
-  }
-}
+const {
+  getFunctionServiceSid,
+  saveLatestDeploymentData,
+} = require('../serverless-api/utils');
 
 async function getConfigFromFlags(flags) {
   const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
@@ -91,7 +51,7 @@ async function getConfigFromFlags(flags) {
     env,
     serviceSid,
     pkgJson,
-    overrideExistingProject: flags.overrideExistingProject,
+    overrideExistingService: flags.overrideExistingProject,
     force: flags.force,
     projectName: flags.projectName || pkgJson.name,
     functionsEnv: flags.functionsEnv,
@@ -181,7 +141,7 @@ Deploying functions & assets to Twilio Serverless
 }
 
 function handleError(err, spinner, flags) {
-  log(err);
+  log('%O', err);
   if (err.name === 'conflicting-servicename') {
     spinner.fail(err.message);
     console.log(stripIndent`
@@ -194,6 +154,8 @@ function handleError(err, spinner, flags) {
       - Run deployment in force mode
         > ${flags.$0} deploy --force
     `);
+  } else if (err.name === 'HTTPError') {
+    spinner.fail(err.body.message);
   } else {
     spinner.fail(err.message);
   }

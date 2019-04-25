@@ -4,6 +4,7 @@ const chalk = require('chalk');
 const startCommand = require('./commands/start');
 const newCommand = require('./commands/new');
 const deployCommand = require('./commands/deploy');
+const listCommand = require('./commands/list');
 
 async function run(rawArgs) {
   const nodeVersion = process.versions.node;
@@ -21,6 +22,7 @@ Please use a tool like nvm (https://github.com/creationix/nvm) to switch your ve
   yargs
     .command(newCommand)
     .command(deployCommand)
+    .command(listCommand)
     .command(startCommand)
     .parse(rawArgs.slice(2));
 }
