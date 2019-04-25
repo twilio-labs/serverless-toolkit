@@ -2,7 +2,7 @@ import debug from 'debug';
 import { ServiceList, ServiceResource } from '../serverless-api-types';
 import { GotClient } from '../types';
 
-const log = debug('twilio-serverless-api/client');
+const log = debug('twilio-serverless-api:services');
 
 export async function createService(
   projectName: string,
@@ -26,13 +26,20 @@ export async function createService(
   }
 }
 
+export async function listServices(
+  client: GotClient
+): Promise<ServiceResource[]> {
+  const resp = await client.get('/Services');
+  const { services } = (resp.body as unknown) as ServiceList;
+  return services;
+}
+
 export async function findServiceSid(
   projectName: string,
   client: GotClient
-): Promise<string | null> {
+): Promise<string | undefined> {
   try {
-    const resp = await client.get('/Services');
-    const { services } = (resp.body as unknown) as ServiceList;
+    const services = await listServices(client);
     for (let service of services) {
       if (service.unique_name === projectName) {
         return service.sid;
@@ -42,5 +49,5 @@ export async function findServiceSid(
     log('%O', err);
     throw err;
   }
-  return null;
+  return undefined;
 }

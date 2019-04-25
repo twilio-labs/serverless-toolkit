@@ -1,5 +1,11 @@
 import { PackageJson } from 'type-fest';
-import { Sid } from './serverless-api-types';
+import {
+  BuildResource,
+  EnvironmentResource,
+  ServiceResource,
+  Sid,
+  VariableResource,
+} from './serverless-api-types';
 import { AccessOptions } from './utils/fs';
 import got = require('got');
 
@@ -39,6 +45,32 @@ export type DeployLocalProjectConfig = ClientConfig &
     cwd: string;
     envPath: string;
   };
+
+export type ListOptions = 'environments' | 'services' | 'variables' | 'builds';
+export type ListConfig = ClientConfig & {
+  types: ListOptions | ListOptions[];
+  serviceSid?: string;
+  projectName?: string;
+  environment?: string | Sid;
+};
+
+export type ListResult = {
+  services?: ServiceResource[];
+  environments?: EnvironmentResource[];
+  builds?: BuildResource[];
+  variables?: {
+    environmentSid: string;
+    entries: VariableResource[];
+  };
+  functions?: {
+    environmentSid: string;
+    entries: FunctionResource[];
+  };
+  assets?: {
+    environmentSid: string;
+    entries: AssetResource[];
+  };
+};
 
 export type GotClient = typeof got;
 
