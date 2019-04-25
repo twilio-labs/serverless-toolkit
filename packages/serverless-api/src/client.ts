@@ -1,33 +1,45 @@
 import debug from 'debug';
 import events from 'events';
-import fs from 'fs';
 import got from 'got';
-import path from 'path';
 import { DeployStatus } from './consts';
 import { getOrCreateAssetResources, uploadAsset } from './internals/assets';
 import {
   activateBuild,
+  listBuilds,
   triggerBuild,
   waitForSuccessfulBuild,
 } from './internals/builds';
 import { getDependencies } from './internals/dependencies';
 import {
+  createEnvironmentIfNotExists,
+  getEnvironmnetFromSuffix,
+  listEnvironments,
+} from './internals/environments';
+import {
   getOrCreateFunctionResources,
   uploadFunction,
 } from './internals/functions';
-import { createService, findServiceSid } from './internals/services';
-import { setEnvironmentVariables } from './internals/variables';
-import { EnvironmentList, EnvironmentResource } from './serverless-api-types';
+import {
+  createService,
+  findServiceSid,
+  listServices,
+} from './internals/services';
+import {
+  listVariablesForEnvironment,
+  setEnvironmentVariables,
+} from './internals/variables';
 import {
   ClientConfig,
   DeployLocalProjectConfig,
   DeployProjectConfig,
   DeployResult,
   GotClient,
+  ListConfig,
+  ListResult,
 } from './types';
-import { getDirContent } from './utils/fs';
+import { getDirContent, getFirstMatchingDirectory } from './utils/fs';
 
-const log = debug('twilio-serverless-api/client');
+const log = debug('twilio-serverless-api:client');
 
 function getClient(config: ClientConfig): GotClient {
   // @ts-ignore
@@ -40,59 +52,6 @@ function getClient(config: ClientConfig): GotClient {
     },
   });
   return client;
-}
-
-async function getOrCreateEnvironment(
-  envSuffix: string,
-  serviceSid: string,
-  client: GotClient
-) {
-  const uniqueName = envSuffix + '-environment';
-  try {
-    const resp = await client.post(`/Services/${serviceSid}/Environments`, {
-      form: true,
-      body: {
-        UniqueName: uniqueName,
-        DomainSuffix: envSuffix,
-      },
-    });
-    return (resp.body as unknown) as EnvironmentResource;
-  } catch (err) {
-    try {
-      const resp = await client.get(`/Services/${serviceSid}/Environments`);
-      const content = (resp.body as unknown) as EnvironmentList;
-      const env = content.environments.find(e => e.unique_name === uniqueName);
-      if (!env) {
-        throw new Error('Failed to create environment');
-      }
-      return env;
-    } catch (err) {
-      log('%O', err);
-      throw err;
-    }
-  }
-}
-
-async function getFirstMatchingDirectory(
-  basePath: string,
-  directories: string[]
-): Promise<string> {
-  for (let dir of directories) {
-    const fullPath = path.join(basePath, dir);
-
-    try {
-      const fStat = fs.statSync(fullPath);
-      if (fStat.isDirectory()) {
-        return fullPath;
-      }
-    } catch (err) {
-      continue;
-    }
-  }
-
-  throw new Error(
-    `Could not find any of these directories "${directories.join('", "')}"`
-  );
 }
 
 async function getListOfFunctionsAndAssets(cwd: string) {
@@ -123,6 +82,77 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
     return this.client;
   }
 
+  async list(listConfig: ListConfig): Promise<ListResult> {
+    let {
+      types,
+      serviceSid,
+      projectName,
+      environment: environmentSid,
+    } = listConfig;
+
+    if (
+      types === 'services' ||
+      (types.length === 1 && types[0] === 'services')
+    ) {
+      const services = await listServices(this.client);
+      return { services };
+    }
+
+    if (
+      typeof serviceSid === 'undefined' &&
+      typeof projectName !== 'undefined'
+    ) {
+      serviceSid = await findServiceSid(projectName, this.client);
+    }
+
+    if (typeof serviceSid === 'undefined') {
+      throw new Error('Missing service SID argument');
+    }
+
+    const result: ListResult = {};
+
+    for (const type of types) {
+      try {
+        if (type === 'environments') {
+          result.environments = await listEnvironments(serviceSid, this.client);
+        }
+
+        if (type === 'builds') {
+          result.builds = await listBuilds(serviceSid, this.client);
+        }
+
+        if (typeof environmentSid === 'string') {
+          if (
+            !environmentSid.startsWith('ZE') ||
+            environmentSid.length !== 34
+          ) {
+            const environment = await getEnvironmnetFromSuffix(
+              environmentSid,
+              serviceSid,
+              this.client
+            );
+            environmentSid = environment.sid;
+          }
+
+          if (type === 'variables') {
+            result.variables = {
+              entries: await listVariablesForEnvironment(
+                environmentSid,
+                serviceSid,
+                this.client
+              ),
+              environmentSid,
+            };
+          }
+        }
+      } catch (err) {
+        log(err);
+      }
+    }
+
+    return result;
+  }
+
   async deployProject(
     deployConfig: DeployProjectConfig
   ): Promise<DeployResult> {
@@ -146,7 +176,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
           config.projectName,
           this.client
         );
-        if (alternativeServiceSid === null) {
+        if (!alternativeServiceSid) {
           throw err;
         }
         if (config.overrideExistingService || config.force) {
@@ -173,7 +203,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
       status: DeployStatus.CONFIGURING_ENVIRONMENT,
       message: `Configuring "${config.functionsEnv}" environment`,
     });
-    const environment = await getOrCreateEnvironment(
+    const environment = await createEnvironmentIfNotExists(
       config.functionsEnv,
       serviceSid,
       this.client

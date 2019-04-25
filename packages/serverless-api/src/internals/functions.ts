@@ -14,7 +14,7 @@ import {
 import { uploadToAws } from '../utils/aws-upload';
 import { getPathAndAccessFromFileInfo, readFile } from '../utils/fs';
 
-const log = debug('twilio-serverless-api/functions');
+const log = debug('twilio-serverless-api:functions');
 
 async function createFunctionResource(
   name: string,
@@ -35,7 +35,10 @@ async function createFunctionResource(
   }
 }
 
-async function getFunctionResources(serviceSid: string, client: GotClient) {
+export async function listFunctionResources(
+  serviceSid: string,
+  client: GotClient
+) {
   try {
     const resp = await client.get(`/Services/${serviceSid}/Functions`);
     const content = (resp.body as unknown) as FunctionList;
@@ -52,7 +55,7 @@ export async function getOrCreateFunctionResources(
   client: GotClient
 ): Promise<FunctionResource[]> {
   const output: FunctionResource[] = [];
-  const existingFunctions = await getFunctionResources(serviceSid, client);
+  const existingFunctions = await listFunctionResources(serviceSid, client);
   const functionsToCreate: RawFunctionWithPath[] = [];
 
   functions.forEach(fn => {

@@ -86,11 +86,24 @@ export async function getDirContent(
   ) as FileInfo[];
 }
 
-module.exports = {
-  fileExists,
-  readFile,
-  writeFile,
-  readDir,
-  getDirContent,
-  getPathAndAccessFromFileInfo,
-};
+export async function getFirstMatchingDirectory(
+  basePath: string,
+  directories: string[]
+): Promise<string> {
+  for (let dir of directories) {
+    const fullPath = path.join(basePath, dir);
+
+    try {
+      const fStat = fs.statSync(fullPath);
+      if (fStat.isDirectory()) {
+        return fullPath;
+      }
+    } catch (err) {
+      continue;
+    }
+  }
+
+  throw new Error(
+    `Could not find any of these directories "${directories.join('", "')}"`
+  );
+}

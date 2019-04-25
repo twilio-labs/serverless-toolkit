@@ -44,16 +44,14 @@ export interface VersionResource extends ResourceBase {
   };
 }
 
-export type BuildStatus =
-  | 'QUEUED'
-  | 'BUILDING'
-  | 'DEPLOYING'
-  | 'DEPLOYED'
-  | 'VERIFIED'
-  | 'FAILED';
+export type BuildStatus = 'building' | 'completed' | 'failed';
 
 export interface BuildResource extends ResourceBase {
   status: BuildStatus;
+}
+
+export interface BuildList {
+  builds: BuildResource[];
 }
 
 export interface VariableResource extends ResourceBase {

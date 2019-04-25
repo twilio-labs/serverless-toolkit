@@ -2,13 +2,13 @@ import debug from 'debug';
 import querystring from 'querystring';
 import { JsonObject } from 'type-fest';
 import { DeployStatus } from '../consts';
-import { BuildResource, Sid } from '../serverless-api-types';
+import { BuildList, BuildResource, Sid } from '../serverless-api-types';
 import { Dependency, GotClient } from '../types';
 import { sleep } from '../utils/sleep';
 
 import events = require('events');
 
-const log = debug('twilio-serverless-api/builds');
+const log = debug('twilio-serverless-api:builds');
 
 async function getBuildStatus(
   buildSid: string,
@@ -22,6 +22,15 @@ async function getBuildStatus(
     log('%O', err);
     throw err;
   }
+}
+
+export async function listBuilds(
+  serviceSid: string,
+  client: GotClient
+): Promise<BuildResource[]> {
+  const resp = await client.get(`/Services/${serviceSid}/Builds`);
+  const { builds } = (resp.body as unknown) as BuildList;
+  return builds;
 }
 
 export type BuildConfig = {
@@ -87,7 +96,7 @@ export function waitForSuccessfulBuild(
         reject(new Error('Timeout'));
       }
       const { status } = await getBuildStatus(buildSid, serviceSid, client);
-      isBuilt = status === 'VERIFIED';
+      isBuilt = status === 'completed';
       if (isBuilt) {
         break;
       }

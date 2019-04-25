@@ -2,7 +2,7 @@ import debug from 'debug';
 import { VariableList, VariableResource } from '../serverless-api-types';
 import { EnvironmentVariables, GotClient, Variable } from '../types';
 
-const log = debug('twilio-serverless-api/variables');
+const log = debug('twilio-serverless-api:variables');
 
 async function registerVariableInEnvironment(
   key: string,
@@ -55,7 +55,7 @@ async function updateVariableInEnvironment(
   }
 }
 
-async function getVariablesForEnvironment(
+export async function listVariablesForEnvironment(
   environmentSid: string,
   serviceSid: string,
   client: GotClient
@@ -91,7 +91,7 @@ export async function setEnvironmentVariables(
   serviceSid: string,
   client: GotClient
 ): Promise<void> {
-  const existingVariables = await getVariablesForEnvironment(
+  const existingVariables = await listVariablesForEnvironment(
     environmentSid,
     serviceSid,
     client

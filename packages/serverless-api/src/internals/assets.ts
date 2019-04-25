@@ -9,7 +9,7 @@ import { AssetResource, FileInfo, GotClient, RawAssetWithPath } from '../types';
 import { uploadToAws } from '../utils/aws-upload';
 import { getPathAndAccessFromFileInfo, readFile } from '../utils/fs';
 
-const log = debug('twilio-serverless-api/assets');
+const log = debug('twilio-serverless-api:assets');
 
 async function createAssetResource(
   name: string,
