@@ -123,8 +123,8 @@ const cliInfo = {
 function optionBuilder(yargs) {
   yargs = yargs
     .example(
-      '$0 new hello-world --template=reply-sms',
-      'Creates a basic reply SMS template as hello-world function'
+      '$0 new hello-world --template=blank',
+      'Creates a basic blank template as hello-world function'
     )
     .example('$0 new --list', 'Lists all available templates');
 
