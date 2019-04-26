@@ -103,23 +103,39 @@ async function handler(flags) {
   }
 }
 
-function optionBuilder(yargs) {
-  return yargs
-    .example(
-      '$0 new reply-sms hello-world',
-      'Creates a basic reply SMS template as hello-world function'
-    )
-    .example('$0 new --list', 'Lists all available templates')
-    .option('list', {
+const cliInfo = {
+  options: {
+    template: {
+      type: 'string',
+      description: 'Name of template to be used',
+    },
+    list: {
       type: 'boolean',
       alias: 'l',
       describe: chalk`List available templates. Will {bold not} create a new function`,
-    });
+    },
+  },
+};
+
+function optionBuilder(yargs) {
+  yargs = yargs
+    .example(
+      '$0 new hello-world --template=reply-sms',
+      'Creates a basic reply SMS template as hello-world function'
+    )
+    .example('$0 new --list', 'Lists all available templates');
+
+  yargs = Object.keys(cliInfo.options).reduce((yargs, name) => {
+    return yargs.option(name, cliInfo.options[name]);
+  }, yargs);
+
+  return yargs;
 }
 
 module.exports = {
-  command: ['new [template] [filename]', 'template [template] [filename]'],
+  command: ['new [filename]', 'template [filename]'],
   describe: 'Creates a new Twilio Function based on an existing template',
   builder: optionBuilder,
   handler,
+  cliInfo,
 };

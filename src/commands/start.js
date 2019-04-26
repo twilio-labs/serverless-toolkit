@@ -34,8 +34,65 @@ async function handler(argv) {
   });
 }
 
+const cliInfo = {
+  options: {
+    'load-local-env': {
+      alias: 'f',
+      default: false,
+      type: 'boolean',
+      describe: 'Includes the local environment variables',
+    },
+    env: {
+      alias: 'e',
+      type: 'string',
+      describe: 'Loads .env file, overrides local env variables',
+    },
+    port: {
+      alias: 'p',
+      type: 'string',
+      describe: 'Override default port of 3000',
+      default: '3000',
+      requiresArg: true,
+    },
+    ngrok: {
+      type: 'string',
+      describe: 'Uses ngrok to create and outfacing url',
+    },
+    logs: {
+      type: 'boolean',
+      default: true,
+      describe: 'Toggles request logging',
+    },
+    'detailed-logs': {
+      type: 'boolean',
+      default: false,
+      describe:
+        'Toggles detailed request logging by showing request body and query params',
+    },
+    live: {
+      type: 'boolean',
+      default: false,
+      describe: 'Always serve from the current functions (no caching)',
+    },
+    inspect: {
+      type: 'string',
+      describe: 'Enables Node.js debugging protocol',
+    },
+    'inspect-brk': {
+      type: 'string',
+      describe:
+        'Enables Node.js debugging protocol, stops executioin until debugger is attached',
+    },
+    'legacy-mode': {
+      type: 'boolean',
+      describe:
+        'Enables legacy mode, it will prefix your asset paths with /assets',
+    },
+  },
+};
+
 function optionBuilder(yargs) {
-  return yargs
+  yargs = yargs
     .example('$0', 'Serves all functions in current functions subdirectory')
     .example('$0 start demo', 'Serves all functions in demo/functions')
     .example('PORT=9000 $0', 'Serves functions on port 9000')
@@ -45,59 +102,13 @@ function optionBuilder(yargs) {
       '$0 start --ngrok',
       'Exposes the Twilio functions via ngrok to share them'
     )
-    .epilog('for more information, check out https://twil.io/local-functions')
-    .option('load-local-env', {
-      alias: 'f',
-      default: false,
-      type: 'boolean',
-      describe: 'Includes the local environment variables',
-    })
-    .option('env', {
-      alias: 'e',
-      type: 'string',
-      describe: 'Loads .env file, overrides local env variables',
-    })
-    .option('port', {
-      alias: 'p',
-      type: 'string',
-      describe: 'Override default port of 3000',
-      default: '3000',
-      requiresArg: true,
-    })
-    .option('ngrok', {
-      type: 'string',
-      describe: 'Uses ngrok to create and outfacing url',
-    })
-    .option('logs', {
-      type: 'boolean',
-      default: true,
-      describe: 'Toggles request logging',
-    })
-    .option('detailed-logs', {
-      type: 'boolean',
-      default: false,
-      describe:
-        'Toggles detailed request logging by showing request body and query params',
-    })
-    .option('live', {
-      type: 'boolean',
-      default: false,
-      describe: 'Always serve from the current functions (no caching)',
-    })
-    .option('inspect', {
-      type: 'string',
-      describe: 'Enables Node.js debugging protocol',
-    })
-    .option('inspect-brk', {
-      type: 'string',
-      describe:
-        'Enables Node.js debugging protocol, stops executioin until debugger is attached',
-    })
-    .option('legacy-mode', {
-      type: 'boolean',
-      describe:
-        'Enables legacy mode, it will prefix your asset paths with /assets',
-    });
+    .epilog('for more information, check out https://twil.io/local-functions');
+
+  yargs = Object.keys(cliInfo.options).reduce((yargs, name) => {
+    return yargs.option(name, cliInfo.options[name]);
+  }, yargs);
+
+  return yargs;
 }
 
 module.exports = {
@@ -105,4 +116,5 @@ module.exports = {
   describe: 'Starts local Twilio Functions development server',
   builder: optionBuilder,
   handler,
+  cliInfo,
 };

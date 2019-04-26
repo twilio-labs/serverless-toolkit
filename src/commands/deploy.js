@@ -147,8 +147,56 @@ async function handler(flags) {
   }
 }
 
+const cliInfo = {
+  options: {
+    cwd: {
+      type: 'string',
+      describe: 'Sets the directory from which to deploy',
+    },
+    'functions-env': {
+      type: 'string',
+      describe: 'The environment name you want to use',
+      default: 'dev',
+    },
+    projectName: {
+      type: 'string',
+      alias: 'n',
+      describe:
+        'Overrides the name of the project. Default: the name field in your package.json',
+    },
+    accountSid: {
+      type: 'string',
+      alias: 'u',
+      describe:
+        'A specific account SID to be used for deployment. Uses fields in .env otherwise',
+    },
+    authToken: {
+      type: 'string',
+      alias: 'p',
+      describe:
+        'Use a specific auth token for deployment. Uses fields from .env otherwise',
+    },
+    env: {
+      type: 'string',
+      describe:
+        'Path to .env file. If none, the local .env in the current working directory is used.',
+    },
+    'override-existing-project': {
+      type: 'boolean',
+      describe:
+        'Deploys project to existing service if a naming conflict has been found.',
+      default: false,
+    },
+    force: {
+      type: 'boolean',
+      describe: 'Will run deployment in force mode. Can be dangerous.',
+      default: false,
+    },
+  },
+};
+
 function optionBuilder(yargs) {
-  return yargs
+  yargs = yargs
     .example(
       '$0 deploy',
       'Deploys all functions and assets in the current working directory'
@@ -156,50 +204,13 @@ function optionBuilder(yargs) {
     .example(
       '$0 deploy --functions-env=dev',
       'Creates a specifically named environment'
-    )
-    .option('cwd', {
-      type: 'string',
-      describe: 'Sets the directory from which to deploy',
-    })
-    .option('functions-env', {
-      type: 'string',
-      describe: 'The environment name you want to use',
-      default: 'dev',
-    })
-    .option('projectName', {
-      type: 'string',
-      alias: 'n',
-      describe:
-        'Overrides the name of the project. Default: the name field in your package.json',
-    })
-    .option('accountSid', {
-      type: 'string',
-      alias: 'u',
-      describe:
-        'A specific account SID to be used for deployment. Uses fields in .env otherwise',
-    })
-    .option('authToken', {
-      type: 'string',
-      alias: 'p',
-      describe:
-        'Use a specific auth token for deployment. Uses fields from .env otherwise',
-    })
-    .option('env', {
-      type: 'string',
-      describe:
-        'Path to .env file. If none, the local .env in the current working directory is used.',
-    })
-    .option('override-existing-project', {
-      type: 'boolean',
-      describe:
-        'Deploys project to existing service if a naming conflict has been found.',
-      default: false,
-    })
-    .option('force', {
-      type: 'boolean',
-      describe: 'Will run deployment in force mode. Can be dangerous.',
-      default: false,
-    });
+    );
+
+  yargs = Object.keys(cliInfo.options).reduce((yargs, name) => {
+    return yargs.option(name, cliInfo.options[name]);
+  }, yargs);
+
+  return yargs;
 }
 
 module.exports = {
@@ -207,4 +218,5 @@ module.exports = {
   describe: 'Deploys existing functions and assets to Twilio',
   builder: optionBuilder,
   handler,
+  cliInfo,
 };

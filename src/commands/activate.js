@@ -93,54 +93,63 @@ async function handler(flags) {
   }
 }
 
-function optionBuilder(yargs) {
-  return yargs
-    .defaults('types', 'environments,builds')
-    .example(
-      '$0 list services',
-      'Lists all existing services/projects associated with your Twilio Account'
-    )
-    .option('cwd', {
+const cliInfo = {
+  options: {
+    cwd: {
       type: 'string',
       describe:
         'Sets the directory of your existing Functions project. Defaults to current directory',
-    })
-    .option('build-sid', {
+    },
+    'build-sid': {
       type: 'string',
       describe: 'An existing Build SID to deploy to the new environment',
-    })
-    .option('source-environment', {
+    },
+    'source-environment': {
       type: 'string',
       describe:
         'SID or suffix of an existing environment you want to deploy from.',
-    })
-    .option('environment', {
+    },
+    environment: {
       type: 'string',
       describe: 'The environment suffix or SID to deploy to.',
       required: true,
-    })
-    .option('accountSid', {
+    },
+    accountSid: {
       type: 'string',
       alias: 'u',
       describe:
         'A specific account SID to be used for deployment. Uses fields in .env otherwise',
-    })
-    .option('authToken', {
+    },
+    authToken: {
       type: 'string',
       alias: 'p',
       describe:
         'Use a specific auth token for deployment. Uses fields from .env otherwise',
-    })
-    .option('create-environment', {
+    },
+    'create-environment': {
       type: 'boolean',
       describe: "Creates environment if it couldn't find it.",
       default: false,
-    })
-    .option('force', {
+    },
+    force: {
       type: 'boolean',
       describe: 'Will run deployment in force mode. Can be dangerous.',
       default: false,
-    });
+    },
+  },
+};
+
+function optionBuilder(yargs) {
+  yargs = yargs.example(
+    '$0 activate --environment=prod --source-environment=dev  ',
+    'Promotes the same build that is on the "dev" environment to the "prod" environment'
+  );
+
+  yargs = Object.keys(cliInfo.options).reduce((yargs, name) => {
+    return yargs.option(name, cliInfo.options[name]);
+  }, yargs);
+
+  return yargs;
 }
 
 module.exports = {
@@ -148,4 +157,5 @@ module.exports = {
   describe: 'Promotes an existing deployment to a new environment',
   builder: optionBuilder,
   handler,
+  cliInfo,
 };

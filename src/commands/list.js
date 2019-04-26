@@ -14,25 +14,28 @@ const { printListResult } = require('../printers/list');
 async function getConfigFromFlags(flags) {
   const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
 
-  const envPath = path.resolve(cwd, flags.env || '.env');
+  let { accountSid, authToken } = flags;
+  if (!accountSid || !authToken) {
+    const envPath = path.resolve(cwd, flags.env || '.env');
 
-  let contentEnvFile;
-  if (!(await fileExists(envPath))) {
-    contentEnvFile = '';
-  } else {
-    contentEnvFile = await readFile(envPath, 'utf8');
+    let contentEnvFile;
+    if (!(await fileExists(envPath))) {
+      contentEnvFile = '';
+    } else {
+      contentEnvFile = await readFile(envPath, 'utf8');
+    }
+
+    const localEnv = dotenv.parse(contentEnvFile);
+
+    accountSid = flags.accountSid || localEnv.ACCOUNT_SID;
+    authToken = flags.authToken || localEnv.AUTH_TOKEN;
   }
 
-  const localEnv = dotenv.parse(contentEnvFile);
   const serviceSid = await getFunctionServiceSid(cwd);
 
-  const accountSid = flags.accountSid || localEnv.ACCOUNT_SID;
-  const authToken = flags.authToken || localEnv.AUTH_TOKEN;
-
-  const pkgJsonPath = path.join(cwd, 'package.json');
   let projectName = flags.projectName;
-
   if (!projectName) {
+    const pkgJsonPath = path.join(cwd, 'package.json');
     if (!(await fileExists(pkgJsonPath))) {
       throw new Error(
         'Failed to find package.json file or --project-name flag'
@@ -95,34 +98,48 @@ async function handler(flags) {
   }
 }
 
-function optionBuilder(yargs) {
-  return yargs
-    .defaults('types', 'environments,builds')
-    .example(
-      '$0 list services',
-      'Lists all existing services/projects associated with your Twilio Account'
-    )
-    .option('cwd', {
+const cliInfo = {
+  argsDefaults: {
+    types: 'environments,builds',
+  },
+  options: {
+    cwd: {
       type: 'string',
       describe:
         'Sets the directory of your existing Functions project. Defaults to current directory',
-    })
-    .option('environment', {
+    },
+    environment: {
       type: 'string',
       describe: 'The environment to list variables for.',
-    })
-    .option('accountSid', {
+    },
+    accountSid: {
       type: 'string',
       alias: 'u',
       describe:
         'A specific account SID to be used for deployment. Uses fields in .env otherwise',
-    })
-    .option('authToken', {
+    },
+    authToken: {
       type: 'string',
       alias: 'p',
       describe:
         'Use a specific auth token for deployment. Uses fields from .env otherwise',
-    });
+    },
+  },
+};
+
+function optionBuilder(yargs) {
+  yargs = yargs
+    .defaults('types', 'environments,builds')
+    .example(
+      '$0 list services',
+      'Lists all existing services/projects associated with your Twilio Account'
+    );
+
+  yargs = Object.keys(cliInfo.options).reduce((yargs, name) => {
+    return yargs.option(name, cliInfo.options[name]);
+  }, yargs);
+
+  return yargs;
 }
 
 module.exports = {
@@ -131,4 +148,5 @@ module.exports = {
     'List existing services, environments, variables, deployments for your Twilio Serverless Account',
   builder: optionBuilder,
   handler,
+  cliInfo,
 };
