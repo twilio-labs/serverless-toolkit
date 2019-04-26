@@ -79,6 +79,28 @@ function printSection(type, sectionEntries) {
       'date_updated',
     ];
     sectionEntries = sectionEntries.entries;
+  } else if (type === 'functions') {
+    keys = [
+      'account_sid',
+      'service_sid',
+      'function_sid',
+      'sid',
+      'path',
+      'visibility',
+      'date_created',
+    ];
+    sectionEntries = sectionEntries.entries;
+  } else if (type === 'assets') {
+    keys = [
+      'account_sid',
+      'service_sid',
+      'asset_sid',
+      'sid',
+      'path',
+      'visibility',
+      'date_created',
+    ];
+    sectionEntries = sectionEntries.entries;
   }
   return `${keys.join('\t')}\n${sectionEntries
     .map(obj => printObject(obj, keys))
@@ -100,15 +122,38 @@ function printListResultPlain(result) {
   }
 }
 
+function prettyPrintFunctionsOrAssets({ entries, environmentSid }) {
+  const resourceString = entries
+    .map((entry, idx) => {
+      const symbol = idx + 1 === entries.length ? '└──' : '├──';
+      const emoji =
+        entry.visibility === 'public'
+          ? '🌐'
+          : entry.visibility === 'protected'
+          ? '🔒'
+          : '🙈';
+      return stripIndent(chalk`
+    ⎪ ${symbol} ${emoji}   ${entry.path} {dim [Visibility: ${entry.visibility}]}
+    `);
+    })
+    .join('\n');
+
+  return stripIndent(chalk`
+  ⎪ {bold For Environment:} ${environmentSid}\n${resourceString}
+  `);
+}
+
 function prettyPrintVariables(variables) {
   const { entries, environmentSid } = variables;
 
-  const variableString = entries.map((entry, idx) => {
-    const symbol = idx + 1 === entries.length ? '└──' : '├──';
-    return stripIndent(chalk`
+  const variableString = entries
+    .map((entry, idx) => {
+      const symbol = idx + 1 === entries.length ? '└──' : '├──';
+      return stripIndent(chalk`
     ⎪ ${symbol} {bold ${entry.key}:} ${entry.value}
     `);
-  });
+    })
+    .join('\n');
 
   return stripIndent(chalk`
   ⎪ {bold For Environment:} ${environmentSid}\n${variableString}
@@ -159,6 +204,8 @@ function prettyPrintSection(sectionTitle, sectionContent) {
     content = sectionContent.map(prettyPrintServices).join('\n');
   } else if (sectionTitle === 'variables') {
     content = prettyPrintVariables(sectionContent);
+  } else if (sectionTitle === 'functions' || sectionTitle === 'assets') {
+    content = prettyPrintFunctionsOrAssets(sectionContent);
   }
   const output = stripIndent`
     ${sectionHeader}\n${content}
