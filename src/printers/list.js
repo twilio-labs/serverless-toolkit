@@ -1,8 +1,9 @@
-const isCi = require('is-ci');
 const chalk = require('chalk');
 const { stripIndent } = require('common-tags');
 const title = require('title');
 const logSymbols = require('log-symbols');
+
+const { shouldPrettyPrint } = require('./utils');
 
 function formatDate(dateStr) {
   return new Date(dateStr).toString();
@@ -223,7 +224,7 @@ function printListResultTerminal(result) {
 }
 
 function printListResult(result) {
-  if (process.stdout.isTTY && !isCi) {
+  if (shouldPrettyPrint) {
     printListResultTerminal(result);
   } else {
     printListResultPlain(result);

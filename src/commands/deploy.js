@@ -8,6 +8,7 @@ const { stripIndent } = require('common-tags');
 const { TwilioServerlessApiClient } = require('@twilio-labs/serverless-api');
 
 const { fileExists, readFile, writeFile } = require('../utils/fs');
+const { printDeployedResources } = require('../printers/deploy');
 const {
   getFunctionServiceSid,
   saveLatestDeploymentData,
@@ -60,63 +61,6 @@ async function getConfigFromFlags(flags) {
 
 function logError(msg) {
   console.error(chalk`{red.bold ERROR} ${msg}`);
-}
-
-function sortByAccess(resA, resB) {
-  if (resA.access === resB.access) {
-    if (resA.functionPath) {
-      return resA.functionPath.localeCompare(resB.functionPath);
-    } else if (resA.assetPath) {
-      return resA.assetPath.localeCompare(resB.assetPath);
-    }
-  }
-  return resA.access.localeCompare(resB.access);
-}
-
-function printDeployedResources(config, output) {
-  console.log(
-    chalk`
-{bold Deployment Details}
-⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺
-{bold Domain:} ${output.domain}
-{bold Service:}
-   ${config.projectName} {dim (${output.serviceSid})}
-{bold Environment:}
-   ${config.functionsEnv} {dim (${output.environmentSid})} 
-{bold Build SID:}
-   ${output.buildSid}
-  `.trim()
-  );
-  if (output.functionResources) {
-    const functionMessage = output.functionResources
-      .sort(sortByAccess)
-      .map(fn => {
-        const accessPrefix =
-          fn.access !== 'public' ? chalk`{bold [${fn.access}]} ` : '';
-        return chalk`   ${accessPrefix}{dim https://${output.domain}}${
-          fn.functionPath
-        }`;
-      })
-      .join('\n');
-    console.log(chalk.bold('Functions:'));
-    console.log(functionMessage);
-  }
-
-  if (output.assetResources) {
-    const assetMessage = output.assetResources
-      .sort(sortByAccess)
-      .map(fn => {
-        const accessPrefix =
-          fn.access !== 'public' ? chalk`{bold [${fn.access}]} ` : '';
-        return chalk`   ${accessPrefix}{dim https://${output.domain}}${
-          fn.assetPath
-        }`;
-      })
-      .join('\n');
-
-    console.log(chalk.bold('Assets:'));
-    console.log(assetMessage);
-  }
 }
 
 function printConfigInfo(config) {
