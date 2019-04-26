@@ -23,11 +23,11 @@ async function handler(argv) {
     startInspector(config.inspect.hostPort, config.inspect.break);
   }
 
-  const app = createServer(config.port, config);
+  const app = await createServer(config.port, config);
   debug('Start server on port %d', config.port);
   return new Promise(resolve => {
-    app.listen(config.port, () => {
-      const info = getRouteInfo(config);
+    app.listen(config.port, async () => {
+      const info = await getRouteInfo(config);
       console.log(boxen(info, { padding: 1 }));
       resolve(app);
     });
@@ -92,6 +92,11 @@ function optionBuilder(yargs) {
       type: 'string',
       describe:
         'Enables Node.js debugging protocol, stops executioin until debugger is attached',
+    })
+    .option('legacy-mode', {
+      type: 'boolean',
+      describe:
+        'Enables legacy mode, it will prefix your asset paths with /assets',
     });
 }
 

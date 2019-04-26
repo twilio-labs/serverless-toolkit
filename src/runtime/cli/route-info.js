@@ -2,22 +2,21 @@ const { basename } = require('path');
 const chalk = require('chalk');
 const { stripIndent } = require('common-tags');
 const logSymbols = require('log-symbols');
+const { getFunctionsAndAssets } = require('../internal/runtime-paths.js');
 
-function getRouteInfo(config) {
+async function getRouteInfo(config) {
   const { url } = config;
   const info = [];
 
-  const Runtime = require('../internal/runtime').create(config);
-  const functions = Runtime.getFunctions();
-  if (functions === null) {
+  const { functions, assets } = await getFunctionsAndAssets(config.baseDir);
+  if (functions.length === 0) {
     info.push(`
       ${logSymbols.warning} No functions directory found
     `);
   } else {
-    const fnInfo = Object.keys(functions)
-      .map(name => {
-        const fnName = basename(name, '.js');
-        return `=> ${url}/${fnName}`;
+    const fnInfo = functions
+      .map(fn => {
+        return `=> ${url}${fn.functionPath}`;
       })
       .join('\n');
     info.push(chalk`
@@ -26,14 +25,16 @@ function getRouteInfo(config) {
     `);
   }
 
-  const assets = Runtime.getAssets();
-  if (assets === null) {
+  if (assets.length === 0) {
     info.push(`
       ${logSymbols.warning} No assets directory found
     `);
   } else {
-    const assetInfo = Object.keys(assets)
-      .map(asset => `=> ${url}/assets/${asset}`)
+    const assetInfo = assets
+      .map(asset => {
+        const prefix = config.legacyMode ? '/asset' : '';
+        return `=> ${url}${prefix}${asset.assetPath}`;
+      })
       .join('\n');
     info.push(chalk`
       {green Assets available:}

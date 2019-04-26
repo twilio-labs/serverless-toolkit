@@ -1,53 +1,38 @@
 const twilio = require('twilio');
-const { basename, join } = require('path');
-const { readdirSync } = require('fs');
 const debug = require('debug')('twilio-run:runtime');
 
-const { getPaths } = require('./runtime-paths');
-
-function safeReadDirectory(path) {
-  try {
-    debug('Reading directory %s', path);
-    const files = readdirSync(path);
-    return files;
-  } catch (err) {
-    debug('Failed to read directory. %O', err);
-    return null;
-  }
-}
+const { getCachedResources } = require('./route-cache');
 
 function getAssets() {
-  const { ASSETS_PATH } = getPaths();
-
-  const files = safeReadDirectory(ASSETS_PATH);
-  if (files === null) {
-    return files;
+  const { assets } = getCachedResources();
+  if (assets.length === 0) {
+    return {};
   }
 
-  const assets = {};
-  for (const path of files) {
-    const filename = basename(path);
-    assets[filename] = { path: join(ASSETS_PATH, filename) };
+  const result = {};
+  for (const asset of assets) {
+    if (asset.access === 'private') {
+      const prefix =
+        process.env.TWILIO_FUNCTIONS_LEGACY_MODE === 'true' ? '/assets' : '';
+      result[prefix + asset.assetPath] = { path: asset.path };
+    }
   }
-  debug('Found the following assets available: %O', assets);
-  return assets;
+  debug('Found the following assets available: %O', result);
+  return result;
 }
 
 function getFunctions() {
-  const { FUNCTIONS_PATH } = getPaths();
-
-  const files = safeReadDirectory(FUNCTIONS_PATH);
-  if (files === null) {
-    return files;
+  const { functions } = getCachedResources();
+  if (functions.length === 0) {
+    return {};
   }
 
-  const functions = {};
-  for (const path of files) {
-    const filename = basename(path);
-    functions[filename] = { path: join(FUNCTIONS_PATH, filename) };
+  const result = {};
+  for (const fn of functions) {
+    result[fn.functionPath] = { path: fn.path };
   }
-  debug('Found the following functions available: %O', functions);
-  return functions;
+  debug('Found the following functions available: %O', result);
+  return result;
 }
 
 function create({ env }) {

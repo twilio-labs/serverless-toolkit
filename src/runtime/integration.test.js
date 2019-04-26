@@ -7,14 +7,9 @@ const cheerio = require('cheerio');
 const { readdirSync } = require('fs');
 
 const TEST_DIR = resolve(__dirname, '../../fixtures');
+
 const TEST_FUNCTIONS_DIR = resolve(TEST_DIR, 'functions');
 const TEST_ENV = {};
-
-const app = createServer(9000, {
-  baseDir: TEST_DIR,
-  env: TEST_ENV,
-  logs: false,
-});
 
 const availableFunctions = readdirSync(TEST_FUNCTIONS_DIR).map(name => {
   const path = resolve(TEST_FUNCTIONS_DIR, name);
@@ -35,6 +30,16 @@ function responseToSnapshotJson(response) {
 }
 
 describe('Function integration tests', () => {
+  let app;
+
+  beforeAll(async () => {
+    app = await createServer(9000, {
+      baseDir: TEST_DIR,
+      env: TEST_ENV,
+      logs: false,
+    });
+  });
+
   for (const testFnCode of availableFunctions) {
     test(`${testFnCode.name} should match snapshot`, async () => {
       const response = await request(app).get(testFnCode.url);

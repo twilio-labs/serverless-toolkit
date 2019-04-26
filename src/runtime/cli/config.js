@@ -66,7 +66,7 @@ function getInspectInfo(cli) {
   if (typeof cli.flags.inspectBrk !== 'undefined') {
     return {
       hostPort: cli.flags.inspect,
-      break: true
+      break: true,
     };
   } else if (typeof cli.flags.inspect !== 'undefined') {
     return { hostPort: cli.flags.inspect, break: false };
@@ -85,6 +85,7 @@ async function getConfigFromCli(cli) {
   config.detailedLogs = cli.flags.detailedLogs;
   config.live = cli.flags.live;
   config.logs = cli.flags.logs;
+  config.legacyMode = cli.flags.legacyMode;
   config.appName = 'twilio-run';
 
   return config;

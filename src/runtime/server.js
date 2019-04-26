@@ -4,8 +4,9 @@ const path = require('path');
 const debug = require('debug')('twilio-run:server');
 
 const { functionToRoute } = require('./route');
-const { getPaths } = require('./internal/runtime-paths');
+const { getPaths, getFunctionsAndAssets } = require('./internal/runtime-paths');
 const { createLogger } = require('./internal/request-logger');
+const { setRoutes } = require('./internal/route-cache');
 const DEFAULT_PORT = process.env.PORT || 3000;
 
 function requireUncached(module) {
@@ -22,15 +23,15 @@ function loadTwilioFunction(fnPath, config) {
   }
 }
 
-function createServer(port = DEFAULT_PORT, config) {
+async function createServer(port = DEFAULT_PORT, config) {
   config = {
     url: `http://localhost:${port}`,
     baseDir: process.cwd(),
     ...config,
   };
+
   debug('Starting server with config: %o', config);
 
-  const { ASSETS_PATH, FUNCTIONS_PATH } = getPaths(config.baseDir);
   const app = express();
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
@@ -44,18 +45,39 @@ function createServer(port = DEFAULT_PORT, config) {
     app.use(createLogger(config));
   }
 
-  debug('Serving assets from directory "%s"', ASSETS_PATH);
-  app.use('/assets', express.static(ASSETS_PATH));
+  if (config.legacyMode) {
+    process.env.TWILIO_FUNCTIONS_LEGACY_MODE = config.legacyMode;
+    debug('Legacy mode enabled');
+    app.use('/assets/*', (req, res, next) => {
+      req.path = req.path.replace('/assets/', '/');
+      next();
+    });
+  }
+
+  const routes = await getFunctionsAndAssets(config.baseDir);
+  const routeMap = setRoutes(routes);
+
   app.set('port', port);
-  app.all('/:name', (req, res) => {
-    const functionPath = path.resolve(FUNCTIONS_PATH, `${req.params.name}.js`);
-    try {
-      debug('Load & route to function at "%s"', functionPath);
-      const twilioFunction = loadTwilioFunction(functionPath, config);
-      functionToRoute(twilioFunction, config)(req, res);
-    } catch (err) {
-      debug('Failed to retrieve function. %O', err);
-      res.status(404).send(`Could not find function ${functionPath}`);
+  app.all('/*', (req, res) => {
+    if (!routeMap.has(req.path)) {
+      res.status(404).send('Could not find request resource');
+      return;
+    }
+
+    const routeInfo = routeMap.get(req.path);
+
+    if (routeInfo.type === 'function') {
+      const functionPath = routeInfo.path;
+      try {
+        debug('Load & route to function at "%s"', functionPath);
+        const twilioFunction = loadTwilioFunction(functionPath, config);
+        functionToRoute(twilioFunction, config)(req, res);
+      } catch (err) {
+        debug('Failed to retrieve function. %O', err);
+        res.status(404).send(`Could not find function ${functionPath}`);
+      }
+    } else if (routeInfo.type === 'asset') {
+      res.sendFile(routeInfo.path);
     }
   });
   return app;

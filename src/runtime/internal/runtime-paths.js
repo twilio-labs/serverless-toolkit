@@ -1,20 +1,26 @@
-const { resolve } = require('path');
+const { fsHelpers } = require('@twilio-labs/serverless-api');
 
-function getPaths(baseDir) {
-  if (baseDir && !process.env.LOCAL_TWILIO_FUNCTIONS_PATH) {
-    process.env.LOCAL_TWILIO_FUNCTIONS_PATH = baseDir;
-  }
-
-  const ASSETS_PATH = resolve(
-    process.env.LOCAL_TWILIO_FUNCTIONS_PATH,
-    'assets'
+async function getFunctionsAndAssets(baseDir) {
+  let { functions, assets } = await fsHelpers.getListOfFunctionsAndAssets(
+    baseDir
   );
-  const FUNCTIONS_PATH = resolve(
-    process.env.LOCAL_TWILIO_FUNCTIONS_PATH,
-    'functions'
-  );
-
-  return { ASSETS_PATH, FUNCTIONS_PATH };
+  functions = functions.map(fileInfo => {
+    const info = fsHelpers.getPathAndAccessFromFileInfo(fileInfo, '.js');
+    return {
+      ...fileInfo,
+      functionPath: info.path,
+      access: info.access,
+    };
+  });
+  assets = assets.map(fileInfo => {
+    const info = fsHelpers.getPathAndAccessFromFileInfo(fileInfo, '.js');
+    return {
+      ...fileInfo,
+      assetPath: info.path,
+      access: info.access,
+    };
+  });
+  return { functions, assets };
 }
 
-module.exports = { getPaths };
+module.exports = { getFunctionsAndAssets };
