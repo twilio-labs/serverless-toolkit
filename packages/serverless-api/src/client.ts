@@ -55,7 +55,7 @@ function getClient(config: ClientConfig): GotClient {
     json: true,
     auth: `${config.accountSid}:${config.authToken}`,
     headers: {
-      'User-Agent': 'twilio-run',
+      'User-Agent': 'twilio-serverless-api',
     },
   });
   return client;
