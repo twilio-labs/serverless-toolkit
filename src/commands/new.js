@@ -76,9 +76,12 @@ async function getMissingInfo(flags) {
 
 function getBaseDirectoryPath() {
   const currentDir = process.cwd();
+  const baseName = path.basename(currentDir);
   if (
-    path.basename(currentDir) === 'functions' ||
-    path.basename(currentDir) === 'assets'
+    baseName === 'functions' ||
+    baseName === 'assets' ||
+    baseName === 'src' ||
+    baseName === 'static'
   ) {
     return path.resolve(currentDir, '..');
   }

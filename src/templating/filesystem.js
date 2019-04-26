@@ -4,6 +4,7 @@ const chalk = require('chalk');
 const got = require('got');
 const Listr = require('listr');
 const path = require('path');
+const { fsHelpers } = require('@twilio-labs/serverless-api');
 
 const {
   writeFile,
@@ -59,13 +60,14 @@ async function installDependencies(contentUrl, targetDir) {
 }
 
 async function writeFiles(files, targetDir, functionName) {
-  const functionTargetPath = path.join(
-    targetDir,
-    `functions/${functionName}.js`
-  );
+  const functionsDir = fsHelpers.getFirstMatchingDirectory(targetDir, [
+    'functions',
+    'src',
+  ]);
+  const functionTargetPath = path.join(functionsDir, `/${functionName}.js`);
   if (await fileExists(functionTargetPath)) {
     throw new Error(
-      `Function with name "${functionName} already exists in functions/ directory`
+      `Function with name "${functionName} already exists in "${functionsDir}"`
     );
   }
 
