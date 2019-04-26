@@ -12,7 +12,6 @@ const { getFunctionServiceSid } = require('../serverless-api/utils');
 const { printListResult } = require('../printers/list');
 
 async function getConfigFromFlags(flags) {
-  console.log(flags);
   const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
 
   let { accountSid, authToken } = flags;
@@ -53,6 +52,10 @@ async function getConfigFromFlags(flags) {
     serviceSid,
     projectName,
     environment: flags.environment,
+    properties: flags.properties
+      ? flags.properties.split(',').map(x => x.trim())
+      : undefined,
+    extendedOutput: flags.extendedOutput,
   };
 }
 
@@ -92,7 +95,7 @@ async function handler(flags) {
     const client = new TwilioServerlessApiClient(config);
     const types = flags.types.split(',');
     const result = await client.list({ ...config, types });
-    printListResult(result);
+    printListResult(result, config);
   } catch (err) {
     handleError(err);
   }
@@ -103,6 +106,17 @@ const cliInfo = {
     types: 'environments,builds',
   },
   options: {
+    properties: {
+      type: 'string',
+      describe:
+        'Specify the output properties you want to see. Works best on single types',
+      hidden: true,
+    },
+    'extended-output': {
+      type: 'boolean',
+      describe: 'Show an extended set of properties on the output',
+      default: false,
+    },
     cwd: {
       type: 'string',
       describe:
@@ -110,7 +124,7 @@ const cliInfo = {
     },
     environment: {
       type: 'string',
-      describe: 'The environment to list variables for.',
+      describe: 'The environment to list variables for',
     },
     'account-sid': {
       type: 'string',

@@ -41,6 +41,7 @@
     "inquirer": "^6.0.0",
     "is-ci": "^2.0.0",
     "listr": "^0.14.3",
+    "lodash.startcase": "^4.4.0",
     "log-symbols": "^2.2.0",
     "ngrok": "^3.0.1",
     "ora": "^3.3.1",

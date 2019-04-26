@@ -2,124 +2,134 @@ const chalk = require('chalk');
 const { stripIndent } = require('common-tags');
 const title = require('title');
 const logSymbols = require('log-symbols');
+const columnify = require('columnify');
+const startCase = require('lodash.startcase');
 
 const { shouldPrettyPrint } = require('./utils');
+
+const baseKeys = {
+  environments: [
+    'sid',
+    'build_sid',
+    'unique_name',
+    'domain_name',
+    'domain_suffix',
+    'date_updated',
+  ],
+  builds: ['sid', 'status', 'date_updated'],
+  services: ['sid', 'unique_name', 'date_created', 'date_updated'],
+  variables: ['environment_sid', 'key', 'value'],
+  functions: ['path', 'visibility'],
+  assets: ['path', 'visibility'],
+};
+
+const extendedKeys = {
+  environments: [
+    'account_sid',
+    'service_sid',
+    'sid',
+    'build_sid',
+    'unique_name',
+    'domain_name',
+    'domain_suffix',
+    'date_created',
+    'date_updated',
+  ],
+  builds: [
+    'account_sid',
+    'service_sid',
+    'sid',
+    'status',
+    'date_created',
+    'date_updated',
+    'function_versions',
+    'asset_versions',
+    'dependencies',
+  ],
+  services: [
+    'account_sid',
+    'sid',
+    'unique_name',
+    'friendly_name',
+    'date_created',
+    'date_updated',
+  ],
+  variables: [
+    'account_sid',
+    'service_sid',
+    'environment_sid',
+    'sid',
+    'key',
+    'value',
+    'date_created',
+    'date_updated',
+  ],
+  functions: [
+    'account_sid',
+    'service_sid',
+    'function_sid',
+    'sid',
+    'path',
+    'visibility',
+    'date_created',
+  ],
+  assets: [
+    'account_sid',
+    'service_sid',
+    'asset_sid',
+    'sid',
+    'path',
+    'visibility',
+    'date_created',
+  ],
+};
 
 function formatDate(dateStr) {
   return new Date(dateStr).toString();
 }
 
-function printObject(obj, keys) {
-  return keys
-    .map(key => {
-      const val = obj[key];
-      if (Array.isArray(val)) {
-        return val
-          .map(x => {
-            if (x.name) {
-              // we have a dependency
-              return `${x.name}@${x.version}`;
-            } else if (x.function_sid) {
-              return x.function_sid;
-            } else if (x.asset_sid) {
-              return x.asset_sid;
-            }
-          })
-          .join(',');
-      }
-      return val;
-    })
-    .filter(Boolean)
-    .join('\t');
+const headingTransform = name => {
+  return chalk.cyan.bold(startCase(name).replace(/Sid$/g, 'SID'));
+};
+
+function printRows(rows, keys) {
+  return columnify(rows, { columns: keys, headingTransform });
 }
 
-function printSection(type, sectionEntries) {
-  let keys = [];
-  if (type === 'environments') {
-    keys = [
-      'account_sid',
-      'service_sid',
-      'sid',
-      'build_sid',
-      'unique_name',
-      'domain_name',
-      'domain_suffix',
-      'date_created',
-      'date_updated',
-    ];
-  } else if (type === 'builds') {
-    keys = [
-      'account_sid',
-      'service_sid',
-      'sid',
-      'status',
-      'date_created',
-      'date_updated',
-      'function_versions',
-      'asset_versions',
-      'dependencies',
-    ];
-  } else if (type === 'services') {
-    keys = [
-      'account_sid',
-      'sid',
-      'unique_name',
-      'friendly_name',
-      'date_created',
-      'date_updated',
-    ];
-  } else if (type === 'variables') {
-    keys = [
-      'account_sid',
-      'service_sid',
-      'environment_sid',
-      'sid',
-      'key',
-      'value',
-      'date_created',
-      'date_updated',
-    ];
-    sectionEntries = sectionEntries.entries;
-  } else if (type === 'functions') {
-    keys = [
-      'account_sid',
-      'service_sid',
-      'function_sid',
-      'sid',
-      'path',
-      'visibility',
-      'date_created',
-    ];
-    sectionEntries = sectionEntries.entries;
-  } else if (type === 'assets') {
-    keys = [
-      'account_sid',
-      'service_sid',
-      'asset_sid',
-      'sid',
-      'path',
-      'visibility',
-      'date_created',
-    ];
+function getKeys(type, config) {
+  let keys = config.properties || [];
+
+  if (config.extendedOutput) {
+    keys = extendedKeys[type];
+  } else if (!config.properties) {
+    keys = baseKeys[type];
+  }
+
+  return keys;
+}
+
+function printSection(type, sectionEntries, config) {
+  let keys = getKeys(type, config);
+
+  if (type === 'functions' || type === 'assets' || type === 'variables') {
     sectionEntries = sectionEntries.entries;
   }
-  return `${keys.join('\t')}\n${sectionEntries
-    .map(obj => printObject(obj, keys))
-    .join('\n')}`;
+
+  return printRows(sectionEntries, keys);
 }
 
-function printListResultPlain(result) {
+function printListResultPlain(result, config) {
   const types = Object.keys(result);
 
   if (types.length === 1) {
-    console.log(printSection(types[0], result[types[0]]));
+    console.log(printSection(types[0], result[types[0]], config));
     return;
   }
 
   for (const type of types) {
     const section = result[type];
-    const output = printSection(type, section);
-    console.log(type + '\n' + output + '\n');
+    const output = printSection(type, section, config);
+    console.log(startCase(type) + '\n' + output + '\n');
   }
 }
 
@@ -214,7 +224,7 @@ function prettyPrintSection(sectionTitle, sectionContent) {
   return output;
 }
 
-function printListResultTerminal(result) {
+function printListResultTerminal(result, config) {
   const sections = Object.keys(result);
   const output = sections
     .map(section => prettyPrintSection(section, result[section]))
@@ -223,11 +233,11 @@ function printListResultTerminal(result) {
   console.log(output);
 }
 
-function printListResult(result) {
-  if (shouldPrettyPrint) {
-    printListResultTerminal(result);
+function printListResult(result, config) {
+  if (shouldPrettyPrint && !config.properties && !config.extendedOutput) {
+    printListResultTerminal(result, config);
   } else {
-    printListResultPlain(result);
+    printListResultPlain(result, config);
   }
 }
 
