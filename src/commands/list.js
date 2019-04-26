@@ -36,14 +36,11 @@ async function getConfigFromFlags(flags) {
   let projectName = flags.projectName;
   if (!projectName) {
     const pkgJsonPath = path.join(cwd, 'package.json');
-    if (!(await fileExists(pkgJsonPath))) {
-      throw new Error(
-        'Failed to find package.json file or --project-name flag'
-      );
+    if (await fileExists(pkgJsonPath)) {
+      const pkgContent = await readFile(pkgJsonPath, 'utf8');
+      const pkgJson = JSON.parse(pkgContent);
+      projectName = pkgJson.name;
     }
-    const pkgContent = await readFile(pkgJsonPath, 'utf8');
-    const pkgJson = JSON.parse(pkgContent);
-    projectName = pkgJson.name;
   }
 
   return {
