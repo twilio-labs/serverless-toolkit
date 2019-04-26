@@ -162,21 +162,20 @@ const cliInfo = {
       describe: 'The environment name you want to use',
       default: 'dev',
     },
-    projectName: {
+    'project-name': {
       type: 'string',
       alias: 'n',
       describe:
         'Overrides the name of the project. Default: the name field in your package.json',
     },
-    accountSid: {
+    'account-sid': {
       type: 'string',
       alias: 'u',
       describe:
         'A specific account SID to be used for deployment. Uses fields in .env otherwise',
     },
-    authToken: {
+    'auth-token': {
       type: 'string',
-      alias: 'p',
       describe:
         'Use a specific auth token for deployment. Uses fields from .env otherwise',
     },
