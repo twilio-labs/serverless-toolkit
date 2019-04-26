@@ -47,8 +47,26 @@ export interface VersionResource extends ResourceBase {
 
 export type BuildStatus = 'building' | 'completed' | 'failed';
 
+export interface VersionOnBuild extends ResourceBase {
+  path: string;
+  visibility: 'public' | 'protected' | 'private';
+  date_created: string;
+  service_sid: string;
+  account_sid: string;
+}
+
+export interface FunctionVersion extends VersionOnBuild {
+  function_sid: string;
+}
+
+export interface AssetVersion extends VersionOnBuild {
+  asset_sid: string;
+}
+
 export interface BuildResource extends ResourceBase {
   status: BuildStatus;
+  function_versions: FunctionVersion[];
+  asset_versions: AssetVersion[];
 }
 
 export interface BuildList {

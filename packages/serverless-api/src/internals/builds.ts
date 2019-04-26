@@ -10,6 +10,15 @@ import events = require('events');
 
 const log = debug('twilio-serverless-api:builds');
 
+export async function getBuild(
+  buildSid: string,
+  serviceSid: string,
+  client: GotClient
+): Promise<BuildResource> {
+  const resp = await client.get(`/Services/${serviceSid}/Builds/${buildSid}`);
+  return (resp.body as unknown) as BuildResource;
+}
+
 async function getBuildStatus(
   buildSid: string,
   serviceSid: string,

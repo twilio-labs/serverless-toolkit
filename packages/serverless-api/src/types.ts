@@ -1,7 +1,9 @@
 import { PackageJson } from 'type-fest';
 import {
+  AssetVersion,
   BuildResource,
   EnvironmentResource,
+  FunctionVersion,
   ServiceResource,
   Sid,
   VariableResource,
@@ -64,11 +66,11 @@ export type ListResult = {
   };
   functions?: {
     environmentSid: string;
-    entries: FunctionResource[];
+    entries: FunctionVersion[];
   };
   assets?: {
     environmentSid: string;
-    entries: AssetResource[];
+    entries: AssetVersion[];
   };
 };
 
