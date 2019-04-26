@@ -23,7 +23,12 @@ class FunctionsActivate extends TwilioClientCommand {
     let { flags, args } = this.parse(FunctionsActivate);
     flags = normalizeFlags(flags);
 
-    if (flags.project) {
+    if (flags.project === 'default') {
+      flags._cliDefault = {
+        username: this.twilioClient.username,
+        password: this.twilioClient.password,
+      };
+    } else {
       flags.accountSid = flags.accountSid || this.twilioClient.username;
       flags.authToken = flags.authToken || this.twilioClient.password;
     }

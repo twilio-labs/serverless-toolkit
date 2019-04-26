@@ -20,8 +20,15 @@ class FunctionsList extends TwilioClientCommand {
     let { flags, args } = this.parse(FunctionsList);
     flags = normalizeFlags(flags);
 
-    flags.accountSid = flags.accountSid || this.twilioClient.username;
-    flags.authToken = flags.authToken || this.twilioClient.password;
+    if (flags.project === 'default') {
+      flags._cliDefault = {
+        username: this.twilioClient.username,
+        password: this.twilioClient.password,
+      };
+    } else {
+      flags.accountSid = flags.accountSid || this.twilioClient.username;
+      flags.authToken = flags.authToken || this.twilioClient.password;
+    }
 
     const opts = Object.assign({}, flags, args);
     return handler(opts);
