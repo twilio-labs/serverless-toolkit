@@ -86,10 +86,10 @@ export async function getDirContent(
   ) as FileInfo[];
 }
 
-export async function getFirstMatchingDirectory(
+export function getFirstMatchingDirectory(
   basePath: string,
   directories: string[]
-): Promise<string> {
+): string {
   for (let dir of directories) {
     const fullPath = path.join(basePath, dir);
 
@@ -106,4 +106,26 @@ export async function getFirstMatchingDirectory(
   throw new Error(
     `Could not find any of these directories "${directories.join('", "')}"`
   );
+}
+
+export async function getListOfFunctionsAndAssets(cwd: string) {
+  let functionsDir;
+  try {
+    functionsDir = getFirstMatchingDirectory(cwd, ['functions', 'src']);
+  } catch (err) {
+    functionsDir = undefined;
+  }
+
+  let assetsDir;
+  try {
+    assetsDir = getFirstMatchingDirectory(cwd, ['assets', 'static']);
+  } catch (err) {
+    assetsDir = undefined;
+  }
+
+  const functions = functionsDir
+    ? await getDirContent(functionsDir, '.js')
+    : [];
+  const assets = assetsDir ? await getDirContent(assetsDir) : [];
+  return { functions, assets };
 }
