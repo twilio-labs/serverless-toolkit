@@ -72,6 +72,21 @@ export type ListResult = {
   };
 };
 
+export type ActivateConfig = ClientConfig & {
+  force?: boolean;
+  createEnvironment?: boolean;
+  serviceSid: Sid;
+  buildSid?: Sid;
+  targetEnvironment: string | Sid;
+  sourceEnvironment?: string | Sid;
+};
+
+export type ActivateResult = {
+  serviceSid: Sid;
+  buildSid: Sid;
+  environmentSid: Sid;
+};
+
 export type GotClient = typeof got;
 
 export type RawFunctionWithPath = FileInfo & {
