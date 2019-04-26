@@ -5,6 +5,7 @@ import { DeployStatus } from './consts';
 import { getOrCreateAssetResources, uploadAsset } from './internals/assets';
 import {
   activateBuild,
+  getBuild,
   listBuilds,
   triggerBuild,
   waitForSuccessfulBuild,
@@ -31,6 +32,7 @@ import {
   listVariablesForEnvironment,
   setEnvironmentVariables,
 } from './internals/variables';
+import { BuildResource } from './serverless-api-types';
 import {
   ActivateConfig,
   ActivateResult,
@@ -116,6 +118,8 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
 
     const result: ListResult = {};
 
+    let currentBuildSidForEnv: string | undefined;
+    let currentBuild: BuildResource | undefined;
     for (const type of types) {
       try {
         if (type === 'environments') {
@@ -134,6 +138,36 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
               this.client
             );
             environmentSid = environment.sid;
+            currentBuildSidForEnv = environment.build_sid;
+          } else if (!currentBuildSidForEnv) {
+            const environment = await getEnvironment(
+              environmentSid,
+              serviceSid,
+              this.client
+            );
+            currentBuildSidForEnv = environment.build_sid;
+          }
+
+          if (type === 'functions' || type === 'assets') {
+            if (!currentBuild) {
+              currentBuild = await getBuild(
+                currentBuildSidForEnv,
+                serviceSid,
+                this.client
+              );
+            }
+
+            if (type === 'functions') {
+              result.functions = {
+                environmentSid,
+                entries: currentBuild.function_versions,
+              };
+            } else if (type === 'assets') {
+              result.assets = {
+                environmentSid,
+                entries: currentBuild.asset_versions,
+              };
+            }
           }
 
           if (type === 'variables') {
