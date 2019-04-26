@@ -2,7 +2,7 @@ const path = require('path');
 const chalk = require('chalk');
 const dotenv = require('dotenv');
 const ora = require('ora');
-const log = require('debug')('twilio-run:list');
+const log = require('debug')('twilio-run:activate');
 const { stripIndent } = require('common-tags');
 
 const { TwilioServerlessApiClient } = require('@twilio-labs/serverless-api');
@@ -30,26 +30,17 @@ async function getConfigFromFlags(flags) {
   const authToken = flags.authToken || localEnv.AUTH_TOKEN;
 
   const pkgJsonPath = path.join(cwd, 'package.json');
-  let projectName = flags.projectName;
-
-  if (!projectName) {
-    if (!(await fileExists(pkgJsonPath))) {
-      throw new Error(
-        'Failed to find package.json file or --project-name flag'
-      );
-    }
-    const pkgContent = await readFile(pkgJsonPath, 'utf8');
-    const pkgJson = JSON.parse(pkgContent);
-    projectName = pkgJson.name;
-  }
 
   return {
     cwd,
     accountSid,
     authToken,
     serviceSid,
-    projectName,
-    environment: flags.environment,
+    force: flags.force,
+    createEnvironment: flags.createEnvironment,
+    buildSid: flags.buildSid,
+    targetEnvironment: flags.environment,
+    sourceEnvironment: flags.sourceEnvironment,
   };
 }
 
@@ -57,9 +48,9 @@ function logError(msg) {
   console.error(chalk`{red.bold ERROR} ${msg}`);
 }
 
-function handleError(err) {
+function handleError(err, spinner) {
   log('%O', err);
-  logError(err);
+  spinner.fail(err.message);
   process.exit(1);
 }
 
@@ -87,9 +78,16 @@ async function handler(flags) {
 
   try {
     const client = new TwilioServerlessApiClient(config);
-    const types = flags.types.split(',');
-    const result = await client.list({ ...config, types });
-    printListResult(result);
+    const details = config.buildSid
+      ? `(${config.buildSid})`
+      : `from ${config.sourceEnvironment}`;
+    const spinner = ora(
+      `Activating build ${details} to ${config.targetEnvironment}`
+    ).start();
+    const result = await client.activateBuild(config);
+    spinner.succeed(
+      `Activated new build ${details} on ${config.targetEnvironment}`
+    );
   } catch (err) {
     handleError(err);
   }
@@ -107,9 +105,19 @@ function optionBuilder(yargs) {
       describe:
         'Sets the directory of your existing Functions project. Defaults to current directory',
     })
+    .option('build-sid', {
+      type: 'string',
+      describe: 'An existing Build SID to deploy to the new environment',
+    })
+    .option('source-environment', {
+      type: 'string',
+      describe:
+        'SID or suffix of an existing environment you want to deploy from.',
+    })
     .option('environment', {
       type: 'string',
-      describe: 'The environment to list variables for.',
+      describe: 'The environment suffix or SID to deploy to.',
+      required: true,
     })
     .option('accountSid', {
       type: 'string',
@@ -122,13 +130,22 @@ function optionBuilder(yargs) {
       alias: 'p',
       describe:
         'Use a specific auth token for deployment. Uses fields from .env otherwise',
+    })
+    .option('create-environment', {
+      type: 'boolean',
+      describe: "Creates environment if it couldn't find it.",
+      default: false,
+    })
+    .option('force', {
+      type: 'boolean',
+      describe: 'Will run deployment in force mode. Can be dangerous.',
+      default: false,
     });
 }
 
 module.exports = {
-  command: ['list [types]', 'ls [types]'],
-  describe:
-    'List existing services, environments, variables, deployments for your Twilio Serverless Account',
+  command: ['activate', 'promote'],
+  describe: 'Promotes an existing deployment to a new environment',
   builder: optionBuilder,
   handler,
 };
