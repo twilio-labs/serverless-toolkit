@@ -7,7 +7,7 @@ const { stripIndent } = require('common-tags');
 
 const { TwilioServerlessApiClient } = require('@twilio-labs/serverless-api');
 
-const { fileExists, readFile, writeFile } = require('../utils/fs');
+const { fileExists, readFile } = require('../utils/fs');
 const { printDeployedResources } = require('../printers/deploy');
 const {
   getFunctionServiceSid,
@@ -26,8 +26,10 @@ async function getConfigFromFlags(flags) {
     const contentEnvFile = await readFile(envPath, 'utf8');
     const localEnv = dotenv.parse(contentEnvFile);
 
-    accountSid = flags.accountSid || localEnv.ACCOUNT_SID;
-    authToken = flags.authToken || localEnv.AUTH_TOKEN;
+    accountSid =
+      flags.accountSid || localEnv.ACCOUNT_SID || flags._cliDefault.username;
+    authToken =
+      flags.authToken || localEnv.AUTH_TOKEN || flags._cliDefault.password;
   } else if (flags.env) {
     throw new Error(`Failed to find .env file at "${envPath}"`);
   }

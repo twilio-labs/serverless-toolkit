@@ -12,6 +12,7 @@ const { getFunctionServiceSid } = require('../serverless-api/utils');
 const { printListResult } = require('../printers/list');
 
 async function getConfigFromFlags(flags) {
+  console.log(flags);
   const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
 
   let { accountSid, authToken } = flags;
@@ -27,8 +28,10 @@ async function getConfigFromFlags(flags) {
 
     const localEnv = dotenv.parse(contentEnvFile);
 
-    accountSid = flags.accountSid || localEnv.ACCOUNT_SID;
-    authToken = flags.authToken || localEnv.AUTH_TOKEN;
+    accountSid =
+      flags.accountSid || localEnv.ACCOUNT_SID || flags._cliDefault.username;
+    authToken =
+      flags.authToken || localEnv.AUTH_TOKEN || flags._cliDefault.password;
   }
 
   const serviceSid = await getFunctionServiceSid(cwd);
@@ -109,15 +112,14 @@ const cliInfo = {
       type: 'string',
       describe: 'The environment to list variables for.',
     },
-    accountSid: {
+    'account-sid': {
       type: 'string',
       alias: 'u',
       describe:
         'A specific account SID to be used for deployment. Uses fields in .env otherwise',
     },
-    authToken: {
+    'auth-token': {
       type: 'string',
-      alias: 'p',
       describe:
         'Use a specific auth token for deployment. Uses fields from .env otherwise',
     },

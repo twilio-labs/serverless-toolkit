@@ -25,8 +25,10 @@ async function getConfigFromFlags(flags) {
     }
 
     const localEnv = dotenv.parse(contentEnvFile);
-    accountSid = flags.accountSid || localEnv.ACCOUNT_SID;
-    authToken = flags.authToken || localEnv.AUTH_TOKEN;
+    accountSid =
+      flags.accountSid || localEnv.ACCOUNT_SID || flags._cliDefault.username;
+    authToken =
+      flags.authToken || localEnv.AUTH_TOKEN || flags._cliDefault.password;
   }
 
   const serviceSid = await getFunctionServiceSid(cwd);
@@ -114,15 +116,14 @@ const cliInfo = {
       describe: 'The environment suffix or SID to deploy to.',
       required: true,
     },
-    accountSid: {
+    'account-sid': {
       type: 'string',
       alias: 'u',
       describe:
         'A specific account SID to be used for deployment. Uses fields in .env otherwise',
     },
-    authToken: {
+    'auth-token': {
       type: 'string',
-      alias: 'p',
       describe:
         'Use a specific auth token for deployment. Uses fields from .env otherwise',
     },
