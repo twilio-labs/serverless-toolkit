@@ -1,0 +1,39 @@
+const { Command } = require('@oclif/command');
+
+const { handler, cliInfo, describe } = require('twilio-run/src/commands/start');
+const {
+  convertYargsOptionsToOclifFlags,
+  normalizeFlags,
+} = require('../../utils');
+
+class FunctionsStart extends Command {
+  constructor(argv, config, secureStorage) {
+    super(argv, config, secureStorage);
+
+    this.showHeaders = true;
+  }
+
+  async run() {
+    let { flags, args } = this.parse(FunctionsStart);
+    flags = normalizeFlags(flags);
+
+    const opts = Object.assign({}, flags, args);
+    return handler(opts);
+  }
+}
+
+FunctionsStart.description = describe;
+
+FunctionsStart.args = [
+  {
+    name: 'dir',
+    required: false,
+    description: 'Root directory to serve local Functions/Assets from',
+  },
+];
+
+FunctionsStart.flags = Object.assign(
+  convertYargsOptionsToOclifFlags(cliInfo.options)
+);
+
+module.exports = FunctionsStart;
