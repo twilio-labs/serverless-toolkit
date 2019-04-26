@@ -1,5 +1,9 @@
 import debug from 'debug';
-import { EnvironmentList, EnvironmentResource } from '../serverless-api-types';
+import {
+  EnvironmentList,
+  EnvironmentResource,
+  Sid,
+} from '../serverless-api-types';
 import { GotClient } from '../types';
 
 const log = debug('twilio-serverless-api:environments');
@@ -8,7 +12,22 @@ function getUniqueNameFromSuffix(suffix: string): string {
   return suffix + '-environment';
 }
 
-async function createEnvironmentFromSuffix(
+export function isEnvironmentSid(str: string) {
+  return str.startsWith('ZE') && str.length === 34;
+}
+
+export async function getEnvironment(
+  environmentSid: Sid,
+  serviceSid: Sid,
+  client: GotClient
+): Promise<EnvironmentResource> {
+  const resp = await client.get(
+    `/Services/${serviceSid}/Environments/${environmentSid}`
+  );
+  return (resp.body as unknown) as EnvironmentResource;
+}
+
+export async function createEnvironmentFromSuffix(
   envSuffix: string,
   serviceSid: string,
   client: GotClient

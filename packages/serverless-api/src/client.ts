@@ -11,8 +11,11 @@ import {
 } from './internals/builds';
 import { getDependencies } from './internals/dependencies';
 import {
+  createEnvironmentFromSuffix,
   createEnvironmentIfNotExists,
+  getEnvironment,
   getEnvironmnetFromSuffix,
+  isEnvironmentSid,
   listEnvironments,
 } from './internals/environments';
 import {
@@ -29,6 +32,8 @@ import {
   setEnvironmentVariables,
 } from './internals/variables';
 import {
+  ActivateConfig,
+  ActivateResult,
   ClientConfig,
   DeployLocalProjectConfig,
   DeployProjectConfig,
@@ -122,10 +127,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
         }
 
         if (typeof environmentSid === 'string') {
-          if (
-            !environmentSid.startsWith('ZE') ||
-            environmentSid.length !== 34
-          ) {
+          if (!isEnvironmentSid(environmentSid)) {
             const environment = await getEnvironmnetFromSuffix(
               environmentSid,
               serviceSid,
@@ -151,6 +153,74 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
     }
 
     return result;
+  }
+
+  async activateBuild(activateConfig: ActivateConfig): Promise<ActivateResult> {
+    let {
+      buildSid,
+      targetEnvironment,
+      serviceSid,
+      sourceEnvironment,
+    } = activateConfig;
+
+    if (!buildSid && !sourceEnvironment) {
+      const error = new Error(
+        'You need to specify either a build SID or source environment to activate'
+      );
+      error.name = 'activate-missing-source';
+      throw error;
+    }
+
+    if (!isEnvironmentSid(targetEnvironment)) {
+      try {
+        const environment = await getEnvironmnetFromSuffix(
+          targetEnvironment,
+          serviceSid,
+          this.client
+        );
+        targetEnvironment = environment.sid;
+      } catch (err) {
+        if (activateConfig.force || activateConfig.createEnvironment) {
+          const environment = await createEnvironmentFromSuffix(
+            targetEnvironment,
+            serviceSid,
+            this.client
+          );
+          targetEnvironment = environment.sid;
+        }
+        throw err;
+      }
+    }
+
+    if (!buildSid && sourceEnvironment) {
+      let currentEnv;
+      if (!isEnvironmentSid(sourceEnvironment)) {
+        currentEnv = await getEnvironmnetFromSuffix(
+          sourceEnvironment,
+          serviceSid,
+          this.client
+        );
+      } else {
+        currentEnv = await getEnvironment(
+          sourceEnvironment,
+          serviceSid,
+          this.client
+        );
+      }
+      buildSid = currentEnv.build_sid;
+    }
+
+    if (!buildSid) {
+      throw new Error('Could not determine build SID');
+    }
+
+    await activateBuild(buildSid, targetEnvironment, serviceSid, this.client);
+
+    return {
+      serviceSid,
+      buildSid,
+      environmentSid: targetEnvironment,
+    };
   }
 
   async deployProject(
