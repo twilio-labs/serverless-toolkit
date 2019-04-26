@@ -1,3 +1,6 @@
+import * as fs from './utils/fs';
+
+export const fsHelpers = fs;
 export {
   activateBuild,
   triggerBuild,

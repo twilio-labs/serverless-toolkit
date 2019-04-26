@@ -44,7 +44,7 @@ import {
   ListConfig,
   ListResult,
 } from './types';
-import { getDirContent, getFirstMatchingDirectory } from './utils/fs';
+import { getListOfFunctionsAndAssets } from './utils/fs';
 
 const log = debug('twilio-serverless-api:client');
 
@@ -59,18 +59,6 @@ function getClient(config: ClientConfig): GotClient {
     },
   });
   return client;
-}
-
-async function getListOfFunctionsAndAssets(cwd: string) {
-  const functionsDir = await getFirstMatchingDirectory(cwd, [
-    'functions',
-    'src',
-  ]);
-  const assetsDir = await getFirstMatchingDirectory(cwd, ['assets', 'static']);
-
-  const functions = await getDirContent(functionsDir, '.js');
-  const assets = await getDirContent(assetsDir);
-  return { functions, assets };
 }
 
 export class TwilioServerlessApiClient extends events.EventEmitter {
