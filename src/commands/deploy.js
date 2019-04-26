@@ -17,20 +17,24 @@ const {
 async function getConfigFromFlags(flags) {
   const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
 
-  const envPath = path.resolve(cwd, flags.env || '.env');
-  const pkgJsonPath = path.join(cwd, 'package.json');
+  let { accountSid, authToken } = flags;
+  let localEnv = {};
 
-  if (!(await fileExists(envPath))) {
-    throw new Error('Failed to find .env file');
+  const envPath = path.resolve(cwd, flags.env || '.env');
+
+  if (await fileExists(envPath)) {
+    const contentEnvFile = await readFile(envPath, 'utf8');
+    const localEnv = dotenv.parse(contentEnvFile);
+
+    accountSid = flags.accountSid || localEnv.ACCOUNT_SID;
+    authToken = flags.authToken || localEnv.AUTH_TOKEN;
+  } else if (flags.env) {
+    throw new Error(`Failed to find .env file at "${envPath}"`);
   }
 
-  const contentEnvFile = await readFile(envPath, 'utf8');
-  const localEnv = dotenv.parse(contentEnvFile);
   const serviceSid = await getFunctionServiceSid(cwd);
 
-  const accountSid = flags.accountSid || localEnv.ACCOUNT_SID;
-  const authToken = flags.authToken || localEnv.AUTH_TOKEN;
-
+  const pkgJsonPath = path.join(cwd, 'package.json');
   if (!(await fileExists(pkgJsonPath))) {
     throw new Error('Failed to find package.json file');
   }

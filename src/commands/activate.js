@@ -13,23 +13,23 @@ const { printListResult } = require('../printers/list');
 
 async function getConfigFromFlags(flags) {
   const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
+  let { accountSid, authToken } = flags;
 
-  const envPath = path.resolve(cwd, flags.env || '.env');
+  if (!accountSid || !authToken) {
+    const envPath = path.resolve(cwd, flags.env || '.env');
+    let contentEnvFile;
+    if (!(await fileExists(envPath))) {
+      contentEnvFile = '';
+    } else {
+      contentEnvFile = await readFile(envPath, 'utf8');
+    }
 
-  let contentEnvFile;
-  if (!(await fileExists(envPath))) {
-    contentEnvFile = '';
-  } else {
-    contentEnvFile = await readFile(envPath, 'utf8');
+    const localEnv = dotenv.parse(contentEnvFile);
+    accountSid = flags.accountSid || localEnv.ACCOUNT_SID;
+    authToken = flags.authToken || localEnv.AUTH_TOKEN;
   }
 
-  const localEnv = dotenv.parse(contentEnvFile);
   const serviceSid = await getFunctionServiceSid(cwd);
-
-  const accountSid = flags.accountSid || localEnv.ACCOUNT_SID;
-  const authToken = flags.authToken || localEnv.AUTH_TOKEN;
-
-  const pkgJsonPath = path.join(cwd, 'package.json');
 
   return {
     cwd,
