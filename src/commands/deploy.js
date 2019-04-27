@@ -8,7 +8,10 @@ const { stripIndent } = require('common-tags');
 const { TwilioServerlessApiClient } = require('@twilio-labs/serverless-api');
 
 const { fileExists, readFile } = require('../utils/fs');
-const { printDeployedResources } = require('../printers/deploy');
+const {
+  printDeployedResources,
+  printConfigInfo,
+} = require('../printers/deploy');
 const {
   getFunctionServiceSid,
   saveLatestDeploymentData,
@@ -67,27 +70,6 @@ async function getConfigFromFlags(flags) {
 
 function logError(msg) {
   console.error(chalk`{red.bold ERROR} ${msg}`);
-}
-
-function printConfigInfo(config) {
-  let dependencyString = '';
-  if (config.pkgJson && config.pkgJson.dependencies) {
-    dependencyString = Object.keys(config.pkgJson.dependencies).join(', ');
-  }
-
-  console.log(
-    // @ts-ignore
-    chalk`
-Deploying functions & assets to Twilio Serverless
-
-{bold Account}\t\t${config.accountSid}
-{bold Project Name}\t${config.projectName}
-{bold Environment}\t${config.functionsEnv}
-{bold Root Directory}\t${config.cwd}
-{bold Dependencies}\t${dependencyString}
-{bold Env Variables}\t${Object.keys(config.env).join(', ')}
-`
-  );
 }
 
 function handleError(err, spinner, flags) {

@@ -1,4 +1,10 @@
 const isCi = require('is-ci');
+const columnify = require('columnify');
+
 const shouldPrettyPrint = process.stdout.isTTY && !isCi;
 
-module.exports = { shouldPrettyPrint };
+function printObjectWithoutHeaders(obj) {
+  return columnify(obj, { showHeaders: false });
+}
+
+module.exports = { shouldPrettyPrint, printObjectWithoutHeaders };

@@ -1,7 +1,8 @@
 const chalk = require('chalk');
 const { stripIndent } = require('common-tags');
 const columnify = require('columnify');
-const { shouldPrettyPrint } = require('./utils');
+const camelCase = require('lodash.camelcase');
+const { shouldPrettyPrint, printObjectWithoutHeaders } = require('./utils');
 
 function sortByAccess(resA, resB) {
   if (resA.access === resB.access) {
@@ -39,21 +40,66 @@ function plainPrintDeployedResources(config, result) {
 
   const data = {
     domain: result.domain,
-    project_name: config.projectName,
-    service_sid: result.serviceSid,
-    environment_suffix: config.functionsEnv,
-    environment_sid: config.ennvironmentSid,
-    build_sid: result.buildSid,
+    projectName: config.projectName,
+    serviceSid: result.serviceSid,
+    environmentSuffix: config.functionsEnv,
+    environmentSid: config.ennvironmentSid,
+    buildSid: result.buildSid,
   };
 
   const output = `
-${columnify(data, { showHeaders: false })}
+deploymentInfo\n${printObjectWithoutHeaders(data)}
 
 functions\n${functionsOutput}
 
 assets\n${assetsOutput}
   `;
   console.log(stripIndent(output));
+}
+
+function prettyPrintConfigInfo(config) {
+  let dependencyString = '';
+  if (config.pkgJson && config.pkgJson.dependencies) {
+    dependencyString = Object.keys(config.pkgJson.dependencies).join(', ');
+  }
+
+  console.log(
+    // @ts-ignore
+    chalk`
+Deploying functions & assets to Twilio Serverless
+
+{bold Account}\t\t${config.accountSid}
+{bold Project Name}\t${config.projectName}
+{bold Environment}\t${config.functionsEnv}
+{bold Root Directory}\t${config.cwd}
+{bold Dependencies}\t${dependencyString}
+{bold Env Variables}\t${Object.keys(config.env).join(', ')}
+`
+  );
+}
+
+function plainPrintConfigInfo(config) {
+  let dependencyString = '';
+  if (config.pkgJson && config.pkgJson.dependencies) {
+    dependencyString = Object.keys(config.pkgJson.dependencies).join(',');
+  }
+  const printObj = {
+    account: config.accountSid,
+    projectName: config.projectName,
+    environment: config.functionsEnv,
+    rootDirectory: config.cwd,
+    dependencies: dependencyString,
+    environmentVariables: Object.keys(config.env).join(','),
+  };
+  console.log(`configInfo\n${printObjectWithoutHeaders(printObj)}\n`);
+}
+
+function printConfigInfo(config) {
+  if (shouldPrettyPrint) {
+    prettyPrintConfigInfo(config);
+  } else {
+    plainPrintConfigInfo(config);
+  }
 }
 
 function prettyPrintDeployedResources(config, result) {
@@ -110,4 +156,4 @@ function printDeployedResources(config, result) {
   }
 }
 
-module.exports = { printDeployedResources };
+module.exports = { printDeployedResources, printConfigInfo };
