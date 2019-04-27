@@ -68,12 +68,12 @@ function prettyPrintConfigInfo(config) {
     chalk`
 Deploying functions & assets to Twilio Serverless
 
-{bold Account}\t\t${config.accountSid}
-{bold Project Name}\t${config.projectName}
-{bold Environment}\t${config.functionsEnv}
-{bold Root Directory}\t${config.cwd}
-{bold Dependencies}\t${dependencyString}
-{bold Env Variables}\t${Object.keys(config.env).join(', ')}
+{bold.cyan Account}\t\t${config.accountSid}
+{bold.cyan Project Name}\t${config.projectName}
+{bold.cyan Environment}\t${config.functionsEnv}
+{bold.cyan Root Directory}\t${config.cwd}
+{bold.cyan Dependencies}\t${dependencyString}
+{bold.cyan Env Variables}\t${Object.keys(config.env).join(', ')}
 `
   );
 }
@@ -105,14 +105,14 @@ function printConfigInfo(config) {
 function prettyPrintDeployedResources(config, result) {
   console.log(
     chalk`
-{bold Deployment Details}
+{bold.cyan Deployment Details}
 ⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺
-{bold Domain:} ${result.domain}
-{bold Service:}
+{bold.cyan Domain:} ${result.domain}
+{bold.cyan Service:}
    ${config.projectName} {dim (${result.serviceSid})}
-{bold Environment:}
+{bold.cyan Environment:}
    ${config.functionsEnv} {dim (${result.environmentSid})} 
-{bold Build SID:}
+{bold.cyan Build SID:}
    ${result.buildSid}
   `.trim()
   );
@@ -127,7 +127,7 @@ function prettyPrintDeployedResources(config, result) {
         }`;
       })
       .join('\n');
-    console.log(chalk.bold('Functions:'));
+    console.log(chalk.bold.cyan('Functions:'));
     console.log(functionMessage);
   }
 
@@ -143,7 +143,7 @@ function prettyPrintDeployedResources(config, result) {
       })
       .join('\n');
 
-    console.log(chalk.bold('Assets:'));
+    console.log(chalk.bold.cyan('Assets:'));
     console.log(assetMessage);
   }
 }
