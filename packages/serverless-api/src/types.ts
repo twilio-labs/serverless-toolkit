@@ -1,4 +1,5 @@
 import { PackageJson } from 'type-fest';
+import { DeployStatus } from './consts';
 import {
   AssetVersion,
   BuildResource,
@@ -55,6 +56,13 @@ export type ListConfig = ClientConfig & {
   projectName?: string;
   environment?: string | Sid;
 };
+
+export type StatusUpdate = {
+  status: DeployStatus;
+  message: string;
+};
+
+export type StatusUpdateCallback = (update: StatusUpdate) => void;
 
 export type ListResult = {
   services?: ServiceResource[];
