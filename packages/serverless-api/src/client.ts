@@ -48,7 +48,7 @@ import { getListOfFunctionsAndAssets } from './utils/fs';
 
 const log = debug('twilio-serverless-api:client');
 
-function getClient(config: ClientConfig): GotClient {
+function createGotClient(config: ClientConfig): GotClient {
   // @ts-ignore
   const client = got.extend({
     baseUrl: 'https://serverless.twilio.com/v1',
@@ -62,21 +62,44 @@ function getClient(config: ClientConfig): GotClient {
 }
 
 export class TwilioServerlessApiClient extends events.EventEmitter {
+  /**
+   * Contains the client config used to do API requests
+   *
+   * @private
+   * @type {ClientConfig}
+   * @memberof TwilioServerlessApiClient
+   */
   private config: ClientConfig;
+
+  /**
+   * The `got` client that is used to make all the API requests
+   *
+   * @private
+   * @type {GotClient}
+   * @memberof TwilioServerlessApiClient
+   */
   private client: GotClient;
 
   constructor(config: ClientConfig) {
     super();
     this.config = config;
-    this.client = getClient(config);
-    this.deployProject = this.deployProject.bind(this);
-    this.deployLocalProject = this.deployLocalProject.bind(this);
+    this.client = createGotClient(config);
   }
 
+  /**
+   * Returns the internally used GotClient instance used to make API requests
+   * @returns {GotClient} A client instance with set-up credentials
+   */
   getClient(): GotClient {
     return this.client;
   }
 
+  /**
+   * Returns an object containing lists of services, environments, variables
+   * functions or assets, depending on which have beeen requested in `listConfig`
+   * @param  {ListConfig} listConfig Specifies info around which things should be listed
+   * @returns Promise<ListResult> Object containing the different lists.
+   */
   async list(listConfig: ListConfig): Promise<ListResult> {
     let {
       types,
@@ -177,6 +200,14 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
     return result;
   }
 
+  /**
+   * "Activates" a build by taking a specified build SID or a "source environment"
+   * and activating the same build in the specified `environment`.
+   *
+   * Can optionally create the new environment when called with `activateConfig.createEnvironment`
+   * @param  {ActivateConfig} activateConfig Config to specify which build to activate in which environment
+   * @returns Promise<ActivateResult> Object containing meta information around deployment
+   */
   async activateBuild(activateConfig: ActivateConfig): Promise<ActivateResult> {
     let {
       buildSid,
@@ -245,6 +276,27 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
     };
   }
 
+  /**
+   * Deploys a set of functions, assets, variables and dependencies specified
+   * in `deployConfig`. Functions & assets can either be paths to the local
+   * filesystem or `Buffer` instances allowing you to dynamically upload
+   * even without a file system.
+   *
+   * Unless a `deployConfig. serviceSid` is specified, it will try to create one. If a service
+   * with the name `deployConfig.projectName` already exists, it will throw
+   * an error. You can make it use the existing service by setting `overrideExistingService` to
+   * true.
+   *
+   * Updates to the deployment will be emitted as events to `status-update`. Example:
+   *
+   * ```js
+   * client.on('status-update', ({ status, message }) => {
+   *  console.log('[%s]: %s', status, message);
+   * })
+   * ```
+   * @param  {DeployProjectConfig} deployConfig Config containing all details for deployment
+   * @returns Promise<DeployResult> Object containing meta information around deployment
+   */
   async deployProject(
     deployConfig: DeployProjectConfig
   ): Promise<DeployResult> {
@@ -393,6 +445,17 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
     };
   }
 
+  /**
+   * Deploys a local project by reading existing functions and assets
+   * from `deployConfig.cwd` and calling `this.deployProject` with it.
+   *
+   * Functions have to be placed in a `functions` or `src` directory to be found.
+   * Assets have to be placed into an `assets` or `static` directory.
+   *
+   * Nested folder structures will result in nested routes.
+   * @param  {DeployLocalProjectConfig} deployConfig
+   * @returns Promise<DeployResult> Object containing meta information around deployment
+   */
   async deployLocalProject(
     deployConfig: DeployLocalProjectConfig
   ): Promise<DeployResult> {
