@@ -33,7 +33,7 @@ async function getConfigFromFlags(flags) {
       flags.authToken || localEnv.AUTH_TOKEN || flags._cliDefault.password;
   }
 
-  const serviceSid = await getFunctionServiceSid(cwd);
+  const serviceSid = flags.serviceSid || (await getFunctionServiceSid(cwd));
 
   let projectName = flags.projectName;
   if (!projectName) {
@@ -119,6 +119,7 @@ const cliInfo = {
     },
     cwd: {
       type: 'string',
+      hidden: true,
       describe:
         'Sets the directory of your existing Functions project. Defaults to current directory',
     },
@@ -137,6 +138,10 @@ const cliInfo = {
       describe:
         'Use a specific auth token for deployment. Uses fields from .env otherwise',
     },
+    'service-sid': {
+      type: 'string',
+      describe: 'Specific Serverless Service SID to run list for',
+    },
   },
 };
 
@@ -146,6 +151,18 @@ function optionBuilder(yargs) {
     .example(
       '$0 list services',
       'Lists all existing services/projects associated with your Twilio Account'
+    )
+    .example(
+      '$0 ls functions,assets --environment=dev --project-name=demo',
+      'Lists all existing functions & assets associated with the `dev` environment of this project'
+    )
+    .example(
+      '$0 ls environments --service-sid=ZSxxxxx --extended-output',
+      'Outputs all environments for a specific service with extended output for better parsing'
+    )
+    .example(
+      '$0 ls assets,variables,functions --properties=sid,date_updated',
+      'Only lists the SIDs and date of last update for assets, variables and function'
     );
 
   yargs = Object.keys(cliInfo.options).reduce((yargs, name) => {

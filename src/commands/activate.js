@@ -52,7 +52,9 @@ function logError(msg) {
 
 function handleError(err, spinner) {
   log('%O', err);
-  spinner.fail(err.message);
+  if (spinner) {
+    spinner.fail(err.message);
+  }
   process.exit(1);
 }
 
@@ -78,20 +80,20 @@ async function handler(flags) {
     process.exit(1);
   }
 
+  const spinner = ora(
+    `Activating build ${details} to ${config.targetEnvironment}`
+  ).start();
   try {
     const client = new TwilioServerlessApiClient(config);
     const details = config.buildSid
       ? `(${config.buildSid})`
       : `from ${config.sourceEnvironment}`;
-    const spinner = ora(
-      `Activating build ${details} to ${config.targetEnvironment}`
-    ).start();
     const result = await client.activateBuild(config);
     spinner.succeed(
       `Activated new build ${details} on ${config.targetEnvironment}`
     );
   } catch (err) {
-    handleError(err);
+    handleError(err, spinner);
   }
 }
 
@@ -99,6 +101,7 @@ const cliInfo = {
   options: {
     cwd: {
       type: 'string',
+      hidden: true,
       describe:
         'Sets the directory of your existing Functions project. Defaults to current directory',
     },
@@ -141,10 +144,15 @@ const cliInfo = {
 };
 
 function optionBuilder(yargs) {
-  yargs = yargs.example(
-    '$0 activate --environment=prod --source-environment=dev  ',
-    'Promotes the same build that is on the "dev" environment to the "prod" environment'
-  );
+  yargs = yargs
+    .example(
+      '$0 activate --environment=prod --source-environment=dev  ',
+      'Promotes the same build that is on the "dev" environment to the "prod" environment'
+    )
+    .example(
+      '$0 activate --environment=demo --create-environment --build-sid=ZB1234xxxxxxxxxx',
+      'Duplicates an existing build to a new environment called `demo`'
+    );
 
   yargs = Object.keys(cliInfo.options).reduce((yargs, name) => {
     return yargs.option(name, cliInfo.options[name]);
