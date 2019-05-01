@@ -1,3 +1,5 @@
+/** @module @twilio-labs/serverless-api */
+
 import debug from 'debug';
 import events from 'events';
 import got from 'got';
@@ -32,10 +34,10 @@ import {
   listVariablesForEnvironment,
   setEnvironmentVariables,
 } from './internals/variables';
-import { BuildResource } from './serverless-api-types';
 import {
   ActivateConfig,
   ActivateResult,
+  BuildResource,
   ClientConfig,
   DeployLocalProjectConfig,
   DeployProjectConfig,

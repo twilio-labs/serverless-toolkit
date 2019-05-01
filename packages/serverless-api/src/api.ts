@@ -1,3 +1,5 @@
+/** @module @twilio-labs/serverless-api */
+
 import * as fs from './utils/fs';
 
 export const fsHelpers = fs;
