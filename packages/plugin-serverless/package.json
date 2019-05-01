@@ -67,6 +67,9 @@
       }
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": "twilio-labs/plugin-serverless",
   "scripts": {
     "postpack": "rimraf oclif.manifest.json npm-shrinkwrap.json",
