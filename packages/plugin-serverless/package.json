@@ -33,7 +33,9 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json",
     "/src",
-    "/yarn.lock"
+    "/yarn.lock",
+    "LICENSE",
+    "README.md"
   ],
   "homepage": "https://github.com/twilio-labs/plugin-serverless",
   "keywords": [
