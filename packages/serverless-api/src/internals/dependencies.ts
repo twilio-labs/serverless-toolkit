@@ -1,6 +1,13 @@
 import { PackageJson } from 'type-fest';
 import { Dependency } from '../types';
 
+/**
+ * Creates a list of dependencies compatible with the Serverless API givn a package.json file
+ *
+ * @export
+ * @param {PackageJson} pkgJson an object structured like a package.json
+ * @returns {Dependency[]}
+ */
 export function getDependencies(pkgJson: PackageJson): Dependency[] {
   const dependencies = pkgJson.dependencies;
   if (!dependencies) {

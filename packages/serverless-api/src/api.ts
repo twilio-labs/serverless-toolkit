@@ -1,8 +1,10 @@
 /** @module @twilio-labs/serverless-api */
 
+import * as internals from './internals/index';
 import * as fs from './utils/fs';
 
 export const fsHelpers = fs;
+export const api = internals;
 export {
   activateBuild,
   triggerBuild,

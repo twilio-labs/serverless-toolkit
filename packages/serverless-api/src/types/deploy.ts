@@ -1,8 +1,8 @@
 /** @module @twilio-labs/serverless-api/dist/types */
 
 import { PackageJson } from 'type-fest';
-import { DeployStatus } from '../consts';
 import { ClientConfig } from './client';
+import { DeployStatus } from './consts';
 import {
   AssetResource,
   EnvironmentVariables,

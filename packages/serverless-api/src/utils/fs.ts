@@ -2,7 +2,12 @@ import fs from 'fs';
 import path from 'path';
 import recursiveReadDir from 'recursive-readdir';
 import { promisify } from 'util';
-import { FileInfo } from '../types';
+import {
+  AccessOptions,
+  DirectoryContent,
+  FileInfo,
+  ResourcePathAndAccess,
+} from '../types';
 
 export const access = promisify(fs.access);
 export const readFile = promisify(fs.readFile);
@@ -10,6 +15,13 @@ export const writeFile = promisify(fs.writeFile);
 export const readDir = promisify(recursiveReadDir);
 export const stat = promisify(fs.stat);
 
+/**
+ * Checks if a given file exists by checking if we have read & write access
+ *
+ * @export
+ * @param {string} filePath full path of the file to check
+ * @returns
+ */
 export async function fileExists(filePath: string) {
   try {
     await access(filePath, fs.constants.R_OK | fs.constants.W_OK);
@@ -19,12 +31,15 @@ export async function fileExists(filePath: string) {
   }
 }
 
-export type AccessOptions = 'private' | 'protected' | 'public';
-export type ResourcePathAndAccess = {
-  path: string;
-  access: AccessOptions;
-};
-
+/**
+ * Determines the access and Serverless path for a filesystem resource.
+ * If it receives an ignore extension it will drop it from the final serverless path
+ *
+ * @export
+ * @param {FileInfo} file the file to get the access and path for
+ * @param {string} [ignoreExtension] file extension to drop for serverless path
+ * @returns {ResourcePathAndAccess}
+ */
 export function getPathAndAccessFromFileInfo(
   file: FileInfo,
   ignoreExtension?: string
@@ -53,9 +68,19 @@ export function getPathAndAccessFromFileInfo(
   };
 }
 
+/**
+ * Retrieves all (nested) files from a given directory.
+ *
+ * If an extension is specified it will be used to filter the results.
+ *
+ * @export
+ * @param {string} dir the directory to be checked
+ * @param {string} [extensionn] extension to be ignored in the results
+ * @returns {Promise<FileInfo[]>}
+ */
 export async function getDirContent(
   dir: string,
-  ext?: string
+  extensionn?: string
 ): Promise<FileInfo[]> {
   const rawFiles: string[] = (await readDir(dir)) as string[];
   const unfilteredFiles: (FileInfo | undefined)[] = await Promise.all(
@@ -69,7 +94,7 @@ export async function getDirContent(
         return undefined;
       }
 
-      if (ext && path.extname(filePath) !== ext) {
+      if (extensionn && path.extname(filePath) !== extensionn) {
         return undefined;
       }
 
@@ -86,6 +111,17 @@ export async function getDirContent(
   ) as FileInfo[];
 }
 
+/**
+ * Given a list of directory names it will return the first one that exists in
+ * the base path.
+ *
+ * **Important**: Performs synchronous file system reading
+ *
+ * @export
+ * @param {string} basePath
+ * @param {string[]} directories
+ * @returns {string}
+ */
 export function getFirstMatchingDirectory(
   basePath: string,
   directories: string[]
@@ -108,7 +144,18 @@ export function getFirstMatchingDirectory(
   );
 }
 
-export async function getListOfFunctionsAndAssets(cwd: string) {
+/**
+ * Retrieves a list of functions and assets existing in a given base directory
+ * Will check for both "functions" and "src" as directory for functions and
+ * "assets" and "static" for assets
+ *
+ * @export
+ * @param {string} cwd Directory
+ * @returns {Promise<DirectoryContent>}
+ */
+export async function getListOfFunctionsAndAssets(
+  cwd: string
+): Promise<DirectoryContent> {
   let functionsDir;
   try {
     functionsDir = getFirstMatchingDirectory(cwd, ['functions', 'src']);

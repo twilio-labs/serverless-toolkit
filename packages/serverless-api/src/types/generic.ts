@@ -1,5 +1,4 @@
 import got = require('got');
-import { AccessOptions } from '../utils/fs';
 
 export type GotClient = typeof got;
 
@@ -55,4 +54,16 @@ export type Dependency = {
 export type Variable = {
   key: string;
   value: string;
+};
+
+export type AccessOptions = 'private' | 'protected' | 'public';
+
+export type ResourcePathAndAccess = {
+  path: string;
+  access: AccessOptions;
+};
+
+export type DirectoryContent = {
+  assets: FileInfo[];
+  functions: FileInfo[];
 };
