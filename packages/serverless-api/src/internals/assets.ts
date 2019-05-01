@@ -7,6 +7,7 @@ import {
   FileInfo,
   GotClient,
   RawAssetWithPath,
+  Sid,
   VersionResource,
 } from '../types';
 import { uploadToAws } from '../utils/aws-upload';
@@ -14,11 +15,19 @@ import { getPathAndAccessFromFileInfo, readFile } from '../utils/fs';
 
 const log = debug('twilio-serverless-api:assets');
 
+/**
+ * Calls the API to create a new Asset Resource
+ *
+ * @param  {string} name friendly name of the resource
+ * @param  {string} serviceSid service to register asset under
+ * @param  {GotClient} client API client
+ * @returns {Promise<AssetApiResource>}
+ */
 async function createAssetResource(
   name: string,
   serviceSid: string,
   client: GotClient
-) {
+): Promise<AssetApiResource> {
   try {
     const resp = await client.post(`/Services/${serviceSid}/Assets`, {
       form: true,
@@ -33,6 +42,13 @@ async function createAssetResource(
   }
 }
 
+/**
+ * Calls the API to retrieve a list of all assets
+ *
+ * @param {string} serviceSid service to look for assets
+ * @param {GotClient} client API client
+ * @returns {Promise<AssetApiResource[]>}
+ */
 async function getAssetResources(serviceSid: string, client: GotClient) {
   try {
     const resp = await client.get(`/Services/${serviceSid}/Assets`);
@@ -43,7 +59,15 @@ async function getAssetResources(serviceSid: string, client: GotClient) {
     throw err;
   }
 }
-
+/**
+ * Given a list of resources it will first check which assets already exists
+ * and create the remaining ones.
+ *
+ * @param  {FileInfo[]} assets
+ * @param  {string} serviceSid
+ * @param  {GotClient} client
+ * @returns {Promise<AssetResource[]>}
+ */
 export async function getOrCreateAssetResources(
   assets: FileInfo[],
   serviceSid: string,
@@ -87,11 +111,19 @@ export async function getOrCreateAssetResources(
   return [...output, ...createdAssets];
 }
 
+/**
+ * Given an asset it will create a new version instance for it
+ *
+ * @param  {AssetResource} asset the one to create a new version for
+ * @param  {string} serviceSid the service to create the asset version for
+ * @param  {GotClient} client API client
+ * @returns {Promise<VersionResource>}
+ */
 async function createAssetVersion(
   asset: AssetResource,
   serviceSid: string,
   client: GotClient
-) {
+): Promise<VersionResource> {
   try {
     const resp = await client.post(
       `/Services/${serviceSid}/Assets/${asset.sid}/Versions`,
@@ -111,11 +143,20 @@ async function createAssetVersion(
   }
 }
 
+/**
+ * Uploads a given asset by creating a new version and uploading the content there
+ *
+ * @export
+ * @param {AssetResource} asset The asset to upload
+ * @param {string} serviceSid The service to upload it to
+ * @param {GotClient} client The API client
+ * @returns {Promise<Sid>}
+ */
 export async function uploadAsset(
   asset: AssetResource,
   serviceSid: string,
   client: GotClient
-) {
+): Promise<Sid> {
   let content: Buffer | string | undefined;
   if (typeof asset.content !== 'undefined') {
     content = asset.content;

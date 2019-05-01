@@ -4,6 +4,16 @@ import fileType from 'file-type';
 import got from 'got';
 import mime from 'mime-types';
 
+/**
+ * Uploads a string or buffer to AWS S3 given a unique upload URL and KMS key
+ *
+ * @export
+ * @param {string} url the unique upload URL
+ * @param {string} key the KMS key
+ * @param {(string | Buffer)} content the content to upload
+ * @param {string} [name] optional name of the content, used to determine the filetype
+ * @returns
+ */
 export async function uploadToAws(
   url: string,
   key: string,

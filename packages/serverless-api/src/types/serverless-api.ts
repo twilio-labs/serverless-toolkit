@@ -1,3 +1,5 @@
+import { Dependency } from './generic';
+
 export type Sid = string;
 
 export interface ResourceBase {
@@ -88,3 +90,9 @@ export interface VariableResource extends ResourceBase {
 export interface VariableList {
   variables: VariableResource[];
 }
+
+export type BuildConfig = {
+  dependencies?: Dependency[];
+  functionVersions?: Sid[];
+  assetVersions?: Sid[];
+};

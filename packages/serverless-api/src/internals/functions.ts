@@ -7,6 +7,7 @@ import {
   FunctionResource,
   GotClient,
   RawFunctionWithPath,
+  Sid,
   VersionResource,
 } from '../types';
 import { uploadToAws } from '../utils/aws-upload';
@@ -14,11 +15,19 @@ import { getPathAndAccessFromFileInfo, readFile } from '../utils/fs';
 
 const log = debug('twilio-serverless-api:functions');
 
+/**
+ * Creates a new Function instance by calling the API
+ *
+ * @param {string} name the friendly name of the function to create
+ * @param {string} serviceSid the service the function should belong to
+ * @param {GotClient} client API client
+ * @returns {Promise<FunctionApiResource>}
+ */
 async function createFunctionResource(
   name: string,
   serviceSid: string,
   client: GotClient
-) {
+): Promise<FunctionApiResource> {
   try {
     const resp = await client.post(`/Services/${serviceSid}/Functions`, {
       form: true,
@@ -33,6 +42,14 @@ async function createFunctionResource(
   }
 }
 
+/**
+ * Lists all functions associated to a service
+ *
+ * @export
+ * @param {string} serviceSid the service to look up
+ * @param {GotClient} client API client
+ * @returns
+ */
 export async function listFunctionResources(
   serviceSid: string,
   client: GotClient
@@ -47,6 +64,15 @@ export async function listFunctionResources(
   }
 }
 
+/**
+ * Given a list of functions it will create the ones that don't exist and retrieves the others
+ *
+ * @export
+ * @param {FileInfo[]} functions list of functions to get or create
+ * @param {string} serviceSid service the functions belong to
+ * @param {GotClient} client API client
+ * @returns {Promise<FunctionResource[]>}
+ */
 export async function getOrCreateFunctionResources(
   functions: FileInfo[],
   serviceSid: string,
@@ -93,11 +119,19 @@ export async function getOrCreateFunctionResources(
   return [...output, ...createdFunctions];
 }
 
+/**
+ * Creates a new Version to be used for uploading a new function
+ *
+ * @param {FunctionResource} fn the function the version should be created for
+ * @param {string} serviceSid the service related to the function
+ * @param {GotClient} client API client
+ * @returns {Promise<VersionResource>}
+ */
 async function createFunctionVersion(
   fn: FunctionResource,
   serviceSid: string,
   client: GotClient
-) {
+): Promise<VersionResource> {
   if (fn.access === 'private') {
     throw new Error(`Function ${fn.functionPath} cannnot be "private". 
 Please rename the file "${fn.name}" to "${fn.name.replace(
@@ -124,11 +158,20 @@ Please rename the file "${fn.name}" to "${fn.name.replace(
   }
 }
 
+/**
+ * Uploads a given function by creating a new version, reading the content if necessary and uploading the content
+ *
+ * @export
+ * @param {FunctionResource} fn function to be uploaded
+ * @param {string} serviceSid service that the function is connected to
+ * @param {GotClient} client API client
+ * @returns {Promise<Sid>}
+ */
 export async function uploadFunction(
   fn: FunctionResource,
   serviceSid: string,
   client: GotClient
-) {
+): Promise<Sid> {
   let content: Buffer | string | undefined;
   if (typeof fn.content !== 'undefined') {
     content = fn.content;

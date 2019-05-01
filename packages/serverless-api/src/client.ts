@@ -3,7 +3,6 @@
 import debug from 'debug';
 import events from 'events';
 import got from 'got';
-import { DeployStatus } from './consts';
 import { getOrCreateAssetResources, uploadAsset } from './internals/assets';
 import {
   activateBuild,
@@ -46,6 +45,7 @@ import {
   ListConfig,
   ListResult,
 } from './types';
+import { DeployStatus } from './types/consts';
 import { getListOfFunctionsAndAssets } from './utils/fs';
 
 const log = debug('twilio-serverless-api:client');

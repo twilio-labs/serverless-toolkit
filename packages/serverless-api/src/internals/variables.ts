@@ -9,6 +9,16 @@ import {
 
 const log = debug('twilio-serverless-api:variables');
 
+/**
+ * Creates a new environment variable for a given environment
+ *
+ * @param {string} key the name of the variable
+ * @param {string} value the value of the variable
+ * @param {string} environmentSid the environment the variable should be created for
+ * @param {string} serviceSid the service that the environment belongs to
+ * @param {GotClient} client API client
+ * @returns {Promise<VariableResource>}
+ */
 async function registerVariableInEnvironment(
   key: string,
   value: string,
@@ -34,6 +44,17 @@ async function registerVariableInEnvironment(
   }
 }
 
+/**
+ * Given the SID of a variable it will update the name and value of the variable
+ *
+ * @param {string} key the name of the variable
+ * @param {string} value the value of the variable
+ * @param {string} variableSid the SID of the existing variable
+ * @param {string} environmentSid the environment the variable belongs to
+ * @param {string} serviceSid the service the environment belongs to
+ * @param {GotClient} client API client
+ * @returns {Promise<VariableResource>}
+ */
 async function updateVariableInEnvironment(
   key: string,
   value: string,
@@ -60,6 +81,15 @@ async function updateVariableInEnvironment(
   }
 }
 
+/**
+ * Lists all variables for a given environment
+ *
+ * @export
+ * @param {string} environmentSid the environment to get the variables for
+ * @param {string} serviceSid the service the environment belongs to
+ * @param {GotClient} client API client
+ * @returns {Promise<VariableResource[]>}
+ */
 export async function listVariablesForEnvironment(
   environmentSid: string,
   serviceSid: string,
@@ -77,6 +107,12 @@ export async function listVariablesForEnvironment(
   }
 }
 
+/**
+ * Convers an object of environment variables into an array of key-value pairs
+ *
+ * @param {EnvironmentVariables} env the object of environment variables
+ * @returns {Variable[]}
+ */
 function convertToVariableArray(env: EnvironmentVariables): Variable[] {
   const output: Variable[] = [];
 
@@ -90,6 +126,16 @@ function convertToVariableArray(env: EnvironmentVariables): Variable[] {
   return output;
 }
 
+/**
+ * Sets or updates the values passed in an object of environment variables for a specfic environment
+ *
+ * @export
+ * @param {EnvironmentVariables} envVariables the object of variables
+ * @param {string} environmentSid the environment the varibales should be set for
+ * @param {string} serviceSid the service the environment belongs to
+ * @param {GotClient} client API client
+ * @returns {Promise<void>}
+ */
 export async function setEnvironmentVariables(
   envVariables: EnvironmentVariables,
   environmentSid: string,
