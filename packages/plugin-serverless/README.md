@@ -10,7 +10,7 @@ Access and stream your Twilio debugger logs.
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g @twilio/cli @twilio-labs/plugin-serverless
+$ npm install -g @twilio-labs/plugin-serverless
 $ twilio COMMAND
 running command...
 $ twilio (-v|--version|version)
@@ -23,28 +23,28 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-- [@twilio/plugin-debugger](#twilioplugin-debugger)
-- [Usage](#usage)
-- [Commands](#commands)
-  - [`twilio functions:activate`](#twilio-functionsactivate)
-  - [`twilio functions:deploy`](#twilio-functionsdeploy)
-  - [`twilio functions:list [TYPES]`](#twilio-functionslist-types)
-  - [`twilio functions:new [FILENAME]`](#twilio-functionsnew-filename)
+* [`twilio serverless:activate`](#twilio-serverlessactivate)
+* [`twilio serverless:deploy`](#twilio-serverlessdeploy)
+* [`twilio serverless:init NAME`](#twilio-serverlessinit-name)
+* [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-types)
+* [`twilio serverless:new [FILENAME]`](#twilio-serverlessnew-filename)
+* [`twilio serverless:start [DIR]`](#twilio-serverlessstart-dir)
 
-## `twilio functions:activate`
+## `twilio serverless:activate`
 
 Promotes an existing deployment to a new environment
 
 ```
 USAGE
-  $ twilio functions:activate
+  $ twilio serverless:activate
 
 OPTIONS
-  -p, --authToken=authToken                Use a specific auth token for deployment. Uses fields from .env otherwise
   -p, --project=project                    [default: default] Shorthand identifier for your Twilio project.
 
-  -u, --accountSid=accountSid              A specific account SID to be used for deployment. Uses fields in .env
+  -u, --account-sid=account-sid            A specific account SID to be used for deployment. Uses fields in .env
                                            otherwise
+
+  --auth-token=auth-token                  Use a specific auth token for deployment. Uses fields from .env otherwise
 
   --build-sid=build-sid                    An existing Build SID to deploy to the new environment
 
@@ -60,15 +60,15 @@ OPTIONS
   --source-environment=source-environment  SID or suffix of an existing environment you want to deploy from.
 ```
 
-_See code: [src/commands/functions/activate.js](https://github.com/twilio-labs/plugin-serverless/blob/v0.0.1/src/commands/functions/activate.js)_
+_See code: [src/commands/serverless/activate.js](https://github.com/twilio-labs/plugin-serverless/blob/v0.0.1/src/commands/serverless/activate.js)_
 
-## `twilio functions:deploy`
+## `twilio serverless:deploy`
 
 Deploys existing functions and assets to Twilio
 
 ```
 USAGE
-  $ twilio functions:deploy
+  $ twilio serverless:deploy
 
 OPTIONS
   -n, --project-name=project-name  Overrides the name of the project. Default: the name field in your package.json
@@ -82,37 +82,58 @@ OPTIONS
   --override-existing-project      Deploys project to existing service if a naming conflict has been found.
 ```
 
-_See code: [src/commands/functions/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v0.0.1/src/commands/functions/deploy.js)_
+_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v0.0.1/src/commands/serverless/deploy.js)_
 
-## `twilio functions:list [TYPES]`
+## `twilio serverless:init NAME`
+
+Creates a new Twilio Serverless project
+
+```
+USAGE
+  $ twilio serverless:init NAME
+
+ARGUMENTS
+  NAME  Name of Serverless project and directory that will be created
+
+OPTIONS
+  -p, --project=project      [default: default] Shorthand identifier for your Twilio project.
+  --account-sid=account-sid  An account SID or API key to be used for your project
+  --auth-token=auth-token    An auth token or API secret to be used for your project
+```
+
+_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v0.0.1/src/commands/serverless/init.js)_
+
+## `twilio serverless:list [TYPES]`
 
 List existing services, environments, variables, deployments for your Twilio Serverless Account
 
 ```
 USAGE
-  $ twilio functions:list [TYPES]
+  $ twilio serverless:list [TYPES]
 
 ARGUMENTS
   TYPES  [default: environments,builds] Comma seperated list of things to list
          (services,environments,functions,assets,variables)
 
 OPTIONS
-  -p, --authToken=authToken    Use a specific auth token for deployment. Uses fields from .env otherwise
-  -p, --project=project        [default: default] Shorthand identifier for your Twilio project.
-  -u, --accountSid=accountSid  A specific account SID to be used for deployment. Uses fields in .env otherwise
-  --cwd=cwd                    Sets the directory of your existing Functions project. Defaults to current directory
-  --environment=environment    The environment to list variables for.
+  -p, --project=project          [default: default] Shorthand identifier for your Twilio project.
+  -u, --account-sid=account-sid  A specific account SID to be used for deployment. Uses fields in .env otherwise
+  --auth-token=auth-token        Use a specific auth token for deployment. Uses fields from .env otherwise
+  --cwd=cwd                      Sets the directory of your existing Functions project. Defaults to current directory
+  --environment=environment      The environment to list variables for
+  --extended-output              Show an extended set of properties on the output
+  --properties=properties        Specify the output properties you want to see. Works best on single types
 ```
 
-_See code: [src/commands/functions/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v0.0.1/src/commands/functions/list.js)_
+_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v0.0.1/src/commands/serverless/list.js)_
 
-## `twilio functions:new [FILENAME]`
+## `twilio serverless:new [FILENAME]`
 
 Creates a new Twilio Function based on an existing template
 
 ```
 USAGE
-  $ twilio functions:new [FILENAME]
+  $ twilio serverless:new [FILENAME]
 
 ARGUMENTS
   FILENAME  Name for the function to be created
@@ -122,5 +143,35 @@ OPTIONS
   --template=template
 ```
 
-_See code: [src/commands/functions/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v0.0.1/src/commands/functions/new.js)_
+_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v0.0.1/src/commands/serverless/new.js)_
+
+## `twilio serverless:start [DIR]`
+
+Starts local Twilio Functions development server
+
+```
+USAGE
+  $ twilio serverless:start [DIR]
+
+ARGUMENTS
+  DIR  Root directory to serve local Functions/Assets from
+
+OPTIONS
+  -e, --env=env              Loads .env file, overrides local env variables
+  -f, --load-local-env       Includes the local environment variables
+  -p, --port=port            (required) [default: 3000] Override default port of 3000
+  --detailed-logs            Toggles detailed request logging by showing request body and query params
+  --inspect=inspect          Enables Node.js debugging protocol
+  --inspect-brk=inspect-brk  Enables Node.js debugging protocol, stops executioin until debugger is attached
+  --legacy-mode              Enables legacy mode, it will prefix your asset paths with /assets
+  --live                     Always serve from the current functions (no caching)
+  --logs                     Toggles request logging
+  --ngrok=ngrok              Uses ngrok to create and outfacing url
+
+ALIASES
+  $ twilio serverless:dev
+  $ twilio dev
+```
+
+_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v0.0.1/src/commands/serverless/start.js)_
 <!-- commandsstop -->
