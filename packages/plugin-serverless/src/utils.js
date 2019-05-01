@@ -9,8 +9,8 @@ function convertYargsOptionsToOclifFlags(options) {
       default: opt.default,
     };
 
-    if (opt.type === 'string') {
-      flag.default = flag.default || '';
+    if (opt.default) {
+      flag.default = opt.default;
     }
 
     if (opt.alias) {

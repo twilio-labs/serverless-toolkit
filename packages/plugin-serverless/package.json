@@ -7,16 +7,17 @@
   "dependencies": {
     "@oclif/command": "^1.5.12",
     "@oclif/config": "^1.12.10",
-    "@twilio/cli-core": "git+ssh://git@code.hq.twilio.com:twilio/cli-core.git",
+    "@twilio/cli-core": "^1.0.0",
+    "create-twilio-function": "^1.0.0",
     "lodash.camelcase": "^4.3.0",
     "lodash.kebabcase": "^4.1.1",
-    "twilio-run": "next"
+    "twilio-run": "^2.0.0-alpha.9"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.21.3",
     "@oclif/plugin-help": "^2.1.6",
     "@oclif/test": "^1.2.4",
-    "@twilio/cli-test": "git+ssh://git@code.hq.twilio.com:twilio/cli-test.git",
+    "@twilio/cli-test": "^1.0.0",
     "chai": "^4.2.0",
     "eslint": "^4.19.1",
     "eslint-config-oclif": "^1.5.1",
@@ -26,7 +27,7 @@
     "rimraf": "^2.6.3"
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": "~8.10.0"
   },
   "files": [
     "/npm-shrinkwrap.json",
@@ -45,24 +46,24 @@
   ],
   "license": "MIT",
   "oclif": {
-    "name": "functions",
+    "name": "serverless",
     "commands": "./src/commands",
     "bin": "twilio",
     "devPlugins": [
       "@oclif/plugin-help"
     ],
     "topics": {
-      "functions:start": {
+      "serverless:start": {
         "description": "Starts a local development environment"
       },
-      "functions:new": {
+      "serverless:new": {
         "description": "Bootstraps a new function in your local project"
       },
-      "functions:list": {
+      "serverless:list": {
         "description": "Lists services, projects and similar related to your project"
       },
-      "functions:deploy": {
-        "description": "Deploys your local Functions project"
+      "serverless:deploy": {
+        "description": "Deploys your local serverless project"
       }
     }
   },
