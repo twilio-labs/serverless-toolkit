@@ -15,6 +15,7 @@ class FunctionsStart extends Command {
 
   async run() {
     let { flags, args } = this.parse(FunctionsStart);
+
     flags = normalizeFlags(flags);
 
     const opts = Object.assign({}, flags, args);
@@ -35,5 +36,7 @@ FunctionsStart.args = [
 FunctionsStart.flags = Object.assign(
   convertYargsOptionsToOclifFlags(cliInfo.options)
 );
+
+FunctionsStart.aliases = ['serverless:dev', 'dev'];
 
 module.exports = FunctionsStart;
