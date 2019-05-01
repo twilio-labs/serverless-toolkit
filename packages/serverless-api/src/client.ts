@@ -3,15 +3,15 @@
 import debug from 'debug';
 import events from 'events';
 import got from 'got';
-import { getOrCreateAssetResources, uploadAsset } from './internals/assets';
+import { getOrCreateAssetResources, uploadAsset } from './api/assets';
 import {
   activateBuild,
   getBuild,
   listBuilds,
   triggerBuild,
   waitForSuccessfulBuild,
-} from './internals/builds';
-import { getDependencies } from './internals/dependencies';
+} from './api/builds';
+import { getDependencies } from './api/dependencies';
 import {
   createEnvironmentFromSuffix,
   createEnvironmentIfNotExists,
@@ -19,20 +19,13 @@ import {
   getEnvironmnetFromSuffix,
   isEnvironmentSid,
   listEnvironments,
-} from './internals/environments';
-import {
-  getOrCreateFunctionResources,
-  uploadFunction,
-} from './internals/functions';
-import {
-  createService,
-  findServiceSid,
-  listServices,
-} from './internals/services';
+} from './api/environments';
+import { getOrCreateFunctionResources, uploadFunction } from './api/functions';
+import { createService, findServiceSid, listServices } from './api/services';
 import {
   listVariablesForEnvironment,
   setEnvironmentVariables,
-} from './internals/variables';
+} from './api/variables';
 import {
   ActivateConfig,
   ActivateResult,

@@ -1,6 +1,6 @@
 /** @module @twilio-labs/serverless-api */
 
-import * as internals from './internals/index';
+import * as internals from './api/index';
 import * as fs from './utils/fs';
 
 export const fsHelpers = fs;
@@ -9,10 +9,7 @@ export {
   activateBuild,
   triggerBuild,
   waitForSuccessfulBuild,
-} from './internals/builds';
-export { getDependencies } from './internals/dependencies';
-export {
-  getOrCreateFunctionResources,
-  uploadFunction,
-} from './internals/functions';
-export { setEnvironmentVariables } from './internals/variables';
+} from './api/builds';
+export { getDependencies } from './api/dependencies';
+export { getOrCreateFunctionResources, uploadFunction } from './api/functions';
+export { setEnvironmentVariables } from './api/variables';
