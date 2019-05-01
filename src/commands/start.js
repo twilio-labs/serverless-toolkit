@@ -4,7 +4,7 @@ const debug = require('debug')('twilio-run:start');
 const { createServer } = require('../runtime/server');
 const { startInspector } = require('../runtime/utils/inspector');
 const { getConfigFromCli } = require('../runtime/cli/config');
-const { getRouteInfo } = require('../runtime/cli/route-info');
+const { printRouteInfo } = require('../printers/start');
 
 async function handler(argv) {
   const cli = {
@@ -27,8 +27,7 @@ async function handler(argv) {
   debug('Start server on port %d', config.port);
   return new Promise(resolve => {
     app.listen(config.port, async () => {
-      const info = await getRouteInfo(config);
-      console.log(boxen(info, { padding: 1 }));
+      printRouteInfo(config);
       resolve(app);
     });
   });
