@@ -3,9 +3,12 @@ import { extname } from 'path';
 import {
   AssetApiResource,
   AssetList,
+  AssetResource,
+  FileInfo,
+  GotClient,
+  RawAssetWithPath,
   VersionResource,
-} from '../serverless-api-types';
-import { AssetResource, FileInfo, GotClient, RawAssetWithPath } from '../types';
+} from '../types';
 import { uploadToAws } from '../utils/aws-upload';
 import { getPathAndAccessFromFileInfo, readFile } from '../utils/fs';
 

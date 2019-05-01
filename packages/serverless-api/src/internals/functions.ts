@@ -1,15 +1,13 @@
 import debug from 'debug';
 import { extname } from 'path';
 import {
+  FileInfo,
   FunctionApiResource,
   FunctionList,
-  VersionResource,
-} from '../serverless-api-types';
-import {
-  FileInfo,
   FunctionResource,
   GotClient,
   RawFunctionWithPath,
+  VersionResource,
 } from '../types';
 import { uploadToAws } from '../utils/aws-upload';
 import { getPathAndAccessFromFileInfo, readFile } from '../utils/fs';

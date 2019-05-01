@@ -1,6 +1,11 @@
 import debug from 'debug';
-import { VariableList, VariableResource } from '../serverless-api-types';
-import { EnvironmentVariables, GotClient, Variable } from '../types';
+import {
+  EnvironmentVariables,
+  GotClient,
+  Variable,
+  VariableList,
+  VariableResource,
+} from '../types';
 
 const log = debug('twilio-serverless-api:variables');
 

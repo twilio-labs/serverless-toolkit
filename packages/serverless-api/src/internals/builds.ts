@@ -2,8 +2,7 @@ import debug from 'debug';
 import querystring from 'querystring';
 import { JsonObject } from 'type-fest';
 import { DeployStatus } from '../consts';
-import { BuildList, BuildResource, Sid } from '../serverless-api-types';
-import { Dependency, GotClient } from '../types';
+import { BuildList, BuildResource, Dependency, GotClient, Sid } from '../types';
 import { sleep } from '../utils/sleep';
 
 import events = require('events');

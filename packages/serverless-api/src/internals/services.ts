@@ -1,6 +1,5 @@
 import debug from 'debug';
-import { ServiceList, ServiceResource } from '../serverless-api-types';
-import { GotClient } from '../types';
+import { GotClient, ServiceList, ServiceResource } from '../types';
 
 const log = debug('twilio-serverless-api:services');
 

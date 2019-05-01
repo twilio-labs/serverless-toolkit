@@ -1,10 +1,5 @@
 import debug from 'debug';
-import {
-  EnvironmentList,
-  EnvironmentResource,
-  Sid,
-} from '../serverless-api-types';
-import { GotClient } from '../types';
+import { EnvironmentList, EnvironmentResource, GotClient, Sid } from '../types';
 
 const log = debug('twilio-serverless-api:environments');
 
