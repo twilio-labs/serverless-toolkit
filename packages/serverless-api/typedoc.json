@@ -1,0 +1,8 @@
+{
+  "name": "@twilio-labs/serverless-api",
+  "mode": "modules",
+  "out": "docs",
+  "theme": "default",
+  "exclude": ["**/__tests__/*.ts"],
+  "gaID": "UA-40008341-3"
+}
