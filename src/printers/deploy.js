@@ -105,8 +105,7 @@ function printConfigInfo(config) {
 function prettyPrintDeployedResources(config, result) {
   console.log(
     chalk`
-{bold.cyan Deployment Details}
-⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺
+{bold.cyan.underline Deployment Details}
 {bold.cyan Domain:} ${result.domain}
 {bold.cyan Service:}
    ${config.projectName} {dim (${result.serviceSid})}

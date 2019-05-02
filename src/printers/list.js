@@ -5,7 +5,7 @@ const logSymbols = require('log-symbols');
 const columnify = require('columnify');
 const startCase = require('lodash.startcase');
 
-const { shouldPrettyPrint } = require('./utils');
+const { shouldPrettyPrint, supportsEmoji } = require('./utils');
 
 const baseKeys = {
   environments: [
@@ -137,20 +137,23 @@ function prettyPrintFunctionsOrAssets({ entries, environmentSid }) {
   const resourceString = entries
     .map((entry, idx) => {
       const symbol = idx + 1 === entries.length ? '└──' : '├──';
-      const emoji =
-        entry.visibility === 'public'
-          ? '🌐'
-          : entry.visibility === 'protected'
-          ? '🔒'
-          : '🙈';
+      let emoji = '';
+      if (supportsEmoji) {
+        emoji =
+          entry.visibility === 'public'
+            ? '🌐'
+            : entry.visibility === 'protected'
+            ? '🔒'
+            : '🙈';
+      }
       return stripIndent(chalk`
-    ⎪ ${symbol} ${emoji}   ${entry.path} {dim [Visibility: ${entry.visibility}]}
+    │ ${symbol} ${emoji}   ${entry.path} {dim [Visibility: ${entry.visibility}]}
     `);
     })
     .join('\n');
 
   return stripIndent(chalk`
-  ⎪ {bold For Environment:} ${environmentSid}\n${resourceString}
+  │ {bold For Environment:} ${environmentSid}\n${resourceString}
   `);
 }
 
@@ -161,33 +164,33 @@ function prettyPrintVariables(variables) {
     .map((entry, idx) => {
       const symbol = idx + 1 === entries.length ? '└──' : '├──';
       return stripIndent(chalk`
-    ⎪ ${symbol} {bold ${entry.key}:} ${entry.value}
+    │ ${symbol} {bold ${entry.key}:} ${entry.value}
     `);
     })
     .join('\n');
 
   return stripIndent(chalk`
-  ⎪ {bold For Environment:} ${environmentSid}\n${variableString}
+  │ {bold For Environment:} ${environmentSid}\n${variableString}
   `);
 }
 
 function prettyPrintEnvironment(environment) {
   return stripIndent(chalk`
-  ⎪ ${environment.unique_name} (${environment.domain_suffix})
-  ⎪ ├── {bold SID:} ${environment.sid}
-  ⎪ ├── {bold URL:} ${environment.domain_name}
-  ⎪ ├── {bold Active Build:} ${environment.build_sid}
-  ⎪ └── {bold Last Updated:} ${formatDate(environment.date_updated)}
+  │ ${environment.unique_name} (${environment.domain_suffix})
+  │ ├── {bold SID:} ${environment.sid}
+  │ ├── {bold URL:} ${environment.domain_name}
+  │ ├── {bold Active Build:} ${environment.build_sid}
+  │ └── {bold Last Updated:} ${formatDate(environment.date_updated)}
   `);
 }
 
 function prettyPrintServices(service) {
   return stripIndent(chalk`
-  ⎪
-  ⎪ {cyan.bold ${service.unique_name}}
-  ⎪ ├── {bold SID: } ${service.sid}
-  ⎪ ├── {bold Created: } ${formatDate(service.date_created)}
-  ⎪ └── {bold Updated: } ${formatDate(service.date_updated)}
+  │
+  │ {cyan.bold ${service.unique_name}}
+  │ ├── {bold SID: } ${service.sid}
+  │ ├── {bold Created: } ${formatDate(service.date_created)}
+  │ └── {bold Updated: } ${formatDate(service.date_updated)}
   `);
 }
 
@@ -199,8 +202,8 @@ function prettyPrintBuilds(build) {
     status = chalk.red(`${logSymbols.error} ${build.status}`);
   }
   return stripIndent`
-  ⎪ ${build.sid} (${status})
-  ⎪ └── ${chalk`{bold Date:}`} ${formatDate(build.date_updated)}
+  │ ${build.sid} (${status})
+  │ └── ${chalk`{bold Date:}`} ${formatDate(build.date_updated)}
   `;
 }
 
