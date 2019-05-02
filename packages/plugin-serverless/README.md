@@ -20,15 +20,12 @@ USAGE
 ```
 # Commands
 <!-- commands -->
-- [@twilio-labs/plugin-serverless](#twilio-labsplugin-serverless)
-- [Usage](#usage)
-- [Commands](#commands)
-  - [`twilio serverless:activate`](#twilio-serverlessactivate)
-  - [`twilio serverless:deploy`](#twilio-serverlessdeploy)
-  - [`twilio serverless:init NAME`](#twilio-serverlessinit-name)
-  - [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-types)
-  - [`twilio serverless:new [FILENAME]`](#twilio-serverlessnew-filename)
-  - [`twilio serverless:start [DIR]`](#twilio-serverlessstart-dir)
+* [`twilio serverless:activate`](#twilio-serverlessactivate)
+* [`twilio serverless:deploy`](#twilio-serverlessdeploy)
+* [`twilio serverless:init NAME`](#twilio-serverlessinit-name)
+* [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-types)
+* [`twilio serverless:new [FILENAME]`](#twilio-serverlessnew-filename)
+* [`twilio serverless:start [DIR]`](#twilio-serverlessstart-dir)
 
 ## `twilio serverless:activate`
 
@@ -60,7 +57,7 @@ OPTIONS
   --source-environment=source-environment  SID or suffix of an existing environment you want to deploy from.
 ```
 
-_See code: [src/commands/serverless/activate.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.1/src/commands/serverless/activate.js)_
+_See code: [src/commands/serverless/activate.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.2/src/commands/serverless/activate.js)_
 
 ## `twilio serverless:deploy`
 
@@ -82,7 +79,7 @@ OPTIONS
   --override-existing-project      Deploys project to existing service if a naming conflict has been found.
 ```
 
-_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.1/src/commands/serverless/deploy.js)_
+_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.2/src/commands/serverless/deploy.js)_
 
 ## `twilio serverless:init NAME`
 
@@ -101,7 +98,7 @@ OPTIONS
   --auth-token=auth-token    An auth token or API secret to be used for your project
 ```
 
-_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.1/src/commands/serverless/init.js)_
+_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.2/src/commands/serverless/init.js)_
 
 ## `twilio serverless:list [TYPES]`
 
@@ -125,7 +122,7 @@ OPTIONS
   --properties=properties        Specify the output properties you want to see. Works best on single types
 ```
 
-_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.1/src/commands/serverless/list.js)_
+_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.2/src/commands/serverless/list.js)_
 
 ## `twilio serverless:new [FILENAME]`
 
@@ -143,7 +140,7 @@ OPTIONS
   --template=template
 ```
 
-_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.1/src/commands/serverless/new.js)_
+_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.2/src/commands/serverless/new.js)_
 
 ## `twilio serverless:start [DIR]`
 
@@ -173,5 +170,5 @@ ALIASES
   $ twilio dev
 ```
 
-_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.1/src/commands/serverless/start.js)_
+_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.2/src/commands/serverless/start.js)_
 <!-- commandsstop -->
