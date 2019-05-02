@@ -27,7 +27,7 @@
     "rimraf": "^2.6.3"
   },
   "engines": {
-    "node": "~8.10.0"
+    "node": ">=8.10.0"
   },
   "files": [
     "/npm-shrinkwrap.json",
