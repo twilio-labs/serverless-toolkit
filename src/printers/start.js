@@ -1,5 +1,8 @@
-const chalk = require('chalk');
 const boxen = require('boxen');
+const chalk = require('chalk');
+const { stripIndent } = require('common-tags');
+const wrapAnsi = require('wrap-ansi');
+const size = require('window-size');
 const logSymbols = require('log-symbols');
 const {
   getFunctionsAndAssets,
@@ -124,4 +127,26 @@ async function printRouteInfo(config) {
   console.log(output);
 }
 
-module.exports = { printRouteInfo };
+function printVersionWarning(nodeVersion) {
+  const msg = chalk`
+      {underline.bold {yellow WARNING!} {bold Different Node.js version}}
+
+      You are currently running ${nodeVersion} but the Twilio Runtime is runnning version 8.10.
+
+      You might encounter differences between local development and production. 
+
+      For a more accurate local development experience, please switch your Node.js version.
+      A tool like nvm (https://github.com/creationix/nvm) can help.
+      `;
+  const wrappedMsg = wrapAnsi(msg, size.width - 20);
+  console.error(
+    boxen(stripIndent(wrappedMsg), {
+      padding: 1,
+      margin: 1,
+      borderStyle: 'double',
+      float: 'center',
+    })
+  );
+}
+
+module.exports = { printRouteInfo, printVersionWarning };

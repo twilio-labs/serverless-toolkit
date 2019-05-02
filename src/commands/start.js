@@ -1,12 +1,16 @@
-const boxen = require('boxen');
 const debug = require('debug')('twilio-run:start');
 
 const { createServer } = require('../runtime/server');
 const { startInspector } = require('../runtime/utils/inspector');
 const { getConfigFromCli } = require('../runtime/cli/config');
-const { printRouteInfo } = require('../printers/start');
+const { printRouteInfo, printVersionWarning } = require('../printers/start');
 
 async function handler(argv) {
+  const nodeVersion = process.versions.node;
+  if (!nodeVersion.startsWith('8.10')) {
+    printVersionWarning(nodeVersion);
+  }
+
   const cli = {
     flags: argv,
   };
