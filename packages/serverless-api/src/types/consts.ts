@@ -1,3 +1,5 @@
+/** @module @twilio-labs/serverless-api */
+
 export enum DeployStatus {
   CREATING_SERVICE = 'creating-service',
   CONFIGURING_ENVIRONMENT = 'configuring-environment',

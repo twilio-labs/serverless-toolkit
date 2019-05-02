@@ -1,3 +1,5 @@
+/** @module @twilio-labs/serverless-api */
+
 export * from './activate';
 export * from './client';
 export * from './deploy';

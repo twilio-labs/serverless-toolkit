@@ -1,3 +1,5 @@
+/** @module @twilio-labs/serverless-api/dist/utils/fs */
+
 import fs from 'fs';
 import path from 'path';
 import recursiveReadDir from 'recursive-readdir';

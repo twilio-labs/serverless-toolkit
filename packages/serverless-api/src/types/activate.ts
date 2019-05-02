@@ -1,3 +1,5 @@
+/** @module @twilio-labs/serverless-api */
+
 import { ClientConfig } from './client';
 import { Sid } from './serverless-api';
 

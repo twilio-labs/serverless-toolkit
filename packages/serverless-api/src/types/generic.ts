@@ -1,3 +1,5 @@
+/** @module @twilio-labs/serverless-api */
+
 import got = require('got');
 
 export type GotClient = typeof got;
