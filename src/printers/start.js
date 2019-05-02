@@ -95,7 +95,7 @@ function printPrettyRouteInfo(functions, assets, config) {
   }
 
   let ngrokInfo = '';
-  if (true || config.url.includes('ngrok.io')) {
+  if (config.url.includes('ngrok.io')) {
     ngrokInfo = chalk`{green.bold ngrok request inspector available:}\nhttp://127.0.0.1:4040`;
   }
 
