@@ -1,5 +1,6 @@
 /** @module @twilio-labs/serverless-api/dist/utils/fs */
 
+import debug from 'debug';
 import fs from 'fs';
 import path from 'path';
 import recursiveReadDir from 'recursive-readdir';
@@ -10,6 +11,8 @@ import {
   FileInfo,
   ResourcePathAndAccess,
 } from '../types';
+
+const log = debug('twilio-serverless-api:fs');
 
 export const access = promisify(fs.access);
 export const readFile = promisify(fs.readFile);
@@ -146,6 +149,21 @@ export function getFirstMatchingDirectory(
   );
 }
 
+export type SearchConfig = {
+  /**
+   * Ordered folder names to search for to find functions
+   *
+   * @type {string[]}
+   */
+  functionsFolderNames?: string[];
+  /**
+   * Ordered folder names to search for to find assets
+   *
+   * @type {string[]}
+   */
+  assetsFolderNames?: string[];
+};
+
 /**
  * Retrieves a list of functions and assets existing in a given base directory
  * Will check for both "functions" and "src" as directory for functions and
@@ -153,24 +171,38 @@ export function getFirstMatchingDirectory(
  *
  * @export
  * @param {string} cwd Directory
+ * @param {SearchConfig} config lets you override the folders to use
  * @returns {Promise<DirectoryContent>}
  */
 export async function getListOfFunctionsAndAssets(
-  cwd: string
+  cwd: string,
+  config: SearchConfig = {}
 ): Promise<DirectoryContent> {
+  console.log(config.assetsFolderNames);
   let functionsDir;
   try {
-    functionsDir = getFirstMatchingDirectory(cwd, ['functions', 'src']);
+    const possibleFunctionDirs = config.functionsFolderNames || [
+      'functions',
+      'src',
+    ];
+    log('Search for directory. Options: "%s"', possibleFunctionDirs.join(','));
+    functionsDir = getFirstMatchingDirectory(cwd, possibleFunctionDirs);
   } catch (err) {
     functionsDir = undefined;
   }
 
+  log('Found Functions Directory "%s"', functionsDir);
+
   let assetsDir;
   try {
-    assetsDir = getFirstMatchingDirectory(cwd, ['assets', 'static']);
+    const possibleAssetDirs = config.assetsFolderNames || ['assets', 'static'];
+    log('Search for directory. Options: "%s"', possibleAssetDirs.join(','));
+    assetsDir = getFirstMatchingDirectory(cwd, possibleAssetDirs);
   } catch (err) {
     assetsDir = undefined;
   }
+
+  log('Found Assets Direectory "%s"', assetsDir);
 
   const functions = functionsDir
     ? await getDirContent(functionsDir, '.js')

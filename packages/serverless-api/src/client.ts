@@ -39,7 +39,7 @@ import {
   ListResult,
 } from './types';
 import { DeployStatus } from './types/consts';
-import { getListOfFunctionsAndAssets } from './utils/fs';
+import { getListOfFunctionsAndAssets, SearchConfig } from './utils/fs';
 
 const log = debug('twilio-serverless-api:client');
 
@@ -459,9 +459,31 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
       message: 'Gathering Functions and Assets to deploy',
     });
 
-    const { functions, assets } = await getListOfFunctionsAndAssets(
-      deployConfig.cwd
+    log('Deploy config %O', deployConfig);
+
+    const searchConfig: SearchConfig = {};
+    if (deployConfig.functionsFolderName) {
+      searchConfig.functionsFolderNames = [deployConfig.functionsFolderName];
+    }
+
+    if (deployConfig.assetsFolderName) {
+      searchConfig.assetsFolderNames = [deployConfig.assetsFolderName];
+    }
+
+    let { functions, assets } = await getListOfFunctionsAndAssets(
+      deployConfig.cwd,
+      searchConfig
     );
+
+    if (deployConfig.noFunctions) {
+      log('Disabling functions upload by emptying functions array');
+      functions = [];
+    }
+
+    if (deployConfig.noAssets) {
+      log('Disabling assets upload by emptying assets array');
+      assets = [];
+    }
 
     const config = {
       ...this.config,
