@@ -68,9 +68,35 @@ export type DeployLocalProjectConfig = ClientConfig &
     /**
      * Root path used to check for functions and assets.
      * Will be used to search for `functions`, `src`, `assets` and `static` directories
+     *
+     * @type {string}
      */
     cwd: string;
+    /**
+     * Path to ".env" file
+     * @type {string}
+     */
     envPath: string;
+    /**
+     * Name of the folder containing assets
+     * @type {string}
+     */
+    assetsFolderName?: string;
+    /**
+     * Name of the folder containing functions
+     * @type {string}
+     */
+    functionsFolderName?: string;
+    /**
+     * Don't upload any functions
+     * @type {boolean}
+     */
+    noFunctions?: boolean;
+    /**
+     * Don't upload any assets
+     * @type {boolean}
+     */
+    noAssets?: boolean;
   };
 
 export type DeployResult = {
