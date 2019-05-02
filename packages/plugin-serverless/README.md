@@ -1,4 +1,4 @@
-@twilio/plugin-debugger
+@twilio-labs/plugin-serverless
 ========================
 
 Access and stream your Twilio debugger logs.
@@ -8,27 +8,27 @@ Access and stream your Twilio debugger logs.
 * [Commands](#commands)
 <!-- tocstop -->
 # Usage
-<!-- usage -->
 ```sh-session
-$ npm install -g @twilio-labs/plugin-serverless
-$ twilio COMMAND
-running command...
-$ twilio (-v|--version|version)
-@twilio-labs/plugin-serverless/1.0.0-alpha.1 darwin-x64 node-v8.10.0
-$ twilio --help [COMMAND]
+$ npm install -g twilio-cli
+$ twilio plugins:install @twilio-labs/plugin-serverless
+$ twilio dev
+running dev command...
+$ twilio --help serverless
 USAGE
-  $ twilio COMMAND
+  $ twilio serverless
 ...
 ```
-<!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`twilio serverless:activate`](#twilio-serverlessactivate)
-* [`twilio serverless:deploy`](#twilio-serverlessdeploy)
-* [`twilio serverless:init NAME`](#twilio-serverlessinit-name)
-* [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-types)
-* [`twilio serverless:new [FILENAME]`](#twilio-serverlessnew-filename)
-* [`twilio serverless:start [DIR]`](#twilio-serverlessstart-dir)
+- [@twilio-labs/plugin-serverless](#twilio-labsplugin-serverless)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`twilio serverless:activate`](#twilio-serverlessactivate)
+  - [`twilio serverless:deploy`](#twilio-serverlessdeploy)
+  - [`twilio serverless:init NAME`](#twilio-serverlessinit-name)
+  - [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-types)
+  - [`twilio serverless:new [FILENAME]`](#twilio-serverlessnew-filename)
+  - [`twilio serverless:start [DIR]`](#twilio-serverlessstart-dir)
 
 ## `twilio serverless:activate`
 
