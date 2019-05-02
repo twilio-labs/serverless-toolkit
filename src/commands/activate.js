@@ -80,14 +80,14 @@ async function handler(flags) {
     process.exit(1);
   }
 
+  const details = config.buildSid
+    ? `(${config.buildSid})`
+    : `from ${config.sourceEnvironment}`;
   const spinner = ora(
     `Activating build ${details} to ${config.targetEnvironment}`
   ).start();
   try {
     const client = new TwilioServerlessApiClient(config);
-    const details = config.buildSid
-      ? `(${config.buildSid})`
-      : `from ${config.sourceEnvironment}`;
     const result = await client.activateBuild(config);
     spinner.succeed(
       `Activated new build ${details} on ${config.targetEnvironment}`
