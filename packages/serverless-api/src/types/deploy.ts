@@ -1,4 +1,4 @@
-/** @module @twilio-labs/serverless-api/dist/types */
+/** @module @twilio-labs/serverless-api */
 
 import { PackageJson } from 'type-fest';
 import { ClientConfig } from './client';

@@ -1,3 +1,5 @@
+/** @module @twilio-labs/serverless-api */
+
 import { Dependency } from './generic';
 
 export type Sid = string;

@@ -1,3 +1,5 @@
+/** @module @twilio-labs/serverless-api/dist/api */
+
 import { PackageJson } from 'type-fest';
 import { Dependency } from '../types';
 

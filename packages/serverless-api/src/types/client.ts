@@ -1,3 +1,5 @@
+/** @module @twilio-labs/serverless-api */
+
 /**
  * Config to set up a API request client
  */

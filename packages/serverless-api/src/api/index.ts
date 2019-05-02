@@ -1,3 +1,5 @@
+/** @module @twilio-labs/serverless-api/dist/api */
+
 export * from './assets';
 export * from './builds';
 export * from './dependencies';

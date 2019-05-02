@@ -1,3 +1,5 @@
+/** @module @twilio-labs/serverless-api/dist/api */
+
 import debug from 'debug';
 import querystring from 'querystring';
 import { JsonObject } from 'type-fest';

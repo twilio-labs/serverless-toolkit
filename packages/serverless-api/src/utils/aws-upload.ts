@@ -1,4 +1,4 @@
-/** @module @twilio-labs/serverless-api/dist/utils/aws-upload */
+/** @module @twilio-labs/serverless-api/dist/utils */
 
 import fileType from 'file-type';
 import got from 'got';

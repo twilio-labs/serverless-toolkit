@@ -1,3 +1,5 @@
+/** @module @twilio-labs/serverless-api/dist/api */
+
 import debug from 'debug';
 import { EnvironmentList, EnvironmentResource, GotClient, Sid } from '../types';
 
