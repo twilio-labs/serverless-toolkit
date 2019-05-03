@@ -65,6 +65,10 @@ async function getConfigFromFlags(flags) {
     force: flags.force,
     projectName: flags.projectName || pkgJson.name,
     functionsEnv: flags.functionsEnv,
+    functionsFolderName: flags.functionsFolder,
+    assetsFolderName: flags.assetsFolder,
+    noAssets: !flags.assets,
+    noFunctions: !flags.functions,
   };
 }
 
@@ -108,6 +112,8 @@ async function handler(flags) {
     logError('Internal Error');
     process.exit(1);
   }
+
+  log('Deploy Config %O', config);
 
   if (!config.accountSid || !config.authToken) {
     logError(
@@ -178,6 +184,24 @@ const cliInfo = {
       type: 'boolean',
       describe: 'Will run deployment in force mode. Can be dangerous.',
       default: false,
+    },
+    functions: {
+      type: 'boolean',
+      describe: 'Upload functions. Can be turned off with --no-functions',
+      default: true,
+    },
+    assets: {
+      type: 'boolean',
+      describe: 'Upload assets. Can be turned off with --no-assets',
+      default: true,
+    },
+    'assets-folder': {
+      type: 'string',
+      describe: 'Specific folder name to be used for static assets',
+    },
+    'functions-folder': {
+      type: 'string',
+      describe: 'Specific folder name to be used for static functions',
     },
   },
 };
