@@ -55,6 +55,9 @@
       "@oclif/plugin-help"
     ],
     "topics": {
+      "dev": {
+        "description": "Starts a local Serverless development environnment"
+      },
       "serverless:start": {
         "description": "Starts a local development environment"
       },
