@@ -50,6 +50,12 @@ async function getConfigFromFlags(flags) {
   const env = {
     ...localEnv,
   };
+
+  for (let key of Object.keys(env)) {
+    if (typeof env[key] === 'string' && env[key].length === 0) {
+      delete env[key];
+    }
+  }
   delete env.ACCOUNT_SID;
   delete env.AUTH_TOKEN;
 
