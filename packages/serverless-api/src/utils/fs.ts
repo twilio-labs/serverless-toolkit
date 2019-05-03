@@ -178,7 +178,6 @@ export async function getListOfFunctionsAndAssets(
   cwd: string,
   config: SearchConfig = {}
 ): Promise<DirectoryContent> {
-  console.log(config.assetsFolderNames);
   let functionsDir;
   try {
     const possibleFunctionDirs = config.functionsFolderNames || [
