@@ -38,7 +38,7 @@ function createPackageJSON(path, name) {
 }
 
 function createExampleFunction(path) {
-  const content = `exports.handler = function(event, context, callback) {
+  const content = `exports.handler = function(context, event, callback) {
   const twiml = new Twilio.twiml.VoiceResponse();
   twiml.say("Hello World!");
   callback(null, twiml);
