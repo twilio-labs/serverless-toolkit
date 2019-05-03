@@ -81,7 +81,11 @@ function functionToRoute(fn, config) {
     }
 
     debug('Calling function for %s', req.path);
-    fn(context, event, callback);
+    try {
+      fn(context, event, callback);
+    } catch (err) {
+      callback(err.message);
+    }
   };
 }
 
