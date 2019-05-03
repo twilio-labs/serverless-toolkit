@@ -27,7 +27,7 @@ async function getConfigFromFlags(flags) {
 
   if (await fileExists(envPath)) {
     const contentEnvFile = await readFile(envPath, 'utf8');
-    const localEnv = dotenv.parse(contentEnvFile);
+    localEnv = dotenv.parse(contentEnvFile);
 
     accountSid =
       flags.accountSid || localEnv.ACCOUNT_SID || flags._cliDefault.username;
