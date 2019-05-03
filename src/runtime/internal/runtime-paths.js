@@ -13,7 +13,7 @@ async function getFunctionsAndAssets(baseDir) {
     };
   });
   assets = assets.map(fileInfo => {
-    const info = fsHelpers.getPathAndAccessFromFileInfo(fileInfo, '.js');
+    const info = fsHelpers.getPathAndAccessFromFileInfo(fileInfo);
     return {
       ...fileInfo,
       assetPath: info.path,
