@@ -35,7 +35,7 @@
       "integrity": "sha512-w7iqhDH9mN8eLClQOYTkhdYUOSpp25eXxfc6VbFOGtzxW34JcvctH2bKjj4jD4++z4R5iO5D+pg48W2e03I65A==",
       "dev": true,
       "requires": {
-        "@types/node": "11.13.2"
+        "@types/node": "11.13.9"
       }
     },
     "@types/glob": {
@@ -46,7 +46,7 @@
       "requires": {
         "@types/events": "3.0.0",
         "@types/minimatch": "3.0.3",
-        "@types/node": "11.13.2"
+        "@types/node": "11.13.9"
       }
     },
     "@types/got": {
@@ -54,7 +54,7 @@
       "resolved": "https://registry.npmjs.org/@types/got/-/got-9.4.1.tgz",
       "integrity": "sha512-m7Uc07bG/bZ+Dis7yI3mGssYDcAdUvP4irF3ZmBzf0ig7zEd1FyADfnELVGcf+p1Ol/iPCXbZYwcSNOJA2a+Qg==",
       "requires": {
-        "@types/node": "11.13.2",
+        "@types/node": "11.13.9",
         "@types/tough-cookie": "2.3.5"
       }
     },
@@ -97,16 +97,16 @@
       "dev": true
     },
     "@types/node": {
-      "version": "11.13.2",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-11.13.2.tgz",
-      "integrity": "sha512-HOtU5KqROKT7qX/itKHuTtt5fV0iXbheQvrgbLNXFJQBY/eh+VS5vmmTAVlo3qIGMsypm0G4N1t2AXjy1ZicaQ=="
+      "version": "11.13.9",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-11.13.9.tgz",
+      "integrity": "sha512-NJ4yuEVw5podZbINp3tEqUIImMSAEHaCXRiWCf3KC32l6hIKf0iPJEh2uZdT0fELfRYk310yLmMXqy2leZQUbg=="
     },
     "@types/recursive-readdir": {
       "version": "2.2.0",
       "resolved": "https://registry.npmjs.org/@types/recursive-readdir/-/recursive-readdir-2.2.0.tgz",
       "integrity": "sha512-HGk753KRu2N4mWduovY4BLjYq4jTOL29gV2OfGdGxHcPSWGFkC5RRIdk+VTs5XmYd7MVAD+JwKrcb5+5Y7FOCg==",
       "requires": {
-        "@types/node": "11.13.2"
+        "@types/node": "11.13.9"
       }
     },
     "@types/shelljs": {
@@ -116,7 +116,7 @@
       "dev": true,
       "requires": {
         "@types/glob": "7.1.1",
-        "@types/node": "11.13.2"
+        "@types/node": "11.13.9"
       }
     },
     "@types/tough-cookie": {
@@ -207,9 +207,9 @@
       }
     },
     "file-type": {
-      "version": "10.10.0",
-      "resolved": "https://registry.npmjs.org/file-type/-/file-type-10.10.0.tgz",
-      "integrity": "sha512-3CTQE/db3dnK2jsfd4XiXMKw9nD0QVEMRLdBzqYDRr5BvYMUccDpP8hMc1uPb1VZ9Iw/cAJjYPNwJ5UzxGqsRg=="
+      "version": "10.11.0",
+      "resolved": "https://registry.npmjs.org/file-type/-/file-type-10.11.0.tgz",
+      "integrity": "sha512-uzk64HRpUZyTGZtVuvrjP0FYxzQrBf4rojot6J65YMEbwBLB0CWm0CLojVpwpmFmxcE/lkvYICgfcGozbBq6rw=="
     },
     "fs-extra": {
       "version": "7.0.1",
@@ -359,16 +359,16 @@
       "dev": true
     },
     "mime-db": {
-      "version": "1.38.0",
-      "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.38.0.tgz",
-      "integrity": "sha512-bqVioMFFzc2awcdJZIzR3HjZFX20QhilVS7hytkKrv7xFAn8bM1gzc/FOX2awLISvWe0PV8ptFKcon+wZ5qYkg=="
+      "version": "1.40.0",
+      "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.40.0.tgz",
+      "integrity": "sha512-jYdeOMPy9vnxEqFRRo6ZvTZ8d9oPb+k18PKoYNYUe2stVEBPPwsln/qWzdbmaIvnhZ9v2P+CuecK+fpUfsV2mA=="
     },
     "mime-types": {
-      "version": "2.1.22",
-      "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.22.tgz",
-      "integrity": "sha512-aGl6TZGnhm/li6F7yx82bJiBZwgiEa4Hf6CNr8YO+r5UHr53tSTYZb102zyU50DOWWKeOv0uQLRL0/9EiKWCog==",
+      "version": "2.1.24",
+      "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.24.tgz",
+      "integrity": "sha512-WaFHS3MCl5fapm3oLxU4eYDw77IQM2ACcxQ9RIxfaC3ooc6PFuBMGZZsYpvoXS5D5QTWPieo1jjLdAm3TBP3cQ==",
       "requires": {
-        "mime-db": "1.38.0"
+        "mime-db": "1.40.0"
       }
     },
     "mimic-response": {
@@ -518,9 +518,9 @@
       "integrity": "sha512-Iq25XBt6zD5npPhlLVXGFN3/gyR2/qODcKNNyTMd4vbm39HUaOiAM4PMq0eMVC/Tkxz+Zjdsc55g9yyz+Yq00Q=="
     },
     "type-fest": {
-      "version": "0.3.0",
-      "resolved": "https://registry.npmjs.org/type-fest/-/type-fest-0.3.0.tgz",
-      "integrity": "sha512-fg3sfdDdJDtdHLUpeGsf/fLyG1aapk6zgFiYG5+MDUPybGrJemH4SLk5tP7hGRe8ntxjg0q5LYW53b6YpJIQ9Q=="
+      "version": "0.3.1",
+      "resolved": "https://registry.npmjs.org/type-fest/-/type-fest-0.3.1.tgz",
+      "integrity": "sha512-cUGJnCdr4STbePCgqNFbpVNCepa+kAVohJs1sLhxzdH+gnEoOd8VhbYa7pD3zZYGiURWM2xzEII3fQcRizDkYQ=="
     },
     "typedoc": {
       "version": "0.14.2",
