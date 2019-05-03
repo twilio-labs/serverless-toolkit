@@ -2,6 +2,7 @@ const { resolve } = require('path');
 const { readFileSync } = require('fs');
 const dotenv = require('dotenv');
 const logSymbols = require('log-symbols');
+const { fileExists } = require('../../utils/fs');
 const debug = require('debug')('twilio-run:cli:config');
 
 async function getUrl(cli, port) {
@@ -29,17 +30,17 @@ function getPort(cli) {
   return port;
 }
 
-function getEnvironment(cli, baseDir) {
+async function getEnvironment(cli, baseDir) {
   let env = {};
   if (cli.flags.loadLocalEnv) {
     debug('Loading local environment variables');
     env = { ...process.env };
   }
 
-  if (typeof cli.flags.env !== 'undefined') {
-    const envFilePath = cli.flags.env.length === 0 ? '.env' : cli.flags.env;
+  const envFilePath = cli.flags.env || '.env';
+  const fullEnvPath = resolve(baseDir || process.cwd(), envFilePath);
+  if (await fileExists(fullEnvPath)) {
     try {
-      const fullEnvPath = resolve(baseDir || process.cwd(), envFilePath);
       debug(`Read .env file at "%s"`, fullEnvPath);
       const envContent = readFileSync(fullEnvPath, 'utf8');
       const envValues = dotenv.parse(envContent);
@@ -49,6 +50,11 @@ function getEnvironment(cli, baseDir) {
     } catch (err) {
       console.error(logSymbols.error, 'Failed to read .env file');
     }
+  } else {
+    if (cli.flags.env) {
+      console.error(logSymbols.error, 'Failed to find .env file');
+    }
+    debug('Not loading a .env file');
   }
   return env;
 }
@@ -79,7 +85,7 @@ async function getConfigFromCli(cli) {
 
   config.inspect = getInspectInfo(cli);
   config.baseDir = getBaseDirectory(cli);
-  config.env = getEnvironment(cli, config.baseDir);
+  config.env = await getEnvironment(cli, config.baseDir);
   config.port = getPort(cli);
   config.url = await getUrl(cli, config.port);
   config.detailedLogs = cli.flags.detailedLogs;
