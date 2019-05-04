@@ -33,7 +33,7 @@ create-twilio-function function-name
 
 ## Command line arguments
 
-```bash
+```
 create-twilio-function <name>
 
 Creates a new Twilio Function project
