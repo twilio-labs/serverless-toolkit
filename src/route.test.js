@@ -20,9 +20,10 @@ mockResponse.type = jest.fn(() => mockResponse);
 
 describe('handleError function', () => {
   test('calls correct response methods', () => {
-    handleError('Failed to execute', mockResponse);
+    const err = new Error('Failed to execute');
+    handleError(err, mockResponse);
     expect(mockResponse.status).toHaveBeenCalledWith(500);
-    expect(mockResponse.send).toHaveBeenCalledWith('Failed to execute');
+    expect(mockResponse.send).toHaveBeenCalledWith(err.stack);
   });
 });
 
