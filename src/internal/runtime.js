@@ -51,7 +51,7 @@ function getFunctions() {
 }
 
 function create({ env }) {
-  function getSync({ serviceName = 'default' }) {
+  function getSync(serviceName = 'default') {
     const client = twilio(env.ACCOUNT_SID, env.AUTH_TOKEN);
     return client.sync.services(serviceName);
   }
