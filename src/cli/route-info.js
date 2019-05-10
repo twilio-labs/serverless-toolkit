@@ -2,11 +2,12 @@ const { basename } = require('path');
 const chalk = require('chalk');
 const { stripIndent } = require('common-tags');
 const logSymbols = require('log-symbols');
-const Runtime = require('../internal/runtime');
 
-function getRouteInfo({ url }) {
+function getRouteInfo(config) {
+  const { url } = config;
   const info = [];
 
+  const Runtime = require('../internal/runtime').create(config);
   const functions = Runtime.getFunctions();
   if (functions === null) {
     info.push(`

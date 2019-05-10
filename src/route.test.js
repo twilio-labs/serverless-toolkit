@@ -139,12 +139,18 @@ describe('constructContext function', () => {
 });
 
 describe('constructGlobalScope function', () => {
+  const ACCOUNT_SID = 'ACxxxxx';
+  const AUTH_TOKEN = 'xyz';
+  let config;
+
   beforeEach(() => {
+    config = { url: 'http://localhost:8000', env: { ACCOUNT_SID, AUTH_TOKEN } };
     global['Twilio'] = undefined;
     global['Runtime'] = undefined;
   });
 
   afterEach(() => {
+    config = {};
     global['Twilio'] = undefined;
     global['Runtime'] = undefined;
   });
@@ -152,10 +158,12 @@ describe('constructGlobalScope function', () => {
   test('sets the correct global variables', () => {
     expect(global.Twilio).toBeUndefined();
     expect(global.Runtime).toBeUndefined();
-    constructGlobalScope();
+    constructGlobalScope(config);
     const twilio = require('twilio');
     expect(global.Twilio).toEqual({ ...twilio, Response });
-    expect(global.Runtime).toEqual(Runtime);
+    expect(typeof global.Runtime.getAssets).toBe('function');
+    expect(typeof global.Runtime.getFunctions).toBe('function');
+    expect(typeof global.Runtime.getSync).toBe('function');
   });
 });
 
