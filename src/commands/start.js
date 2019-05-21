@@ -19,6 +19,9 @@ async function handler(argv) {
   debug('Determined configuration: %o', config);
   process.title = config.appName;
 
+  debug('Set environment variables as: %o', config.env);
+  process.env = config.env;
+
   if (config.inspect) {
     debug(
       'Starting inspector mode with following configuration: %o',
