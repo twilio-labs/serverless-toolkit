@@ -14,9 +14,7 @@ class FunctionsList extends TwilioClientCommand {
     this.showHeaders = true;
   }
 
-  async run() {
-    await super.run();
-
+  async runCommand() {
     let { flags, args } = this.parse(FunctionsList);
     flags = normalizeFlags(flags);
 

@@ -17,9 +17,7 @@ class FunctionsActivate extends TwilioClientCommand {
     this.showHeaders = true;
   }
 
-  async run() {
-    await super.run();
-
+  async runCommand() {
     let { flags, args } = this.parse(FunctionsActivate);
     flags = normalizeFlags(flags);
 
