@@ -37,6 +37,6 @@ FunctionsStart.flags = Object.assign(
   convertYargsOptionsToOclifFlags(cliInfo.options)
 );
 
-FunctionsStart.aliases = ['serverless:dev', 'dev'];
+FunctionsStart.aliases = ['serverless:dev', 'serverless:run'];
 
 module.exports = FunctionsStart;
