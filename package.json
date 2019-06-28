@@ -18,10 +18,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/dkundel/twilio-run.git"
+    "url": "https://github.com/twilio-labs/twilio-run.git"
   },
   "bugs": {
-    "url": "https://github.com/dkundel/twilio-run/issues",
+    "url": "https://github.com/twilio-labs/twilio-run/issues",
     "email": "dkundel@twilio.com"
   },
   "author": "Dominik Kundel <dkundel@twilio.com>",
