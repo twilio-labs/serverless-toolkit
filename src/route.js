@@ -28,7 +28,7 @@ function constructGlobalScope(config) {
 
 function handleError(err, res) {
   res.status(500);
-  res.send(err);
+  res.send(err.stack);
 }
 
 function isTwiml(obj) {
@@ -81,7 +81,12 @@ function functionToRoute(fn, config) {
     }
 
     debug('Calling function for %s', req.path);
-    fn(context, event, callback);
+
+    try {
+      fn(context, event, callback);
+    } catch (err) {
+      callback(err);
+    }
   };
 }
 
