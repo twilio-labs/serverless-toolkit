@@ -21,8 +21,7 @@ function getRouteInfo(config) {
       })
       .join('\n');
     info.push(chalk`
-      {green Twilio functions available at:}
-      ${fnInfo}
+      {green Twilio functions available at:}\n${fnInfo}
     `);
   }
 
