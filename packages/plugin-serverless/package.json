@@ -55,20 +55,26 @@
       "@oclif/plugin-help"
     ],
     "topics": {
-      "dev": {
-        "description": "Starts a local Serverless development environnment"
+      "serverless": {
+        "description": "locally develop, debug and deploy to Twilio Serverless "
+      },
+      "serverless:init": {
+        "description": "creates a new Twilio Serverless project"
+      },
+      "serverless:activate": {
+        "description": "moves an active deployment from one environment to another"
       },
       "serverless:start": {
-        "description": "Starts a local development environment"
+        "description": "starts a local development environment"
       },
       "serverless:new": {
-        "description": "Bootstraps a new function in your local project"
+        "description": "bootstraps a new function in your local project"
       },
       "serverless:list": {
-        "description": "Lists services, projects and similar related to your project"
+        "description": "lists services, projects and similar related to your project"
       },
       "serverless:deploy": {
-        "description": "Deploys your local serverless project"
+        "description": "deploys your local serverless project"
       }
     }
   },
