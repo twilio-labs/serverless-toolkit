@@ -34,6 +34,11 @@ $ npx twilio-run
     --env, -e [/path/to/.env] Loads .env file, overrides local env variables
     --port, -p <port> Override default port of 3000
     --ngrok [subdomain] Uses ngrok to create an outfacing url
+    --no-logs Turns request logging off
+    --detailed-logs Turns on detailed request logging
+    --live Always serve from the current functions (no caching)
+    --inspect [host:port] Enables Node.js debugging protocol
+    --inspect-brk [host:port] Enables Node.js debugging protocol, stops execution until debugger is attached
 
   Examples
     $ twilio-run

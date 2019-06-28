@@ -18,8 +18,17 @@ const availableFunctions = readdirSync(TEST_FUNCTIONS_DIR).map(name => {
 });
 
 function responseToSnapshotJson(response) {
-  const { statusCode, type, body, text, headers } = response;
+  let { statusCode, type, body, text, headers } = response;
   delete headers['date'];
+
+  if (text.startsWith('Error')) {
+    // stack traces are different in every environment
+    // let's not snapshot values that rely on it
+    text = `${text.split('\n')[0]} ...`;
+    delete headers['content-length'];
+    delete headers['etag'];
+  }
+
   return {
     statusCode,
     type,
@@ -43,7 +52,6 @@ describe('Function integration tests', () => {
   for (const testFnCode of availableFunctions) {
     test(`${testFnCode.name} should match snapshot`, async () => {
       const response = await request(app).get(testFnCode.url);
-      expect(response.statusCode).toBe(200);
       const result = responseToSnapshotJson(response);
       expect(result).toMatchSnapshot();
     });

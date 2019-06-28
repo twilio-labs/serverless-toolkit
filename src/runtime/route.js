@@ -28,7 +28,7 @@ function constructGlobalScope(config) {
 
 function handleError(err, res) {
   res.status(500);
-  res.send(err);
+  res.send(err.stack);
 }
 
 function isTwiml(obj) {

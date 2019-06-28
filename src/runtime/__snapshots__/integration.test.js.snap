@@ -1,5 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Function integration tests basic-error.js should match snapshot 1`] = `
+Object {
+  "body": Object {},
+  "headers": Object {
+    "connection": "close",
+    "content-type": "text/html; charset=utf-8",
+    "x-powered-by": "Express",
+  },
+  "statusCode": 500,
+  "text": "Error: I'm throwing ...",
+  "type": "text/html",
+}
+`;
+
 exports[`Function integration tests basic-twiml.js should match snapshot 1`] = `
 Object {
   "body": Object {},
