@@ -1,15 +1,34 @@
 @twilio-labs/plugin-serverless
 ========================
 
-Access and stream your Twilio debugger logs.
+This plugin adds functionality to the [Twilio CLI](https://github.com/twilio/twilio-cli) to locally develop,
+debug and deploy to Twilio Serverless. It's a wrapper around [twilio-run](https://github.com/twilio-labs/twilio-run) and [create-twilio-function](https://github.com/philnash/create-twilio-function).
 
 <!-- toc -->
+* [Requirements](#requirements)
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
-# Usage
+# Requirements
+
+## Install the Twilio CLI
+
+Via `npm` or `yarn`:
+
 ```sh-session
 $ npm install -g twilio-cli
+$ yarn global add twilio-cli
+```
+
+Via `homebrew`:
+
+```sh-session
+$ brew tap twilio/brew && brew install twilio
+```
+
+# Usage
+
+```sh-session
 $ twilio plugins:install @twilio-labs/plugin-serverless
 $ twilio dev
 running dev command...
@@ -18,14 +37,20 @@ USAGE
   $ twilio serverless
 ...
 ```
+
 # Commands
 <!-- commands -->
-* [`twilio serverless:activate`](#twilio-serverlessactivate)
-* [`twilio serverless:deploy`](#twilio-serverlessdeploy)
-* [`twilio serverless:init NAME`](#twilio-serverlessinit-name)
-* [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-types)
-* [`twilio serverless:new [FILENAME]`](#twilio-serverlessnew-filename)
-* [`twilio serverless:start [DIR]`](#twilio-serverlessstart-dir)
+- [@twilio-labs/plugin-serverless](#twilio-labsplugin-serverless)
+- [Requirements](#Requirements)
+  - [Install the Twilio CLI](#Install-the-Twilio-CLI)
+- [Usage](#Usage)
+- [Commands](#Commands)
+  - [`twilio serverless:activate`](#twilio-serverlessactivate)
+  - [`twilio serverless:deploy`](#twilio-serverlessdeploy)
+  - [`twilio serverless:init NAME`](#twilio-serverlessinit-NAME)
+  - [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-TYPES)
+  - [`twilio serverless:new [FILENAME]`](#twilio-serverlessnew-FILENAME)
+  - [`twilio serverless:start [DIR]`](#twilio-serverlessstart-DIR)
 
 ## `twilio serverless:activate`
 
