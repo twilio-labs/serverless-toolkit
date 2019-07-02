@@ -1,4 +1,5 @@
 @twilio-labs/plugin-serverless
+[![All Contributors](https://img.shields.io/badge/all_contributors-0-orange.svg?style=flat-square)](#contributors)
 ========================
 
 This plugin adds functionality to the [Twilio CLI](https://github.com/twilio/twilio-cli) to locally develop,
@@ -40,7 +41,7 @@ USAGE
 
 # Commands
 <!-- commands -->
-- [@twilio-labs/plugin-serverless](#twilio-labsplugin-serverless)
+- [![All Contributors](#contributors)](#All-Contributorscontributors)
 - [Requirements](#Requirements)
   - [Install the Twilio CLI](#Install-the-Twilio-CLI)
 - [Usage](#Usage)
@@ -51,6 +52,8 @@ USAGE
   - [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-TYPES)
   - [`twilio serverless:new [FILENAME]`](#twilio-serverlessnew-FILENAME)
   - [`twilio serverless:start [DIR]`](#twilio-serverlessstart-DIR)
+- [Contributors](#Contributors)
+- [License](#License)
 
 ## `twilio serverless:activate`
 
@@ -209,3 +212,17 @@ ALIASES
 
 _See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.5/src/commands/serverless/start.js)_
 <!-- commandsstop -->
+
+# Contributors
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+# License
+
+MIT
