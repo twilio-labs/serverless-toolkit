@@ -1,8 +1,7 @@
 <h1 align="center">@twilio-labs/plugin-serverless</h1>
 <p align="center">Plugin for the <a href="https://github.com/twilio/twilio-cli">Twilio CLI</a> to locally develop, debug and deploy to <a href="https://www.twilio.com/functions">Twilio Serverless</a>.</p>
 <p align="center">
-<img alt="npm (scoped)" src="https://img.shields.io/npm/v/@twilio-labs/plugin-serverless.svg?style=flat-square"> <img alt="npm" src="https://img.shields.io/npm/dt/@twilio-labs/plugin-serverless.svg?style=flat-square"> <img alt="GitHub" src="https://img.shields.io/github/license/twilio-labs/plugin-serverless.svg?style=flat-square"> <a href="#contributors"><img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square" /></a> <a href="https://github.com/twilio-labs/.github/blob/master/CODE_OF_CONDUCT.md"><img alt="Code of Conduct" src="https://img.shields.io/badge/%F0%9F%92%96-Code%20of%20Conduct-blueviolet.svg?style=flat-square"></a>
-</p>
+<img alt="npm (scoped)" src="https://img.shields.io/npm/v/@twilio-labs/plugin-serverless.svg?style=flat-square"> <img alt="npm" src="https://img.shields.io/npm/dt/@twilio-labs/plugin-serverless.svg?style=flat-square"> <img alt="GitHub" src="https://img.shields.io/github/license/twilio-labs/plugin-serverless.svg?style=flat-square"> <a href="#contributors"><img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square" /></a> <a href="https://github.com/twilio-labs/.github/blob/master/CODE_OF_CONDUCT.md"><img alt="Code of Conduct" src="https://img.shields.io/badge/%F0%9F%92%96-Code%20of%20Conduct-blueviolet.svg?style=flat-square"></a> <a href="http://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" /></a> </<a>
 <hr>
 
 This plugin adds functionality to the [Twilio CLI](https://github.com/twilio/twilio-cli) to locally develop,
@@ -12,6 +11,8 @@ debug and deploy to Twilio Serverless. It's a wrapper around [twilio-run](https:
 * [Requirements](#requirements)
 * [Usage](#usage)
 * [Commands](#commands)
+* [Contributing](#contributing)
+* [License](#license)
 <!-- tocstop -->
 # Requirements
 
@@ -54,7 +55,9 @@ USAGE
   - [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-TYPES)
   - [`twilio serverless:new [FILENAME]`](#twilio-serverlessnew-FILENAME)
   - [`twilio serverless:start [DIR]`](#twilio-serverlessstart-DIR)
-- [Contributors](#Contributors)
+- [Contributing](#Contributing)
+  - [Code of Conduct](#Code-of-Conduct)
+  - [Contributors](#Contributors)
 - [License](#License)
 
 ## `twilio serverless:activate`
@@ -214,8 +217,15 @@ ALIASES
 
 _See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.5/src/commands/serverless/start.js)_
 <!-- commandsstop -->
+#  Contributing
 
-# Contributors
+This project welcomes contributions from the community. Please see the [`CONTRIBUTING.md`](CONTRIBUTING.md) file for more details.
+
+## Code of Conduct
+
+Please be aware that this project has a [Code of Conduct](https://github.com/twilio-labs/.github/blob/master/CODE_OF_CONDUCT.md). The tldr; is to just be excellent to each other ❤️
+
+## Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
