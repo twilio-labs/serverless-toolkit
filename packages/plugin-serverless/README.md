@@ -1,6 +1,9 @@
-@twilio-labs/plugin-serverless
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
-========================
+<h1 align="center">@twilio-labs/plugin-serverless</h1>
+<p align="center">Plugin for the <a href="https://github.com/twilio/twilio-cli">Twilio CLI</a> to locally develop, debug and deploy to <a href="https://www.twilio.com/functions">Twilio Serverless</a>.</p>
+<p align="center">
+<img alt="npm (scoped)" src="https://img.shields.io/npm/v/@twilio-labs/plugin-serverless.svg?style=flat-square"> <img alt="npm" src="https://img.shields.io/npm/dt/@twilio-labs/plugin-serverless.svg?style=flat-square"> <img alt="GitHub" src="https://img.shields.io/github/license/twilio-labs/plugin-serverless.svg?style=flat-square"> <a href="#contributors"><img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square" /></a> <a href="https://github.com/twilio-labs/.github/blob/master/CODE_OF_CONDUCT.md"><img alt="Code of Conduct" src="https://img.shields.io/badge/%F0%9F%92%96-Code%20of%20Conduct-blueviolet.svg?style=flat-square"></a>
+</p>
+<hr>
 
 This plugin adds functionality to the [Twilio CLI](https://github.com/twilio/twilio-cli) to locally develop,
 debug and deploy to Twilio Serverless. It's a wrapper around [twilio-run](https://github.com/twilio-labs/twilio-run) and [create-twilio-function](https://github.com/philnash/create-twilio-function).
@@ -41,7 +44,6 @@ USAGE
 
 # Commands
 <!-- commands -->
-- [![All Contributors](#contributors)](#All-Contributorscontributors)
 - [Requirements](#Requirements)
   - [Install the Twilio CLI](#Install-the-Twilio-CLI)
 - [Usage](#Usage)
