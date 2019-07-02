@@ -20,8 +20,10 @@ You won't be able to use this library unless you have been granted prior access 
   - [`client.getClient(): GotClient`](#clientgetClient-GotClient)
   - [`client.list(listConfig: ListConfig): Promise<ListResult>`](#clientlistlistConfig-ListConfig-PromiseListResult)
   - [`api` and `fsHelpers`](#api-and-fsHelpers)
+- [Contributing](#Contributing)
+  - [Code of Conduct](#Code-of-Conduct)
+  - [Contributors](#Contributors)
 - [License](#License)
-- [Contributors](#Contributors)
 
 ## Installation
 
@@ -117,18 +119,30 @@ const api = require('@twilio-labs/serverless-api/dist/api');
 const utils = require('@twilio-labs/serverless-api/dist/utils');
 ```
 
-## License
+##  Contributing
 
-MIT
+This project welcomes contributions from the community. Please see the [`CONTRIBUTING.md`](CONTRIBUTING.md) file for more details.
 
-## Contributors
+### Code of Conduct
+
+Please be aware that this project has a [Code of Conduct](https://github.com/twilio-labs/.github/blob/master/CODE_OF_CONDUCT.md). The tldr; is to just be excellent to each other ❤️
+
+### Contributors
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
 <table>
   <tr>
-    <td align="center"><a href="https://dkundel.com"><img src="https://avatars3.githubusercontent.com/u/1505101?v=4" width="100px;" alt="Dominik Kundel"/><br /><sub><b>Dominik Kundel</b></sub></a><br /><a href="https://github.com/twilio-labs/serverless-api/commits?author=dkundel" title="Code">💻</a> <a href="https://github.com/twilio-labs/serverless-api/commits?author=dkundel" title="Documentation">📖</a> <a href="#ideas-dkundel" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://dkundel.com"><img src="https://avatars3.githubusercontent.com/u/1505101?v=4" width="100px;" alt="Dominik Kundel"/><br /><sub><b>Dominik Kundel</b></sub></a><br /><a href="https://github.com/twilio-labs/plugin-serverless/commits?author=dkundel" title="Code">💻</a> <a href="https://github.com/twilio-labs/plugin-serverless/commits?author=dkundel" title="Documentation">📖</a> <a href="#ideas-dkundel" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+## License
+
+MIT
