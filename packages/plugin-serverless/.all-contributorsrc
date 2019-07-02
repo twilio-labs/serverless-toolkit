@@ -20,6 +20,16 @@
         "doc",
         "ideas"
       ]
+    },
+    {
+      "login": "childish-sambino",
+      "name": "childish-sambino",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/47228322?v=4",
+      "profile": "https://github.com/childish-sambino",
+      "contributions": [
+        "code",
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7
