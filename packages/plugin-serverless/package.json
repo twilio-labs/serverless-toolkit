@@ -18,6 +18,7 @@
     "@oclif/plugin-help": "^2.1.6",
     "@oclif/test": "^1.2.4",
     "@twilio/cli-test": "^1.0.0",
+    "all-contributors-cli": "^6.7.0",
     "chai": "^4.2.0",
     "eslint": "^4.19.1",
     "eslint-config-oclif": "^1.5.1",
