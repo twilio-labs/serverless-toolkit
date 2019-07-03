@@ -2,7 +2,7 @@
 
 A command line tool to setup a new [Twilio Function](https://www.twilio.com/docs/api/runtime/functions) with local testing using [`twilio-run`](https://github.com/twilio-labs/twilio-run).
 
-[![Build Status](https://travis-ci.org/twilio-labs/create-twilio-function.svg?branch=master)](https://travis-ci.org/twilio-labs/create-twilio-function) [![Maintainability](https://api.codeclimate.com/v1/badges/e5a8bfd53740478460e0/maintainability)](https://codeclimate.com/github/philnash/create-twilio-function/maintainability)
+[![Build Status](https://travis-ci.com/twilio-labs/create-twilio-function.svg?branch=master)](https://travis-ci.com/twilio-labs/create-twilio-function) [![Maintainability](https://api.codeclimate.com/v1/badges/e6f9eb67589927df5d72/maintainability)](https://codeclimate.com/github/twilio-labs/create-twilio-function/maintainability)
 
 ## Usage
 
