@@ -15,11 +15,11 @@
   "author": "Phil Nash <philnash@twilio.com> (http://philna.sh)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/philnash/create-twilio-function.git"
+    "url": "https://github.com/twilio-labs/create-twilio-function.git"
   },
-  "homepage": "https://github.com/philnash/create-twilio-function",
+  "homepage": "https://github.com/twilio-labs/create-twilio-function",
   "bugs": {
-    "url": "https://github.com/philnash/create-twilio-function/issues"
+    "url": "https://github.com/twilio-labs/create-twilio-function/issues"
   },
   "license": "MIT",
   "devDependencies": {
