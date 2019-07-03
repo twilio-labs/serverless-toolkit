@@ -11,4 +11,4 @@
 
 ## 1.0.0 (April 9, 2019) [☰](https://github.com/philnash/create-twilio-function/commits/v1.0.0)
 
-Initial release. Includes basic features for creating a new Twilio Functions project setup to use [`twilio-run`](https://github.com/dkundel/twilio-run) to run locally.
+Initial release. Includes basic features for creating a new Twilio Functions project setup to use [`twilio-run`](https://github.com/twilio-labs/twilio-run) to run locally.

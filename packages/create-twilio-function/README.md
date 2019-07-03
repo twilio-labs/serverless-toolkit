@@ -1,6 +1,6 @@
 # `create-twilio-function`
 
-A command line tool to setup a new [Twilio Function](https://www.twilio.com/docs/api/runtime/functions) with local testing using [`twilio-run`](https://github.com/dkundel/twilio-run).
+A command line tool to setup a new [Twilio Function](https://www.twilio.com/docs/api/runtime/functions) with local testing using [`twilio-run`](https://github.com/twilio-labs/twilio-run).
 
 [![Build Status](https://travis-ci.org/philnash/create-twilio-function.svg?branch=master)](https://travis-ci.org/philnash/create-twilio-function) [![Maintainability](https://api.codeclimate.com/v1/badges/e5a8bfd53740478460e0/maintainability)](https://codeclimate.com/github/philnash/create-twilio-function/maintainability)
 
