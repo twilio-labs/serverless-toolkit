@@ -23,6 +23,7 @@
     "eslint": "^4.19.1",
     "eslint-config-oclif": "^1.5.1",
     "globby": "^8.0.2",
+    "keytar": "^4.11.0",
     "mocha": "^5.2.0",
     "nyc": "^13.3.0",
     "rimraf": "^2.6.3"
