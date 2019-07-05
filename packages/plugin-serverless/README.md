@@ -35,8 +35,6 @@ $ brew tap twilio/brew && brew install twilio
 
 ```sh-session
 $ twilio plugins:install @twilio-labs/plugin-serverless
-$ twilio dev
-running dev command...
 $ twilio --help serverless
 USAGE
   $ twilio serverless
