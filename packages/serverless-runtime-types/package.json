@@ -1,0 +1,41 @@
+{
+  "name": "@twilio-labs/serverless-runtime-types",
+  "version": "1.0.0",
+  "description": "TypeScript definitions to define globals for the Twilio Serverless runtime",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twilio-labs/twilio-runtime-types.git"
+  },
+  "keywords": [
+    "twilio",
+    "serverless",
+    "typescript",
+    "types"
+  ],
+  "author": "Dominik Kundel <dkundel@twilio.com> (https://dkundel.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/twilio-labs/twilio-runtime-types/issues"
+  },
+  "homepage": "https://github.com/twilio-labs/twilio-runtime-types#readme",
+  "dependencies": {
+    "twilio": "^3.33.0"
+  },
+  "devDependencies": {
+    "all-contributors-cli": "^6.7.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "README.md",
+    "index.js",
+    "index.d.ts",
+    "types.d.ts"
+  ]
+}

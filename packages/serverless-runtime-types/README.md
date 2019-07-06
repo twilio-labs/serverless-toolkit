@@ -1,23 +1,21 @@
 <h1 align="center">@twilio-labs/serverless-runtime-types</h1>
-<p align="center">A module to interact with the <a href="https://www.twilio.com/functions">Twilio Serverless</a> API. For example to deploy projects. <br>Full reference documentation at <a href="https://serverless-api.twilio-labs.com">serverless-api.twilio-labs.com</a></p>
+<p align="center">TypeScript definitions to define globals for the Twilio Serverless runtime</p>
 <p align="center">
-<img alt="npm (scoped)" src="https://img.shields.io/npm/v/@twilio-labs/serverless-api.svg?style=flat-square"> <img alt="npm" src="https://img.shields.io/npm/dt/@twilio-labs/serverless-api.svg?style=flat-square"> <img alt="GitHub" src="https://img.shields.io/github/license/twilio-labs/serverless-api.svg?style=flat-square"> <a href="#contributors"><img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square" /></a> <a href="https://github.com/twilio-labs/.github/blob/master/CODE_OF_CONDUCT.md"><img alt="Code of Conduct" src="https://img.shields.io/badge/%F0%9F%92%96-Code%20of%20Conduct-blueviolet.svg?style=flat-square"></a> <a href="http://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" /></a> </<a>
+<img alt="npm (scoped)" src="https://img.shields.io/npm/v/@twilio-labs/serverless-runtime-types.svg?style=flat-square"> <img alt="npm" src="https://img.shields.io/npm/dt/@twilio-labs/serverless-runtime-types.svg?style=flat-square"> <img alt="GitHub" src="https://img.shields.io/github/license/twilio-labs/serverless-runtime-types.svg?style=flat-square"> <a href="#contributors"><img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square" /></a> <a href="https://github.com/twilio-labs/.github/blob/master/CODE_OF_CONDUCT.md"><img alt="Code of Conduct" src="https://img.shields.io/badge/%F0%9F%92%96-Code%20of%20Conduct-blueviolet.svg?style=flat-square"></a> <a href="http://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" /></a> </<a>
 <hr>
 
-- [⚠️ **IMPORTANT**](#%E2%9A%A0%EF%B8%8F-IMPORTANT)
 - [Installation](#Installation)
 - [Example](#Example)
-- [API](#API)
-  - [`client.activateBuild(activateConfig: ActivateConfig): Promise<ActivateResult>`](#clientactivateBuildactivateConfig-ActivateConfig-PromiseActivateResult)
-  - [`client.deployLocalProject(deployConfig: DeployLocalProjectConfig): Promise<DeployResult>`](#clientdeployLocalProjectdeployConfig-DeployLocalProjectConfig-PromiseDeployResult)
-  - [`client.deployProject(deployConfig: DeployProjectConfig): Promise<DeployResult>`](#clientdeployProjectdeployConfig-DeployProjectConfig-PromiseDeployResult)
-  - [`client.getClient(): GotClient`](#clientgetClient-GotClient)
-  - [`client.list(listConfig: ListConfig): Promise<ListResult>`](#clientlistlistConfig-ListConfig-PromiseListResult)
-  - [`api` and `fsHelpers`](#api-and-fsHelpers)
+  - [In JavaScript](#In-JavaScript)
+  - [In TypeScript](#In-TypeScript)
+    - [Option 1: Modify your `tsconfig.json`](#Option-1-Modify-your-tsconfigjson)
+    - [Option 2: Import the file](#Option-2-Import-the-file)
+- [Alternative Usage](#Alternative-Usage)
 - [Contributing](#Contributing)
   - [Code of Conduct](#Code-of-Conduct)
   - [Contributors](#Contributors)
 - [License](#License)
+- [Contributors ✨](#Contributors-%E2%9C%A8)
 
 ## Installation
 
@@ -27,32 +25,51 @@ npm install @twilio-labs/serverless-runtime-types
 
 ## Example
 
-If you want to deploy a local project you can do this using:
+### In JavaScript
+
+If you want to use the types in JavaScript to get autocomplete in VS Code and 
+other editors using the TypeScript language server:
 
 ```js
-const TwilioServerlessApiClient = require('@twilio-labs/serverless-api');
+/// <reference path="../../node_modules/twilio-runtime-types/index.d.ts"/>
 
-const client = new TwilioServerlessApiClient({
-  accountSid: '...',
-  authToken: '...'
-});
+exports.handler = function(context, event, callback) {
+  let twiml = new Twilio.twiml.MessagingResponse();
+  twiml.message('Hello World');
+  callback(null, twiml);
+};
+```
 
-client.on('status-update', evt => {
-  console.log(evt.message);
-});
+### In TypeScript
 
-const result = await client.deployLocalProject({
-  cwd: '...',
-  envPath: '...',
-  accountSid: '...',
-  authToken: '...',
-  env: {  },
-  pkgJson: {},
-  projectName: 'serverless-example',
-  functionsEnv: 'dev',
-  assetsFolderName: 'static',
-  functionsFolderName: 'src'
-});
+For TypeScript you can use the same technique if you want to limit the global
+types to that file. Alternatively, you can use one of the following two options
+to use the definitions.
+
+#### Option 1: Modify your `tsconfig.json`
+
+#### Option 2: Import the file
+
+```ts
+import '@twilio-labs/serverless-runtime-types';
+
+export function handler(context, event, callback) {
+  let twiml = new Twilio.twiml.MessagingResponse();
+  twiml.message('Hello World');
+  callback(null, twiml);
+}
+```
+
+## Alternative Usage
+
+You can also import the specific types without setting the global types:
+
+```ts
+import { RuntimeInstance } from '@twilio-labs/serverless-runtime-types/types';
+
+function listSyncDocuments(runtime: RuntimeInstance) {
+  return runtime.getSync().documents.list()
+}
 ```
 
 ##  Contributing
@@ -71,7 +88,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- prettier-ignore -->
 <table>
   <tr>
-    <td align="center"><a href="https://dkundel.com"><img src="https://avatars3.githubusercontent.com/u/1505101?v=4" width="100px;" alt="Dominik Kundel"/><br /><sub><b>Dominik Kundel</b></sub></a><br /><a href="https://github.com/twilio-labs/serverless-runtime-types/commits?author=dkundel" title="Code">💻</a> <a href="https://github.com/twilio-labs/serverless-runtime-types/commits?author=dkundel" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://dkundel.com"><img src="https://avatars3.githubusercontent.com/u/1505101?v=4" width="100px;" alt="Dominik Kundel"/><br /><sub><b>Dominik Kundel</b></sub></a><br /><a href="https://github.com/twilio-labs/plugin-serverless/commits?author=dkundel" title="Code">💻</a> <a href="https://github.com/twilio-labs/plugin-serverless/commits?author=dkundel" title="Documentation">📖</a></td>
   </tr>
 </table>
 
