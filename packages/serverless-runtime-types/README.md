@@ -15,7 +15,6 @@
   - [Code of Conduct](#Code-of-Conduct)
   - [Contributors](#Contributors)
 - [License](#License)
-- [Contributors ✨](#Contributors-%E2%9C%A8)
 
 ## Installation
 
@@ -31,7 +30,7 @@ If you want to use the types in JavaScript to get autocomplete in VS Code and
 other editors using the TypeScript language server:
 
 ```js
-/// <reference path="../../node_modules/twilio-runtime-types/index.d.ts"/>
+/// <reference path="../node_modules/@twilio-labs/serverless-runtime-types/index.d.ts"/>
 
 exports.handler = function(context, event, callback) {
   let twiml = new Twilio.twiml.MessagingResponse();
@@ -47,6 +46,14 @@ types to that file. Alternatively, you can use one of the following two options
 to use the definitions.
 
 #### Option 1: Modify your `tsconfig.json`
+
+```json
+{
+  "compilerOptions": {
+    "types": ["node_modules/@twilio-labs/serverless-runtime-types/index.d.ts"]
+  }
+}
+```
 
 #### Option 2: Import the file
 
@@ -99,12 +106,3 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 ## License
 
 MIT
-## Contributors ✨
-
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore -->
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
