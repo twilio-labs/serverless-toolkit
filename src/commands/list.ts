@@ -1,15 +1,17 @@
-const path = require('path');
-const chalk = require('chalk');
-const dotenv = require('dotenv');
-const ora = require('ora');
-const log = require('debug')('twilio-run:list');
-const { stripIndent } = require('common-tags');
+import debug from 'debug';
+import path from 'path';
+import chalk from 'chalk';
+import dotenv from 'dotenv';
+import ora from 'ora';
+import { stripIndent } from 'common-tags';
 
-const { TwilioServerlessApiClient } = require('@twilio-labs/serverless-api');
+import { TwilioServerlessApiClient } from '@twilio-labs/serverless-api';
 
-const { fileExists, readFile, writeFile } = require('../utils/fs');
-const { getFunctionServiceSid } = require('../serverless-api/utils');
-const { printListResult } = require('../printers/list');
+import { fileExists, readFile, writeFile } from '../utils/fs';
+import { getFunctionServiceSid } from '../serverless-api/utils';
+import { printListResult } from '../printers/list';
+
+const log = debug('twilio-run:list');
 
 async function getConfigFromFlags(flags) {
   const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
@@ -69,7 +71,7 @@ function handleError(err) {
   process.exit(1);
 }
 
-async function handler(flags) {
+export async function handler(flags) {
   let config;
   try {
     config = await getConfigFromFlags(flags);
@@ -101,7 +103,7 @@ async function handler(flags) {
   }
 }
 
-const cliInfo = {
+export const cliInfo = {
   argsDefaults: {
     types: 'environments,builds',
   },
@@ -172,11 +174,7 @@ function optionBuilder(yargs) {
   return yargs;
 }
 
-module.exports = {
-  command: ['list [types]', 'ls [types]'],
-  describe:
-    'List existing services, environments, variables, deployments for your Twilio Serverless Account',
-  builder: optionBuilder,
-  handler,
-  cliInfo,
-};
+export const command = ['list [types]', 'ls [types]'];
+export const describe =
+  'List existing services, environments, variables, deployments for your Twilio Serverless Account';
+export const builder = optionBuilder;

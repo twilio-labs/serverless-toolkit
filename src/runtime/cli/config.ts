@@ -1,15 +1,22 @@
-const { resolve } = require('path');
-const { readFileSync } = require('fs');
-const dotenv = require('dotenv');
-const logSymbols = require('log-symbols');
-const { fileExists } = require('../../utils/fs');
-const debug = require('debug')('twilio-run:cli:config');
+import { resolve } from 'path';
+import { readFileSync } from 'fs';
+import dotenv from 'dotenv';
+import logSymbols from 'log-symbols';
+import { fileExists } from '../../utils/fs';
+import debugModule from 'debug';
+
+const debug = debugModule('twilio-run:cli:config');
+
+type NgrokConfig = {
+  addr: number;
+  subdomain?: string;
+};
 
 async function getUrl(cli, port) {
   let url = `http://localhost:${port}`;
   if (typeof cli.flags.ngrok !== 'undefined') {
     debug('Starting ngrok tunnel');
-    const ngrokConfig = { addr: port };
+    const ngrokConfig: NgrokConfig = { addr: port };
     if (cli.flags.ngrok.length > 0) {
       ngrokConfig.subdomain = cli.flags.ngrok;
     }
@@ -26,6 +33,9 @@ function getPort(cli) {
   if (typeof cli.flags.port !== 'undefined') {
     port = parseInt(cli.flags.port, 10);
     debug('Overriding port via command-line flag to %d', port);
+  }
+  if (typeof port === 'string') {
+    port = parseInt(port, 10);
   }
   return port;
 }
@@ -80,8 +90,26 @@ function getInspectInfo(cli) {
   return undefined;
 }
 
-async function getConfigFromCli(cli) {
-  const config = {};
+export type CliConfig = {
+  inspect?: {
+    hostPort: string;
+    break: boolean;
+  };
+  baseDir: string;
+  env: {
+    [key: string]: string;
+  };
+  port: number;
+  url: string;
+  detailedLogs: boolean;
+  live: boolean;
+  logs: boolean;
+  legacyMode: boolean;
+  appName: string;
+};
+
+export async function getConfigFromCli(cli) {
+  const config = {} as CliConfig;
 
   config.inspect = getInspectInfo(cli);
   config.baseDir = getBaseDirectory(cli);
@@ -96,5 +124,3 @@ async function getConfigFromCli(cli) {
 
   return config;
 }
-
-module.exports = { getConfigFromCli };

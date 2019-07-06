@@ -1,27 +1,32 @@
-const path = require('path');
-const chalk = require('chalk');
-const dotenv = require('dotenv');
-const ora = require('ora');
-const log = require('debug')('twilio-run:deploy');
-const { stripIndent } = require('common-tags');
+import debug from 'debug';
+import path from 'path';
+import chalk from 'chalk';
+import dotenv from 'dotenv';
+import ora from 'ora';
+import { stripIndent } from 'common-tags';
 
-const { TwilioServerlessApiClient } = require('@twilio-labs/serverless-api');
+import { TwilioServerlessApiClient } from '@twilio-labs/serverless-api';
 
-const { fileExists, readFile } = require('../utils/fs');
-const {
-  printDeployedResources,
-  printConfigInfo,
-} = require('../printers/deploy');
-const {
+import { fileExists, readFile } from '../utils/fs';
+import { printDeployedResources, printConfigInfo } from '../printers/deploy';
+import {
   getFunctionServiceSid,
   saveLatestDeploymentData,
-} = require('../serverless-api/utils');
+} from '../serverless-api/utils';
+
+const log = debug('twilio-run:deploy');
+
+type LocalEnvironmentVariables = {
+  ACCOUNT_SID?: string;
+  AUTH_TOKEN?: string;
+  [key: string]: string;
+};
 
 async function getConfigFromFlags(flags) {
   const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
 
   let { accountSid, authToken } = flags;
-  let localEnv = {};
+  let localEnv: LocalEnvironmentVariables = {};
 
   const envPath = path.resolve(cwd, flags.env || '.env');
 
@@ -56,6 +61,7 @@ async function getConfigFromFlags(flags) {
       delete env[key];
     }
   }
+
   delete env.ACCOUNT_SID;
   delete env.AUTH_TOKEN;
 
@@ -147,7 +153,7 @@ async function handler(flags) {
   }
 }
 
-const cliInfo = {
+export const cliInfo = {
   options: {
     cwd: {
       type: 'string',
@@ -212,7 +218,7 @@ const cliInfo = {
   },
 };
 
-function optionBuilder(yargs) {
+export function optionBuilder(yargs) {
   yargs = yargs
     .example(
       '$0 deploy',
@@ -230,10 +236,6 @@ function optionBuilder(yargs) {
   return yargs;
 }
 
-module.exports = {
-  command: ['deploy'],
-  describe: 'Deploys existing functions and assets to Twilio',
-  builder: optionBuilder,
-  handler,
-  cliInfo,
-};
+export const command = ['deploy'];
+export const describe = 'Deploys existing functions and assets to Twilio';
+export const builder = optionBuilder;

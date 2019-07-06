@@ -1,12 +1,9 @@
-const path = require('path');
-const chalk = require('chalk');
-const ora = require('ora');
-const prompts = require('prompts');
-const {
-  fetchListOfTemplates,
-  getTemplateFiles,
-} = require('../templating/data');
-const { writeFiles } = require('../templating/filesystem');
+import path from 'path';
+import chalk from 'chalk';
+import ora from 'ora';
+import prompts from 'prompts';
+import { fetchListOfTemplates, getTemplateFiles } from '../templating/data';
+import { writeFiles } from '../templating/filesystem';
 
 async function listTemplates() {
   const spinner = ora('Fetching available templates').start();
@@ -88,7 +85,7 @@ function getBaseDirectoryPath() {
   return currentDir;
 }
 
-async function handler(flags) {
+export async function handler(flags) {
   if (flags.list) {
     await listTemplates();
     process.exit(0);
@@ -106,7 +103,7 @@ async function handler(flags) {
   }
 }
 
-const cliInfo = {
+export const cliInfo = {
   options: {
     template: {
       type: 'string',
@@ -135,10 +132,7 @@ function optionBuilder(yargs) {
   return yargs;
 }
 
-module.exports = {
-  command: ['new [filename]', 'template [filename]'],
-  describe: 'Creates a new Twilio Function based on an existing template',
-  builder: optionBuilder,
-  handler,
-  cliInfo,
-};
+export const command = ['new [filename]', 'template [filename]'];
+export const describe =
+  'Creates a new Twilio Function based on an existing template';
+export const builder = optionBuilder;

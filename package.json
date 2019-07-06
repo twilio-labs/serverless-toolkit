@@ -6,8 +6,10 @@
     "twilio-run": "./bin/twilio-run.js"
   },
   "description": "CLI tool to run Twilio Functions locally for development",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
     "test": "jest",
     "contrib:add": "all-contributors add",
     "contrib:generate": "all-contributors generate"
@@ -28,7 +30,7 @@
   "author": "Dominik Kundel <dkundel@twilio.com>",
   "license": "MIT",
   "dependencies": {
-    "@twilio-labs/serverless-api": "^1.0.0-alpha.10",
+    "@twilio-labs/serverless-api": "^1.0.0-alpha.11",
     "body-parser": "^1.18.3",
     "boxen": "^1.3.0",
     "chalk": "^2.4.2",
@@ -55,17 +57,19 @@
     "yargs": "^13.2.2"
   },
   "devDependencies": {
+    "@twilio-labs/serverless-runtime-types": "^1.0.1",
+    "@types/jest": "^24.0.15",
     "all-contributors-cli": "^5.3.0",
     "cheerio": "^1.0.0-rc.2",
     "jest": "^23.4.1",
     "jest-express": "^1.6.0",
-    "supertest": "^3.1.0"
+    "supertest": "^3.1.0",
+    "typescript": "^3.5.2"
   },
   "files": [
     "bin/",
-    "src/",
+    "dist/",
     "LICENSE",
-    "README.md",
-    "index.js"
+    "README.md"
   ]
 }

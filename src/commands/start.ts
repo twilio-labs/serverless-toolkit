@@ -1,9 +1,10 @@
-const debug = require('debug')('twilio-run:start');
+import debug from 'debug';
+import { createServer } from '../runtime/server';
+import { startInspector } from '../runtime/utils/inspector';
+import { getConfigFromCli } from '../runtime/cli/config';
+import { printRouteInfo, printVersionWarning } from '../printers/start';
 
-const { createServer } = require('../runtime/server');
-const { startInspector } = require('../runtime/utils/inspector');
-const { getConfigFromCli } = require('../runtime/cli/config');
-const { printRouteInfo, printVersionWarning } = require('../printers/start');
+const log = debug('twilio-run:start');
 
 async function handler(argv) {
   const nodeVersion = process.versions.node;
@@ -16,14 +17,14 @@ async function handler(argv) {
   };
 
   const config = await getConfigFromCli(cli);
-  debug('Determined configuration: %o', config);
+  log('Determined configuration: %o', config);
   process.title = config.appName;
 
-  debug('Set environment variables as: %o', config.env);
+  log('Set environment variables as: %o', config.env);
   process.env = config.env;
 
   if (config.inspect) {
-    debug(
+    log(
       'Starting inspector mode with following configuration: %o',
       config.inspect
     );
@@ -31,7 +32,7 @@ async function handler(argv) {
   }
 
   const app = await createServer(config.port, config);
-  debug('Start server on port %d', config.port);
+  log('Start server on port %d', config.port);
   return new Promise(resolve => {
     app.listen(config.port, async () => {
       printRouteInfo(config);
@@ -117,10 +118,6 @@ function optionBuilder(yargs) {
   return yargs;
 }
 
-module.exports = {
-  command: ['start [dir]', '$0 [dir]'],
-  describe: 'Starts local Twilio Functions development server',
-  builder: optionBuilder,
-  handler,
-  cliInfo,
-};
+export const command = ['start [dir]', '$0 [dir]'];
+export const describe = 'Starts local Twilio Functions development server';
+export const builder = optionBuilder;
