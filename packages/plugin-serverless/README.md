@@ -233,6 +233,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://dkundel.com"><img src="https://avatars3.githubusercontent.com/u/1505101?v=4" width="100px;" alt="Dominik Kundel"/><br /><sub><b>Dominik Kundel</b></sub></a><br /><a href="https://github.com/twilio-labs/plugin-serverless/commits?author=dkundel" title="Code">💻</a> <a href="https://github.com/twilio-labs/plugin-serverless/commits?author=dkundel" title="Documentation">📖</a> <a href="#ideas-dkundel" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/childish-sambino"><img src="https://avatars0.githubusercontent.com/u/47228322?v=4" width="100px;" alt="childish-sambino"/><br /><sub><b>childish-sambino</b></sub></a><br /><a href="https://github.com/twilio-labs/plugin-serverless/commits?author=childish-sambino" title="Code">💻</a> <a href="https://github.com/twilio-labs/plugin-serverless/issues?q=author%3Achildish-sambino" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="http://www.ThinkingSerious.com"><img src="https://avatars0.githubusercontent.com/u/146695?v=4" width="100px;" alt="Elmer Thomas"/><br /><sub><b>Elmer Thomas</b></sub></a><br /><a href="https://github.com/twilio-labs/plugin-serverless/issues?q=author%3Athinkingserious" title="Bug reports">🐛</a> <a href="https://github.com/twilio-labs/plugin-serverless/commits?author=thinkingserious" title="Documentation">📖</a></td>
   </tr>
 </table>
 
