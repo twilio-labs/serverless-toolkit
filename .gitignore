@@ -61,3 +61,4 @@ typings/
 .next
 
 .vscode/settings.json
+dist/
