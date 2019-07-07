@@ -1,8 +1,10 @@
-const path = require('path');
-const log = require('debug')('twilio-run:internal:utils');
-const { fileExists, readFile, writeFile } = require('../utils/fs');
+import debug from 'debug';
+import path from 'path';
+import { fileExists, readFile, writeFile } from '../utils/fs';
 
-async function getFunctionServiceSid(cwd) {
+const log = debug('twilio-run:internal:utils');
+
+export async function getFunctionServiceSid(cwd) {
   const configPath = path.join(cwd, '.twilio-functions');
   if (!(await fileExists(configPath))) {
     return undefined;
@@ -17,7 +19,7 @@ async function getFunctionServiceSid(cwd) {
   }
 }
 
-async function saveLatestDeploymentData(cwd, serviceSid, buildSid) {
+export async function saveLatestDeploymentData(cwd, serviceSid, buildSid) {
   const configPath = path.join(cwd, '.twilio-functions');
   if (!(await fileExists(configPath))) {
     const output = JSON.stringify(
@@ -45,5 +47,3 @@ async function saveLatestDeploymentData(cwd, serviceSid, buildSid) {
     return writeFile(configPath, output, 'utf8');
   }
 }
-
-module.exports = { getFunctionServiceSid, saveLatestDeploymentData };

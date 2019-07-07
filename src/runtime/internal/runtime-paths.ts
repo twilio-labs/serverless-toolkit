@@ -1,6 +1,6 @@
-const { fsHelpers } = require('@twilio-labs/serverless-api');
+import { fsHelpers } from '@twilio-labs/serverless-api';
 
-async function getFunctionsAndAssets(baseDir) {
+export async function getFunctionsAndAssets(baseDir) {
   let { functions, assets } = await fsHelpers.getListOfFunctionsAndAssets(
     baseDir
   );
@@ -22,5 +22,3 @@ async function getFunctionsAndAssets(baseDir) {
   });
   return { functions, assets };
 }
-
-module.exports = { getFunctionsAndAssets };

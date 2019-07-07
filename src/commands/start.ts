@@ -6,7 +6,7 @@ import { printRouteInfo, printVersionWarning } from '../printers/start';
 
 const log = debug('twilio-run:start');
 
-async function handler(argv) {
+export async function handler(argv) {
   const nodeVersion = process.versions.node;
   if (!nodeVersion.startsWith('8.10')) {
     printVersionWarning(nodeVersion);
@@ -41,7 +41,7 @@ async function handler(argv) {
   });
 }
 
-const cliInfo = {
+export const cliInfo = {
   options: {
     'load-local-env': {
       alias: 'f',

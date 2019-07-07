@@ -1,5 +1,5 @@
-const chalk = require('chalk');
-const { stripIndent } = require('common-tags');
+import chalk from 'chalk';
+import { stripIndent } from 'common-tags';
 
 function simpleLogs(req, res) {
   const contentType = res.get('Content-Type');
@@ -10,12 +10,10 @@ function simpleLogs(req, res) {
       ? chalk`{black.bgGreen ${res.statusCode}}`
       : chalk`{black.bgYellow ${res.statusCode}}`;
   let msg = chalk`
-  ${responseCode} {bold ${req.method}} ${
-    req.originalUrl
-  }`;
+  ${responseCode} {bold ${req.method}} ${req.originalUrl}`;
 
   if (contentType) {
-    msg += chalk` │ {dim Response Type ${contentType}}`
+    msg += chalk` │ {dim Response Type ${contentType}}`;
   }
 
   return stripIndent`${msg}`;
@@ -48,7 +46,7 @@ function detailedLogs(req, res) {
   return msgLines.filter(x => !!x).join('\n');
 }
 
-function createLogger(config) {
+export function createLogger(config) {
   return function requestLogger(req, res, next) {
     const resEnd = res.end.bind(res);
     res.end = function sendInterceptor(...args) {
@@ -61,5 +59,3 @@ function createLogger(config) {
     next();
   };
 }
-
-module.exports = { createLogger };

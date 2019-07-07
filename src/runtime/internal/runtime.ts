@@ -1,5 +1,8 @@
-const twilio = require('twilio');
-const debug = require('debug')('twilio-run:runtime');
+import twilio from 'twilio';
+import debug from 'debug';
+import { RuntimeInstance } from '@twilio-labs/serverless-runtime-types/types';
+
+const log = debug('twilio-run:runtime');
 
 const { getCachedResources } = require('./route-cache');
 
@@ -17,7 +20,7 @@ function getAssets() {
       result[prefix + asset.assetPath] = { path: asset.path };
     }
   }
-  debug('Found the following assets available: %O', result);
+  log('Found the following assets available: %O', result);
   return result;
 }
 
@@ -31,11 +34,11 @@ function getFunctions() {
   for (const fn of functions) {
     result[fn.functionPath] = { path: fn.path };
   }
-  debug('Found the following functions available: %O', result);
+  log('Found the following functions available: %O', result);
   return result;
 }
 
-function create({ env }) {
+export function create({ env }): RuntimeInstance {
   function getSync(config) {
     config = config || { serviceName: 'default' };
     const client = twilio(env.ACCOUNT_SID, env.AUTH_TOKEN);

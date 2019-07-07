@@ -110,7 +110,7 @@ function handleError(err, spinner, flags) {
   process.exit(1);
 }
 
-async function handler(flags) {
+export async function handler(flags) {
   let config;
   try {
     config = await getConfigFromFlags(flags);
@@ -218,7 +218,7 @@ export const cliInfo = {
   },
 };
 
-export function optionBuilder(yargs) {
+function optionBuilder(yargs) {
   yargs = yargs
     .example(
       '$0 deploy',

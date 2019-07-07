@@ -1,17 +1,12 @@
-const pkgInstall = require('pkg-install');
-const dotenv = require('dotenv');
-const chalk = require('chalk');
-const got = require('got');
-const Listr = require('listr');
-const path = require('path');
-const { fsHelpers } = require('@twilio-labs/serverless-api');
+import pkgInstall from 'pkg-install';
+import dotenv from 'dotenv';
+import chalk from 'chalk';
+import got from 'got';
+import Listr from 'listr';
+import path from 'path';
+import { fsHelpers } from '@twilio-labs/serverless-api';
 
-const {
-  writeFile,
-  fileExists,
-  downloadFile,
-  readFile,
-} = require('../utils/fs');
+import { writeFile, fileExists, downloadFile, readFile } from '../utils/fs';
 
 async function writeEnvFile(contentUrl, targetDir, functionName) {
   const envFilePath = path.join(targetDir, '.env');
@@ -59,7 +54,7 @@ async function installDependencies(contentUrl, targetDir) {
   });
 }
 
-async function writeFiles(files, targetDir, functionName) {
+export async function writeFiles(files, targetDir, functionName) {
   const functionsDir = fsHelpers.getFirstMatchingDirectory(targetDir, [
     'functions',
     'src',
@@ -110,7 +105,4 @@ async function writeFiles(files, targetDir, functionName) {
   }
 }
 
-module.exports = {
-  writeFiles,
-  fileExists,
-};
+export { fileExists } from '../utils/fs';

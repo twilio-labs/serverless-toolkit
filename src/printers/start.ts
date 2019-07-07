@@ -1,13 +1,11 @@
-const boxen = require('boxen');
-const chalk = require('chalk');
-const { stripIndent } = require('common-tags');
-const wrapAnsi = require('wrap-ansi');
-const size = require('window-size');
-const logSymbols = require('log-symbols');
-const {
-  getFunctionsAndAssets,
-} = require('../runtime/internal/runtime-paths.js');
-const { shouldPrettyPrint, terminalLink } = require('./utils');
+import boxen from 'boxen';
+import chalk from 'chalk';
+import { stripIndent } from 'common-tags';
+import wrapAnsi from 'wrap-ansi';
+import size from 'window-size';
+import logSymbols from 'log-symbols';
+import { getFunctionsAndAssets } from '../runtime/internal/runtime-paths';
+import { shouldPrettyPrint, terminalLink } from './utils';
 
 function printAsset(asset, config) {
   const prefix = config.legacyMode ? '/asset' : '';
@@ -114,7 +112,7 @@ function printPrettyRouteInfo(functions, assets, config) {
   return boxen(output, { padding: 1 });
 }
 
-async function printRouteInfo(config) {
+export async function printRouteInfo(config) {
   const { functions, assets } = await getFunctionsAndAssets(config.baseDir);
 
   let output;
@@ -127,7 +125,7 @@ async function printRouteInfo(config) {
   console.log(output);
 }
 
-function printVersionWarning(nodeVersion) {
+export function printVersionWarning(nodeVersion) {
   const msg = chalk`
       {underline.bold {yellow WARNING!} {bold Different Node.js version}}
 
@@ -148,5 +146,3 @@ function printVersionWarning(nodeVersion) {
     })
   );
 }
-
-module.exports = { printRouteInfo, printVersionWarning };

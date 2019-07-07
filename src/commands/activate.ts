@@ -3,13 +3,11 @@ import path from 'path';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
 import ora from 'ora';
-import { stripIndent } from 'common-tags';
 
 import { TwilioServerlessApiClient } from '@twilio-labs/serverless-api';
 
-import { fileExists, readFile, writeFile } from '../utils/fs';
+import { fileExists, readFile } from '../utils/fs';
 import { getFunctionServiceSid } from '../serverless-api/utils';
-import { printListResult } from '../printers/list';
 
 const log = debug('twilio-run:activate');
 

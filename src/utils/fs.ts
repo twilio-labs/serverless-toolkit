@@ -1,15 +1,15 @@
-const got = require('got');
-const path = require('path');
-const fs = require('fs');
-const { promisify } = require('util');
+import got from 'got';
+import path from 'path';
+import fs from 'fs';
+import { promisify } from 'util';
 
 const access = promisify(fs.access);
-const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
-const readdir = promisify(fs.readdir);
+export const readFile = promisify(fs.readFile);
+export const writeFile = promisify(fs.writeFile);
+export const readdir = promisify(fs.readdir);
 const stat = promisify(fs.stat);
 
-async function fileExists(filePath) {
+export async function fileExists(filePath) {
   try {
     await access(filePath, fs.constants.R_OK | fs.constants.W_OK);
     return true;
@@ -18,7 +18,7 @@ async function fileExists(filePath) {
   }
 }
 
-function downloadFile(contentUrl, targetPath) {
+export function downloadFile(contentUrl, targetPath) {
   return new Promise((resolve, reject) => {
     const writeStream = fs.createWriteStream(targetPath);
     got
@@ -29,7 +29,7 @@ function downloadFile(contentUrl, targetPath) {
   });
 }
 
-async function getDirContent(dir, ext) {
+export async function getDirContent(dir, ext) {
   const rawFiles = await readdir(dir);
   return (await Promise.all(
     rawFiles.map(async file => {
@@ -50,12 +50,3 @@ async function getDirContent(dir, ext) {
     })
   )).filter(Boolean);
 }
-
-module.exports = {
-  downloadFile,
-  fileExists,
-  readFile,
-  writeFile,
-  readdir,
-  getDirContent,
-};

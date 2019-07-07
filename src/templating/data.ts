@@ -1,18 +1,20 @@
-const got = require('got');
-const log = require('debug')('twilio-run:new:template-data');
+import debug from 'debug';
+import got from 'got';
+
+const log = debug('twilio-run:new:template-data');
 
 const TEMPLATES_URL =
   'https://raw.githubusercontent.com/twilio-labs/function-templates/master/templates.json';
 const CONTENT_BASE_URL =
   'https://api.github.com/repos/twilio-labs/function-templates/contents';
 
-async function fetchListOfTemplates() {
+export async function fetchListOfTemplates() {
   const response = await got(TEMPLATES_URL, { json: true });
   const { templates } = response.body;
   return templates;
 }
 
-async function getTemplateFiles(templateId, functionName) {
+export async function getTemplateFiles(templateId, functionName) {
   try {
     const response = await got(CONTENT_BASE_URL + `/${templateId}`, {
       json: true,
@@ -39,8 +41,3 @@ async function getTemplateFiles(templateId, functionName) {
     throw new Error('Invalid template');
   }
 }
-
-module.exports = {
-  fetchListOfTemplates,
-  getTemplateFiles,
-};

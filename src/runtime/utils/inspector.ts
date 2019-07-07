@@ -1,6 +1,6 @@
-const inspector = require('inspector');
+import inspector from 'inspector';
 
-function startInspector(val, wait = false) {
+export function startInspector(val, wait = false) {
   let port = undefined;
   let host = undefined;
 
@@ -17,7 +17,3 @@ function startInspector(val, wait = false) {
   inspector.open(port, host, wait);
   return inspector;
 }
-
-module.exports = {
-  startInspector
-};

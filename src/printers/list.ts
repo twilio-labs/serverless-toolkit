@@ -1,11 +1,11 @@
-const chalk = require('chalk');
-const { stripIndent } = require('common-tags');
-const title = require('title');
-const logSymbols = require('log-symbols');
-const columnify = require('columnify');
-const startCase = require('lodash.startcase');
+import chalk from 'chalk';
+import { stripIndent } from 'common-tags';
+import title from 'title';
+import logSymbols from 'log-symbols';
+import columnify from 'columnify';
+import startCase from 'lodash.startcase';
 
-const { shouldPrettyPrint, supportsEmoji } = require('./utils');
+import { shouldPrettyPrint, supportsEmoji } from './utils';
 
 const baseKeys = {
   environments: [
@@ -236,12 +236,10 @@ function printListResultTerminal(result, config) {
   console.log(output);
 }
 
-function printListResult(result, config) {
+export function printListResult(result, config) {
   if (shouldPrettyPrint && !config.properties && !config.extendedOutput) {
     printListResultTerminal(result, config);
   } else {
     printListResultPlain(result, config);
   }
 }
-
-module.exports = { printListResult };

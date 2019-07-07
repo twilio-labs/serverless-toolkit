@@ -1,19 +1,18 @@
-const twilio = require('twilio');
-const {
-  VoiceResponse,
-  MessagingResponse,
-  FaxResponse,
-} = require('twilio').twiml;
-const debug = require('debug')('twilio-run:route');
+import twilio, { twiml } from 'twilio';
+import debug from 'debug';
 
-const { Response } = require('./internal/response');
-const Runtime = require('./internal/runtime');
+import { Response } from './internal/response';
+import * as Runtime from './internal/runtime';
 
-function constructEvent(req) {
+const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
+
+const log = debug('twilio-run:route');
+
+export function constructEvent(req) {
   return { ...req.query, ...req.body };
 }
 
-function constructContext({ url, env }) {
+export function constructContext({ url, env }) {
   function getTwilioClient() {
     return twilio(env.ACCOUNT_SID, env.AUTH_TOKEN);
   }
@@ -21,58 +20,58 @@ function constructContext({ url, env }) {
   return { ...env, DOMAIN_NAME, getTwilioClient };
 }
 
-function constructGlobalScope(config) {
+export function constructGlobalScope(config) {
   global['Twilio'] = { ...twilio, Response };
   global['Runtime'] = Runtime.create(config);
 }
 
-function handleError(err, res) {
+export function handleError(err, res) {
   res.status(500);
   res.send(err.stack);
 }
 
-function isTwiml(obj) {
+export function isTwiml(obj) {
   const isVoiceTwiml = obj instanceof VoiceResponse;
   const isMessagingTwiml = obj instanceof MessagingResponse;
   const isFaxTwiml = obj instanceof FaxResponse;
   return isVoiceTwiml || isMessagingTwiml || isFaxTwiml;
 }
 
-function handleSuccess(responseObject, res) {
+export function handleSuccess(responseObject, res) {
   res.status(200);
   if (typeof responseObject === 'string') {
-    debug('Sending basic string response');
+    log('Sending basic string response');
     res.send(responseObject);
     return;
   }
 
   if (isTwiml(responseObject)) {
-    debug('Sending TwiML response as XML string');
+    log('Sending TwiML response as XML string');
     res.type('text/xml').send(responseObject.toString());
     return;
   }
 
   if (responseObject instanceof Response) {
-    debug('Sending custom response');
+    log('Sending custom response');
     responseObject.applyToExpressResponse(res);
     return;
   }
 
-  debug('Sending JSON response');
+  log('Sending JSON response');
   res.send(responseObject);
 }
 
-function functionToRoute(fn, config) {
+export function functionToRoute(fn, config) {
   constructGlobalScope(config);
 
   return function twilioFunctionHandler(req, res) {
     const event = constructEvent(req);
-    debug('Event for %s: %o', req.path, event);
+    log('Event for %s: %o', req.path, event);
     const context = constructContext(config);
-    debug('Context for %s: %o', req.path, context);
+    log('Context for %s: %o', req.path, context);
 
-    function callback(err, responseObject) {
-      debug('Function execution %s finished', req.path);
+    function callback(err, responseObject?) {
+      log('Function execution %s finished', req.path);
       if (err) {
         handleError(err, res);
         return;
@@ -80,7 +79,7 @@ function functionToRoute(fn, config) {
       handleSuccess(responseObject, res);
     }
 
-    debug('Calling function for %s', req.path);
+    log('Calling function for %s', req.path);
     try {
       fn(context, event, callback);
     } catch (err) {
@@ -88,13 +87,3 @@ function functionToRoute(fn, config) {
     }
   };
 }
-
-module.exports = {
-  functionToRoute,
-  constructEvent,
-  constructContext,
-  constructGlobalScope,
-  handleError,
-  handleSuccess,
-  isTwiml,
-};

@@ -1,8 +1,7 @@
-const chalk = require('chalk');
-const { stripIndent } = require('common-tags');
-const columnify = require('columnify');
-const camelCase = require('lodash.camelcase');
-const { shouldPrettyPrint, printObjectWithoutHeaders } = require('./utils');
+import chalk from 'chalk';
+import { stripIndent } from 'common-tags';
+import columnify from 'columnify';
+import { shouldPrettyPrint, printObjectWithoutHeaders } from './utils';
 
 function sortByAccess(resA, resB) {
   if (resA.access === resB.access) {
@@ -94,14 +93,6 @@ function plainPrintConfigInfo(config) {
   console.log(`configInfo\n${printObjectWithoutHeaders(printObj)}\n`);
 }
 
-function printConfigInfo(config) {
-  if (shouldPrettyPrint) {
-    prettyPrintConfigInfo(config);
-  } else {
-    plainPrintConfigInfo(config);
-  }
-}
-
 function prettyPrintDeployedResources(config, result) {
   console.log(
     chalk`
@@ -147,12 +138,18 @@ function prettyPrintDeployedResources(config, result) {
   }
 }
 
-function printDeployedResources(config, result) {
+export function printConfigInfo(config) {
+  if (shouldPrettyPrint) {
+    prettyPrintConfigInfo(config);
+  } else {
+    plainPrintConfigInfo(config);
+  }
+}
+
+export function printDeployedResources(config, result) {
   if (shouldPrettyPrint) {
     prettyPrintDeployedResources(config, result);
   } else {
     plainPrintDeployedResources(config, result);
   }
 }
-
-module.exports = { printDeployedResources, printConfigInfo };

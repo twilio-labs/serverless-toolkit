@@ -2,7 +2,7 @@ const allRoutes = new Map();
 const assetsCache = new Set();
 const functionsCache = new Set();
 
-function setRoutes({ functions, assets }) {
+export function setRoutes({ functions, assets }) {
   allRoutes.clear();
   assetsCache.clear();
   functionsCache.clear();
@@ -32,15 +32,13 @@ function setRoutes({ functions, assets }) {
   return new Map(allRoutes);
 }
 
-function getRoutes() {
+export function getRoutes() {
   return new Map(allRoutes);
 }
 
-function getCachedResources() {
+export function getCachedResources() {
   return {
     assets: Array.from(assetsCache),
     functions: Array.from(functionsCache),
   };
 }
-
-module.exports = { setRoutes, getRoutes, getCachedResources };
