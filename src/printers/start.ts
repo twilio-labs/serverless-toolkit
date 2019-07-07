@@ -4,19 +4,28 @@ import { stripIndent } from 'common-tags';
 import wrapAnsi from 'wrap-ansi';
 import size from 'window-size';
 import logSymbols from 'log-symbols';
-import { getFunctionsAndAssets } from '../runtime/internal/runtime-paths';
+import {
+  getFunctionsAndAssets,
+  FunctionInfo,
+  AssetInfo,
+} from '../runtime/internal/runtime-paths';
 import { shouldPrettyPrint, terminalLink } from './utils';
+import { StartCliConfig } from '../runtime/cli/config';
 
-function printAsset(asset, config) {
+function printAsset(asset: AssetInfo, config: StartCliConfig): string {
   const prefix = config.legacyMode ? '/asset' : '';
   return chalk`{dim ${config.url}${prefix}}${asset.assetPath}`;
 }
 
-function printFunction(fn, config) {
+function printFunction(fn: FunctionInfo, config: StartCliConfig): string {
   return chalk`{dim ${config.url}}${fn.functionPath}`;
 }
 
-function printPlainRouteInfo(functions, assets, config) {
+function printPlainRouteInfo(
+  functions: FunctionInfo[],
+  assets: AssetInfo[],
+  config: StartCliConfig
+): string {
   const functionHeading = 'Functions';
   let functionInfo;
   if (functions.length > 0) {
@@ -53,19 +62,23 @@ function printPlainRouteInfo(functions, assets, config) {
   return output;
 }
 
-function prettyPrintAsset(asset, config) {
+function prettyPrintAsset(asset: AssetInfo, config: StartCliConfig): string {
   const prefix = config.legacyMode ? '/asset' : '';
   const assetPath = prefix + asset.assetPath;
   const link = terminalLink(assetPath, config.url + assetPath);
   return link;
 }
 
-function prettyPrintFunction(fn, config) {
+function prettyPrintFunction(fn: FunctionInfo, config: StartCliConfig) {
   const link = terminalLink(fn.functionPath, config.url + fn.functionPath);
   return link;
 }
 
-function printPrettyRouteInfo(functions, assets, config) {
+function printPrettyRouteInfo(
+  functions: FunctionInfo[],
+  assets: AssetInfo[],
+  config: StartCliConfig
+): string {
   const functionHeading = chalk`{green.bold Twilio functions available:}`;
   let functionInfo;
   if (functions.length > 0) {
@@ -112,7 +125,7 @@ function printPrettyRouteInfo(functions, assets, config) {
   return boxen(output, { padding: 1 });
 }
 
-export async function printRouteInfo(config) {
+export async function printRouteInfo(config: StartCliConfig): Promise<void> {
   const { functions, assets } = await getFunctionsAndAssets(config.baseDir);
 
   let output;
@@ -125,7 +138,7 @@ export async function printRouteInfo(config) {
   console.log(output);
 }
 
-export function printVersionWarning(nodeVersion) {
+export function printVersionWarning(nodeVersion: string): void {
   const msg = chalk`
       {underline.bold {yellow WARNING!} {bold Different Node.js version}}
 

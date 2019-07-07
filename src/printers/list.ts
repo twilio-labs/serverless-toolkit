@@ -6,6 +6,17 @@ import columnify from 'columnify';
 import startCase from 'lodash.startcase';
 
 import { shouldPrettyPrint, supportsEmoji } from './utils';
+import { ListConfig } from '../commands/list';
+import {
+  ListResult,
+  FunctionVersion,
+  AssetVersion,
+  VariableResource,
+  EnvironmentResource,
+  ServiceResource,
+  BuildResource,
+  ListOptions,
+} from '@twilio-labs/serverless-api';
 
 const baseKeys = {
   environments: [
@@ -84,19 +95,19 @@ const extendedKeys = {
   ],
 };
 
-function formatDate(dateStr) {
+function formatDate(dateStr: string) {
   return new Date(dateStr).toString();
 }
 
-const headingTransform = name => {
+const headingTransform = (name: string) => {
   return chalk.cyan.bold(startCase(name).replace(/Sid$/g, 'SID'));
 };
 
-function printRows(rows, keys) {
+function printRows(rows: any[], keys: string[]) {
   return columnify(rows, { columns: keys, headingTransform });
 }
 
-function getKeys(type, config) {
+function getKeys(type: string, config: ListConfig) {
   let keys = config.properties || [];
 
   if (config.extendedOutput) {
@@ -108,17 +119,21 @@ function getKeys(type, config) {
   return keys;
 }
 
-function printSection(type, sectionEntries, config) {
+function printSection(
+  type: string,
+  sectionEntries: any[] | { entries: any[] },
+  config: ListConfig
+) {
   let keys = getKeys(type, config);
 
-  if (type === 'functions' || type === 'assets' || type === 'variables') {
+  if (!Array.isArray(sectionEntries)) {
     sectionEntries = sectionEntries.entries;
   }
 
   return printRows(sectionEntries, keys);
 }
 
-function printListResultPlain(result, config) {
+function printListResultPlain(result: ListResult, config: ListConfig) {
   const types = Object.keys(result);
 
   if (types.length === 1) {
@@ -133,9 +148,23 @@ function printListResultPlain(result, config) {
   }
 }
 
-function prettyPrintFunctionsOrAssets({ entries, environmentSid }) {
+type CommonKeysFunctionAndAssetVersion = Extract<
+  keyof FunctionVersion,
+  keyof AssetVersion
+>;
+type FunctionOrAssetContent = {
+  environmentSid: string;
+  entries: [
+    {
+      [key in CommonKeysFunctionAndAssetVersion]: FunctionVersion[key];
+    }
+  ];
+};
+
+function prettyPrintFunctionsOrAssets(result: FunctionOrAssetContent) {
+  const { entries, environmentSid } = result;
   const resourceString = entries
-    .map((entry, idx) => {
+    .map((entry: AssetVersion | FunctionVersion, idx: number): string => {
       const symbol = idx + 1 === entries.length ? '└──' : '├──';
       let emoji = '';
       if (supportsEmoji) {
@@ -157,7 +186,12 @@ function prettyPrintFunctionsOrAssets({ entries, environmentSid }) {
   `);
 }
 
-function prettyPrintVariables(variables) {
+type VariablesContent = {
+  environmentSid: string;
+  entries: VariableResource[];
+};
+
+function prettyPrintVariables(variables: VariablesContent) {
   const { entries, environmentSid } = variables;
 
   const variableString = entries
@@ -174,7 +208,7 @@ function prettyPrintVariables(variables) {
   `);
 }
 
-function prettyPrintEnvironment(environment) {
+function prettyPrintEnvironment(environment: EnvironmentResource): string {
   return stripIndent(chalk`
   │ ${environment.unique_name} (${environment.domain_suffix})
   │ ├── {bold SID:} ${environment.sid}
@@ -184,7 +218,7 @@ function prettyPrintEnvironment(environment) {
   `);
 }
 
-function prettyPrintServices(service) {
+function prettyPrintServices(service: ServiceResource): string {
   return stripIndent(chalk`
   │
   │ {cyan.bold ${service.unique_name}}
@@ -194,7 +228,7 @@ function prettyPrintServices(service) {
   `);
 }
 
-function prettyPrintBuilds(build) {
+function prettyPrintBuilds(build: BuildResource): string {
   let status = chalk.yellow(build.status);
   if (build.status === 'completed') {
     status = chalk.green(`${logSymbols.success} ${build.status}`);
@@ -207,19 +241,37 @@ function prettyPrintBuilds(build) {
   `;
 }
 
-function prettyPrintSection(sectionTitle, sectionContent) {
+type SectionContent =
+  | VariablesContent
+  | FunctionOrAssetContent
+  | BuildResource[]
+  | EnvironmentResource[]
+  | ServiceResource[];
+
+function prettyPrintSection(
+  sectionTitle: ListOptions,
+  sectionContent: SectionContent
+): string {
   const sectionHeader = chalk.cyan.bold(`${title(sectionTitle)}: `);
   let content = '';
   if (sectionTitle === 'builds') {
-    content = sectionContent.map(prettyPrintBuilds).join('\n');
+    content = (sectionContent as BuildResource[])
+      .map(prettyPrintBuilds)
+      .join('\n');
   } else if (sectionTitle === 'environments') {
-    content = sectionContent.map(prettyPrintEnvironment).join('\n');
+    content = (sectionContent as EnvironmentResource[])
+      .map(prettyPrintEnvironment)
+      .join('\n');
   } else if (sectionTitle === 'services') {
-    content = sectionContent.map(prettyPrintServices).join('\n');
+    content = (sectionContent as ServiceResource[])
+      .map(prettyPrintServices)
+      .join('\n');
   } else if (sectionTitle === 'variables') {
-    content = prettyPrintVariables(sectionContent);
+    content = prettyPrintVariables(sectionContent as VariablesContent);
   } else if (sectionTitle === 'functions' || sectionTitle === 'assets') {
-    content = prettyPrintFunctionsOrAssets(sectionContent);
+    content = prettyPrintFunctionsOrAssets(
+      sectionContent as FunctionOrAssetContent
+    );
   }
   const output = stripIndent`
     ${sectionHeader}\n${content}
@@ -227,16 +279,18 @@ function prettyPrintSection(sectionTitle, sectionContent) {
   return output;
 }
 
-function printListResultTerminal(result, config) {
-  const sections = Object.keys(result);
+function printListResultTerminal(result: ListResult, config: ListConfig): void {
+  const sections = Object.keys(result) as ListOptions[];
   const output = sections
-    .map(section => prettyPrintSection(section, result[section]))
+    .map(section =>
+      prettyPrintSection(section, result[section] as SectionContent)
+    )
     .join('\n\n');
 
   console.log(output);
 }
 
-export function printListResult(result, config) {
+export function printListResult(result: ListResult, config: ListConfig): void {
   if (shouldPrettyPrint && !config.properties && !config.extendedOutput) {
     printListResultTerminal(result, config);
   } else {

@@ -2,6 +2,10 @@ import chalk from 'chalk';
 import { stripIndent } from 'common-tags';
 import columnify from 'columnify';
 import { shouldPrettyPrint, printObjectWithoutHeaders } from './utils';
+import {
+  DeployLocalProjectConfig,
+  DeployResult,
+} from '@twilio-labs/serverless-api';
 
 function sortByAccess(resA, resB) {
   if (resA.access === resB.access) {
@@ -14,8 +18,11 @@ function sortByAccess(resA, resB) {
   return resA.access.localeCompare(resB.access);
 }
 
-function plainPrintDeployedResources(config, result) {
-  const functionsOutput = columnify(
+function plainPrintDeployedResources(
+  config: DeployLocalProjectConfig,
+  result: DeployResult
+) {
+  const functionsOutput: string = columnify(
     result.functionResources.sort(sortByAccess).map(fn => ({
       ...fn,
       url: `https://${result.domain}${fn.functionPath}`,
@@ -26,7 +33,7 @@ function plainPrintDeployedResources(config, result) {
     }
   );
 
-  const assetsOutput = columnify(
+  const assetsOutput: string = columnify(
     result.assetResources.sort(sortByAccess).map(asset => ({
       ...asset,
       url: `https://${result.domain}${asset.assetPath}`,
@@ -42,7 +49,7 @@ function plainPrintDeployedResources(config, result) {
     projectName: config.projectName,
     serviceSid: result.serviceSid,
     environmentSuffix: config.functionsEnv,
-    environmentSid: config.ennvironmentSid,
+    environmentSid: result.environmentSid,
     buildSid: result.buildSid,
   };
 
@@ -56,14 +63,13 @@ assets\n${assetsOutput}
   console.log(stripIndent(output));
 }
 
-function prettyPrintConfigInfo(config) {
+function prettyPrintConfigInfo(config: DeployLocalProjectConfig) {
   let dependencyString = '';
   if (config.pkgJson && config.pkgJson.dependencies) {
     dependencyString = Object.keys(config.pkgJson.dependencies).join(', ');
   }
 
   console.log(
-    // @ts-ignore
     chalk`
 Deploying functions & assets to Twilio Serverless
 
@@ -77,7 +83,7 @@ Deploying functions & assets to Twilio Serverless
   );
 }
 
-function plainPrintConfigInfo(config) {
+function plainPrintConfigInfo(config: DeployLocalProjectConfig) {
   let dependencyString = '';
   if (config.pkgJson && config.pkgJson.dependencies) {
     dependencyString = Object.keys(config.pkgJson.dependencies).join(',');
@@ -93,7 +99,10 @@ function plainPrintConfigInfo(config) {
   console.log(`configInfo\n${printObjectWithoutHeaders(printObj)}\n`);
 }
 
-function prettyPrintDeployedResources(config, result) {
+function prettyPrintDeployedResources(
+  config: DeployLocalProjectConfig,
+  result: DeployResult
+) {
   console.log(
     chalk`
 {bold.cyan.underline Deployment Details}
@@ -112,9 +121,7 @@ function prettyPrintDeployedResources(config, result) {
       .map(fn => {
         const accessPrefix =
           fn.access !== 'public' ? chalk`{bold [${fn.access}]} ` : '';
-        return chalk`   ${accessPrefix}{dim https://${result.domain}}${
-          fn.functionPath
-        }`;
+        return chalk`   ${accessPrefix}{dim https://${result.domain}}${fn.functionPath}`;
       })
       .join('\n');
     console.log(chalk.bold.cyan('Functions:'));
@@ -127,9 +134,7 @@ function prettyPrintDeployedResources(config, result) {
       .map(fn => {
         const accessPrefix =
           fn.access !== 'public' ? chalk`{bold [${fn.access}]} ` : '';
-        return chalk`   ${accessPrefix}{dim https://${result.domain}}${
-          fn.assetPath
-        }`;
+        return chalk`   ${accessPrefix}{dim https://${result.domain}}${fn.assetPath}`;
       })
       .join('\n');
 
@@ -138,7 +143,7 @@ function prettyPrintDeployedResources(config, result) {
   }
 }
 
-export function printConfigInfo(config) {
+export function printConfigInfo(config: DeployLocalProjectConfig) {
   if (shouldPrettyPrint) {
     prettyPrintConfigInfo(config);
   } else {
@@ -146,7 +151,10 @@ export function printConfigInfo(config) {
   }
 }
 
-export function printDeployedResources(config, result) {
+export function printDeployedResources(
+  config: DeployLocalProjectConfig,
+  result: DeployResult
+) {
   if (shouldPrettyPrint) {
     prettyPrintDeployedResources(config, result);
   } else {
