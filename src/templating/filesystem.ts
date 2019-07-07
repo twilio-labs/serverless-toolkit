@@ -7,12 +7,20 @@ import path from 'path';
 import { fsHelpers } from '@twilio-labs/serverless-api';
 
 import { writeFile, fileExists, downloadFile, readFile } from '../utils/fs';
+import { TemplateFileInfo } from './data';
 
-async function writeEnvFile(contentUrl, targetDir, functionName) {
+async function writeEnvFile(
+  contentUrl: string,
+  targetDir: string,
+  functionName: string
+): Promise<{
+  newEnvironmentVariableKeys: string[];
+}> {
   const envFilePath = path.join(targetDir, '.env');
   const envFileExists = await fileExists(envFilePath);
   if (!envFileExists) {
-    return downloadFile(contentUrl, envFilePath);
+    await downloadFile(contentUrl, envFilePath);
+    return { newEnvironmentVariableKeys: [] };
   }
 
   const currentContent = await readFile(envFilePath, 'utf8');
@@ -46,7 +54,10 @@ async function writeEnvFile(contentUrl, targetDir, functionName) {
   return { newEnvironmentVariableKeys: functionKeys };
 }
 
-async function installDependencies(contentUrl, targetDir) {
+async function installDependencies(
+  contentUrl: string,
+  targetDir: string
+): Promise<pkgInstall.InstallResult> {
   const pkgContent = await got(contentUrl, { json: true });
   const dependencies = pkgContent.body.dependencies;
   return pkgInstall.install(dependencies, {
@@ -54,7 +65,11 @@ async function installDependencies(contentUrl, targetDir) {
   });
 }
 
-export async function writeFiles(files, targetDir, functionName) {
+export async function writeFiles(
+  files: TemplateFileInfo[],
+  targetDir: string,
+  functionName: string
+): Promise<void> {
   const functionsDir = fsHelpers.getFirstMatchingDirectory(targetDir, [
     'functions',
     'src',

@@ -8,18 +8,54 @@ const TEMPLATES_URL =
 const CONTENT_BASE_URL =
   'https://api.github.com/repos/twilio-labs/function-templates/contents';
 
-export async function fetchListOfTemplates() {
+export type Template = {
+  id: string;
+  name: string;
+  description: string;
+};
+
+export type TemplatesPayload = {
+  templates: Template[];
+};
+
+export async function fetchListOfTemplates(): Promise<Template[]> {
   const response = await got(TEMPLATES_URL, { json: true });
-  const { templates } = response.body;
+  const { templates } = response.body as TemplatesPayload;
   return templates;
 }
 
-export async function getTemplateFiles(templateId, functionName) {
+export type TemplateFileInfo = {
+  type: string;
+  functionName: string;
+  content: string;
+};
+
+type RawContentsPayload = {
+  name: string;
+  path: string;
+  sha: string;
+  size: string;
+  url: string;
+  html_url: string;
+  git_url: string;
+  download_url: string;
+  type: string;
+  _links: {
+    self: string;
+    git: string;
+    html: string;
+  };
+}[];
+
+export async function getTemplateFiles(
+  templateId: string,
+  functionName: string
+): Promise<TemplateFileInfo[]> {
   try {
     const response = await got(CONTENT_BASE_URL + `/${templateId}`, {
       json: true,
     });
-    const output = response.body
+    const output = (response.body as RawContentsPayload)
       .filter(file => {
         return (
           file.name === 'package.json' ||

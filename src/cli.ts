@@ -6,7 +6,7 @@ import * as DeployCommand from './commands/deploy';
 import * as ListCommand from './commands/list';
 import * as ActivateCommand from './commands/activate';
 
-export async function run(rawArgs) {
+export async function run(rawArgs: string[]) {
   yargs
     .command(NewCommand)
     .command(DeployCommand)

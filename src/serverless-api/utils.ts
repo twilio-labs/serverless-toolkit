@@ -11,7 +11,9 @@ export interface HttpError extends Error {
   };
 }
 
-export async function getFunctionServiceSid(cwd) {
+export async function getFunctionServiceSid(
+  cwd: string
+): Promise<string | undefined> {
   const configPath = path.join(cwd, '.twilio-functions');
   if (!(await fileExists(configPath))) {
     return undefined;
@@ -26,7 +28,11 @@ export async function getFunctionServiceSid(cwd) {
   }
 }
 
-export async function saveLatestDeploymentData(cwd, serviceSid, buildSid) {
+export async function saveLatestDeploymentData(
+  cwd: string,
+  serviceSid: string,
+  buildSid: string
+): Promise<void> {
   const configPath = path.join(cwd, '.twilio-functions');
   if (!(await fileExists(configPath))) {
     const output = JSON.stringify(
