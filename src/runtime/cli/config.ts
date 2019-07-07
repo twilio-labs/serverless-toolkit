@@ -4,15 +4,52 @@ import dotenv from 'dotenv';
 import logSymbols from 'log-symbols';
 import { fileExists } from '../../utils/fs';
 import debugModule from 'debug';
+import { Arguments } from 'yargs';
 
 const debug = debugModule('twilio-run:cli:config');
 
 type NgrokConfig = {
-  addr: number;
+  addr: string | number;
   subdomain?: string;
 };
 
-async function getUrl(cli, port) {
+export type StartCliConfig = {
+  inspect?: {
+    hostPort: string;
+    break: boolean;
+  };
+  baseDir: string;
+  env: {
+    [key: string]: string;
+  };
+  port: number;
+  url: string;
+  detailedLogs: boolean;
+  live: boolean;
+  logs: boolean;
+  legacyMode: boolean;
+  appName: string;
+};
+
+export type StartCliFlags = Arguments<{
+  dir?: string;
+  loadLocalEnv: boolean;
+  env?: string;
+  port: string;
+  ngrok?: string;
+  logs: boolean;
+  detailedLogs: boolean;
+  live: boolean;
+  inspect?: string;
+  inspectBrk?: string;
+  legacyMode: boolean;
+}>;
+
+export type WrappedStartCliFlags = {
+  flags: StartCliFlags;
+};
+
+async function getUrl(cli: WrappedStartCliFlags, port: string | number) {
   let url = `http://localhost:${port}`;
   if (typeof cli.flags.ngrok !== 'undefined') {
     debug('Starting ngrok tunnel');
@@ -28,7 +65,7 @@ async function getUrl(cli, port) {
   return url;
 }
 
-function getPort(cli) {
+function getPort(cli: WrappedStartCliFlags) {
   let port = process.env.PORT || 3000;
   if (typeof cli.flags.port !== 'undefined') {
     port = parseInt(cli.flags.port, 10);
@@ -40,7 +77,7 @@ function getPort(cli) {
   return port;
 }
 
-async function getEnvironment(cli, baseDir) {
+async function getEnvironment(cli: WrappedStartCliFlags, baseDir: string) {
   let env = {};
   if (cli.flags.loadLocalEnv) {
     debug('Loading local environment variables');
@@ -69,16 +106,16 @@ async function getEnvironment(cli, baseDir) {
   return env;
 }
 
-function getBaseDirectory(cli) {
+function getBaseDirectory(cli: WrappedStartCliFlags) {
   let baseDir = process.cwd();
-  if (cli.dir) {
-    baseDir = cli.dir;
+  if (cli.flags.dir) {
+    baseDir = cli.flags.dir;
     debug('Set base directory based on input to "%s"', baseDir);
   }
   return baseDir;
 }
 
-function getInspectInfo(cli) {
+function getInspectInfo(cli: WrappedStartCliFlags) {
   if (typeof cli.flags.inspectBrk !== 'undefined') {
     return {
       hostPort: cli.flags.inspect,
@@ -90,26 +127,8 @@ function getInspectInfo(cli) {
   return undefined;
 }
 
-export type CliConfig = {
-  inspect?: {
-    hostPort: string;
-    break: boolean;
-  };
-  baseDir: string;
-  env: {
-    [key: string]: string;
-  };
-  port: number;
-  url: string;
-  detailedLogs: boolean;
-  live: boolean;
-  logs: boolean;
-  legacyMode: boolean;
-  appName: string;
-};
-
-export async function getConfigFromCli(cli) {
-  const config = {} as CliConfig;
+export async function getConfigFromCli(cli: { flags: StartCliFlags }) {
+  const config = {} as StartCliConfig;
 
   config.inspect = getInspectInfo(cli);
   config.baseDir = getBaseDirectory(cli);

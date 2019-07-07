@@ -4,6 +4,13 @@ import { fileExists, readFile, writeFile } from '../utils/fs';
 
 const log = debug('twilio-run:internal:utils');
 
+export interface HttpError extends Error {
+  name: 'HTTPError';
+  body: {
+    message: string;
+  };
+}
+
 export async function getFunctionServiceSid(cwd) {
   const configPath = path.join(cwd, '.twilio-functions');
   if (!(await fileExists(configPath))) {

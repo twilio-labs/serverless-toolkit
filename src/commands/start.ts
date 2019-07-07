@@ -1,12 +1,13 @@
 import debug from 'debug';
 import { createServer } from '../runtime/server';
 import { startInspector } from '../runtime/utils/inspector';
-import { getConfigFromCli } from '../runtime/cli/config';
+import { getConfigFromCli, StartCliFlags } from '../runtime/cli/config';
 import { printRouteInfo, printVersionWarning } from '../printers/start';
+import { Argv } from 'yargs';
 
 const log = debug('twilio-run:start');
 
-export async function handler(argv) {
+export async function handler(argv: StartCliFlags): Promise<void> {
   const nodeVersion = process.versions.node;
   if (!nodeVersion.startsWith('8.10')) {
     printVersionWarning(nodeVersion);
@@ -36,7 +37,7 @@ export async function handler(argv) {
   return new Promise(resolve => {
     app.listen(config.port, async () => {
       printRouteInfo(config);
-      resolve(app);
+      resolve();
     });
   });
 }
@@ -98,7 +99,7 @@ export const cliInfo = {
   },
 };
 
-function optionBuilder(yargs) {
+function optionBuilder(yargs: Argv<any>): Argv<StartCliFlags> {
   yargs = yargs
     .example('$0', 'Serves all functions in current functions subdirectory')
     .example('$0 start demo', 'Serves all functions in demo/functions')

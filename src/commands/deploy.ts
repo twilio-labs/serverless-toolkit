@@ -2,16 +2,21 @@ import debug from 'debug';
 import path from 'path';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
-import ora from 'ora';
+import ora, { Ora } from 'ora';
 import { stripIndent } from 'common-tags';
+import { Argv, Arguments } from 'yargs';
 
-import { TwilioServerlessApiClient } from '@twilio-labs/serverless-api';
+import {
+  TwilioServerlessApiClient,
+  DeployLocalProjectConfig,
+} from '@twilio-labs/serverless-api';
 
 import { fileExists, readFile } from '../utils/fs';
 import { printDeployedResources, printConfigInfo } from '../printers/deploy';
 import {
   getFunctionServiceSid,
   saveLatestDeploymentData,
+  HttpError,
 } from '../serverless-api/utils';
 
 const log = debug('twilio-run:deploy');
@@ -22,7 +27,29 @@ type LocalEnvironmentVariables = {
   [key: string]: string;
 };
 
-async function getConfigFromFlags(flags) {
+export type DeployCliFlags = Arguments<{
+  cwd?: string;
+  functionsEnv: string;
+  projectName?: string;
+  accountSid?: string;
+  authToken?: string;
+  env?: string;
+  overrideExistingProject: boolean;
+  force: boolean;
+  functions: boolean;
+  assets: boolean;
+  assetsFolder?: string;
+  functionsFolder?: string;
+}> & {
+  _cliDefault?: {
+    username: string;
+    password: string;
+  };
+};
+
+async function getConfigFromFlags(
+  flags: DeployCliFlags
+): Promise<DeployLocalProjectConfig> {
   const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
 
   let { accountSid, authToken } = flags;
@@ -84,11 +111,15 @@ async function getConfigFromFlags(flags) {
   };
 }
 
-function logError(msg) {
+function logError(msg: string) {
   console.error(chalk`{red.bold ERROR} ${msg}`);
 }
 
-function handleError(err, spinner, flags) {
+function handleError(
+  err: Error | HttpError,
+  spinner: Ora,
+  flags: DeployCliFlags
+) {
   log('%O', err);
   if (err.name === 'conflicting-servicename') {
     spinner.fail(err.message);
@@ -97,21 +128,21 @@ function handleError(err, spinner, flags) {
       - Rename your project in the package.json "name" property
       - Pass an explicit name to your deployment
         > ${flags.$0} deploy -n my-new-service-name
-      - Deploy to the existing service with the name "${err.projectName}"
+      - Deploy to the existing service with the name "${flags.projectName}"
         > ${flags.$0} deploy --override-existing-project
       - Run deployment in force mode
         > ${flags.$0} deploy --force
     `);
   } else if (err.name === 'HTTPError') {
-    spinner.fail(err.body.message);
+    spinner.fail((err as HttpError).body.message);
   } else {
     spinner.fail(err.message);
   }
   process.exit(1);
 }
 
-export async function handler(flags) {
-  let config;
+export async function handler(flags: DeployCliFlags): Promise<void> {
+  let config: DeployLocalProjectConfig;
   try {
     config = await getConfigFromFlags(flags);
   } catch (err) {
@@ -218,7 +249,7 @@ export const cliInfo = {
   },
 };
 
-function optionBuilder(yargs) {
+function optionBuilder(yargs: Argv<any>): Argv<DeployCliFlags> {
   yargs = yargs
     .example(
       '$0 deploy',

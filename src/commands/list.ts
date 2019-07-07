@@ -2,18 +2,46 @@ import debug from 'debug';
 import path from 'path';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
-import ora from 'ora';
-import { stripIndent } from 'common-tags';
+import { PackageJson } from 'type-fest';
 
-import { TwilioServerlessApiClient } from '@twilio-labs/serverless-api';
+import {
+  TwilioServerlessApiClient,
+  ListConfig as ApiListConfig,
+  ListOptions,
+} from '@twilio-labs/serverless-api';
 
-import { fileExists, readFile, writeFile } from '../utils/fs';
+import { fileExists, readFile } from '../utils/fs';
 import { getFunctionServiceSid } from '../serverless-api/utils';
 import { printListResult } from '../printers/list';
+import { Arguments, Argv } from 'yargs';
 
 const log = debug('twilio-run:list');
 
-async function getConfigFromFlags(flags) {
+export type ListConfig = ApiListConfig & {
+  cwd: string;
+  properties?: string[];
+  extendedOutput: boolean;
+};
+
+export type ListCliFlags = Arguments<{
+  types: string;
+  projectName?: string;
+  properties?: string;
+  extendedOutput: boolean;
+  cwd?: string;
+  environment?: string;
+  accountSid?: string;
+  authToken?: string;
+  serviceSid?: string;
+  env?: string;
+}> & {
+  _cliDefault: {
+    username: string;
+    password: string;
+  };
+};
+
+async function getConfigFromFlags(flags: ListCliFlags): Promise<ListConfig> {
   const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
 
   let { accountSid, authToken } = flags;
@@ -42,10 +70,14 @@ async function getConfigFromFlags(flags) {
     const pkgJsonPath = path.join(cwd, 'package.json');
     if (await fileExists(pkgJsonPath)) {
       const pkgContent = await readFile(pkgJsonPath, 'utf8');
-      const pkgJson = JSON.parse(pkgContent);
-      projectName = pkgJson.name;
+      const pkgJson: PackageJson = JSON.parse(pkgContent);
+      if (typeof pkgJson.name === 'string') {
+        projectName = pkgJson.name;
+      }
     }
   }
+
+  const types = flags.types.split(',') as ListOptions[];
 
   return {
     cwd,
@@ -58,21 +90,22 @@ async function getConfigFromFlags(flags) {
       ? flags.properties.split(',').map(x => x.trim())
       : undefined,
     extendedOutput: flags.extendedOutput,
+    types,
   };
 }
 
-function logError(msg) {
+function logError(msg: string) {
   console.error(chalk`{red.bold ERROR} ${msg}`);
 }
 
-function handleError(err) {
+function handleError(err: Error) {
   log('%O', err);
-  logError(err);
+  logError(err.message);
   process.exit(1);
 }
 
-export async function handler(flags) {
-  let config;
+export async function handler(flags: ListCliFlags): Promise<void> {
+  let config: ListConfig;
   try {
     config = await getConfigFromFlags(flags);
   } catch (err) {
@@ -95,8 +128,7 @@ export async function handler(flags) {
 
   try {
     const client = new TwilioServerlessApiClient(config);
-    const types = flags.types.split(',');
-    const result = await client.list({ ...config, types });
+    const result = await client.list({ ...config });
     printListResult(result, config);
   } catch (err) {
     handleError(err);
@@ -108,6 +140,12 @@ export const cliInfo = {
     types: 'environments,builds',
   },
   options: {
+    'project-name': {
+      type: 'string',
+      alias: 'n',
+      describe:
+        'Overrides the name of the project. Default: the name field in your package.json',
+    },
     properties: {
       type: 'string',
       describe:
@@ -144,12 +182,17 @@ export const cliInfo = {
       type: 'string',
       describe: 'Specific Serverless Service SID to run list for',
     },
+    env: {
+      type: 'string',
+      describe:
+        'Path to .env file for environment variables that should be installed',
+    },
   },
 };
 
-function optionBuilder(yargs) {
+function optionBuilder(yargs: Argv<any>): Argv<ListCliFlags> {
   yargs = yargs
-    .defaults('types', 'environments,builds')
+    .default('types', 'environments,builds')
     .example(
       '$0 list services',
       'Lists all existing services/projects associated with your Twilio Account'

@@ -4,8 +4,20 @@ import ora from 'ora';
 import prompts from 'prompts';
 import { fetchListOfTemplates, getTemplateFiles } from '../templating/data';
 import { writeFiles } from '../templating/filesystem';
+import { Arguments, Argv } from 'yargs';
 
-async function listTemplates() {
+export type NewCliFlags = Arguments<{
+  filename?: string;
+  template?: string;
+  list?: string;
+}>;
+
+export type NewConfig = NewCliFlags & {
+  template: string;
+  filename: string;
+};
+
+async function listTemplates(): Promise<void> {
   const spinner = ora('Fetching available templates').start();
 
   let templates;
@@ -20,14 +32,12 @@ async function listTemplates() {
 
   templates.forEach(template => {
     console.log(
-      chalk`‣ ${template.name} ({cyan ${template.id}})\n  {dim ${
-        template.description
-      }}`
+      chalk`‣ ${template.name} ({cyan ${template.id}})\n  {dim ${template.description}}`
     );
   });
 }
 
-async function getMissingInfo(flags) {
+async function getMissingInfo(flags: NewCliFlags): Promise<NewConfig> {
   const questions = [];
   if (!flags.template) {
     const templates = await fetchListOfTemplates();
@@ -60,7 +70,11 @@ async function getMissingInfo(flags) {
   }
 
   if (questions.length === 0) {
-    return flags;
+    return {
+      ...flags,
+      filename: flags.filename as string,
+      template: flags.template as string,
+    };
   }
 
   const answers = await prompts(questions);
@@ -71,7 +85,7 @@ async function getMissingInfo(flags) {
   };
 }
 
-function getBaseDirectoryPath() {
+function getBaseDirectoryPath(): string {
   const currentDir = process.cwd();
   const baseName = path.basename(currentDir);
   if (
@@ -85,7 +99,7 @@ function getBaseDirectoryPath() {
   return currentDir;
 }
 
-export async function handler(flags) {
+export async function handler(flags: NewCliFlags): Promise<void> {
   if (flags.list) {
     await listTemplates();
     process.exit(0);
@@ -117,7 +131,7 @@ export const cliInfo = {
   },
 };
 
-function optionBuilder(yargs) {
+function optionBuilder(yargs: Argv<any>): Argv<NewCliFlags> {
   yargs = yargs
     .example(
       '$0 new hello-world --template=blank',

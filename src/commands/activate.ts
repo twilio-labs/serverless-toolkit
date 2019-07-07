@@ -2,16 +2,43 @@ import debug from 'debug';
 import path from 'path';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
-import ora from 'ora';
+import ora, { Ora } from 'ora';
+import { Argv, Arguments } from 'yargs';
 
-import { TwilioServerlessApiClient } from '@twilio-labs/serverless-api';
+import {
+  TwilioServerlessApiClient,
+  ActivateConfig as ApiActivateConfig,
+} from '@twilio-labs/serverless-api';
 
 import { fileExists, readFile } from '../utils/fs';
 import { getFunctionServiceSid } from '../serverless-api/utils';
 
 const log = debug('twilio-run:activate');
 
-async function getConfigFromFlags(flags) {
+type ActivateConfig = ApiActivateConfig & {
+  cwd: string;
+};
+
+export type ActivateCliFlags = Arguments<{
+  cwd?: string;
+  buildSid?: string;
+  sourceEnvironment?: string;
+  environment: string;
+  accountSid?: string;
+  authToken?: string;
+  createEnvironment: boolean;
+  force: boolean;
+  env?: string;
+}> & {
+  _cliDefault?: {
+    username: string;
+    password: string;
+  };
+};
+
+async function getConfigFromFlags(
+  flags: ActivateCliFlags
+): Promise<ActivateConfig> {
   const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
   let { accountSid, authToken } = flags;
 
@@ -50,7 +77,7 @@ function logError(msg) {
   console.error(chalk`{red.bold ERROR} ${msg}`);
 }
 
-function handleError(err, spinner) {
+function handleError(err: Error, spinner: Ora) {
   log('%O', err);
   if (spinner) {
     spinner.fail(err.message);
@@ -58,8 +85,8 @@ function handleError(err, spinner) {
   process.exit(1);
 }
 
-export async function handler(flags) {
-  let config;
+export async function handler(flags: ActivateCliFlags) {
+  let config: ActivateConfig;
   try {
     config = await getConfigFromFlags(flags);
   } catch (err) {
@@ -140,10 +167,15 @@ export const cliInfo = {
       describe: 'Will run deployment in force mode. Can be dangerous.',
       default: false,
     },
+    env: {
+      type: 'string',
+      describe:
+        'Path to .env file for environment variables that should be installed',
+    },
   },
 };
 
-function optionBuilder(yargs) {
+function optionBuilder<T>(yargs: Argv<any>): Argv<ActivateCliFlags> {
   yargs = yargs
     .example(
       '$0 activate --environment=prod --source-environment=dev  ',
