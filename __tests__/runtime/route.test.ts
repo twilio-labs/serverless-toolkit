@@ -1,21 +1,18 @@
-/// <reference path="../../node_modules/twilio-runtime-types/index.d.ts"/>
+import '@twilio-labs/serverless-runtime-types';
 
-const {
-  VoiceResponse,
-  MessagingResponse,
-  FaxResponse,
-} = require('twilio').twiml;
-const {
+import { twiml } from 'twilio';
+import {
   handleError,
   handleSuccess,
   constructEvent,
   isTwiml,
   constructContext,
   constructGlobalScope,
-} = require('./route');
-const { Response } = require('./internal/response');
-const Runtime = require('./internal/runtime');
-const { Response: MockResponse } = require('jest-express/lib/response');
+} from '../../src/runtime/route';
+import { Response } from '../../src/runtime/internal/response';
+import { Response as MockResponse } from 'jest-express/lib/response';
+
+const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
 
 const mockResponse = new MockResponse();
 mockResponse.type = jest.fn(() => mockResponse);

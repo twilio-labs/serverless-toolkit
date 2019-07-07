@@ -32,9 +32,9 @@ jest.doMock('@twilio-labs/serverless-api', () => {
   return mod;
 });
 
-const { getFunctionsAndAssets } = require('./runtime-paths');
+import { getFunctionsAndAssets } from '../../../src/runtime/internal/runtime-paths';
 
-const { fsHelpers } = require('@twilio-labs/serverless-api');
+import { fsHelpers } from '@twilio-labs/serverless-api';
 
 test('calls the right functions', async () => {
   const result = await getFunctionsAndAssets('/var/task/handlers');
@@ -43,9 +43,7 @@ test('calls the right functions', async () => {
 });
 
 test('returns the right functions and assets', async () => {
-  const { functions, assets } = await getFunctionsAndAssets(
-    '/var/task/handlers'
-  );
+  const { functions } = await getFunctionsAndAssets('/var/task/handlers');
   expect(functions).toEqual([
     {
       functionPath: '/sms/reply',

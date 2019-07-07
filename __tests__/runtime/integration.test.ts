@@ -1,7 +1,7 @@
 jest.unmock('twilio');
 
 const request = require('supertest');
-const { createServer } = require('./server');
+const { createServer } = require('../../src/runtime/server');
 const { resolve, basename } = require('path');
 const cheerio = require('cheerio');
 const { readdirSync } = require('fs');
