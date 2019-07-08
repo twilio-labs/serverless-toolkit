@@ -30,7 +30,7 @@ export function constructContext<T extends {} = {}>({
 }: StartCliConfig): Context<{
   ACCOUNT_SID?: string;
   AUTH_TOKEN?: string;
-  [key: string]: string | Function;
+  [key: string]: string | undefined | Function;
 }> {
   function getTwilioClient(): twilio.Twilio {
     return twilio(env.ACCOUNT_SID, env.AUTH_TOKEN);
@@ -40,8 +40,8 @@ export function constructContext<T extends {} = {}>({
 }
 
 export function constructGlobalScope(config: StartCliConfig): void {
-  global['Twilio'] = { ...twilio, Response };
-  global['Runtime'] = Runtime.create(config);
+  (global as any)['Twilio'] = { ...twilio, Response };
+  (global as any)['Runtime'] = Runtime.create(config);
 }
 
 export function handleError(err: Error, res: ExpressResponse) {
@@ -57,7 +57,7 @@ export function isTwiml(obj: object): boolean {
 }
 
 export function handleSuccess(
-  responseObject: string | object,
+  responseObject: string | object | undefined,
   res: ExpressResponse
 ) {
   res.status(200);
@@ -67,13 +67,13 @@ export function handleSuccess(
     return;
   }
 
-  if (isTwiml(responseObject)) {
+  if (responseObject && isTwiml(responseObject)) {
     log('Sending TwiML response as XML string');
     res.type('text/xml').send(responseObject.toString());
     return;
   }
 
-  if (responseObject instanceof Response) {
+  if (responseObject && responseObject instanceof Response) {
     log('Sending custom response');
     responseObject.applyToExpressResponse(res);
     return;

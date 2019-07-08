@@ -38,6 +38,7 @@ test('sets headers correctly', () => {
     'Access-Control-Allow-Headers': 'Content-Type',
   };
   expect(response['headers']).toEqual(expected);
+  // @ts-ignore
   response.setHeaders(undefined);
   expect(response['headers']).toEqual(expected);
 });
@@ -59,6 +60,7 @@ test('appends a new header correctly', () => {
 test('appends a header correctly with no existing one', () => {
   const response = new Response();
   expect(response['headers']).toEqual({});
+  // @ts-ignore
   response['headers'] = undefined;
   response.appendHeader('Access-Control-Allow-Origin', 'dkundel.com');
   expect(response['headers']).toEqual({

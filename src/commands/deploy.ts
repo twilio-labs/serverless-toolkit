@@ -19,11 +19,13 @@ import {
   HttpError,
 } from '../serverless-api/utils';
 import { EnvironmentVariablesWithAuth } from '../types/generic';
+import { CliInfo } from './types';
 
 const log = debug('twilio-run:deploy');
 
 export type DeployCliFlags = Arguments<{
   cwd?: string;
+  serviceSid?: string;
   functionsEnv: string;
   projectName?: string;
   accountSid?: string;
@@ -47,7 +49,8 @@ async function getConfigFromFlags(
 ): Promise<DeployLocalProjectConfig> {
   const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
 
-  let { accountSid, authToken } = flags;
+  let accountSid = '';
+  let authToken = '';
   let localEnv: EnvironmentVariablesWithAuth = {};
 
   const envPath = path.resolve(cwd, flags.env || '.env');
@@ -57,14 +60,20 @@ async function getConfigFromFlags(
     localEnv = dotenv.parse(contentEnvFile);
 
     accountSid =
-      flags.accountSid || localEnv.ACCOUNT_SID || flags._cliDefault.username;
+      flags.accountSid ||
+      localEnv.ACCOUNT_SID ||
+      (flags._cliDefault && flags._cliDefault.username) ||
+      '';
     authToken =
-      flags.authToken || localEnv.AUTH_TOKEN || flags._cliDefault.password;
+      flags.authToken ||
+      localEnv.AUTH_TOKEN ||
+      (flags._cliDefault && flags._cliDefault.password) ||
+      '';
   } else if (flags.env) {
     throw new Error(`Failed to find .env file at "${envPath}"`);
   }
 
-  const serviceSid = await getFunctionServiceSid(cwd);
+  const serviceSid = flags.serviceSid || (await getFunctionServiceSid(cwd));
 
   const pkgJsonPath = path.join(cwd, 'package.json');
   if (!(await fileExists(pkgJsonPath))) {
@@ -79,7 +88,8 @@ async function getConfigFromFlags(
   };
 
   for (let key of Object.keys(env)) {
-    if (typeof env[key] === 'string' && env[key].length === 0) {
+    const val = env[key];
+    if (typeof val === 'string' && val.length === 0) {
       delete env[key];
     }
   }
@@ -144,11 +154,13 @@ export async function handler(flags: DeployCliFlags): Promise<void> {
     log(err);
     logError(err.message);
     process.exit(1);
+    return;
   }
 
   if (!config) {
     logError('Internal Error');
     process.exit(1);
+    return;
   }
 
   log('Deploy Config %O', config);
@@ -158,6 +170,7 @@ export async function handler(flags: DeployCliFlags): Promise<void> {
       'Please enter ACCOUNT_SID and AUTH_TOKEN in your .env file or specify them via the command-line.'
     );
     process.exit(1);
+    return;
   }
 
   printConfigInfo(config);
@@ -179,11 +192,16 @@ export async function handler(flags: DeployCliFlags): Promise<void> {
   }
 }
 
-export const cliInfo = {
+export const cliInfo: CliInfo = {
   options: {
     cwd: {
       type: 'string',
       describe: 'Sets the directory from which to deploy',
+    },
+    'service-sid': {
+      type: 'string',
+      describe: 'SID of the Twilio Serverless service you want to deploy to.',
+      hidden: true,
     },
     'functions-env': {
       type: 'string',

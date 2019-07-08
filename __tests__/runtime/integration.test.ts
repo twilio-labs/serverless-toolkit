@@ -1,27 +1,38 @@
 jest.unmock('twilio');
 
-const request = require('supertest');
-const { createServer } = require('../../src/runtime/server');
-const { resolve, basename } = require('path');
-const cheerio = require('cheerio');
-const { readdirSync } = require('fs');
+import request from 'supertest';
+import { createServer } from '../../src/runtime/server';
+import { resolve, basename } from 'path';
+import cheerio from 'cheerio';
+import { readdirSync } from 'fs';
+import { Response as ExpressResponse, Express } from 'express';
+import { StartCliConfig } from '../../src/runtime/cli/config';
 
 const TEST_DIR = resolve(__dirname, '../../fixtures');
 
 const TEST_FUNCTIONS_DIR = resolve(TEST_DIR, 'functions');
 const TEST_ENV = {};
 
-const availableFunctions = readdirSync(TEST_FUNCTIONS_DIR).map(name => {
-  const path = resolve(TEST_FUNCTIONS_DIR, name);
-  const url = `/${basename(name, '.js')}`;
-  return { name, url, path };
-});
+const availableFunctions = readdirSync(TEST_FUNCTIONS_DIR).map(
+  (name: string) => {
+    const path = resolve(TEST_FUNCTIONS_DIR, name);
+    const url = `/${basename(name, '.js')}`;
+    return { name, url, path };
+  }
+);
 
-function responseToSnapshotJson(response) {
+type InternalResponse = request.Response & {
+  statusCode: number;
+  headers: {
+    [key: string]: string | undefined;
+  };
+};
+
+function responseToSnapshotJson(response: InternalResponse) {
   let { statusCode, type, body, text, headers } = response;
   delete headers['date'];
 
-  if (text.startsWith('Error')) {
+  if (text && text.startsWith('Error')) {
     // stack traces are different in every environment
     // let's not snapshot values that rely on it
     text = `${text.split('\n')[0]} ...`;
@@ -39,20 +50,20 @@ function responseToSnapshotJson(response) {
 }
 
 describe('Function integration tests', () => {
-  let app;
+  let app: Express;
 
   beforeAll(async () => {
     app = await createServer(9000, {
       baseDir: TEST_DIR,
       env: TEST_ENV,
       logs: false,
-    });
+    } as StartCliConfig);
   });
 
   for (const testFnCode of availableFunctions) {
     test(`${testFnCode.name} should match snapshot`, async () => {
       const response = await request(app).get(testFnCode.url);
-      const result = responseToSnapshotJson(response);
+      const result = responseToSnapshotJson(response as InternalResponse);
       expect(result).toMatchSnapshot();
     });
   }

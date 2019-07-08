@@ -6,13 +6,18 @@ import {
   DeployLocalProjectConfig,
   DeployResult,
 } from '@twilio-labs/serverless-api';
+import { FunctionInfo, AssetInfo } from '../runtime/internal/runtime-paths';
+import { MergeExclusive } from 'type-fest';
 
-function sortByAccess(resA, resB) {
+function sortByAccess<T extends MergeExclusive<AssetInfo, FunctionInfo>>(
+  resA: T,
+  resB: T
+) {
   if (resA.access === resB.access) {
     if (resA.functionPath) {
-      return resA.functionPath.localeCompare(resB.functionPath);
+      return resA.functionPath.localeCompare(resB.functionPath || '');
     } else if (resA.assetPath) {
-      return resA.assetPath.localeCompare(resB.assetPath);
+      return resA.assetPath.localeCompare(resB.assetPath || '');
     }
   }
   return resA.access.localeCompare(resB.access);

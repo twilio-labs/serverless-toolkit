@@ -83,7 +83,7 @@ async function getEnvironment(
   cli: WrappedStartCliFlags,
   baseDir: string
 ): Promise<EnvironmentVariables> {
-  let env = {};
+  let env: EnvironmentVariables = {};
   if (cli.flags.loadLocalEnv) {
     debug('Loading local environment variables');
     env = { ...process.env };
@@ -123,7 +123,7 @@ function getBaseDirectory(cli: WrappedStartCliFlags): string {
 function getInspectInfo(cli: WrappedStartCliFlags): InspectInfo | undefined {
   if (typeof cli.flags.inspectBrk !== 'undefined') {
     return {
-      hostPort: cli.flags.inspect,
+      hostPort: cli.flags.inspectBrk,
       break: true,
     };
   } else if (typeof cli.flags.inspect !== 'undefined') {

@@ -1,8 +1,9 @@
 import { RouteInfo, AssetInfo, FunctionInfo } from './runtime-paths';
+import { MergeExclusive, Merge } from 'type-fest';
 
-type ExtendedRouteInfo = {
-  type: 'function' | 'asset';
-} & (FunctionInfo | AssetInfo);
+type ExtendedRouteInfo =
+  | Merge<{ type: 'function' }, FunctionInfo>
+  | Merge<{ type: 'asset' }, AssetInfo>;
 
 const allRoutes = new Map<string, ExtendedRouteInfo>();
 const assetsCache = new Set<AssetInfo>();

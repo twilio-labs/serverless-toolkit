@@ -55,5 +55,5 @@ export async function getDirContent(
         path: filePath,
       };
     })
-  )).filter(Boolean);
+  )).filter(Boolean) as FileInfo[];
 }

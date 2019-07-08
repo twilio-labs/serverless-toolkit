@@ -5,6 +5,8 @@ import prompts from 'prompts';
 import { fetchListOfTemplates, getTemplateFiles } from '../templating/data';
 import { writeFiles } from '../templating/filesystem';
 import { Arguments, Argv } from 'yargs';
+import { Merge } from 'type-fest';
+import { CliInfo } from './types';
 
 export type NewCliFlags = Arguments<{
   filename?: string;
@@ -12,10 +14,13 @@ export type NewCliFlags = Arguments<{
   list?: string;
 }>;
 
-export type NewConfig = NewCliFlags & {
-  template: string;
-  filename: string;
-};
+export type NewConfig = Merge<
+  NewCliFlags,
+  {
+    template: string;
+    filename: string;
+  }
+>;
 
 async function listTemplates(): Promise<void> {
   const spinner = ora('Fetching available templates').start();
@@ -26,6 +31,7 @@ async function listTemplates(): Promise<void> {
   } catch (err) {
     spinner.fail('Failed to retrieve templates');
     process.exit(1);
+    return;
   }
 
   spinner.stop();
@@ -38,7 +44,7 @@ async function listTemplates(): Promise<void> {
 }
 
 async function getMissingInfo(flags: NewCliFlags): Promise<NewConfig> {
-  const questions = [];
+  const questions: prompts.PromptObject[] = [];
   if (!flags.template) {
     const templates = await fetchListOfTemplates();
     const choices = templates.map(template => {
@@ -60,7 +66,7 @@ async function getMissingInfo(flags: NewCliFlags): Promise<NewConfig> {
       type: 'text',
       name: 'filename',
       message: 'What should be the name of your function?',
-      validate: input => {
+      validate: (input: string) => {
         if (input.length < 1 || input.includes(' ')) {
           return 'Your name cannot include whitespace';
         }
@@ -99,13 +105,14 @@ function getBaseDirectoryPath(): string {
   return currentDir;
 }
 
-export async function handler(flags: NewCliFlags): Promise<void> {
-  if (flags.list) {
+export async function handler(flagsInput: NewCliFlags): Promise<void> {
+  if (flagsInput.list) {
     await listTemplates();
     process.exit(0);
+    return;
   }
 
-  flags = await getMissingInfo(flags);
+  const flags = await getMissingInfo(flagsInput);
   const targetDirectory = getBaseDirectoryPath();
   const functionName = flags.filename.replace(/\.js$/, '');
   const files = await getTemplateFiles(flags.template, functionName);
@@ -117,7 +124,7 @@ export async function handler(flags: NewCliFlags): Promise<void> {
   }
 }
 
-export const cliInfo = {
+export const cliInfo: CliInfo = {
   options: {
     template: {
       type: 'string',

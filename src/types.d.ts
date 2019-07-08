@@ -1,3 +1,11 @@
+declare module 'columnify' {
+  function columnify(obj: any, config: any): string;
+  export = columnify;
+}
+
+declare module 'log-symbols';
+declare module 'boxen';
+
 /**
  * Chalk is currently behind on releases. As a result the correct TypeScript
  * definitions are missing. This code has been taken from:

@@ -4,6 +4,7 @@ import { startInspector } from '../runtime/utils/inspector';
 import { getConfigFromCli, StartCliFlags } from '../runtime/cli/config';
 import { printRouteInfo, printVersionWarning } from '../printers/start';
 import { Argv } from 'yargs';
+import { CliInfo } from './types';
 
 const log = debug('twilio-run:start');
 
@@ -42,7 +43,7 @@ export async function handler(argv: StartCliFlags): Promise<void> {
   });
 }
 
-export const cliInfo = {
+export const cliInfo: CliInfo = {
   options: {
     'load-local-env': {
       alias: 'f',

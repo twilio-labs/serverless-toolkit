@@ -14,6 +14,7 @@ import { fileExists, readFile } from '../utils/fs';
 import { getFunctionServiceSid } from '../serverless-api/utils';
 import { printListResult } from '../printers/list';
 import { Arguments, Argv } from 'yargs';
+import { CliInfo } from './types';
 
 const log = debug('twilio-run:list');
 
@@ -112,11 +113,13 @@ export async function handler(flags: ListCliFlags): Promise<void> {
     log(err);
     logError(err.message);
     process.exit(1);
+    return;
   }
 
   if (!config) {
     logError('Internal Error');
     process.exit(1);
+    return;
   }
 
   if (!config.accountSid || !config.authToken) {
@@ -124,6 +127,7 @@ export async function handler(flags: ListCliFlags): Promise<void> {
       'Please enter ACCOUNT_SID and AUTH_TOKEN in your .env file or specify them via the command-line.'
     );
     process.exit(1);
+    return;
   }
 
   try {
@@ -135,7 +139,7 @@ export async function handler(flags: ListCliFlags): Promise<void> {
   }
 }
 
-export const cliInfo = {
+export const cliInfo: CliInfo = {
   argsDefaults: {
     types: 'environments,builds',
   },

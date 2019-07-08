@@ -18,7 +18,11 @@ import {
   ListOptions,
 } from '@twilio-labs/serverless-api';
 
-const baseKeys = {
+type KeyMaps = {
+  [key in ListOptions]: string[];
+};
+
+const baseKeys: KeyMaps = {
   environments: [
     'sid',
     'build_sid',
@@ -34,7 +38,7 @@ const baseKeys = {
   assets: ['path', 'visibility'],
 };
 
-const extendedKeys = {
+const extendedKeys: KeyMaps = {
   environments: [
     'account_sid',
     'service_sid',
@@ -107,7 +111,7 @@ function printRows(rows: any[], keys: string[]) {
   return columnify(rows, { columns: keys, headingTransform });
 }
 
-function getKeys(type: string, config: ListConfig) {
+function getKeys(type: ListOptions, config: ListConfig) {
   let keys = config.properties || [];
 
   if (config.extendedOutput) {
@@ -119,22 +123,25 @@ function getKeys(type: string, config: ListConfig) {
   return keys;
 }
 
-function printSection(
-  type: string,
-  sectionEntries: any[] | { entries: any[] },
+function printSection<T extends ListOptions>(
+  type: T,
+  sectionEntries: ListResult[T],
   config: ListConfig
 ) {
   let keys = getKeys(type, config);
 
-  if (!Array.isArray(sectionEntries)) {
-    sectionEntries = sectionEntries.entries;
+  let sectionEntryArray: any[] = [];
+  if (Array.isArray(sectionEntries)) {
+    sectionEntryArray = sectionEntries;
+  } else if (sectionEntries && sectionEntries.entries) {
+    sectionEntryArray = sectionEntries.entries;
   }
 
-  return printRows(sectionEntries, keys);
+  return printRows(sectionEntryArray, keys);
 }
 
 function printListResultPlain(result: ListResult, config: ListConfig) {
-  const types = Object.keys(result);
+  const types = Object.keys(result) as ListOptions[];
 
   if (types.length === 1) {
     console.log(printSection(types[0], result[types[0]], config));
@@ -148,23 +155,22 @@ function printListResultPlain(result: ListResult, config: ListConfig) {
   }
 }
 
-type CommonKeysFunctionAndAssetVersion = Extract<
+export type CommonKeysFunctionAndAssetVersion = Extract<
   keyof FunctionVersion,
   keyof AssetVersion
 >;
-type FunctionOrAssetContent = {
+export type CommonType = {
+  [key in CommonKeysFunctionAndAssetVersion]: FunctionVersion[key];
+};
+export type FunctionOrAssetContent = {
   environmentSid: string;
-  entries: [
-    {
-      [key in CommonKeysFunctionAndAssetVersion]: FunctionVersion[key];
-    }
-  ];
+  entries: CommonType[];
 };
 
 function prettyPrintFunctionsOrAssets(result: FunctionOrAssetContent) {
   const { entries, environmentSid } = result;
   const resourceString = entries
-    .map((entry: AssetVersion | FunctionVersion, idx: number): string => {
+    .map<string>((entry: CommonType, idx: number): string => {
       const symbol = idx + 1 === entries.length ? '└──' : '├──';
       let emoji = '';
       if (supportsEmoji) {

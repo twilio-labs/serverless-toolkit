@@ -12,20 +12,22 @@ import {
 
 import { fileExists, readFile } from '../utils/fs';
 import { getFunctionServiceSid } from '../serverless-api/utils';
+import { CliInfo } from './types';
 
 const log = debug('twilio-run:activate');
 
 type ActivateConfig = ApiActivateConfig & {
   cwd: string;
+  accountSid?: string;
+  authToken?: string;
 };
 
 export type ActivateCliFlags = Arguments<{
   cwd?: string;
+  serviceSid?: string;
   buildSid?: string;
   sourceEnvironment?: string;
   environment: string;
-  accountSid?: string;
-  authToken?: string;
   createEnvironment: boolean;
   force: boolean;
   env?: string;
@@ -40,7 +42,17 @@ async function getConfigFromFlags(
   flags: ActivateCliFlags
 ): Promise<ActivateConfig> {
   const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
-  let { accountSid, authToken } = flags;
+  let { accountSid: rawAccountSid, authToken: rawAuthToken } = flags;
+
+  let accountSid = '';
+  if (typeof rawAccountSid === 'string') {
+    accountSid = rawAccountSid;
+  }
+
+  let authToken = '';
+  if (typeof rawAuthToken === 'string') {
+    authToken = rawAuthToken;
+  }
 
   if (!accountSid || !authToken) {
     const envPath = path.resolve(cwd, flags.env || '.env');
@@ -53,12 +65,24 @@ async function getConfigFromFlags(
 
     const localEnv = dotenv.parse(contentEnvFile);
     accountSid =
-      flags.accountSid || localEnv.ACCOUNT_SID || flags._cliDefault.username;
+      accountSid ||
+      localEnv.ACCOUNT_SID ||
+      (flags._cliDefault && flags._cliDefault.username) ||
+      '';
     authToken =
-      flags.authToken || localEnv.AUTH_TOKEN || flags._cliDefault.password;
+      authToken ||
+      localEnv.AUTH_TOKEN ||
+      (flags._cliDefault && flags._cliDefault.password) ||
+      '';
   }
 
-  const serviceSid = await getFunctionServiceSid(cwd);
+  const serviceSid = flags.serviceSid || (await getFunctionServiceSid(cwd));
+
+  if (typeof serviceSid === 'undefined') {
+    throw new Error(
+      'Could not find a service SID in .twilio-functions configuration file.'
+    );
+  }
 
   return {
     cwd,
@@ -73,7 +97,7 @@ async function getConfigFromFlags(
   };
 }
 
-function logError(msg) {
+function logError(msg: string) {
   console.error(chalk`{red.bold ERROR} ${msg}`);
 }
 
@@ -85,7 +109,7 @@ function handleError(err: Error, spinner: Ora) {
   process.exit(1);
 }
 
-export async function handler(flags: ActivateCliFlags) {
+export async function handler(flags: ActivateCliFlags): Promise<void> {
   let config: ActivateConfig;
   try {
     config = await getConfigFromFlags(flags);
@@ -93,18 +117,29 @@ export async function handler(flags: ActivateCliFlags) {
     log(err);
     logError(err.message);
     process.exit(1);
+    return;
   }
 
   if (!config) {
     logError('Internal Error');
     process.exit(1);
+    return;
   }
 
-  if (!config.accountSid || !config.authToken) {
+  if (typeof config.accountSid !== 'string' || config.accountSid.length === 0) {
     logError(
-      'Please enter ACCOUNT_SID and AUTH_TOKEN in your .env file or specify them via the command-line.'
+      'Please enter an ACCOUNT_SID in your .env file or specify them via the command-line. Use --help for more info.'
     );
     process.exit(1);
+    return;
+  }
+
+  if (typeof config.authToken !== 'string' || config.authToken.length === 0) {
+    logError(
+      'Please enter an AUTH_TOKEN in your .env file or specify them via the command-line. Use --help for more info.'
+    );
+    process.exit(1);
+    return;
   }
 
   const details = config.buildSid
@@ -124,13 +159,17 @@ export async function handler(flags: ActivateCliFlags) {
   }
 }
 
-export const cliInfo = {
+export const cliInfo: CliInfo = {
   options: {
     cwd: {
       type: 'string',
       hidden: true,
       describe:
         'Sets the directory of your existing Functions project. Defaults to current directory',
+    },
+    'service-sid': {
+      type: 'string',
+      describe: 'SID of the Twilio Serverless Service to deploy to',
     },
     'build-sid': {
       type: 'string',

@@ -2,7 +2,7 @@ import pkgInstall from 'pkg-install';
 import dotenv from 'dotenv';
 import chalk from 'chalk';
 import got from 'got';
-import Listr from 'listr';
+import Listr, { ListrOptions, ListrTask } from 'listr';
 import path from 'path';
 import { fsHelpers } from '@twilio-labs/serverless-api';
 
@@ -81,33 +81,35 @@ export async function writeFiles(
     );
   }
 
-  const tasks = files.map(file => {
-    if (file.type === 'function') {
-      return {
-        title: 'Create Function',
-        task: () => {
-          return downloadFile(file.content, functionTargetPath);
-        },
-      };
-    } else if (file.type === '.env') {
-      return {
-        title: 'Configure Environment Variables in .env',
-        task: async ctx => {
-          const output = await writeEnvFile(
-            file.content,
-            targetDir,
-            file.functionName
-          );
-          ctx.env = output;
-        },
-      };
-    } else if (file.type === 'package.json') {
-      return {
-        title: 'Installing Dependencies',
-        task: () => installDependencies(file.content, targetDir),
-      };
-    }
-  });
+  const tasks = files
+    .map(file => {
+      if (file.type === 'function') {
+        return {
+          title: 'Create Function',
+          task: () => {
+            return downloadFile(file.content, functionTargetPath);
+          },
+        };
+      } else if (file.type === '.env') {
+        return {
+          title: 'Configure Environment Variables in .env',
+          task: async (ctx: any) => {
+            const output = await writeEnvFile(
+              file.content,
+              targetDir,
+              file.functionName
+            );
+            ctx.env = output;
+          },
+        };
+      } else if (file.type === 'package.json') {
+        return {
+          title: 'Installing Dependencies',
+          task: () => installDependencies(file.content, targetDir),
+        };
+      }
+    })
+    .filter(Boolean) as ListrTask[];
   const context = await new Listr(tasks, { concurrent: true }).run();
 
   const newKeys = context.env.newEnvironmentVariableKeys;

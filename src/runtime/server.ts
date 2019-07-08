@@ -84,9 +84,13 @@ export async function createServer(
 
       const routeInfo = routeMap.get(req.path);
 
-      if (routeInfo.type === 'function') {
+      if (routeInfo && routeInfo.type === 'function') {
         const functionPath = routeInfo.path;
         try {
+          if (!functionPath) {
+            throw new Error('Missing function path');
+          }
+
           log('Load & route to function at "%s"', functionPath);
           const twilioFunction = loadTwilioFunction(functionPath, config);
           functionToRoute(twilioFunction, config)(req, res, next);
@@ -94,8 +98,14 @@ export async function createServer(
           log('Failed to retrieve function. %O', err);
           res.status(404).send(`Could not find function ${functionPath}`);
         }
-      } else if (routeInfo.type === 'asset') {
-        res.sendFile(routeInfo.path);
+      } else if (routeInfo && routeInfo.type === 'asset') {
+        if (routeInfo.path) {
+          res.sendFile(routeInfo.path);
+        } else {
+          res.status(404).send('Could not find asset');
+        }
+      } else {
+        res.status(404).send('Could not find requested resource');
       }
     }
   );
@@ -104,7 +114,7 @@ export async function createServer(
 
 export async function runServer(
   port: number | string = DEFAULT_PORT,
-  config?: StartCliConfig
+  config: StartCliConfig
 ): Promise<Express> {
   const app = await createServer(port, config);
   return new Promise(resolve => {

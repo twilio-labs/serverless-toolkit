@@ -146,17 +146,24 @@ describe('constructContext function', () => {
 describe('constructGlobalScope function', () => {
   const ACCOUNT_SID = 'ACxxxxx';
   const AUTH_TOKEN = 'xyz';
-  let config;
+  let config: StartCliConfig;
 
   beforeEach(() => {
-    config = { url: 'http://localhost:8000', env: { ACCOUNT_SID, AUTH_TOKEN } };
+    config = {
+      url: 'http://localhost:8000',
+      env: { ACCOUNT_SID, AUTH_TOKEN },
+    } as StartCliConfig;
+    // @ts-ignore
     global['Twilio'] = undefined;
+    // @ts-ignore
     global['Runtime'] = undefined;
   });
 
   afterEach(() => {
-    config = {};
+    config = {} as StartCliConfig;
+    // @ts-ignore
     global['Twilio'] = undefined;
+    // @ts-ignore
     global['Runtime'] = undefined;
   });
 

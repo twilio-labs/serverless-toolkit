@@ -24,7 +24,8 @@ function simpleLogs(req: Request, res: Response): string {
 function detailedLogs(req: Request, res: Response): string {
   debugger;
   const msgLines = [chalk`{reset }`, simpleLogs(req, res)];
-  let body;
+
+  let body: string | undefined;
   const bodyEntries = Object.entries(req.body);
   if (bodyEntries.length > 0) {
     const lines = bodyEntries
@@ -32,7 +33,8 @@ function detailedLogs(req: Request, res: Response): string {
       .join('\n');
     body = `│  Body:\n${lines}`;
   }
-  let query;
+
+  let query: string | undefined;
   const queryEntries = Object.entries(req.query);
   if (queryEntries.length > 0) {
     const lines = queryEntries
@@ -42,7 +44,13 @@ function detailedLogs(req: Request, res: Response): string {
   }
 
   if (body || query) {
-    msgLines.push(chalk`│{underline Request:}`, query, body);
+    msgLines.push(chalk`│{underline Request:}`);
+    if (query) {
+      msgLines.push(query);
+    }
+    if (body) {
+      msgLines.push(body);
+    }
   }
 
   return msgLines.filter(x => !!x).join('\n');
@@ -51,7 +59,7 @@ function detailedLogs(req: Request, res: Response): string {
 export function createLogger(config: StartCliConfig): RequestHandler {
   return function requestLogger(req, res, next) {
     const resEnd = res.end.bind(res);
-    res.end = function sendInterceptor(...args) {
+    res.end = function sendInterceptor(...args: any[]) {
       const msg = config.detailedLogs
         ? detailedLogs(req, res)
         : simpleLogs(req, res);

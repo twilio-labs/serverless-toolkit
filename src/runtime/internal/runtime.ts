@@ -44,7 +44,7 @@ function getFunctions(): ResourceMap {
 }
 
 export function create({ env }: StartCliConfig): RuntimeInstance {
-  function getSync(config): ServiceContext {
+  function getSync(config?: { serviceName: string }): ServiceContext {
     config = config || { serviceName: 'default' };
     const client = twilio(env.ACCOUNT_SID, env.AUTH_TOKEN);
     return client.sync.services(config.serviceName);
