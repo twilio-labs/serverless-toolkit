@@ -20,7 +20,7 @@ const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
 
 const log = debug('twilio-run:route');
 
-export function constructEvent(req: ExpressRequest) {
+export function constructEvent<T extends {} = {}>(req: ExpressRequest): T {
   return { ...req.query, ...req.body };
 }
 
