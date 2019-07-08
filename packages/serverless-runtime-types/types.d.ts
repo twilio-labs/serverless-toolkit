@@ -13,8 +13,7 @@ export type RuntimeInstance = {
   getSync(config?: { serviceName: string }): ServiceContext;
 };
 
-export type Context = {
+export type Context<T = {}> = {
   getTwilioClient(): twilio.Twilio;
   DOMAIN_NAME: string;
-  [key: string]: string;
-};
+} & T;
