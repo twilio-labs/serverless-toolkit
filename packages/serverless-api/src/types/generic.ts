@@ -5,7 +5,7 @@ import got = require('got');
 export type GotClient = typeof got;
 
 export type EnvironmentVariables = {
-  [key: string]: string | number | undefined;
+  [key: string]: string | undefined;
 };
 
 /**
