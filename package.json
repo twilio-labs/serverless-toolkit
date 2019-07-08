@@ -8,15 +8,15 @@
   "description": "CLI tool to run Twilio Functions locally for development",
   "main": "dist/index.js",
   "scripts": {
-    "prebuild": "rimraf dist",
+    "clean": "rimraf dist",
     "build": "tsc",
     "build:noemit": "tsc --noEmit",
-    "prepublishOnly": "npm run build",
     "jest": "jest",
     "test": "run-s build:noemit jest",
     "contrib:add": "all-contributors add",
     "contrib:generate": "all-contributors generate",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "prepack": "run-s clean build"
   },
   "keywords": [
     "twilio",
