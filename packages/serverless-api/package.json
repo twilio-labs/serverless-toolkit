@@ -6,12 +6,12 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prebuild": "rimraf dist/",
     "build": "tsc",
-    "prepare": "npm run build",
+    "postbuild": "npm shrinkwrap",
     "docs": "typedoc --options typedoc.json",
     "postinstall": "node scripts/not-for-production-warning.js",
-    "prepack": "npm shrinkwrap"
+    "clean": "rimraf ./dist",
+    "prepack": "run-s clean build"
   },
   "publishConfig": {
     "access": "public"
@@ -32,6 +32,7 @@
   "devDependencies": {
     "@types/debug": "^4.1.3",
     "all-contributors-cli": "^6.7.0",
+    "npm-run-all": "^4.1.5",
     "rimraf": "^2.6.3",
     "typedoc": "^0.14.2",
     "typedoc-plugin-external-module-name": "^2.0.0",
