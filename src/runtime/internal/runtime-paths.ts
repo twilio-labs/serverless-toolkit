@@ -14,12 +14,14 @@ export type AssetInfo = FileInfo & {
   access: AccessOptions;
 };
 
-export async function getFunctionsAndAssets(
-  baseDir
-): Promise<{
+export type RouteInfo = {
   functions: FunctionInfo[];
   assets: AssetInfo[];
-}> {
+};
+
+export async function getFunctionsAndAssets(
+  baseDir: string
+): Promise<RouteInfo> {
   let {
     functions: functionsRaw,
     assets: assetsRaw,

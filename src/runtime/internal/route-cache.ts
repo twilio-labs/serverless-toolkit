@@ -1,8 +1,14 @@
-const allRoutes = new Map();
-const assetsCache = new Set();
-const functionsCache = new Set();
+import { RouteInfo, AssetInfo, FunctionInfo } from './runtime-paths';
 
-export function setRoutes({ functions, assets }) {
+type ExtendedRouteInfo = {
+  type: 'function' | 'asset';
+} & (FunctionInfo | AssetInfo);
+
+const allRoutes = new Map<string, ExtendedRouteInfo>();
+const assetsCache = new Set<AssetInfo>();
+const functionsCache = new Set<FunctionInfo>();
+
+export function setRoutes({ functions, assets }: RouteInfo) {
   allRoutes.clear();
   assetsCache.clear();
   functionsCache.clear();
@@ -32,11 +38,11 @@ export function setRoutes({ functions, assets }) {
   return new Map(allRoutes);
 }
 
-export function getRoutes() {
+export function getRoutes(): Map<string, ExtendedRouteInfo> {
   return new Map(allRoutes);
 }
 
-export function getCachedResources() {
+export function getCachedResources(): RouteInfo {
   return {
     assets: Array.from(assetsCache),
     functions: Array.from(functionsCache),

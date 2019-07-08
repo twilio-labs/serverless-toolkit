@@ -11,16 +11,21 @@ import {
 } from '../../src/runtime/route';
 import { Response } from '../../src/runtime/internal/response';
 import { Response as MockResponse } from 'jest-express/lib/response';
+import {
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+} from 'express';
+import { StartCliConfig } from '../../src/runtime/cli/config';
 
 const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
 
-const mockResponse = new MockResponse();
+const mockResponse = (new MockResponse() as unknown) as ExpressResponse;
 mockResponse.type = jest.fn(() => mockResponse);
 
 describe('handleError function', () => {
   test('calls correct response methods', () => {
     const err = new Error('Failed to execute');
-    handleError(err, mockResponse);
+    handleError(err, (mockResponse as unknown) as ExpressResponse);
     expect(mockResponse.status).toHaveBeenCalledWith(500);
     expect(mockResponse.send).toHaveBeenCalledWith(err.stack);
   });
@@ -35,7 +40,7 @@ describe('constructEvent function', () => {
       query: {
         index: 5,
       },
-    });
+    } as ExpressRequest);
     expect(event).toEqual({ Body: 'Hello', index: 5 });
   });
 
@@ -48,7 +53,7 @@ describe('constructEvent function', () => {
         Body: 'Hello',
         From: '+123456789',
       },
-    });
+    } as ExpressRequest);
     expect(event).toEqual({ Body: 'Bye', From: '+123456789' });
   });
 
@@ -59,7 +64,7 @@ describe('constructEvent function', () => {
         Body: 'Hello',
         From: '+123456789',
       },
-    });
+    } as ExpressRequest);
     expect(event).toEqual({ Body: 'Hello', From: '+123456789' });
   });
 
@@ -70,7 +75,7 @@ describe('constructEvent function', () => {
         From: '+123456789',
       },
       query: {},
-    });
+    } as ExpressRequest);
     expect(event).toEqual({ Body: 'Hello', From: '+123456789' });
   });
 
@@ -78,7 +83,7 @@ describe('constructEvent function', () => {
     const event = constructEvent({
       body: {},
       query: {},
-    });
+    } as ExpressRequest);
     expect(event).toEqual({});
   });
 });
@@ -115,7 +120,7 @@ describe('constructContext function', () => {
         ACCOUNT_SID: 'ACxxxxxxxxxxx',
         AUTH_TOKEN: 'xyz',
       },
-    };
+    } as StartCliConfig;
     const context = constructContext(config);
     expect(context.DOMAIN_NAME).toBe('localhost:8000');
     expect(context.ACCOUNT_SID).toBe('ACxxxxxxxxxxx');
@@ -130,7 +135,7 @@ describe('constructContext function', () => {
     const config = {
       url: 'http://localhost:8000',
       env: { ACCOUNT_SID, AUTH_TOKEN },
-    };
+    } as StartCliConfig;
     const context = constructContext(config);
     const twilioFn = require('twilio');
     context.getTwilioClient();

@@ -241,16 +241,9 @@ function prettyPrintBuilds(build: BuildResource): string {
   `;
 }
 
-type SectionContent =
-  | VariablesContent
-  | FunctionOrAssetContent
-  | BuildResource[]
-  | EnvironmentResource[]
-  | ServiceResource[];
-
-function prettyPrintSection(
+function prettyPrintSection<T extends ListOptions>(
   sectionTitle: ListOptions,
-  sectionContent: SectionContent
+  sectionContent: ListResult[T]
 ): string {
   const sectionHeader = chalk.cyan.bold(`${title(sectionTitle)}: `);
   let content = '';
@@ -270,7 +263,7 @@ function prettyPrintSection(
     content = prettyPrintVariables(sectionContent as VariablesContent);
   } else if (sectionTitle === 'functions' || sectionTitle === 'assets') {
     content = prettyPrintFunctionsOrAssets(
-      sectionContent as FunctionOrAssetContent
+      (sectionContent as unknown) as FunctionOrAssetContent
     );
   }
   const output = stripIndent`
@@ -282,9 +275,7 @@ function prettyPrintSection(
 function printListResultTerminal(result: ListResult, config: ListConfig): void {
   const sections = Object.keys(result) as ListOptions[];
   const output = sections
-    .map(section =>
-      prettyPrintSection(section, result[section] as SectionContent)
-    )
+    .map(section => prettyPrintSection(section, result[section]))
     .join('\n\n');
 
   console.log(output);

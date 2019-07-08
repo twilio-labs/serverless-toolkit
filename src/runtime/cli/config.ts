@@ -5,6 +5,8 @@ import logSymbols from 'log-symbols';
 import { fileExists } from '../../utils/fs';
 import debugModule from 'debug';
 import { Arguments } from 'yargs';
+import { EnvironmentVariables } from '@twilio-labs/serverless-api';
+import { EnvironmentVariablesWithAuth } from '../../types/generic';
 
 const debug = debugModule('twilio-run:cli:config');
 
@@ -13,15 +15,15 @@ type NgrokConfig = {
   subdomain?: string;
 };
 
+type InspectInfo = {
+  hostPort: string;
+  break: boolean;
+};
+
 export type StartCliConfig = {
-  inspect?: {
-    hostPort: string;
-    break: boolean;
-  };
+  inspect?: InspectInfo;
   baseDir: string;
-  env: {
-    [key: string]: string;
-  };
+  env: EnvironmentVariablesWithAuth;
   port: number;
   url: string;
   detailedLogs: boolean;
@@ -65,7 +67,7 @@ async function getUrl(cli: WrappedStartCliFlags, port: string | number) {
   return url;
 }
 
-function getPort(cli: WrappedStartCliFlags) {
+function getPort(cli: WrappedStartCliFlags): number {
   let port = process.env.PORT || 3000;
   if (typeof cli.flags.port !== 'undefined') {
     port = parseInt(cli.flags.port, 10);
@@ -77,7 +79,10 @@ function getPort(cli: WrappedStartCliFlags) {
   return port;
 }
 
-async function getEnvironment(cli: WrappedStartCliFlags, baseDir: string) {
+async function getEnvironment(
+  cli: WrappedStartCliFlags,
+  baseDir: string
+): Promise<EnvironmentVariables> {
   let env = {};
   if (cli.flags.loadLocalEnv) {
     debug('Loading local environment variables');
@@ -106,7 +111,7 @@ async function getEnvironment(cli: WrappedStartCliFlags, baseDir: string) {
   return env;
 }
 
-function getBaseDirectory(cli: WrappedStartCliFlags) {
+function getBaseDirectory(cli: WrappedStartCliFlags): string {
   let baseDir = process.cwd();
   if (cli.flags.dir) {
     baseDir = cli.flags.dir;
@@ -115,7 +120,7 @@ function getBaseDirectory(cli: WrappedStartCliFlags) {
   return baseDir;
 }
 
-function getInspectInfo(cli: WrappedStartCliFlags) {
+function getInspectInfo(cli: WrappedStartCliFlags): InspectInfo | undefined {
   if (typeof cli.flags.inspectBrk !== 'undefined') {
     return {
       hostPort: cli.flags.inspect,
@@ -127,7 +132,9 @@ function getInspectInfo(cli: WrappedStartCliFlags) {
   return undefined;
 }
 
-export async function getConfigFromCli(cli: { flags: StartCliFlags }) {
+export async function getConfigFromCli(cli: {
+  flags: StartCliFlags;
+}): Promise<StartCliConfig> {
   const config = {} as StartCliConfig;
 
   config.inspect = getInspectInfo(cli);

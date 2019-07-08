@@ -18,14 +18,9 @@ import {
   saveLatestDeploymentData,
   HttpError,
 } from '../serverless-api/utils';
+import { EnvironmentVariablesWithAuth } from '../types/generic';
 
 const log = debug('twilio-run:deploy');
-
-type LocalEnvironmentVariables = {
-  ACCOUNT_SID?: string;
-  AUTH_TOKEN?: string;
-  [key: string]: string;
-};
 
 export type DeployCliFlags = Arguments<{
   cwd?: string;
@@ -53,7 +48,7 @@ async function getConfigFromFlags(
   const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
 
   let { accountSid, authToken } = flags;
-  let localEnv: LocalEnvironmentVariables = {};
+  let localEnv: EnvironmentVariablesWithAuth = {};
 
   const envPath = path.resolve(cwd, flags.env || '.env');
 

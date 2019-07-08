@@ -1,5 +1,6 @@
 import debug from 'debug';
 import { Response as ExpressResponse } from 'express';
+import { TwilioResponse } from '@twilio-labs/serverless-runtime-types/types';
 
 const log = debug('twilio-run:response');
 
@@ -8,7 +9,7 @@ type Headers = {
   [key: string]: HeaderValue;
 };
 
-export class Response {
+export class Response implements TwilioResponse {
   private body: undefined | any;
   private statusCode: number;
   private headers: Headers;
@@ -24,7 +25,7 @@ export class Response {
     this.statusCode = statusCode;
   }
 
-  setBody(body: any): void {
+  setBody(body: object | string): void {
     log('Setting response body to %o', body);
     this.body = body;
   }

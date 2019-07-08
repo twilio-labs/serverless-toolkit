@@ -1,7 +1,9 @@
 import chalk from 'chalk';
 import { stripIndent } from 'common-tags';
+import { Request, Response, RequestHandler } from 'express';
+import { StartCliConfig } from '../cli/config';
 
-function simpleLogs(req, res) {
+function simpleLogs(req: Request, res: Response): string {
   const contentType = res.get('Content-Type');
   const responseCode =
     res.statusCode >= 400
@@ -19,7 +21,7 @@ function simpleLogs(req, res) {
   return stripIndent`${msg}`;
 }
 
-function detailedLogs(req, res) {
+function detailedLogs(req: Request, res: Response): string {
   debugger;
   const msgLines = [chalk`{reset }`, simpleLogs(req, res)];
   let body;
@@ -46,7 +48,7 @@ function detailedLogs(req, res) {
   return msgLines.filter(x => !!x).join('\n');
 }
 
-export function createLogger(config) {
+export function createLogger(config: StartCliConfig): RequestHandler {
   return function requestLogger(req, res, next) {
     const resEnd = res.end.bind(res);
     res.end = function sendInterceptor(...args) {

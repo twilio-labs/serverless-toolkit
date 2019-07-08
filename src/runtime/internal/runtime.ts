@@ -1,18 +1,23 @@
-import twilio from 'twilio';
 import debug from 'debug';
-import { RuntimeInstance } from '@twilio-labs/serverless-runtime-types/types';
+import {
+  RuntimeInstance,
+  ResourceMap,
+} from '@twilio-labs/serverless-runtime-types/types';
+import { ServiceContext } from 'twilio/lib/rest/sync/v1/service';
+import twilio from 'twilio';
+import { StartCliConfig } from '../cli/config';
 
 const log = debug('twilio-run:runtime');
 
 const { getCachedResources } = require('./route-cache');
 
-function getAssets() {
+function getAssets(): ResourceMap {
   const { assets } = getCachedResources();
   if (assets.length === 0) {
     return {};
   }
 
-  const result = {};
+  const result: ResourceMap = {};
   for (const asset of assets) {
     if (asset.access === 'private') {
       const prefix =
@@ -24,13 +29,13 @@ function getAssets() {
   return result;
 }
 
-function getFunctions() {
+function getFunctions(): ResourceMap {
   const { functions } = getCachedResources();
   if (functions.length === 0) {
     return {};
   }
 
-  const result = {};
+  const result: ResourceMap = {};
   for (const fn of functions) {
     result[fn.functionPath] = { path: fn.path };
   }
@@ -38,8 +43,8 @@ function getFunctions() {
   return result;
 }
 
-export function create({ env }): RuntimeInstance {
-  function getSync(config) {
+export function create({ env }: StartCliConfig): RuntimeInstance {
+  function getSync(config): ServiceContext {
     config = config || { serviceName: 'default' };
     const client = twilio(env.ACCOUNT_SID, env.AUTH_TOKEN);
     return client.sync.services(config.serviceName);

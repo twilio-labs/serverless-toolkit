@@ -1,6 +1,9 @@
 import inspector from 'inspector';
 
-export function startInspector(val, wait = false) {
+export function startInspector(
+  val: string,
+  wait: boolean = false
+): typeof inspector {
   let port = undefined;
   let host = undefined;
 
