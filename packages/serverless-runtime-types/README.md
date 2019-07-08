@@ -30,13 +30,19 @@ If you want to use the types in JavaScript to get autocomplete in VS Code and
 other editors using the TypeScript language server:
 
 ```js
-/// <reference path="../node_modules/@twilio-labs/serverless-runtime-types/index.d.ts"/>
+/// <reference path="../../node_modules/@twilio-labs/serverless-runtime-types/index.d.ts"/>
 
-exports.handler = function(context, event, callback) {
+/**
+ * @param {import('@twilio-labs/serverless-runtime-types').Context} context
+ * @param {{}} event
+ * @param {import('@twilio-labs/serverless-runtime-types').ServerlessCallback} callback
+ */
+exports.handler = function (context, event, callback) {
   let twiml = new Twilio.twiml.MessagingResponse();
   twiml.message('Hello World');
   callback(null, twiml);
 };
+
 ```
 
 ### In TypeScript
