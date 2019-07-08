@@ -1,13 +1,12 @@
-import TwilioLib = require('twilio');
-import { RuntimeInstance } from './types';
+import { RuntimeInstance, TwilioResponse, GlobalTwilio } from './types';
 
 declare global {
-  var Twilio: typeof TwilioLib;
+  var Twilio: GlobalTwilio;
   var Runtime: RuntimeInstance;
 
   namespace NodeJS {
     interface Global {
-      Twilio: typeof TwilioLib;
+      Twilio: GlobalTwilio;
       Runtime: RuntimeInstance;
     }
   }

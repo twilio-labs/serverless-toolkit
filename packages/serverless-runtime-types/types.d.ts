@@ -1,4 +1,4 @@
-import twilio from 'twilio';
+import * as twilio from 'twilio';
 import { ServiceContext } from 'twilio/lib/rest/sync/v1/service';
 
 export type EnvironmentVariables = {
@@ -10,6 +10,13 @@ export type ResourceMap = {
     path: string;
   };
 };
+
+export interface TwilioResponse {
+  setStatusCode(code: number): void;
+  setBody(body: string | object): void;
+  appendHeader(key: string, value: string): void;
+  setHeaders(headers: { [key: string]: string }): void;
+}
 
 export type RuntimeInstance = {
   getAssets(): ResourceMap;
@@ -35,3 +42,8 @@ export type ServerlessFunctionSignature<
   event: U,
   callback: ServerlessCallback
 ) => void | Promise<void>;
+
+export type ResponseConstructor = new (...args: any[]) => TwilioResponse;
+export type GlobalTwilio = Omit<typeof twilio, 'default'> & {
+  Response: ResponseConstructor;
+};
