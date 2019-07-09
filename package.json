@@ -18,7 +18,8 @@
     "lint-staged": "lint-staged",
     "prepack": "run-s clean build",
     "cm": "git-cz",
-    "release": "HUSKY_SKIP_HOOKS=1 standard-version"
+    "release": "HUSKY_SKIP_HOOKS=1 standard-version",
+    "reset-dependencies": "bash ./hooks/update-dependencies.sh"
   },
   "keywords": [
     "twilio",
@@ -108,7 +109,9 @@
     "hooks": {
       "pre-commit": "run-s lint-staged test",
       "prepare-commit-msg": "exec < /dev/tty && git-cz --hook",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "post-checkout": "reset-dependencies",
+      "post-merge": "reset-dependencies"
     }
   },
   "lint-staged": {
