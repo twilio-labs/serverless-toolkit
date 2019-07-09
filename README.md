@@ -1,9 +1,9 @@
-[![npm](https://img.shields.io/npm/v/twilio-run.svg?style=flat-square)](https://npmjs.com/package/twilio-run) [![npm](https://img.shields.io/npm/dt/twilio-run.svg?style=flat-square)](https://npmjs.com/package/twilio-run) [![npm](https://img.shields.io/npm/l/twilio-run.svg?style=flat-square)](/LICENSE) [![Build Status](https://travis-ci.com/twilio-labs/twilio-run.svg?branch=master)](https://travis-ci.com/twilio-labs/twilio-run)
-[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors)
-
-# ☁️ `twilio-run` ☁️
-
-> CLI tool to run [Twilio Functions](https://twilio.com/functions) locally for development
+<h1 align="center">twilio-run</h1>
+<p align="center">CLI tool to locally develop and deploy to <a href="https://www.twilio.com/functions">Twilio Serverless</a></p>
+<p align="center">
+<img alt="npm (scoped)" src="https://img.shields.io/npm/v/twilio-run.svg?style=flat-square"> <img alt="npm" src="https://img.shields.io/npm/dt/twilio-run.svg?style=flat-square"> <img alt="GitHub" src="https://img.shields.io/github/license/twilio-labs/twilio-run.svg?style=flat-square"> <a href="#contributors"><img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square" /></a> <a href="https://github.com/twilio-labs/twilio-run/blob/master/CODE_OF_CONDUCT.md"><img alt="Code of Conduct" src="https://img.shields.io/badge/%F0%9F%92%96-Code%20of%20Conduct-blueviolet.svg?style=flat-square"></a> <a href="http://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" /></a>
+<a href="https://travis-ci.com/twilio-labs/twilio-run"><img alt="Travis (.com)" src="https://img.shields.io/travis/com/twilio-labs/twilio-run.svg?style=flat-square"></a>
+<hr>
 
 ## 📦 Installation
 
@@ -101,30 +101,11 @@ app.listen(3000, () => console.log('Server running on port 3000'));
 
 ## 💞 Contributing
 
-💖 Please be aware that this project has a [Code of Conduct](CODE_OF_CONDUCT.md) 💖
+This project welcomes contributions from the community. Please see the [`CONTRIBUTING.md`](CONTRIBUTING.md) file for more details.
 
-1.  Fork the project
-2.  Clone your own fork like this:
+### Code of Conduct
 
-```bash
-$ git clone git@github.com:twilio-labs/twilio-run.git
-```
-
-3.  Install the dependencies
-
-```bash
-$ cd twilio-run
-$ npm install
-```
-
-4.  Make changes
-5.  Test your changes by running
-
-```bash
-$ npm test
-```
-
-6.  Commit your changes and open a pull request
+Please be aware that this project has a [Code of Conduct](CODE_OF_CONDUCT.md). The tldr; is to just be excellent to each other ❤️
 
 ## ✨ Contributors
 
