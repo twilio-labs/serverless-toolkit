@@ -16,7 +16,9 @@
     "contrib:add": "all-contributors add",
     "contrib:generate": "all-contributors generate",
     "lint-staged": "lint-staged",
-    "prepack": "run-s clean build"
+    "prepack": "run-s clean build",
+    "cm": "git-cz",
+    "release": "HUSKY_SKIP_HOOKS=1 standard-version"
   },
   "keywords": [
     "twilio",
@@ -67,6 +69,8 @@
     "yargs": "^13.2.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^8.0.0",
+    "@commitlint/config-conventional": "^8.0.0",
     "@types/cheerio": "^0.22.12",
     "@types/common-tags": "^1.8.0",
     "@types/debug": "^4.1.4",
@@ -80,6 +84,8 @@
     "@types/window-size": "^0.2.4",
     "all-contributors-cli": "^5.3.0",
     "cheerio": "^1.0.0-rc.2",
+    "commitizen": "^3.1.1",
+    "cz-conventional-changelog": "^2.1.0",
     "husky": "^3.0.0",
     "jest": "^24.8.0",
     "jest-express": "^1.10.1",
@@ -87,6 +93,7 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^1.18.2",
     "rimraf": "^2.6.3",
+    "standard-version": "^6.0.1",
     "supertest": "^3.1.0",
     "ts-jest": "^24.0.2",
     "typescript": "^3.5.2"
@@ -99,7 +106,9 @@
   ],
   "husky": {
     "hooks": {
-      "pre-commit": "run-s lint-staged test"
+      "pre-commit": "run-s lint-staged test",
+      "prepare-commit-msg": "exec < /dev/tty && git-cz --hook",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
   "lint-staged": {
@@ -107,5 +116,10 @@
       "prettier --write",
       "git add"
     ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
