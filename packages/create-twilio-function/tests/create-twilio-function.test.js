@@ -88,9 +88,35 @@ describe('createTwilioFunction', () => {
 
     await createTwilioFunction({ name, path: './scratch' });
 
-    expect.assertions(3);
+    expect.assertions(4);
 
     expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith(
+      `A directory called '${name}' already exists. Please create your function in a new directory.`
+    );
+    expect(console.log).not.toHaveBeenCalled();
+
+    try {
+      await stat(`./scratch/${name}/package.json`);
+    } catch (e) {
+      expect(e.toString()).toMatch('no such file or directory');
+    }
+  });
+
+  it("fails gracefully if it doesn't have permission to create directories", async () => {
+    const name = 'test-function';
+    const chmod = promisify(fs.chmod);
+    await chmod('./scratch', 0o555);
+    console.error = jest.fn();
+
+    await createTwilioFunction({ name, path: './scratch' });
+
+    expect.assertions(4);
+
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith(
+      `You do not have permission to create files or directories in the path './scratch'.`
+    );
     expect(console.log).not.toHaveBeenCalled();
 
     try {

@@ -21,11 +21,24 @@ async function createTwilioFunction(config) {
   try {
     await createDirectory(config.path, config.name);
   } catch (e) {
-    console.error(
-      `A directory called '${
-        config.name
-      }' already exists. Please create your function in a new directory.`
-    );
+    switch (e.code) {
+      case 'EEXIST':
+        console.error(
+          `A directory called '${
+            config.name
+          }' already exists. Please create your function in a new directory.`
+        );
+        break;
+      case 'EACCES':
+        console.error(
+          `You do not have permission to create files or directories in the path '${
+            config.path
+          }'.`
+        );
+        break;
+      default:
+        console.error(e.message);
+    }
     return;
   }
 
