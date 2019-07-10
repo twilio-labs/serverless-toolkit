@@ -1,19 +1,17 @@
-import debug from 'debug';
-import path from 'path';
-import chalk from 'chalk';
-import dotenv from 'dotenv';
-import { PackageJson } from 'type-fest';
-
 import {
-  TwilioServerlessApiClient,
   ListConfig as ApiListConfig,
   ListOptions,
+  TwilioServerlessApiClient,
 } from '@twilio-labs/serverless-api';
-
-import { fileExists, readFile } from '../utils/fs';
-import { getFunctionServiceSid } from '../serverless-api/utils';
-import { printListResult } from '../printers/list';
+import chalk from 'chalk';
+import debug from 'debug';
+import dotenv from 'dotenv';
+import path from 'path';
+import { PackageJson } from 'type-fest';
 import { Arguments, Argv } from 'yargs';
+import { printListResult } from '../printers/list';
+import { getFunctionServiceSid } from '../serverless-api/utils';
+import { fileExists, readFile } from '../utils/fs';
 import { CliInfo } from './types';
 
 const log = debug('twilio-run:list');
@@ -170,6 +168,7 @@ export const cliInfo: CliInfo = {
     environment: {
       type: 'string',
       describe: 'The environment to list variables for',
+      default: 'dev',
     },
     'account-sid': {
       type: 'string',
