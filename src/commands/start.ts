@@ -1,17 +1,19 @@
 import debug from 'debug';
+import { Argv } from 'yargs';
+import { printRouteInfo, printVersionWarning } from '../printers/start';
+import { getConfigFromCli, StartCliFlags } from '../runtime/cli/config';
 import { createServer } from '../runtime/server';
 import { startInspector } from '../runtime/utils/inspector';
-import { getConfigFromCli, StartCliFlags } from '../runtime/cli/config';
-import { printRouteInfo, printVersionWarning } from '../printers/start';
-import { Argv } from 'yargs';
 import { CliInfo } from './types';
 
 const log = debug('twilio-run:start');
 
+const SERVERLESS_NODE_JS_VERSION = '8.10';
+
 export async function handler(argv: StartCliFlags): Promise<void> {
   const nodeVersion = process.versions.node;
-  if (!nodeVersion.startsWith('8.10')) {
-    printVersionWarning(nodeVersion);
+  if (!nodeVersion.startsWith(SERVERLESS_NODE_JS_VERSION)) {
+    printVersionWarning(nodeVersion, SERVERLESS_NODE_JS_VERSION);
   }
 
   const cli = {

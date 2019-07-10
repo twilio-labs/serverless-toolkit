@@ -1,16 +1,16 @@
 import boxen from 'boxen';
 import chalk from 'chalk';
 import { stripIndent } from 'common-tags';
-import wrapAnsi from 'wrap-ansi';
-import size from 'window-size';
 import logSymbols from 'log-symbols';
+import size from 'window-size';
+import wrapAnsi from 'wrap-ansi';
+import { StartCliConfig } from '../runtime/cli/config';
 import {
-  getFunctionsAndAssets,
-  FunctionInfo,
   AssetInfo,
+  FunctionInfo,
+  getFunctionsAndAssets,
 } from '../runtime/internal/runtime-paths';
 import { shouldPrettyPrint, terminalLink } from './utils';
-import { StartCliConfig } from '../runtime/cli/config';
 
 function printAsset(asset: AssetInfo, config: StartCliConfig): string {
   const prefix = config.legacyMode ? '/asset' : '';
@@ -138,13 +138,16 @@ export async function printRouteInfo(config: StartCliConfig): Promise<void> {
   console.log(output);
 }
 
-export function printVersionWarning(nodeVersion: string): void {
+export function printVersionWarning(
+  nodeVersion: string,
+  expectedVersion: string
+): void {
   const msg = chalk`
       {underline.bold {yellow WARNING!} {bold Different Node.js version}}
 
-      You are currently running ${nodeVersion} but the Twilio Runtime is runnning version 8.10.
+      You are currently running Node.js ${nodeVersion} on this local machine. The production environment for Twilio Serverless is currently on ${expectedVersion}.
 
-      You might encounter differences between local development and production. 
+      When you deploy to Twilio Serverless, you may encounter differences between local development and production.
 
       For a more accurate local development experience, please switch your Node.js version.
       A tool like nvm (https://github.com/creationix/nvm) can help.
