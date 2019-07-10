@@ -1,7 +1,7 @@
 // const { Command } = require('@oclif/command');
 const { TwilioClientCommand } = require('@twilio/cli-core').baseCommands;
 
-const { handler, cliInfo, describe } = require('twilio-run/src/commands/list');
+const { handler, cliInfo, describe } = require('twilio-run/dist/commands/list');
 const {
   convertYargsOptionsToOclifFlags,
   normalizeFlags,
