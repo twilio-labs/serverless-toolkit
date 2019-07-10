@@ -29,6 +29,6 @@ export function checkConfigForCredentials(
   console.error(msg);
 
   if (shouldExit) {
-    process.exit(22 /* EINVAL */);
+    process.exit(1);
   }
 }

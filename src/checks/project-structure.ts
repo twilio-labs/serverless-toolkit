@@ -62,7 +62,7 @@ export default async function checkProjectStructure(
 
   if (shouldExit) {
     console.error(errorMessage(title, messageBody));
-    process.exit(20 /* ENOTDIR */);
+    process.exit(1);
   } else {
     console.warn(warningMessage(title, messageBody));
   }
