@@ -73,14 +73,18 @@ OPTIONS
   --cwd=cwd                                Sets the directory of your existing Functions project. Defaults to current
                                            directory
 
+  --env=env                                Path to .env file for environment variables that should be installed
+
   --environment=environment                The environment suffix or SID to deploy to.
 
   --force                                  Will run deployment in force mode. Can be dangerous.
 
+  --service-sid=service-sid                SID of the Twilio Serverless Service to deploy to
+
   --source-environment=source-environment  SID or suffix of an existing environment you want to deploy from.
 ```
 
-_See code: [src/commands/serverless/activate.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.6/src/commands/serverless/activate.js)_
+_See code: [src/commands/serverless/activate.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.7/src/commands/serverless/activate.js)_
 
 ## `twilio serverless:deploy`
 
@@ -111,9 +115,11 @@ OPTIONS
   --functions-folder=functions-folder  Specific folder name to be used for static functions
 
   --override-existing-project          Deploys project to existing service if a naming conflict has been found.
+
+  --service-sid=service-sid            SID of the Twilio Serverless service you want to deploy to.
 ```
 
-_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.6/src/commands/serverless/deploy.js)_
+_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.7/src/commands/serverless/deploy.js)_
 
 ## `twilio serverless:init NAME`
 
@@ -132,7 +138,7 @@ OPTIONS
   --auth-token=auth-token    An auth token or API secret to be used for your project
 ```
 
-_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.6/src/commands/serverless/init.js)_
+_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.7/src/commands/serverless/init.js)_
 
 ## `twilio serverless:list [TYPES]`
 
@@ -147,17 +153,19 @@ ARGUMENTS
          (services,environments,functions,assets,variables)
 
 OPTIONS
-  -p, --project=project          Shorthand identifier for your Twilio project.
-  -u, --account-sid=account-sid  A specific account SID to be used for deployment. Uses fields in .env otherwise
-  --auth-token=auth-token        Use a specific auth token for deployment. Uses fields from .env otherwise
-  --cwd=cwd                      Sets the directory of your existing Functions project. Defaults to current directory
-  --environment=environment      The environment to list variables for
-  --extended-output              Show an extended set of properties on the output
-  --properties=properties        Specify the output properties you want to see. Works best on single types
-  --service-sid=service-sid      Specific Serverless Service SID to run list for
+  -n, --project-name=project-name  Overrides the name of the project. Default: the name field in your package.json
+  -p, --project=project            Shorthand identifier for your Twilio project.
+  -u, --account-sid=account-sid    A specific account SID to be used for deployment. Uses fields in .env otherwise
+  --auth-token=auth-token          Use a specific auth token for deployment. Uses fields from .env otherwise
+  --cwd=cwd                        Sets the directory of your existing Functions project. Defaults to current directory
+  --env=env                        Path to .env file for environment variables that should be installed
+  --environment=environment        The environment to list variables for
+  --extended-output                Show an extended set of properties on the output
+  --properties=properties          Specify the output properties you want to see. Works best on single types
+  --service-sid=service-sid        Specific Serverless Service SID to run list for
 ```
 
-_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.6/src/commands/serverless/list.js)_
+_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.7/src/commands/serverless/list.js)_
 
 ## `twilio serverless:new [FILENAME]`
 
@@ -175,7 +183,7 @@ OPTIONS
   --template=template
 ```
 
-_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.6/src/commands/serverless/new.js)_
+_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.7/src/commands/serverless/new.js)_
 
 ## `twilio serverless:start [DIR]`
 
@@ -205,7 +213,7 @@ ALIASES
   $ twilio serverless:run
 ```
 
-_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.6/src/commands/serverless/start.js)_
+_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.7/src/commands/serverless/start.js)_
 <!-- commandsstop -->
 #  Contributing
 
