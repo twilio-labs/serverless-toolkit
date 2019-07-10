@@ -9,6 +9,7 @@ import ora, { Ora } from 'ora';
 import path from 'path';
 import { Arguments, Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
+import checkForValidServiceSid from '../checks/check-service-sid';
 import { getFunctionServiceSid } from '../serverless-api/utils';
 import { fileExists, readFile } from '../utils/fs';
 import { CliInfo } from './types';
@@ -75,13 +76,9 @@ async function getConfigFromFlags(
       '';
   }
 
-  const serviceSid = flags.serviceSid || (await getFunctionServiceSid(cwd));
+  const readServiceSid = flags.serviceSid || (await getFunctionServiceSid(cwd));
 
-  if (typeof serviceSid === 'undefined') {
-    throw new Error(
-      'Could not find a service SID in .twilio-functions configuration file.'
-    );
-  }
+  const serviceSid = checkForValidServiceSid(readServiceSid);
 
   return {
     cwd,

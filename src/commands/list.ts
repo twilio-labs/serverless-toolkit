@@ -10,6 +10,7 @@ import path from 'path';
 import { PackageJson } from 'type-fest';
 import { Arguments, Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
+import checkForValidServiceSid from '../checks/check-service-sid';
 import { printListResult } from '../printers/list';
 import { getFunctionServiceSid } from '../serverless-api/utils';
 import { fileExists, readFile } from '../utils/fs';
@@ -138,6 +139,10 @@ export async function handler(flags: ListCliFlags): Promise<void> {
   }
 
   checkConfigForCredentials(config);
+
+  if (config.types !== 'services' && config.types[0] !== 'services') {
+    checkForValidServiceSid(config.serviceSid);
+  }
 
   try {
     const client = new TwilioServerlessApiClient(config);
