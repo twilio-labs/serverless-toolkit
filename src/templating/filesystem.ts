@@ -1,12 +1,11 @@
-import pkgInstall from 'pkg-install';
-import dotenv from 'dotenv';
-import chalk from 'chalk';
-import got from 'got';
-import Listr, { ListrOptions, ListrTask } from 'listr';
-import path from 'path';
 import { fsHelpers } from '@twilio-labs/serverless-api';
-
-import { writeFile, fileExists, downloadFile, readFile } from '../utils/fs';
+import chalk from 'chalk';
+import dotenv from 'dotenv';
+import got from 'got';
+import Listr, { ListrTask } from 'listr';
+import path from 'path';
+import { install, InstallResult } from 'pkg-install';
+import { downloadFile, fileExists, readFile, writeFile } from '../utils/fs';
 import { TemplateFileInfo } from './data';
 
 async function writeEnvFile(
@@ -57,10 +56,10 @@ async function writeEnvFile(
 async function installDependencies(
   contentUrl: string,
   targetDir: string
-): Promise<pkgInstall.InstallResult> {
+): Promise<InstallResult> {
   const pkgContent = await got(contentUrl, { json: true });
   const dependencies = pkgContent.body.dependencies;
-  return pkgInstall.install(dependencies, {
+  return install(dependencies, {
     cwd: targetDir,
   });
 }
