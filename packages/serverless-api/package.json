@@ -5,13 +5,18 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "run-s build:noemit",
     "build": "tsc",
+    "build:noemit": "tsc --noEmit",
     "postbuild": "npm shrinkwrap",
     "docs": "typedoc --options typedoc.json",
     "postinstall": "node scripts/not-for-production-warning.js",
     "clean": "rimraf ./dist",
-    "prepack": "run-s clean build"
+    "prepack": "run-s clean build",
+    "lint-staged": "lint-staged",
+    "cm": "git-cz",
+    "release": "HUSKY_SKIP_HOOKS=1 standard-version",
+    "reset-dependencies": "bash ./hooks/update-dependencies"
   },
   "publishConfig": {
     "access": "public"
@@ -30,10 +35,18 @@
     "LICENSE"
   ],
   "devDependencies": {
+    "@commitlint/cli": "^8.0.0",
+    "@commitlint/config-conventional": "^8.0.0",
     "@types/debug": "^4.1.3",
     "all-contributors-cli": "^6.7.0",
+    "commitizen": "^3.1.1",
+    "cz-conventional-changelog": "^2.1.0",
+    "husky": "^3.0.0",
+    "lint-staged": "^8.2.1",
     "npm-run-all": "^4.1.5",
+    "prettier": "^1.18.2",
     "rimraf": "^2.6.3",
+    "standard-version": "^6.0.1",
     "typedoc": "^0.14.2",
     "typedoc-plugin-external-module-name": "^2.0.0",
     "typescript": "^3.4.2"
@@ -49,5 +62,25 @@
     "mime-types": "^2.1.22",
     "recursive-readdir": "^2.2.2",
     "type-fest": "^0.3.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "run-s lint-staged test",
+      "prepare-commit-msg": "exec < /dev/tty && git-cz --hook",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "post-checkout": "reset-dependencies",
+      "post-merge": "reset-dependencies"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
