@@ -1,8 +1,8 @@
+import { FileInfo } from '@twilio-labs/serverless-api';
+import fs from 'fs';
 import got from 'got';
 import path from 'path';
-import fs from 'fs';
 import { promisify } from 'util';
-import { FileInfo } from '@twilio-labs/serverless-api';
 
 const access = promisify(fs.access);
 export const readFile = promisify(fs.readFile);

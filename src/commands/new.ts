@@ -1,12 +1,14 @@
-import path from 'path';
 import chalk from 'chalk';
 import ora from 'ora';
+import path from 'path';
 import prompts from 'prompts';
+import { Merge } from 'type-fest';
+import { Arguments, Argv } from 'yargs';
+import checkProjectStructure from '../checks/project-structure';
 import { fetchListOfTemplates, getTemplateFiles } from '../templating/data';
 import { writeFiles } from '../templating/filesystem';
-import { Arguments, Argv } from 'yargs';
-import { Merge } from 'type-fest';
 import { CliInfo } from './types';
+import { getFullCommand } from './utils';
 
 export type NewCliFlags = Arguments<{
   filename?: string;
@@ -112,8 +114,12 @@ export async function handler(flagsInput: NewCliFlags): Promise<void> {
     return;
   }
 
-  const flags = await getMissingInfo(flagsInput);
   const targetDirectory = getBaseDirectoryPath();
+  const command = getFullCommand(flagsInput);
+  await checkProjectStructure(targetDirectory, command, true);
+
+  const flags = await getMissingInfo(flagsInput);
+
   const functionName = flags.filename.replace(/\.js$/, '');
   const files = await getTemplateFiles(flags.template, functionName);
   try {

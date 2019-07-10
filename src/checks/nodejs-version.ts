@@ -31,7 +31,7 @@ export function printVersionWarning(
   );
 }
 
-export default function() {
+export default function checkNodejsVersion() {
   const nodeVersion = process.versions.node;
   if (!nodeVersion.startsWith(SERVERLESS_NODE_JS_VERSION)) {
     printVersionWarning(nodeVersion, SERVERLESS_NODE_JS_VERSION);

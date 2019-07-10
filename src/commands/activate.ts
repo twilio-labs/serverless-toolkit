@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
 import ora, { Ora } from 'ora';
 import path from 'path';
 import { Arguments, Argv } from 'yargs';
+import { checkConfigForCredentials } from '../checks/check-credentials';
 import { getFunctionServiceSid } from '../serverless-api/utils';
 import { fileExists, readFile } from '../utils/fs';
 import { CliInfo } from './types';
@@ -124,21 +125,7 @@ export async function handler(flags: ActivateCliFlags): Promise<void> {
     return;
   }
 
-  if (typeof config.accountSid !== 'string' || config.accountSid.length === 0) {
-    logError(
-      'Please enter an ACCOUNT_SID in your .env file or specify them via the command-line. Use --help for more info.'
-    );
-    process.exit(1);
-    return;
-  }
-
-  if (typeof config.authToken !== 'string' || config.authToken.length === 0) {
-    logError(
-      'Please enter an AUTH_TOKEN in your .env file or specify them via the command-line. Use --help for more info.'
-    );
-    process.exit(1);
-    return;
-  }
+  checkConfigForCredentials(config);
 
   const details = config.buildSid
     ? `(${config.buildSid})`

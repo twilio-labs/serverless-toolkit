@@ -9,6 +9,8 @@ import dotenv from 'dotenv';
 import ora, { Ora } from 'ora';
 import path from 'path';
 import { Arguments, Argv } from 'yargs';
+import { checkConfigForCredentials } from '../checks/check-credentials';
+import checkProjectStructure from '../checks/project-structure';
 import { printConfigInfo, printDeployedResources } from '../printers/deploy';
 import {
   getFunctionServiceSid,
@@ -18,7 +20,7 @@ import {
 import { EnvironmentVariablesWithAuth } from '../types/generic';
 import { fileExists, readFile } from '../utils/fs';
 import { CliInfo } from './types';
-import { deprecateProjectName } from './utils';
+import { deprecateProjectName, getFullCommand } from './utils';
 
 const log = debug('twilio-run:deploy');
 
@@ -164,6 +166,11 @@ function handleError(
 }
 
 export async function handler(flags: DeployCliFlags): Promise<void> {
+  const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
+  flags.cwd = cwd;
+  const command = getFullCommand(flags);
+  await checkProjectStructure(cwd, command, true);
+
   let config: DeployLocalProjectConfig;
   try {
     config = await getConfigFromFlags(flags);
@@ -182,13 +189,7 @@ export async function handler(flags: DeployCliFlags): Promise<void> {
 
   log('Deploy Config %O', config);
 
-  if (!config.accountSid || !config.authToken) {
-    logError(
-      'Please enter ACCOUNT_SID and AUTH_TOKEN in your .env file or specify them via the command-line.'
-    );
-    process.exit(1);
-    return;
-  }
+  checkConfigForCredentials(config);
 
   printConfigInfo(config);
 

@@ -1,6 +1,8 @@
-import isCi from 'is-ci';
-import columnify from 'columnify';
 import chalk from 'chalk';
+import columnify from 'columnify';
+import isCi from 'is-ci';
+import size from 'window-size';
+import wrapAnsi from 'wrap-ansi';
 
 export const shouldPrettyPrint = process.stdout.isTTY && !isCi;
 export const supportsEmoji =
@@ -12,4 +14,32 @@ export function printObjectWithoutHeaders(obj: {}): string {
 
 export function terminalLink(name: string, link: string): string {
   return chalk`${name} {dim | ${link}}`;
+}
+
+export function borderLeft(text: string, color: string): string {
+  return text
+    .split('\n')
+    .map(str => `${chalk.keyword(color)('│')} ${str}`)
+    .join('\n');
+}
+
+export function importantMessage(
+  label: string,
+  color: string,
+  title: string,
+  body: string
+) {
+  label = chalk.keyword(color)(label);
+  title = chalk.bold.underline(`${label} ${chalk.bold(title)}`);
+  body = wrapAnsi(body, size.width - 5);
+
+  return '\n' + borderLeft(`${title}\n\n${chalk.dim(body)}`, color) + '\n';
+}
+
+export function warningMessage(title: string, body: string) {
+  return importantMessage('WARNING', 'yellow', title, body);
+}
+
+export function errorMessage(title: string, body: string) {
+  return importantMessage('ERROR', 'red', title, body);
 }

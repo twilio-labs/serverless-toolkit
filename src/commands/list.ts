@@ -9,6 +9,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { PackageJson } from 'type-fest';
 import { Arguments, Argv } from 'yargs';
+import { checkConfigForCredentials } from '../checks/check-credentials';
 import { printListResult } from '../printers/list';
 import { getFunctionServiceSid } from '../serverless-api/utils';
 import { fileExists, readFile } from '../utils/fs';
@@ -36,7 +37,7 @@ export type ListCliFlags = Arguments<{
   serviceSid?: string;
   env?: string;
 }> & {
-  _cliDefault: {
+  _cliDefault?: {
     username: string;
     password: string;
   };
@@ -59,9 +60,15 @@ async function getConfigFromFlags(flags: ListCliFlags): Promise<ListConfig> {
     const localEnv = dotenv.parse(contentEnvFile);
 
     accountSid =
-      flags.accountSid || localEnv.ACCOUNT_SID || flags._cliDefault.username;
+      flags.accountSid ||
+      localEnv.ACCOUNT_SID ||
+      (flags._cliDefault && flags._cliDefault.username) ||
+      '';
     authToken =
-      flags.authToken || localEnv.AUTH_TOKEN || flags._cliDefault.password;
+      flags.authToken ||
+      localEnv.AUTH_TOKEN ||
+      (flags._cliDefault && flags._cliDefault.password) ||
+      '';
   }
 
   const serviceSid = flags.serviceSid || (await getFunctionServiceSid(cwd));
@@ -130,13 +137,7 @@ export async function handler(flags: ListCliFlags): Promise<void> {
     return;
   }
 
-  if (!config.accountSid || !config.authToken) {
-    logError(
-      'Please enter ACCOUNT_SID and AUTH_TOKEN in your .env file or specify them via the command-line.'
-    );
-    process.exit(1);
-    return;
-  }
+  checkConfigForCredentials(config);
 
   try {
     const client = new TwilioServerlessApiClient(config);

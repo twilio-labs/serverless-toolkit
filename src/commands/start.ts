@@ -1,11 +1,13 @@
 import debug from 'debug';
 import { Argv } from 'yargs';
 import checkNodejsVersion from '../checks/nodejs-version';
+import checkProjectStructure from '../checks/project-structure';
 import { printRouteInfo } from '../printers/start';
 import { getConfigFromCli, StartCliFlags } from '../runtime/cli/config';
 import { createServer } from '../runtime/server';
 import { startInspector } from '../runtime/utils/inspector';
 import { CliInfo } from './types';
+import { getFullCommand } from './utils';
 
 const log = debug('twilio-run:start');
 
@@ -17,6 +19,10 @@ export async function handler(argv: StartCliFlags): Promise<void> {
   };
 
   const config = await getConfigFromCli(cli);
+
+  const command = getFullCommand(argv);
+  await checkProjectStructure(config.baseDir, command);
+
   log('Determined configuration: %o', config);
   process.title = config.appName;
 
