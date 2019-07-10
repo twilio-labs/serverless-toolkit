@@ -129,7 +129,7 @@ describe('getBaseDirectory', () => {
   const initialWorkingDirectory = process.cwd();
 
   beforeAll(() => {
-    process.chdir('/private/tmp');
+    process.chdir('/home');
   });
 
   afterAll(() => {
@@ -145,7 +145,7 @@ describe('getBaseDirectory', () => {
     } as unknown) as WrappedStartCliFlags;
 
     const result = getBaseDirectory(config);
-    expect(result).toBe('/private/tmp');
+    expect(result).toBe('/home');
   });
 
   test('supports dir argument', () => {
@@ -181,7 +181,7 @@ describe('getBaseDirectory', () => {
     } as unknown) as WrappedStartCliFlags;
 
     let result = getBaseDirectory(config);
-    expect(result).toBe('/private/tmp/demo');
+    expect(result).toBe('/home/demo');
 
     config = ({
       flags: {
@@ -191,7 +191,7 @@ describe('getBaseDirectory', () => {
     } as unknown) as WrappedStartCliFlags;
 
     result = getBaseDirectory(config);
-    expect(result).toBe('/private/demo');
+    expect(result).toBe('/demo');
   });
 
   test('handles relative path for cwd', () => {
@@ -203,7 +203,7 @@ describe('getBaseDirectory', () => {
     } as unknown) as WrappedStartCliFlags;
 
     let result = getBaseDirectory(config);
-    expect(result).toBe('/private/tmp/demo');
+    expect(result).toBe('/home/demo');
 
     config = ({
       flags: {
@@ -213,7 +213,7 @@ describe('getBaseDirectory', () => {
     } as unknown) as WrappedStartCliFlags;
 
     result = getBaseDirectory(config);
-    expect(result).toBe('/private/demo');
+    expect(result).toBe('/demo');
   });
 });
 
