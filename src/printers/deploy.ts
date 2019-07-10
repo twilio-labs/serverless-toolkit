@@ -1,13 +1,13 @@
-import chalk from 'chalk';
-import { stripIndent } from 'common-tags';
-import columnify from 'columnify';
-import { shouldPrettyPrint, printObjectWithoutHeaders } from './utils';
 import {
   DeployLocalProjectConfig,
   DeployResult,
 } from '@twilio-labs/serverless-api';
-import { FunctionInfo, AssetInfo } from '../runtime/internal/runtime-paths';
+import chalk from 'chalk';
+import columnify from 'columnify';
+import { stripIndent } from 'common-tags';
 import { MergeExclusive } from 'type-fest';
+import { AssetInfo, FunctionInfo } from '../runtime/internal/runtime-paths';
+import { printObjectWithoutHeaders, shouldPrettyPrint } from './utils';
 
 function sortByAccess<T extends MergeExclusive<AssetInfo, FunctionInfo>>(
   resA: T,
@@ -51,7 +51,7 @@ function plainPrintDeployedResources(
 
   const data = {
     domain: result.domain,
-    projectName: config.projectName,
+    serviceName: config.serviceName,
     serviceSid: result.serviceSid,
     environmentSuffix: config.functionsEnv,
     environmentSid: result.environmentSid,
@@ -79,7 +79,7 @@ function prettyPrintConfigInfo(config: DeployLocalProjectConfig) {
 Deploying functions & assets to Twilio Serverless
 
 {bold.cyan Account}\t\t${config.accountSid}
-{bold.cyan Project Name}\t${config.projectName}
+{bold.cyan Service Name}\t${config.serviceName}
 {bold.cyan Environment}\t${config.functionsEnv}
 {bold.cyan Root Directory}\t${config.cwd}
 {bold.cyan Dependencies}\t${dependencyString}
@@ -95,7 +95,7 @@ function plainPrintConfigInfo(config: DeployLocalProjectConfig) {
   }
   const printObj = {
     account: config.accountSid,
-    projectName: config.projectName,
+    serviceName: config.serviceName,
     environment: config.functionsEnv,
     rootDirectory: config.cwd,
     dependencies: dependencyString,
@@ -113,7 +113,7 @@ function prettyPrintDeployedResources(
 {bold.cyan.underline Deployment Details}
 {bold.cyan Domain:} ${result.domain}
 {bold.cyan Service:}
-   ${config.projectName} {dim (${result.serviceSid})}
+   ${config.serviceName} {dim (${result.serviceSid})}
 {bold.cyan Environment:}
    ${config.functionsEnv} {dim (${result.environmentSid})} 
 {bold.cyan Build SID:}

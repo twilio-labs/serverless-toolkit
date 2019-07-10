@@ -13,6 +13,7 @@ import { printListResult } from '../printers/list';
 import { getFunctionServiceSid } from '../serverless-api/utils';
 import { fileExists, readFile } from '../utils/fs';
 import { CliInfo } from './types';
+import { deprecateProjectName } from './utils';
 
 const log = debug('twilio-run:list');
 
@@ -25,6 +26,7 @@ export type ListConfig = ApiListConfig & {
 export type ListCliFlags = Arguments<{
   types: string;
   projectName?: string;
+  serviceName?: string;
   properties?: string;
   extendedOutput: boolean;
   cwd?: string;
@@ -64,14 +66,22 @@ async function getConfigFromFlags(flags: ListCliFlags): Promise<ListConfig> {
 
   const serviceSid = flags.serviceSid || (await getFunctionServiceSid(cwd));
 
-  let projectName = flags.projectName;
-  if (!projectName) {
+  let serviceName = flags.serviceName;
+
+  if (typeof flags.projectName !== 'undefined') {
+    deprecateProjectName();
+    if (!serviceName) {
+      serviceName = flags.projectName;
+    }
+  }
+
+  if (!serviceName) {
     const pkgJsonPath = path.join(cwd, 'package.json');
     if (await fileExists(pkgJsonPath)) {
       const pkgContent = await readFile(pkgJsonPath, 'utf8');
       const pkgJson: PackageJson = JSON.parse(pkgContent);
       if (typeof pkgJson.name === 'string') {
-        projectName = pkgJson.name;
+        serviceName = pkgJson.name;
       }
     }
   }
@@ -83,7 +93,7 @@ async function getConfigFromFlags(flags: ListCliFlags): Promise<ListConfig> {
     accountSid,
     authToken,
     serviceSid,
-    projectName,
+    serviceName,
     environment: flags.environment,
     properties: flags.properties
       ? flags.properties.split(',').map(x => x.trim())
@@ -142,11 +152,17 @@ export const cliInfo: CliInfo = {
     types: 'environments,builds',
   },
   options: {
-    'project-name': {
+    'service-name': {
       type: 'string',
       alias: 'n',
       describe:
-        'Overrides the name of the project. Default: the name field in your package.json',
+        'Overrides the name of the Serverless project. Default: the name field in your package.json',
+    },
+    'project-name': {
+      type: 'string',
+      hidden: true,
+      describe:
+        'DEPRECATED: Overrides the name of the project. Default: the name field in your package.json',
     },
     properties: {
       type: 'string',
@@ -163,7 +179,7 @@ export const cliInfo: CliInfo = {
       type: 'string',
       hidden: true,
       describe:
-        'Sets the directory of your existing Functions project. Defaults to current directory',
+        'Sets the directory of your existing Serverless project. Defaults to current directory',
     },
     environment: {
       type: 'string',
@@ -201,8 +217,8 @@ function optionBuilder(yargs: Argv<any>): Argv<ListCliFlags> {
       'Lists all existing services/projects associated with your Twilio Account'
     )
     .example(
-      '$0 ls functions,assets --environment=dev --project-name=demo',
-      'Lists all existing functions & assets associated with the `dev` environment of this project'
+      '$0 ls functions,assets --environment=dev --service-name=demo',
+      'Lists all existing functions & assets associated with the `dev` environment of this service/project'
     )
     .example(
       '$0 ls environments --service-sid=ZSxxxxx --extended-output',

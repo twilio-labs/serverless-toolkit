@@ -1,25 +1,24 @@
-import debug from 'debug';
-import path from 'path';
+import {
+  DeployLocalProjectConfig,
+  TwilioServerlessApiClient,
+} from '@twilio-labs/serverless-api';
 import chalk from 'chalk';
+import { stripIndent } from 'common-tags';
+import debug from 'debug';
 import dotenv from 'dotenv';
 import ora, { Ora } from 'ora';
-import { stripIndent } from 'common-tags';
-import { Argv, Arguments } from 'yargs';
-
-import {
-  TwilioServerlessApiClient,
-  DeployLocalProjectConfig,
-} from '@twilio-labs/serverless-api';
-
-import { fileExists, readFile } from '../utils/fs';
-import { printDeployedResources, printConfigInfo } from '../printers/deploy';
+import path from 'path';
+import { Arguments, Argv } from 'yargs';
+import { printConfigInfo, printDeployedResources } from '../printers/deploy';
 import {
   getFunctionServiceSid,
-  saveLatestDeploymentData,
   HttpError,
+  saveLatestDeploymentData,
 } from '../serverless-api/utils';
 import { EnvironmentVariablesWithAuth } from '../types/generic';
+import { fileExists, readFile } from '../utils/fs';
 import { CliInfo } from './types';
+import { deprecateProjectName } from './utils';
 
 const log = debug('twilio-run:deploy');
 
@@ -28,6 +27,7 @@ export type DeployCliFlags = Arguments<{
   serviceSid?: string;
   functionsEnv: string;
   projectName?: string;
+  serviceName?: string;
   accountSid?: string;
   authToken?: string;
   env?: string;
@@ -97,6 +97,20 @@ async function getConfigFromFlags(
   delete env.ACCOUNT_SID;
   delete env.AUTH_TOKEN;
 
+  let serviceName: string | undefined = flags.serviceName || pkgJson.name;
+  if (typeof flags.projectName !== 'undefined') {
+    deprecateProjectName();
+    if (!serviceName) {
+      serviceName = flags.projectName;
+    }
+  }
+
+  if (!serviceName) {
+    throw new Error(
+      'Please pass --service-name or add a "name" field to your package.json'
+    );
+  }
+
   return {
     cwd,
     envPath,
@@ -107,7 +121,7 @@ async function getConfigFromFlags(
     pkgJson,
     overrideExistingService: flags.overrideExistingProject,
     force: flags.force,
-    projectName: flags.projectName || pkgJson.name,
+    serviceName,
     functionsEnv: flags.functionsEnv,
     functionsFolderName: flags.functionsFolder,
     assetsFolderName: flags.assetsFolder,
@@ -123,7 +137,8 @@ function logError(msg: string) {
 function handleError(
   err: Error | HttpError,
   spinner: Ora,
-  flags: DeployCliFlags
+  flags: DeployCliFlags,
+  config: DeployLocalProjectConfig
 ) {
   log('%O', err);
   if (err.name === 'conflicting-servicename') {
@@ -133,7 +148,9 @@ function handleError(
       - Rename your project in the package.json "name" property
       - Pass an explicit name to your deployment
         > ${flags.$0} deploy -n my-new-service-name
-      - Deploy to the existing service with the name "${flags.projectName}"
+      - Deploy to the existing service with the name "${(err as any)[
+        'serviceName'
+      ] || config.serviceName}"
         > ${flags.$0} deploy --override-existing-project
       - Run deployment in force mode
         > ${flags.$0} deploy --force
@@ -182,13 +199,13 @@ export async function handler(flags: DeployCliFlags): Promise<void> {
       spinner.text = evt.message + '\n';
     });
     const result = await client.deployLocalProject(config);
-    spinner.text = 'Project successfully deployed\n';
+    spinner.text = 'Serverless project successfully deployed\n';
     spinner.succeed();
     printDeployedResources(config, result);
     const { serviceSid, buildSid } = result;
     await saveLatestDeploymentData(config.cwd, serviceSid, buildSid);
   } catch (err) {
-    handleError(err, spinner, flags);
+    handleError(err, spinner, flags, config);
   }
 }
 
@@ -208,11 +225,17 @@ export const cliInfo: CliInfo = {
       describe: 'The environment name you want to use',
       default: 'dev',
     },
-    'project-name': {
+    'service-name': {
       type: 'string',
       alias: 'n',
       describe:
-        'Overrides the name of the project. Default: the name field in your package.json',
+        'Overrides the name of the Serverless project. Default: the name field in your package.json',
+    },
+    'project-name': {
+      type: 'string',
+      hidden: true,
+      describe:
+        'DEPRECATED: Overrides the name of the project. Default: the name field in your package.json',
     },
     'account-sid': {
       type: 'string',
@@ -233,7 +256,7 @@ export const cliInfo: CliInfo = {
     'override-existing-project': {
       type: 'boolean',
       describe:
-        'Deploys project to existing service if a naming conflict has been found.',
+        'Deploys Serverless project to existing service if a naming conflict has been found.',
       default: false,
     },
     force: {
