@@ -201,7 +201,7 @@ export async function getListOfFunctionsAndAssets(
     assetsDir = undefined;
   }
 
-  log('Found Assets Direectory "%s"', assetsDir);
+  log('Found Assets Directory "%s"', assetsDir);
 
   const functions = functionsDir
     ? await getDirContent(functionsDir, '.js')
