@@ -24,11 +24,46 @@ npm install
 ```
 
 ## Contributing
+
 1. Perform changes
 2. Make sure tests pass by running `npm test`
-3. Submit a PR 
+3. Run `git commit`  to kick off validation and enter your commit message. We are using [conventional commits](https://www.conventionalcommits.org/en/) for this project. When you run `git commit` it will trigger [`commitizen`](https://npm.im/commitizen) to assist you with your commit message.
+4. Submit a Pull Request 
 
 **Working on your first Pull Request?** You can learn how from this *free* series [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github) 
+
+## For Maintainers: Releasing
+
+The project uses `standard-version` to bump and git tag the version as well as update the `CHANGELOG.md`. Here are the steps you need to run to release a new version:
+
+
+### Pre-release version (from `next` branch):
+
+For example to release a new pre-release version containing `beta` and releasing it as `next`:
+
+```bash
+npm release -- --prerelease beta
+git push origin next --follow-tags 
+npm publish --tag next
+```
+
+### Normal release (from `master` branch):
+
+For a normal release `standard-version` will detect the version increment automatically. Run:
+
+```bash
+npm release
+git push origin master --follow-tags
+npm publish
+```
+
+To ship a specific version instead (like a forced minor bump) you can run:
+
+```bash
+npm release -- --release-as minor
+git push origin master --follow-tags
+npm publish
+```
 
 ## Code of Conduct
 
