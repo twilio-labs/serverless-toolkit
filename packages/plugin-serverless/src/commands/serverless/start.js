@@ -1,6 +1,10 @@
 const { Command } = require('@oclif/command');
 
-const { handler, cliInfo, describe } = require('twilio-run/src/commands/start');
+const {
+  handler,
+  cliInfo,
+  describe,
+} = require('twilio-run/dist/commands/start');
 const {
   convertYargsOptionsToOclifFlags,
   normalizeFlags,

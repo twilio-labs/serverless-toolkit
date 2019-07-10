@@ -2,11 +2,6 @@ const { flags } = require('@oclif/command');
 const { TwilioClientCommand } = require('@twilio/cli-core').baseCommands;
 
 const createTwilioFunction = require('create-twilio-function/src/create-twilio-function');
-const {
-  handler,
-  cliInfo,
-  describe,
-} = require('twilio-run/src/commands/activate');
 const { normalizeFlags } = require('../../utils');
 
 class FunctionsInit extends TwilioClientCommand {

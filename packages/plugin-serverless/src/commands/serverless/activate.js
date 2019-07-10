@@ -4,7 +4,7 @@ const {
   handler,
   cliInfo,
   describe,
-} = require('twilio-run/src/commands/activate');
+} = require('twilio-run/dist/commands/activate');
 const {
   convertYargsOptionsToOclifFlags,
   normalizeFlags,
