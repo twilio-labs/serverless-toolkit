@@ -1,17 +1,15 @@
-import debug from 'debug';
-import path from 'path';
+import {
+  ActivateConfig as ApiActivateConfig,
+  TwilioServerlessApiClient,
+} from '@twilio-labs/serverless-api';
 import chalk from 'chalk';
+import debug from 'debug';
 import dotenv from 'dotenv';
 import ora, { Ora } from 'ora';
-import { Argv, Arguments } from 'yargs';
-
-import {
-  TwilioServerlessApiClient,
-  ActivateConfig as ApiActivateConfig,
-} from '@twilio-labs/serverless-api';
-
-import { fileExists, readFile } from '../utils/fs';
+import path from 'path';
+import { Arguments, Argv } from 'yargs';
 import { getFunctionServiceSid } from '../serverless-api/utils';
+import { fileExists, readFile } from '../utils/fs';
 import { CliInfo } from './types';
 
 const log = debug('twilio-run:activate');
@@ -165,7 +163,7 @@ export const cliInfo: CliInfo = {
       type: 'string',
       hidden: true,
       describe:
-        'Sets the directory of your existing Functions project. Defaults to current directory',
+        'Sets the directory of your existing Serverless project. Defaults to current directory',
     },
     'service-sid': {
       type: 'string',
