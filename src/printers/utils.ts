@@ -23,6 +23,9 @@ export function borderLeft(text: string, color: string): string {
     .join('\n');
 }
 
+const wrapText = (text: string) =>
+  wrapAnsi(text, size.width - 5, { trim: false });
+
 export function importantMessage(
   label: string,
   color: string,
@@ -30,8 +33,8 @@ export function importantMessage(
   body: string
 ) {
   label = chalk.keyword(color)(label);
-  title = chalk.bold.underline(`${label} ${chalk.bold(title)}`);
-  body = wrapAnsi(body, size.width - 5);
+  title = wrapText(chalk.bold.underline(`${label} ${chalk.bold(title)}`));
+  body = wrapText(body);
 
   return '\n' + borderLeft(`${title}\n\n${chalk.dim(body)}`, color) + '\n';
 }

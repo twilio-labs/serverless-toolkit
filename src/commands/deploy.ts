@@ -12,7 +12,9 @@ import { Arguments, Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
 import checkProjectStructure from '../checks/project-structure';
 import { printConfigInfo, printDeployedResources } from '../printers/deploy';
+import { errorMessage } from '../printers/utils';
 import {
+  ApiErrorResponse,
   getFunctionServiceSid,
   HttpError,
   saveLatestDeploymentData,
@@ -143,10 +145,11 @@ function handleError(
   config: DeployLocalProjectConfig
 ) {
   log('%O', err);
+  spinner.fail('Failed Deployment');
   if (err.name === 'conflicting-servicename') {
-    spinner.fail(err.message);
-    console.log(stripIndent`
+    const messageBody = stripIndent`
       Here are a few ways to solve this problem:
+      
       - Rename your project in the package.json "name" property
       - Pass an explicit name to your deployment
         > ${flags.$0} deploy -n my-new-service-name
@@ -156,11 +159,20 @@ function handleError(
         > ${flags.$0} deploy --override-existing-project
       - Run deployment in force mode
         > ${flags.$0} deploy --force
-    `);
+    `;
+    console.error(errorMessage(err.message, messageBody));
   } else if (err.name === 'HTTPError') {
-    spinner.fail((err as HttpError).body.message);
+    const responseBody = JSON.parse(
+      (err as HttpError).body
+    ) as ApiErrorResponse;
+    const messageBody = stripIndent`
+      ${responseBody.message}
+
+      More info: ${responseBody.more_info}
+    `;
+    console.error(errorMessage('', messageBody));
   } else {
-    spinner.fail(err.message);
+    console.error(err.message);
   }
   process.exit(1);
 }

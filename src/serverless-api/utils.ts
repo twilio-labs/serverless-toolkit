@@ -6,10 +6,14 @@ const log = debug('twilio-run:internal:utils');
 
 export interface HttpError extends Error {
   name: 'HTTPError';
-  body: {
-    message: string;
-  };
+  body: string;
 }
+
+export type ApiErrorResponse = {
+  code: number;
+  message: string;
+  more_info: string;
+};
 
 export async function getFunctionServiceSid(
   cwd: string
