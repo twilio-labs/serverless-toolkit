@@ -1,12 +1,12 @@
-import { resolve } from 'path';
-import { readFileSync } from 'fs';
-import dotenv from 'dotenv';
-import logSymbols from 'log-symbols';
-import { fileExists } from '../../utils/fs';
-import debugModule from 'debug';
-import { Arguments } from 'yargs';
 import { EnvironmentVariables } from '@twilio-labs/serverless-api';
+import debugModule from 'debug';
+import dotenv from 'dotenv';
+import { readFileSync } from 'fs';
+import logSymbols from 'log-symbols';
+import path, { resolve } from 'path';
+import { Arguments } from 'yargs';
 import { EnvironmentVariablesWithAuth } from '../../types/generic';
+import { fileExists } from '../../utils/fs';
 
 const debug = debugModule('twilio-run:cli:config');
 
@@ -35,6 +35,7 @@ export type StartCliConfig = {
 
 export type StartCliFlags = Arguments<{
   dir?: string;
+  cwd?: string;
   loadLocalEnv: boolean;
   env?: string;
   port: string;
@@ -51,7 +52,7 @@ export type WrappedStartCliFlags = {
   flags: StartCliFlags;
 };
 
-async function getUrl(cli: WrappedStartCliFlags, port: string | number) {
+export async function getUrl(cli: WrappedStartCliFlags, port: string | number) {
   let url = `http://localhost:${port}`;
   if (typeof cli.flags.ngrok !== 'undefined') {
     debug('Starting ngrok tunnel');
@@ -67,7 +68,7 @@ async function getUrl(cli: WrappedStartCliFlags, port: string | number) {
   return url;
 }
 
-function getPort(cli: WrappedStartCliFlags): number {
+export function getPort(cli: WrappedStartCliFlags): number {
   let port = process.env.PORT || 3000;
   if (typeof cli.flags.port !== 'undefined') {
     port = parseInt(cli.flags.port, 10);
@@ -79,7 +80,7 @@ function getPort(cli: WrappedStartCliFlags): number {
   return port;
 }
 
-async function getEnvironment(
+export async function getEnvironment(
   cli: WrappedStartCliFlags,
   baseDir: string
 ): Promise<EnvironmentVariables> {
@@ -111,16 +112,21 @@ async function getEnvironment(
   return env;
 }
 
-function getBaseDirectory(cli: WrappedStartCliFlags): string {
+export function getBaseDirectory(cli: WrappedStartCliFlags): string {
   let baseDir = process.cwd();
-  if (cli.flags.dir) {
-    baseDir = cli.flags.dir;
+  if (cli.flags.cwd) {
+    baseDir = path.resolve(cli.flags.cwd);
+    debug('Set base directory based on input to "%s"', baseDir);
+  } else if (cli.flags.dir) {
+    baseDir = path.resolve(cli.flags.dir);
     debug('Set base directory based on input to "%s"', baseDir);
   }
   return baseDir;
 }
 
-function getInspectInfo(cli: WrappedStartCliFlags): InspectInfo | undefined {
+export function getInspectInfo(
+  cli: WrappedStartCliFlags
+): InspectInfo | undefined {
   if (typeof cli.flags.inspectBrk !== 'undefined') {
     return {
       hostPort: cli.flags.inspectBrk,

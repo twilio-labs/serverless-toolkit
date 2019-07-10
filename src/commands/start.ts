@@ -51,6 +51,11 @@ export const cliInfo: CliInfo = {
       type: 'boolean',
       describe: 'Includes the local environment variables',
     },
+    cwd: {
+      type: 'string',
+      describe:
+        'Alternative way to define the directory to start the server in. Overrides the [dir] argument passed.',
+    },
     env: {
       alias: 'e',
       type: 'string',
