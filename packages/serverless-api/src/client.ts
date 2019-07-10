@@ -99,7 +99,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
     let {
       types,
       serviceSid,
-      projectName,
+      serviceName: serviceName,
       environment: environmentSid,
     } = listConfig;
 
@@ -113,9 +113,9 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
 
     if (
       typeof serviceSid === 'undefined' &&
-      typeof projectName !== 'undefined'
+      typeof serviceName !== 'undefined'
     ) {
-      serviceSid = await findServiceSid(projectName, this.client);
+      serviceSid = await findServiceSid(serviceName, this.client);
     }
 
     if (typeof serviceSid === 'undefined') {
@@ -278,7 +278,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
    * even without a file system.
    *
    * Unless a `deployConfig. serviceSid` is specified, it will try to create one. If a service
-   * with the name `deployConfig.projectName` already exists, it will throw
+   * with the name `deployConfig.serviceName` already exists, it will throw
    * an error. You can make it use the existing service by setting `overrideExistingService` to
    * true.
    *
@@ -309,10 +309,10 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
         message: 'Creating Service',
       });
       try {
-        serviceSid = await createService(config.projectName, this.client);
+        serviceSid = await createService(config.serviceName, this.client);
       } catch (err) {
         const alternativeServiceSid = await findServiceSid(
-          config.projectName,
+          config.serviceName,
           this.client
         );
         if (!alternativeServiceSid) {
@@ -322,16 +322,14 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
           serviceSid = alternativeServiceSid;
         } else {
           const error = new Error(
-            `Project with name "${
-              config.projectName
-            }" already exists with SID "${alternativeServiceSid}".`
+            `Service with name "${config.serviceName}" already exists with SID "${alternativeServiceSid}".`
           );
           error.name = 'conflicting-servicename';
           Object.defineProperty(err, 'serviceSid', {
             value: alternativeServiceSid,
           });
-          Object.defineProperty(err, 'projectName', {
-            value: config.projectName,
+          Object.defineProperty(err, 'serviceName', {
+            value: config.serviceName,
           });
           throw error;
         }

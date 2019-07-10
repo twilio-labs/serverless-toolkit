@@ -6,7 +6,7 @@
 
 ## ⚠️ **IMPORTANT**
 
-This is a module for an experimental API that is still in preview mode. 
+This is a module for an experimental API that is still in preview mode.
 
 You won't be able to use this library unless you have been granted prior access to the underlying API.
 
@@ -40,7 +40,7 @@ const TwilioServerlessApiClient = require('@twilio-labs/serverless-api');
 
 const client = new TwilioServerlessApiClient({
   accountSid: '...',
-  authToken: '...'
+  authToken: '...',
 });
 
 client.on('status-update', evt => {
@@ -52,12 +52,12 @@ const result = await client.deployLocalProject({
   envPath: '...',
   accountSid: '...',
   authToken: '...',
-  env: {  },
+  env: {},
   pkgJson: {},
-  projectName: 'serverless-example',
+  serviceName: 'serverless-example',
   functionsEnv: 'dev',
   assetsFolderName: 'static',
-  functionsFolderName: 'src'
+  functionsFolderName: 'src',
 });
 ```
 
@@ -87,9 +87,9 @@ Nested folder structures will result in nested routes.
 
 Deploys a set of functions, assets, variables and dependencies specified in deployConfig. Functions & assets can either be paths to the local filesystem or Buffer instances allowing you to dynamically upload even without a file system.
 
-Unless a deployConfig. serviceSid is specified, it will try to create one. If a service with the name deployConfig.projectName already exists, it will throw an error. You can make it use the existing service by setting overrideExistingService to true.
+Unless a deployConfig. serviceSid is specified, it will try to create one. If a service with the name deployConfig.serviceName already exists, it will throw an error. You can make it use the existing service by setting overrideExistingService to true.
 
-Updates to the deployment will be emitted as events to status-update. 
+Updates to the deployment will be emitted as events to status-update.
 
 [More in the Docs](https://serverless-api.twilio-labs.com/classes/_twilio_labs_serverless_api.twilioserverlessapiclient.html#deployproject)
 
@@ -119,7 +119,7 @@ const api = require('@twilio-labs/serverless-api/dist/api');
 const utils = require('@twilio-labs/serverless-api/dist/utils');
 ```
 
-##  Contributing
+## Contributing
 
 This project welcomes contributions from the community. Please see the [`CONTRIBUTING.md`](CONTRIBUTING.md) file for more details.
 
