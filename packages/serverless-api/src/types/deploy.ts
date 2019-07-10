@@ -28,9 +28,9 @@ type DeployProjectConfigBase = {
    */
   pkgJson: PackageJson;
   /**
-   * Project name, used as `UniqueName` for Serverless Service.
+   * Name, used as `UniqueName` for Serverless Service.
    */
-  projectName: string;
+  serviceName: string;
   /**
    * Name of Functions environment to deploy to. Will be used as domain suffix and `${value}-environment` for `UniqueName`
    */
@@ -40,7 +40,7 @@ type DeployProjectConfigBase = {
    */
   force?: boolean;
   /**
-   * If no `serviceSid` is specified but a service with `projectName` is found, it will deploy to that one.
+   * If no `serviceSid` is specified but a service with `serviceName` is found, it will deploy to that one.
    */
   overrideExistingService?: boolean;
 };

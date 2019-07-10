@@ -6,23 +6,23 @@ import { GotClient, ServiceList, ServiceResource } from '../types';
 const log = debug('twilio-serverless-api:services');
 
 /**
- * Creates a new service given a project name
+ * Creates a new service given a service name
  *
  * @export
- * @param {string} projectName the unique name for the service
+ * @param {string} serviceName the unique name for the service
  * @param {GotClient} client API client
  * @returns {Promise<string>}
  */
 export async function createService(
-  projectName: string,
+  serviceName: string,
   client: GotClient
 ): Promise<string> {
   try {
     const resp = await client.post('/Services', {
       form: true,
       body: {
-        UniqueName: projectName,
-        FriendlyName: projectName,
+        UniqueName: serviceName,
+        FriendlyName: serviceName,
         IncludeCrendentials: true,
       },
     });
@@ -51,7 +51,7 @@ export async function listServices(
 }
 
 /**
- * Tries to find the service SID associated to a project name
+ * Tries to find the service SID associated to a service name
  *
  * @export
  * @param {string} uniqueName the unique name of the service

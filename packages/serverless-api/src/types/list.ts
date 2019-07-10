@@ -35,9 +35,9 @@ export type ListConfig = ClientConfig & {
    */
   serviceSid?: string;
   /**
-   * Project namee as alternative to `serviceSid`
+   * Service name as alternative to `serviceSid`
    */
-  projectName?: string;
+  serviceName?: string;
   /**
    * Environment SID or domain suffix. Required to list variables, functions and assets
    */
