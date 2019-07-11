@@ -7,7 +7,7 @@
   "dependencies": {
     "@oclif/command": "^1.5.12",
     "@oclif/config": "^1.12.10",
-    "@twilio/cli-core": "~1.4.1",
+    "@twilio/cli-core": "^2.0.2",
     "create-twilio-function": "^1.0.1",
     "lodash.camelcase": "^4.3.0",
     "lodash.kebabcase": "^4.1.1",
@@ -25,14 +25,12 @@
     "globby": "^8.0.2",
     "keytar": "^4.11.0",
     "mocha": "^5.2.0",
-    "nyc": "^13.3.0",
-    "rimraf": "^2.6.3"
+    "nyc": "^13.3.0"
   },
   "engines": {
     "node": ">=8.10.0"
   },
   "files": [
-    "/npm-shrinkwrap.json",
     "/oclif.manifest.json",
     "/src",
     "/yarn.lock",
@@ -85,9 +83,9 @@
   },
   "repository": "twilio-labs/plugin-serverless",
   "scripts": {
-    "postpack": "rimraf oclif.manifest.json npm-shrinkwrap.json",
+    "postpack": "rm -f oclif.manifest.json",
     "posttest": "eslint --ignore-path .gitignore . && npm audit",
-    "prepack": "oclif-dev manifest && oclif-dev readme && npm shrinkwrap",
+    "prepack": "oclif-dev manifest && oclif-dev readme",
     "test": "nyc --check-coverage --lines 90 --reporter=html --reporter=text mocha --forbid-only \"test/**/*.test.js\"",
     "version": "oclif-dev readme && git add README.md"
   }
