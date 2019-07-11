@@ -1,8 +1,14 @@
-const { flags } = require('@oclif/command');
 const { TwilioClientCommand } = require('@twilio/cli-core').baseCommands;
 
-const createTwilioFunction = require('create-twilio-function/src/create-twilio-function');
-const { normalizeFlags } = require('../../utils');
+const {
+  handler,
+  cliInfo,
+  describe,
+} = require('create-twilio-function/src/command');
+const {
+  convertYargsOptionsToOclifFlags,
+  normalizeFlags,
+} = require('../../utils');
 
 class FunctionsInit extends TwilioClientCommand {
   constructor(argv, config, secureStorage) {
@@ -21,31 +27,23 @@ class FunctionsInit extends TwilioClientCommand {
 
     opts.path = process.cwd();
     opts.skipCredentials = true;
-    return createTwilioFunction(opts);
+    return handler(opts);
   }
 }
 
-FunctionsInit.description = 'Creates a new Twilio Serverless project';
+FunctionsInit.description = describe;
 
 FunctionsInit.args = [
   {
     name: 'name',
     required: true,
-    description:
-      'Name of Serverless project and directory that will be created',
+    description: 'Name of Serverless project and directory that will be created',
   },
 ];
 
 FunctionsInit.flags = Object.assign(
   {},
-  {
-    'auth-token': flags.string({
-      description: 'An auth token or API secret to be used for your project',
-    }),
-    'account-sid': flags.string({
-      description: 'An account SID or API key to be used for your project',
-    }),
-  },
+  convertYargsOptionsToOclifFlags(cliInfo.options),
   { project: TwilioClientCommand.flags.project }
 );
 
