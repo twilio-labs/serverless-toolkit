@@ -7,6 +7,7 @@
   },
   "description": "CLI tool to run Twilio Functions locally for development",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
     "build": "tsc",
