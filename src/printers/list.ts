@@ -24,13 +24,6 @@ type KeyMaps = {
 
 const LONG_LINE = '─'.repeat(size.width);
 
-function basicIndent(str: string, repeat = 0) {
-  return str
-    .split('\n')
-    .map(s => ' '.repeat(repeat) + s)
-    .join('\n');
-}
-
 const baseKeys: KeyMaps = {
   environments: [
     'sid',
@@ -184,11 +177,10 @@ export type FunctionOrAssetContent = {
 };
 
 function prettyPrintFunctionsOrAssets(result: FunctionOrAssetContent) {
-  const { entries, environmentSid } = result;
+  const { entries } = result;
   const resourceString = entries
     .sort(sortByAccess)
     .map<string>((entry: CommonType, idx: number): string => {
-      const symbol = idx + 1 === entries.length ? '└──' : '├──';
       const suffix =
         entry.visibility === 'public'
           ? ' '
@@ -226,8 +218,7 @@ function prettyPrintVariables(variables: VariablesContent) {
 }
 
 function prettyPrintEnvironment(environment: EnvironmentResource): string {
-  return basicIndent(
-    stripIndent(chalk`
+  return stripIndent(chalk`
       {bold ${environment.domain_suffix}} {dim [${environment.sid}]}
       {dim │} {cyan URL:         } {reset ${environment.domain_name}}
       {dim │} {cyan Unique Name: } {reset ${environment.unique_name}}
@@ -235,8 +226,7 @@ function prettyPrintEnvironment(environment: EnvironmentResource): string {
       {dim │} {cyan Last Updated:} {reset ${formatDate(
         environment.date_updated
       )}}
-  `)
-  );
+  `);
 }
 
 function prettyPrintServices(service: ServiceResource): string {
@@ -255,12 +245,10 @@ function prettyPrintBuilds(build: BuildResource): string {
   } else if (build.status === 'failed') {
     status = chalk.reset.red(`${logSymbols.error} ${build.status}`);
   }
-  return basicIndent(
-    stripIndent(chalk`
+  return stripIndent(chalk`
       {bold ${build.sid}} {dim [${status}]}
       {dim │} {cyan Date:} {dim ${formatDate(build.date_updated)}}
-  `)
-  );
+  `);
 }
 
 function prettyPrintSection<T extends ListOptions>(
