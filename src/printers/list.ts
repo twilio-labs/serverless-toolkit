@@ -1,26 +1,35 @@
-import chalk from 'chalk';
-import { stripIndent } from 'common-tags';
-import title from 'title';
-import logSymbols from 'log-symbols';
-import columnify from 'columnify';
-import startCase from 'lodash.startcase';
-
-import { shouldPrettyPrint, supportsEmoji } from './utils';
-import { ListConfig } from '../commands/list';
 import {
-  ListResult,
-  FunctionVersion,
   AssetVersion,
-  VariableResource,
-  EnvironmentResource,
-  ServiceResource,
   BuildResource,
+  EnvironmentResource,
+  FunctionVersion,
   ListOptions,
+  ListResult,
+  ServiceResource,
+  VariableResource,
 } from '@twilio-labs/serverless-api';
+import chalk from 'chalk';
+import columnify from 'columnify';
+import { stripIndent } from 'common-tags';
+import startCase from 'lodash.startcase';
+import logSymbols from 'log-symbols';
+import title from 'title';
+import size from 'window-size';
+import { ListConfig } from '../commands/list';
+import { shouldPrettyPrint } from './utils';
 
 type KeyMaps = {
   [key in ListOptions]: string[];
 };
+
+const LONG_LINE = '─'.repeat(size.width);
+
+function basicIndent(str: string, repeat = 0) {
+  return str
+    .split('\n')
+    .map(s => ' '.repeat(repeat) + s)
+    .join('\n');
+}
 
 const baseKeys: KeyMaps = {
   environments: [
@@ -103,6 +112,13 @@ function formatDate(dateStr: string) {
   return new Date(dateStr).toString();
 }
 
+function sortByAccess(resA: CommonType, resB: CommonType) {
+  if (resA.visibility === resB.visibility) {
+    resA.path.localeCompare(resB.path);
+  }
+  return resA.visibility.localeCompare(resB.visibility);
+}
+
 const headingTransform = (name: string) => {
   return chalk.cyan.bold(startCase(name).replace(/Sid$/g, 'SID'));
 };
@@ -170,26 +186,20 @@ export type FunctionOrAssetContent = {
 function prettyPrintFunctionsOrAssets(result: FunctionOrAssetContent) {
   const { entries, environmentSid } = result;
   const resourceString = entries
+    .sort(sortByAccess)
     .map<string>((entry: CommonType, idx: number): string => {
       const symbol = idx + 1 === entries.length ? '└──' : '├──';
-      let emoji = '';
-      if (supportsEmoji) {
-        emoji =
-          entry.visibility === 'public'
-            ? '🌐'
-            : entry.visibility === 'protected'
-            ? '🔒'
-            : '🙈';
-      }
+      const suffix =
+        entry.visibility === 'public'
+          ? ' '
+          : chalk`{dim [Visibility {reset.bold ${entry.visibility}}]}`;
       return stripIndent(chalk`
-    │ ${symbol} ${emoji}   ${entry.path} {dim [Visibility: ${entry.visibility}]}
-    `);
+        {dim │} {reset ${entry.path}} ${suffix}
+      `);
     })
     .join('\n');
 
-  return stripIndent(chalk`
-  │ {bold For Environment:} ${environmentSid}\n${resourceString}
-  `);
+  return resourceString;
 }
 
 type VariablesContent = {
@@ -198,82 +208,94 @@ type VariablesContent = {
 };
 
 function prettyPrintVariables(variables: VariablesContent) {
-  const { entries, environmentSid } = variables;
+  const { entries } = variables;
 
-  const variableString = entries
-    .map((entry, idx) => {
-      const symbol = idx + 1 === entries.length ? '└──' : '├──';
-      return stripIndent(chalk`
-    │ ${symbol} {bold ${entry.key}:} ${entry.value}
-    `);
-    })
-    .join('\n');
+  const updatedRows = entries.map((entry: VariableResource) => {
+    return {
+      ...entry,
+      key: chalk`{dim │} {cyan ${entry.key}}:`,
+    };
+  });
 
-  return stripIndent(chalk`
-  │ {bold For Environment:} ${environmentSid}\n${variableString}
-  `);
+  const renderedValues = columnify(updatedRows, {
+    columns: ['key', 'value'],
+    showHeaders: false,
+  });
+
+  return renderedValues;
 }
 
 function prettyPrintEnvironment(environment: EnvironmentResource): string {
-  return stripIndent(chalk`
-  │ ${environment.unique_name} (${environment.domain_suffix})
-  │ ├── {bold SID:} ${environment.sid}
-  │ ├── {bold URL:} ${environment.domain_name}
-  │ ├── {bold Active Build:} ${environment.build_sid}
-  │ └── {bold Last Updated:} ${formatDate(environment.date_updated)}
-  `);
+  return basicIndent(
+    stripIndent(chalk`
+      {bold ${environment.domain_suffix}} {dim [${environment.sid}]}
+      {dim │} {cyan URL:         } {reset ${environment.domain_name}}
+      {dim │} {cyan Unique Name: } {reset ${environment.unique_name}}
+      {dim │} {cyan Active Build:} {reset ${environment.build_sid}}
+      {dim │} {cyan Last Updated:} {reset ${formatDate(
+        environment.date_updated
+      )}}
+  `)
+  );
 }
 
 function prettyPrintServices(service: ServiceResource): string {
   return stripIndent(chalk`
-  │
-  │ {cyan.bold ${service.unique_name}}
-  │ ├── {bold SID: } ${service.sid}
-  │ ├── {bold Created: } ${formatDate(service.date_created)}
-  │ └── {bold Updated: } ${formatDate(service.date_updated)}
+  {bold ${service.unique_name}}
+  {dim │} {cyan SID: }     ${service.sid}
+  {dim │} {cyan Created: } {dim ${formatDate(service.date_created)}}
+  {dim │} {cyan Updated: } {dim ${formatDate(service.date_updated)}}
   `);
 }
 
 function prettyPrintBuilds(build: BuildResource): string {
-  let status = chalk.yellow(build.status);
+  let status = chalk.reset.yellow(build.status);
   if (build.status === 'completed') {
-    status = chalk.green(`${logSymbols.success} ${build.status}`);
+    status = chalk.reset.green(`${logSymbols.success} ${build.status}`);
   } else if (build.status === 'failed') {
-    status = chalk.red(`${logSymbols.error} ${build.status}`);
+    status = chalk.reset.red(`${logSymbols.error} ${build.status}`);
   }
-  return stripIndent`
-  │ ${build.sid} (${status})
-  │ └── ${chalk`{bold Date:}`} ${formatDate(build.date_updated)}
-  `;
+  return basicIndent(
+    stripIndent(chalk`
+      {bold ${build.sid}} {dim [${status}]}
+      {dim │} {cyan Date:} {dim ${formatDate(build.date_updated)}}
+  `)
+  );
 }
 
 function prettyPrintSection<T extends ListOptions>(
   sectionTitle: ListOptions,
   sectionContent: ListResult[T]
 ): string {
-  const sectionHeader = chalk.cyan.bold(`${title(sectionTitle)}: `);
+  let sectionHeader = chalk.cyan.bold(`${title(sectionTitle)}:`);
   let content = '';
   if (sectionTitle === 'builds') {
     content = (sectionContent as BuildResource[])
       .map(prettyPrintBuilds)
-      .join('\n');
+      .join(`\n\n`);
   } else if (sectionTitle === 'environments') {
     content = (sectionContent as EnvironmentResource[])
       .map(prettyPrintEnvironment)
-      .join('\n');
+      .join('\n\n');
   } else if (sectionTitle === 'services') {
     content = (sectionContent as ServiceResource[])
       .map(prettyPrintServices)
-      .join('\n');
+      .join('\n\n');
   } else if (sectionTitle === 'variables') {
-    content = prettyPrintVariables(sectionContent as VariablesContent);
+    const data = sectionContent as VariablesContent;
+    sectionHeader = chalk`{cyan.bold ${title(
+      sectionTitle
+    )}} {dim for environment ${data.environmentSid}}`;
+    content = prettyPrintVariables(data);
   } else if (sectionTitle === 'functions' || sectionTitle === 'assets') {
-    content = prettyPrintFunctionsOrAssets(
-      (sectionContent as unknown) as FunctionOrAssetContent
-    );
+    const data = sectionContent as FunctionOrAssetContent;
+    sectionHeader = chalk`{cyan.bold ${title(
+      sectionTitle
+    )}} {dim for environment ${data.environmentSid}}`;
+    content = prettyPrintFunctionsOrAssets(data);
   }
   const output = stripIndent`
-    ${sectionHeader}\n${content}
+    ${sectionHeader}\n\n${content}\n\n${chalk.dim(LONG_LINE)}\n
   `;
   return output;
 }
