@@ -19,8 +19,8 @@ export type NewCliFlags = Arguments<{
 export type NewConfig = Merge<
   NewCliFlags,
   {
-    template: string;
-    filename: string;
+    filename?: string;
+    template?: string;
   }
 >;
 
@@ -80,8 +80,8 @@ async function getMissingInfo(flags: NewCliFlags): Promise<NewConfig> {
   if (questions.length === 0) {
     return {
       ...flags,
-      filename: flags.filename as string,
-      template: flags.template as string,
+      filename: flags.filename,
+      template: flags.template,
     };
   }
 
@@ -119,6 +119,15 @@ export async function handler(flagsInput: NewCliFlags): Promise<void> {
   await checkProjectStructure(targetDirectory, command, true);
 
   const flags = await getMissingInfo(flagsInput);
+
+  if (
+    typeof flags.filename === 'undefined' ||
+    flags.filename.length === 0 ||
+    typeof flags.template === 'undefined' ||
+    flags.filename.length === 0
+  ) {
+    return;
+  }
 
   const functionName = flags.filename.replace(/\.js$/, '');
   const files = await getTemplateFiles(flags.template, functionName);
