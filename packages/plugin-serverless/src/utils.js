@@ -8,6 +8,7 @@ function convertYargsOptionsToOclifFlags(options) {
     const flag = {
       description: opt.describe,
       default: opt.default,
+      hidden: opt.hidden,
     };
 
     if (opt.default) {
