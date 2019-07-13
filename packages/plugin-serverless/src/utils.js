@@ -11,8 +11,14 @@ function convertYargsOptionsToOclifFlags(options) {
       hidden: opt.hidden,
     };
 
-    if (opt.default) {
+    if (typeof opt.default !== 'undefined') {
       flag.default = opt.default;
+
+      if (opt.type === 'boolean') {
+        if (flag.default === true) {
+          flag.allowNo = true;
+        }
+      }
     }
 
     if (opt.alias) {
