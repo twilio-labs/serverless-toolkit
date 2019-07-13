@@ -1,18 +1,17 @@
-import express, {
-  Express,
-  Request as ExpressRequest,
-  Response as ExpressResponse,
-  NextFunction,
-} from 'express';
+import { ServerlessFunctionSignature } from '@twilio-labs/serverless-runtime-types/types';
 import bodyParser from 'body-parser';
 import debug from 'debug';
-
-import { functionToRoute } from './route';
-import { getFunctionsAndAssets } from './internal/runtime-paths';
+import express, {
+  Express,
+  NextFunction,
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+} from 'express';
+import { StartCliConfig } from './cli/config';
 import { createLogger } from './internal/request-logger';
 import { setRoutes } from './internal/route-cache';
-import { StartCliConfig } from './cli/config';
-import { ServerlessFunctionSignature } from '@twilio-labs/serverless-runtime-types/types';
+import { getFunctionsAndAssets } from './internal/runtime-paths';
+import { functionToRoute } from './route';
 
 const log = debug('twilio-run:server');
 const DEFAULT_PORT = process.env.PORT || 3000;
@@ -100,7 +99,11 @@ export async function createServer(
         }
       } else if (routeInfo && routeInfo.type === 'asset') {
         if (routeInfo.path) {
-          res.sendFile(routeInfo.path);
+          if (routeInfo.access === 'private') {
+            res.status(403).send('This asset has been marked as private');
+          } else {
+            res.sendFile(routeInfo.path);
+          }
         } else {
           res.status(404).send('Could not find asset');
         }
