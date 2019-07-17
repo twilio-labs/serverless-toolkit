@@ -5,143 +5,24 @@ import {
 import chalk from 'chalk';
 import { stripIndent } from 'common-tags';
 import debug from 'debug';
-import dotenv from 'dotenv';
 import ora, { Ora } from 'ora';
 import path from 'path';
-import { Arguments, Argv } from 'yargs';
+import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
 import checkProjectStructure from '../checks/project-structure';
+import { DeployCliFlags, getConfigFromFlags } from '../config/deploy';
 import { printConfigInfo, printDeployedResources } from '../printers/deploy';
 import { errorMessage } from '../printers/utils';
 import {
   ApiErrorResponse,
-  getFunctionServiceSid,
   HttpError,
   saveLatestDeploymentData,
 } from '../serverless-api/utils';
-import { EnvironmentVariablesWithAuth } from '../types/generic';
-import { fileExists, readFile } from '../utils/fs';
-import { sharedCliOptions, SharedFlags } from './shared';
+import { sharedCliOptions } from './shared';
 import { CliInfo } from './types';
-import {
-  constructCommandName,
-  deprecateProjectName,
-  getFullCommand,
-} from './utils';
+import { constructCommandName, getFullCommand } from './utils';
 
 const log = debug('twilio-run:deploy');
-
-export type DeployCliFlags = Arguments<
-  SharedFlags & {
-    cwd?: string;
-    serviceSid?: string;
-    functionsEnv: string;
-    projectName?: string;
-    serviceName?: string;
-    accountSid?: string;
-    authToken?: string;
-    env?: string;
-    overrideExistingProject: boolean;
-    force: boolean;
-    functions: boolean;
-    assets: boolean;
-    assetsFolder?: string;
-    functionsFolder?: string;
-  }
-> & {
-  _cliDefault?: {
-    username: string;
-    password: string;
-  };
-};
-
-async function getConfigFromFlags(
-  flags: DeployCliFlags
-): Promise<DeployLocalProjectConfig> {
-  const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
-
-  let accountSid = '';
-  let authToken = '';
-  let localEnv: EnvironmentVariablesWithAuth = {};
-
-  const envPath = path.resolve(cwd, flags.env || '.env');
-
-  if (await fileExists(envPath)) {
-    const contentEnvFile = await readFile(envPath, 'utf8');
-    localEnv = dotenv.parse(contentEnvFile);
-
-    accountSid =
-      flags.accountSid ||
-      localEnv.ACCOUNT_SID ||
-      (flags._cliDefault && flags._cliDefault.username) ||
-      '';
-    authToken =
-      flags.authToken ||
-      localEnv.AUTH_TOKEN ||
-      (flags._cliDefault && flags._cliDefault.password) ||
-      '';
-  } else if (flags.env) {
-    throw new Error(`Failed to find .env file at "${envPath}"`);
-  }
-
-  const serviceSid =
-    flags.serviceSid ||
-    (await getFunctionServiceSid(cwd, flags.config, 'deployConfig'));
-
-  const pkgJsonPath = path.join(cwd, 'package.json');
-  if (!(await fileExists(pkgJsonPath))) {
-    throw new Error('Failed to find package.json file');
-  }
-
-  const pkgContent = await readFile(pkgJsonPath, 'utf8');
-  const pkgJson = JSON.parse(pkgContent);
-
-  const env = {
-    ...localEnv,
-  };
-
-  for (let key of Object.keys(env)) {
-    const val = env[key];
-    if (typeof val === 'string' && val.length === 0) {
-      delete env[key];
-    }
-  }
-
-  delete env.ACCOUNT_SID;
-  delete env.AUTH_TOKEN;
-
-  let serviceName: string | undefined = flags.serviceName || pkgJson.name;
-  if (typeof flags.projectName !== 'undefined') {
-    deprecateProjectName();
-    if (!serviceName) {
-      serviceName = flags.projectName;
-    }
-  }
-
-  if (!serviceName) {
-    throw new Error(
-      'Please pass --service-name or add a "name" field to your package.json'
-    );
-  }
-
-  return {
-    cwd,
-    envPath,
-    accountSid,
-    authToken,
-    env,
-    serviceSid,
-    pkgJson,
-    overrideExistingService: flags.overrideExistingProject,
-    force: flags.force,
-    serviceName,
-    functionsEnv: flags.functionsEnv,
-    functionsFolderName: flags.functionsFolder,
-    assetsFolderName: flags.assetsFolder,
-    noAssets: !flags.assets,
-    noFunctions: !flags.functions,
-  };
-}
 
 function logError(msg: string) {
   console.error(chalk`{red.bold ERROR} ${msg}`);
@@ -256,7 +137,13 @@ export const cliInfo: CliInfo = {
     },
     'functions-env': {
       type: 'string',
-      describe: 'The environment name you want to use',
+      describe: 'DEPRECATED: Use --environment instead',
+      hidden: true,
+    },
+    environment: {
+      type: 'string',
+      describe:
+        'The environment name and domain suffix you want to use for your deployment',
       default: 'dev',
     },
     'service-name': {

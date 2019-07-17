@@ -15,7 +15,7 @@ import startCase from 'lodash.startcase';
 import logSymbols from 'log-symbols';
 import title from 'title';
 import size from 'window-size';
-import { ListConfig } from '../commands/list';
+import { ListConfig } from '../config/list';
 import { shouldPrettyPrint } from './utils';
 
 type KeyMaps = {
