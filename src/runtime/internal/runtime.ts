@@ -11,7 +11,7 @@ import twilio from 'twilio';
 import { ServiceContext } from 'twilio/lib/rest/sync/v1/service';
 import { SyncListListInstance } from 'twilio/lib/rest/sync/v1/service/syncList';
 import { SyncMapListInstance } from 'twilio/lib/rest/sync/v1/service/syncMap';
-import { StartCliConfig } from '../cli/config';
+import { StartCliConfig } from '../../config/start';
 
 const log = debug('twilio-run:runtime');
 

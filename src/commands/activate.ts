@@ -12,6 +12,7 @@ import { checkConfigForCredentials } from '../checks/check-credentials';
 import checkForValidServiceSid from '../checks/check-service-sid';
 import { getFunctionServiceSid } from '../serverless-api/utils';
 import { fileExists, readFile } from '../utils/fs';
+import { sharedCliOptions, SharedFlags } from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
 
@@ -23,16 +24,18 @@ type ActivateConfig = ApiActivateConfig & {
   authToken?: string;
 };
 
-export type ActivateCliFlags = Arguments<{
-  cwd?: string;
-  serviceSid?: string;
-  buildSid?: string;
-  sourceEnvironment?: string;
-  environment: string;
-  createEnvironment: boolean;
-  force: boolean;
-  env?: string;
-}> & {
+export type ActivateCliFlags = Arguments<
+  SharedFlags & {
+    cwd?: string;
+    serviceSid?: string;
+    buildSid?: string;
+    sourceEnvironment?: string;
+    environment: string;
+    createEnvironment: boolean;
+    force: boolean;
+    env?: string;
+  }
+> & {
   _cliDefault?: {
     username: string;
     password: string;
@@ -77,7 +80,9 @@ async function getConfigFromFlags(
       '';
   }
 
-  const readServiceSid = flags.serviceSid || (await getFunctionServiceSid(cwd));
+  const readServiceSid =
+    flags.serviceSid ||
+    (await getFunctionServiceSid(cwd, flags.config, 'activateConfig'));
 
   const command = getFullCommand(flags);
   const serviceSid = checkForValidServiceSid(command, readServiceSid);
@@ -146,12 +151,7 @@ export async function handler(flags: ActivateCliFlags): Promise<void> {
 
 export const cliInfo: CliInfo = {
   options: {
-    cwd: {
-      type: 'string',
-      hidden: true,
-      describe:
-        'Sets the directory of your existing Serverless project. Defaults to current directory',
-    },
+    ...sharedCliOptions,
     'service-sid': {
       type: 'string',
       describe: 'SID of the Twilio Serverless Service to deploy to',

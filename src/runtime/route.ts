@@ -11,7 +11,7 @@ import {
   Response as ExpressResponse,
 } from 'express';
 import twilio, { twiml } from 'twilio';
-import { StartCliConfig } from './cli/config';
+import { StartCliConfig } from '../config/start';
 import { Response } from './internal/response';
 import * as Runtime from './internal/runtime';
 

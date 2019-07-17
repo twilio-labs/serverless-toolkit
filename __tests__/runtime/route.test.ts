@@ -5,7 +5,7 @@ import {
 } from 'express';
 import { Response as MockResponse } from 'jest-express/lib/response';
 import { twiml } from 'twilio';
-import { StartCliConfig } from '../../src/runtime/cli/config';
+import { StartCliConfig } from '../../src/config/start';
 import { Response } from '../../src/runtime/internal/response';
 import {
   constructContext,

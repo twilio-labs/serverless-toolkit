@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { stripIndent } from 'common-tags';
-import { Request, Response, RequestHandler } from 'express';
-import { StartCliConfig } from '../cli/config';
+import { Request, RequestHandler, Response } from 'express';
+import { StartCliConfig } from '../../config/start';
 
 function simpleLogs(req: Request, res: Response): string {
   const contentType = res.get('Content-Type');

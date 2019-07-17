@@ -1,12 +1,11 @@
 jest.unmock('twilio');
 
-import request from 'supertest';
-import { createServer } from '../../src/runtime/server';
-import { resolve, basename } from 'path';
-import cheerio from 'cheerio';
+import { Express } from 'express';
 import { readdirSync } from 'fs';
-import { Response as ExpressResponse, Express } from 'express';
-import { StartCliConfig } from '../../src/runtime/cli/config';
+import { basename, resolve } from 'path';
+import request from 'supertest';
+import { StartCliConfig } from '../../src/config/start';
+import { createServer } from '../../src/runtime/server';
 
 const TEST_DIR = resolve(__dirname, '../../fixtures');
 

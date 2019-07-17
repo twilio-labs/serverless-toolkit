@@ -1,7 +1,7 @@
 import boxen from 'boxen';
 import chalk from 'chalk';
 import logSymbols from 'log-symbols';
-import { StartCliConfig } from '../runtime/cli/config';
+import { StartCliConfig } from '../config/start';
 import {
   AssetInfo,
   FunctionInfo,

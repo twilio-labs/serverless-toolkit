@@ -2,10 +2,11 @@ import debug from 'debug';
 import { Argv } from 'yargs';
 import checkNodejsVersion from '../checks/nodejs-version';
 import checkProjectStructure from '../checks/project-structure';
+import { getConfigFromCli, StartCliFlags } from '../config/start';
 import { printRouteInfo } from '../printers/start';
-import { getConfigFromCli, StartCliFlags } from '../runtime/cli/config';
 import { createServer } from '../runtime/server';
 import { startInspector } from '../runtime/utils/inspector';
+import { sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
 
@@ -14,11 +15,7 @@ const log = debug('twilio-run:start');
 export async function handler(argv: StartCliFlags): Promise<void> {
   checkNodejsVersion();
 
-  const cli = {
-    flags: argv,
-  };
-
-  const config = await getConfigFromCli(cli);
+  const config = await getConfigFromCli(argv, cliInfo);
 
   const command = getFullCommand(argv);
   await checkProjectStructure(config.baseDir, command);
@@ -49,6 +46,7 @@ export async function handler(argv: StartCliFlags): Promise<void> {
 
 export const cliInfo: CliInfo = {
   options: {
+    ...sharedCliOptions,
     'load-local-env': {
       alias: 'f',
       default: false,

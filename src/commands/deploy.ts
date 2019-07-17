@@ -21,6 +21,7 @@ import {
 } from '../serverless-api/utils';
 import { EnvironmentVariablesWithAuth } from '../types/generic';
 import { fileExists, readFile } from '../utils/fs';
+import { sharedCliOptions, SharedFlags } from './shared';
 import { CliInfo } from './types';
 import {
   constructCommandName,
@@ -30,22 +31,24 @@ import {
 
 const log = debug('twilio-run:deploy');
 
-export type DeployCliFlags = Arguments<{
-  cwd?: string;
-  serviceSid?: string;
-  functionsEnv: string;
-  projectName?: string;
-  serviceName?: string;
-  accountSid?: string;
-  authToken?: string;
-  env?: string;
-  overrideExistingProject: boolean;
-  force: boolean;
-  functions: boolean;
-  assets: boolean;
-  assetsFolder?: string;
-  functionsFolder?: string;
-}> & {
+export type DeployCliFlags = Arguments<
+  SharedFlags & {
+    cwd?: string;
+    serviceSid?: string;
+    functionsEnv: string;
+    projectName?: string;
+    serviceName?: string;
+    accountSid?: string;
+    authToken?: string;
+    env?: string;
+    overrideExistingProject: boolean;
+    force: boolean;
+    functions: boolean;
+    assets: boolean;
+    assetsFolder?: string;
+    functionsFolder?: string;
+  }
+> & {
   _cliDefault?: {
     username: string;
     password: string;
@@ -81,7 +84,9 @@ async function getConfigFromFlags(
     throw new Error(`Failed to find .env file at "${envPath}"`);
   }
 
-  const serviceSid = flags.serviceSid || (await getFunctionServiceSid(cwd));
+  const serviceSid =
+    flags.serviceSid ||
+    (await getFunctionServiceSid(cwd, flags.config, 'deployConfig'));
 
   const pkgJsonPath = path.join(cwd, 'package.json');
   if (!(await fileExists(pkgJsonPath))) {
@@ -226,7 +231,12 @@ export async function handler(flags: DeployCliFlags): Promise<void> {
     spinner.succeed();
     printDeployedResources(config, result);
     const { serviceSid, buildSid } = result;
-    await saveLatestDeploymentData(config.cwd, serviceSid, buildSid);
+    await saveLatestDeploymentData(
+      config.cwd,
+      config.accountSid,
+      serviceSid,
+      buildSid
+    );
   } catch (err) {
     handleError(err, spinner, flags, config);
   }
@@ -234,6 +244,7 @@ export async function handler(flags: DeployCliFlags): Promise<void> {
 
 export const cliInfo: CliInfo = {
   options: {
+    ...sharedCliOptions,
     cwd: {
       type: 'string',
       describe: 'Sets the directory from which to deploy',
