@@ -8,7 +8,7 @@ import express, {
   Response as ExpressResponse,
 } from 'express';
 import nocache from 'nocache';
-import { StartCliConfig } from './cli/config';
+import { StartCliConfig } from '../config/start';
 import { createLogger } from './internal/request-logger';
 import { setRoutes } from './internal/route-cache';
 import { getFunctionsAndAssets } from './internal/runtime-paths';

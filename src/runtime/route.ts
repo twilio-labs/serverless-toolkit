@@ -12,8 +12,8 @@ import {
 } from 'express';
 import twilio, { twiml } from 'twilio';
 import { checkForValidAccountSid } from '../checks/check-account-sid';
+import { StartCliConfig } from '../config/start';
 import { wrapErrorInHtml } from '../utils/error-html';
-import { StartCliConfig } from './cli/config';
 import { Response } from './internal/response';
 import * as Runtime from './internal/runtime';
 

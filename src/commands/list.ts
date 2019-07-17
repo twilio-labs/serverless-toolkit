@@ -14,6 +14,7 @@ import checkForValidServiceSid from '../checks/check-service-sid';
 import { printListResult } from '../printers/list';
 import { getFunctionServiceSid } from '../serverless-api/utils';
 import { fileExists, readFile } from '../utils/fs';
+import { sharedCliOptions, SharedFlags } from './shared';
 import { CliInfo } from './types';
 import { deprecateProjectName, getFullCommand } from './utils';
 
@@ -25,19 +26,21 @@ export type ListConfig = ApiListConfig & {
   extendedOutput: boolean;
 };
 
-export type ListCliFlags = Arguments<{
-  types: string;
-  projectName?: string;
-  serviceName?: string;
-  properties?: string;
-  extendedOutput: boolean;
-  cwd?: string;
-  environment?: string;
-  accountSid?: string;
-  authToken?: string;
-  serviceSid?: string;
-  env?: string;
-}> & {
+export type ListCliFlags = Arguments<
+  SharedFlags & {
+    types: string;
+    projectName?: string;
+    serviceName?: string;
+    properties?: string;
+    extendedOutput: boolean;
+    cwd?: string;
+    environment?: string;
+    accountSid?: string;
+    authToken?: string;
+    serviceSid?: string;
+    env?: string;
+  }
+> & {
   _cliDefault?: {
     username: string;
     password: string;
@@ -72,7 +75,9 @@ async function getConfigFromFlags(flags: ListCliFlags): Promise<ListConfig> {
       '';
   }
 
-  const serviceSid = flags.serviceSid || (await getFunctionServiceSid(cwd));
+  const serviceSid =
+    flags.serviceSid ||
+    (await getFunctionServiceSid(cwd, flags.config, 'listConfig'));
 
   let serviceName = flags.serviceName;
 
@@ -122,6 +127,14 @@ function handleError(err: Error) {
 }
 
 export async function handler(flags: ListCliFlags): Promise<void> {
+  // console.log('hi');
+  // const c = readSpecializedConfig(process.cwd(), 'listConfig', {
+  //   projectId: 'ACc2bdaa19578061b45a518a9dedb5e406',
+  //   // environmentSuffix: 'dev',
+  // });
+  // console.log(c);
+  // process.exit(0);
+
   let config: ListConfig;
   try {
     config = await getConfigFromFlags(flags);
@@ -159,6 +172,7 @@ export const cliInfo: CliInfo = {
     types: 'services',
   },
   options: {
+    ...sharedCliOptions,
     'service-name': {
       type: 'string',
       alias: 'n',

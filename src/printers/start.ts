@@ -2,7 +2,7 @@ import { ServerlessResourceConfig } from '@twilio-labs/serverless-api';
 import boxen from 'boxen';
 import chalk from 'chalk';
 import logSymbols from 'log-symbols';
-import { StartCliConfig } from '../runtime/cli/config';
+import { StartCliConfig } from '../config/start';
 import { getFunctionsAndAssets } from '../runtime/internal/runtime-paths';
 import { shouldPrettyPrint, terminalLink } from './utils';
 
