@@ -3,12 +3,12 @@ import fs from 'fs';
 import got from 'got';
 import path from 'path';
 import { promisify } from 'util';
-
 const access = promisify(fs.access);
 export const readFile = promisify(fs.readFile);
 export const writeFile = promisify(fs.writeFile);
 export const readdir = promisify(fs.readdir);
 const stat = promisify(fs.stat);
+const open = promisify(fs.open);
 
 export async function fileExists(filePath: string): Promise<boolean> {
   try {
@@ -24,12 +24,16 @@ export function downloadFile(
   targetPath: string
 ): Promise<void> {
   return new Promise((resolve, reject) => {
-    const writeStream = fs.createWriteStream(targetPath);
-    got
-      .stream(contentUrl)
-      .on('response', resolve)
-      .on('error', reject)
-      .pipe(writeStream);
+    return open(targetPath, 'wx')
+      .then(fd => {
+        const writeStream = fs.createWriteStream('', { fd });
+        got
+          .stream(contentUrl)
+          .on('response', resolve)
+          .on('error', reject)
+          .pipe(writeStream);
+      })
+      .catch(err => reject(err));
   });
 }
 
