@@ -1,9 +1,9 @@
 import Conf from 'conf';
 import kebabCase from 'lodash.kebabcase';
-import { ActivateCliFlags } from '../commands/activate';
-import { DeployCliFlags } from '../commands/deploy';
-import { ListCliFlags } from '../commands/list';
 import { CliInfo } from '../commands/types';
+import { ActivateCliFlags } from './activate';
+import { DeployCliFlags } from './deploy';
+import { ListCliFlags } from './list';
 import { StartCliFlags } from './start';
 
 const DEFAULT_CONFIG_NAME = '.twilio-functions';
@@ -117,21 +117,22 @@ export function readSpecializedConfig<T extends keyof CommandConfigurations>(
 }
 
 export function mergeFlagsAndConfig<T extends { [key: string]: any }>(
-  config: T,
+  config: Partial<T>,
   flags: T,
   cliInfo: CliInfo
 ): T {
-  return Object.keys(config).reduce(
+  return Object.keys(flags).reduce(
     (result: T, key: string) => {
       let value = flags[key];
-      if (
-        value === (cliInfo.options[kebabCase(key)] || {}).default &&
-        typeof config[key] !== 'undefined'
-      ) {
-        value = config[key];
+      const opt = cliInfo.options[kebabCase(key)];
+      const arg = cliInfo.argsDefaults && cliInfo.argsDefaults[kebabCase(key)];
+      if ((opt && opt.default === value) || arg) {
+        if (typeof config[key] !== 'undefined') {
+          value = config[key];
+        }
       }
       return { ...result, [key]: value };
     },
-    { ...config }
+    { ...(config as T) }
   );
 }
