@@ -25,7 +25,7 @@ const log = debug('twilio-serverless-api:functions');
  * @param {GotClient} client API client
  * @returns {Promise<FunctionApiResource>}
  */
-async function createFunctionResource(
+export async function createFunctionResource(
   name: string,
   serviceSid: string,
   client: GotClient
