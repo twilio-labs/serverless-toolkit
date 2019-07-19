@@ -1,15 +1,18 @@
 import { fsHelpers } from '@twilio-labs/serverless-api';
 import chalk from 'chalk';
+import debug from 'debug';
 import dotenv from 'dotenv';
+import { mkdir as oldMkdir } from 'fs';
 import got from 'got';
 import Listr, { ListrTask } from 'listr';
 import path from 'path';
 import { install, InstallResult } from 'pkg-install';
+import { promisify } from 'util';
 import { downloadFile, fileExists, readFile, writeFile } from '../utils/fs';
 import { TemplateFileInfo } from './data';
-import { mkdir as oldMkdir } from 'fs';
-import { promisify } from 'util';
 const mkdir = promisify(oldMkdir);
+
+const log = debug('twilio-run:templating:filesystem');
 
 async function writeEnvFile(
   contentUrl: string,
@@ -59,12 +62,23 @@ async function writeEnvFile(
 async function installDependencies(
   contentUrl: string,
   targetDir: string
-): Promise<InstallResult> {
+): Promise<InstallResult | undefined> {
   const pkgContent = await got(contentUrl, { json: true });
   const dependencies = pkgContent.body.dependencies;
-  return install(dependencies, {
-    cwd: targetDir,
-  });
+  if (dependencies && Object.keys(dependencies).length > 0) {
+    return install(dependencies, {
+      cwd: targetDir,
+    });
+  }
+}
+
+function hasFilesOfType(files: TemplateFileInfo[], type: string) {
+  for (let file of files) {
+    if (file.type === type) {
+      return true;
+    }
+  }
+  return false;
 }
 
 export async function writeFiles(
@@ -82,22 +96,28 @@ export async function writeFiles(
   ]);
   const functionsTargetDir = path.join(functionsDir, bundleName);
   const assetsTargetDir = path.join(assetsDir, bundleName);
+
   if (functionsTargetDir !== functionsDir) {
-    try {
-      await mkdir(functionsTargetDir);
-    } catch (err) {
-      console.error(err);
-      throw new Error(
-        `Bundle with name "${bundleName}" already exists in "${functionsDir}"`
-      );
+    if (hasFilesOfType(files, 'functions')) {
+      try {
+        await mkdir(functionsTargetDir);
+      } catch (err) {
+        log(err);
+        throw new Error(
+          `Bundle with name "${bundleName}" already exists in "${functionsDir}"`
+        );
+      }
     }
-    try {
-      await mkdir(assetsTargetDir);
-    } catch (err) {
-      console.error(err);
-      throw new Error(
-        `Bundle with name "${bundleName}" already exists in "${assetsDir}"`
-      );
+
+    if (hasFilesOfType(files, 'assets')) {
+      try {
+        await mkdir(assetsTargetDir);
+      } catch (err) {
+        log(err);
+        throw new Error(
+          `Bundle with name "${bundleName}" already exists in "${assetsDir}"`
+        );
+      }
     }
   }
 

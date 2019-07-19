@@ -5,12 +5,12 @@ import prompts from 'prompts';
 import { Merge } from 'type-fest';
 import { Arguments, Argv } from 'yargs';
 import checkProjectStructure from '../checks/project-structure';
+import { downloadTemplate, fetchListOfTemplates } from '../templating/actions';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
-import { downloadTemplate, fetchListOfTemplates } from '../templating/actions';
 
 export type NewCliFlags = Arguments<{
-  filename?: string;
+  namespace?: string;
   template?: string;
   list?: string;
 }>;
@@ -18,7 +18,7 @@ export type NewCliFlags = Arguments<{
 export type NewConfig = Merge<
   NewCliFlags,
   {
-    filename?: string;
+    namespace?: string;
     template?: string;
   }
 >;
@@ -62,11 +62,12 @@ async function getMissingInfo(flags: NewCliFlags): Promise<NewConfig> {
     });
   }
 
-  if (!flags.filename) {
+  if (!flags.namespace) {
     questions.push({
       type: 'text',
-      name: 'filename',
-      message: 'What should be the name of your function?',
+      name: 'namespace',
+      message:
+        'What should be the namespace your function(s) are placed under?',
       validate: (input: string) => {
         if (input.length < 1 || input.includes(' ')) {
           return 'Your name cannot include whitespace';
@@ -79,7 +80,7 @@ async function getMissingInfo(flags: NewCliFlags): Promise<NewConfig> {
   if (questions.length === 0) {
     return {
       ...flags,
-      filename: flags.filename,
+      namespace: flags.namespace,
       template: flags.template,
     };
   }
@@ -88,7 +89,7 @@ async function getMissingInfo(flags: NewCliFlags): Promise<NewConfig> {
   return {
     ...flags,
     template: flags.template || answers.template,
-    filename: flags.filename || answers.filename,
+    namespace: flags.namespace || answers.namespace,
   };
 }
 
@@ -120,17 +121,17 @@ export async function handler(flagsInput: NewCliFlags): Promise<void> {
   const flags = await getMissingInfo(flagsInput);
 
   if (
-    typeof flags.filename === 'undefined' ||
-    flags.filename.length === 0 ||
+    typeof flags.namespace === 'undefined' ||
+    flags.namespace.length === 0 ||
     typeof flags.template === 'undefined' ||
-    flags.filename.length === 0
+    flags.namespace.length === 0
   ) {
     return;
   }
 
-  const bundleName = flags.filename.replace(/\.js$/, '');
+  const sanitizedNamespace = flags.namespace.replace(/\.js$/, '');
 
-  downloadTemplate(flags.template, bundleName, targetDirectory);
+  downloadTemplate(flags.template, sanitizedNamespace, targetDirectory);
 }
 
 export const cliInfo: CliInfo = {
@@ -162,7 +163,7 @@ function optionBuilder(yargs: Argv<any>): Argv<NewCliFlags> {
   return yargs;
 }
 
-export const command = ['new [filename]', 'template [filename]'];
+export const command = ['new [namespace]', 'template [namespace]'];
 export const describe =
   'Creates a new Twilio Function based on an existing template';
 export const builder = optionBuilder;
