@@ -1,6 +1,6 @@
 import * as twilio from 'twilio';
-import { SyncListListInstance } from 'twilio/lib/rest/preview/sync/service/syncList';
 import { ServiceContext } from 'twilio/lib/rest/sync/v1/service';
+import { SyncListListInstance } from 'twilio/lib/rest/sync/v1/service/syncList';
 import { SyncMapListInstance } from 'twilio/lib/rest/sync/v1/service/syncMap';
 import { TwilioClientOptions } from 'twilio/lib/rest/Twilio';
 
