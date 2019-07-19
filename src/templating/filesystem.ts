@@ -7,6 +7,9 @@ import path from 'path';
 import { install, InstallResult } from 'pkg-install';
 import { downloadFile, fileExists, readFile, writeFile } from '../utils/fs';
 import { TemplateFileInfo } from './data';
+import { mkdir as oldMkdir } from 'fs';
+import { promisify } from 'util';
+const mkdir = promisify(oldMkdir);
 
 async function writeEnvFile(
   contentUrl: string,
@@ -67,36 +70,62 @@ async function installDependencies(
 export async function writeFiles(
   files: TemplateFileInfo[],
   targetDir: string,
-  functionName: string
+  bundleName: string
 ): Promise<void> {
   const functionsDir = fsHelpers.getFirstMatchingDirectory(targetDir, [
     'functions',
     'src',
   ]);
-  const functionTargetPath = path.join(functionsDir, `/${functionName}.js`);
-  if (await fileExists(functionTargetPath)) {
-    throw new Error(
-      `Function with name "${functionName} already exists in "${functionsDir}"`
-    );
+  const assetsDir = fsHelpers.getFirstMatchingDirectory(targetDir, [
+    'assets',
+    'static',
+  ]);
+  const functionsTargetDir = path.join(functionsDir, bundleName);
+  const assetsTargetDir = path.join(assetsDir, bundleName);
+  if (functionsTargetDir !== functionsDir) {
+    try {
+      await mkdir(functionsTargetDir);
+    } catch (err) {
+      console.error(err);
+      throw new Error(
+        `Bundle with name "${bundleName}" already exists in "${functionsDir}"`
+      );
+    }
+    try {
+      await mkdir(assetsTargetDir);
+    } catch (err) {
+      console.error(err);
+      throw new Error(
+        `Bundle with name "${bundleName}" already exists in "${assetsDir}"`
+      );
+    }
   }
 
   const tasks = files
     .map(file => {
-      if (file.type === 'function') {
+      if (file.type === 'functions') {
         return {
-          title: 'Create Function',
-          task: () => {
-            return downloadFile(file.content, functionTargetPath);
-          },
+          title: `Creating function: ${file.name}`,
+          task: () =>
+            downloadFile(
+              file.content,
+              path.join(functionsTargetDir, file.name)
+            ),
+        };
+      } else if (file.type === 'assets') {
+        return {
+          title: `Creating asset: ${file.name}`,
+          task: () =>
+            downloadFile(file.content, path.join(assetsTargetDir, file.name)),
         };
       } else if (file.type === '.env') {
         return {
-          title: 'Configure Environment Variables in .env',
+          title: 'Configuring Environment Variables in .env',
           task: async (ctx: any) => {
             const output = await writeEnvFile(
               file.content,
               targetDir,
-              file.functionName
+              file.name
             );
             ctx.env = output;
           },

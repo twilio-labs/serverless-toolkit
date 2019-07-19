@@ -25,8 +25,8 @@ export async function fetchListOfTemplates(): Promise<Template[]> {
 }
 
 export type TemplateFileInfo = {
+  name: string;
   type: string;
-  functionName: string;
   content: string;
 };
 
@@ -47,30 +47,57 @@ type RawContentsPayload = {
   };
 }[];
 
-export async function getTemplateFiles(
+async function getFiles(
   templateId: string,
-  functionName: string
+  directory: string
+): Promise<TemplateFileInfo[]> {
+  const response = await got(
+    CONTENT_BASE_URL + `/${templateId}/${directory}?ref=next`,
+    {
+      json: true,
+    }
+  );
+  const repoContents = response.body as RawContentsPayload;
+  return repoContents.map(file => {
+    return {
+      name: file.name,
+      type: directory,
+      content: file.download_url,
+    };
+  });
+}
+
+export async function getTemplateFiles(
+  templateId: string
 ): Promise<TemplateFileInfo[]> {
   try {
-    const response = await got(CONTENT_BASE_URL + `/${templateId}`, {
+    const response = await got(CONTENT_BASE_URL + `/${templateId}?ref=next`, {
       json: true,
     });
-    const output = (response.body as RawContentsPayload)
+    const repoContents = response.body as RawContentsPayload;
+
+    const assets = repoContents.find(file => file.name === 'assets')
+      ? getFiles(templateId, 'assets')
+      : [];
+    const functions = repoContents.find(file => file.name === 'functions')
+      ? getFiles(templateId, 'functions')
+      : [];
+
+    const otherFiles = repoContents
       .filter(file => {
-        return (
-          file.name === 'package.json' ||
-          file.name === '.env' ||
-          (file.name.endsWith('.js') && !file.name.endsWith('.test.js'))
-        );
+        return file.name === 'package.json' || file.name === '.env';
       })
       .map(file => {
         return {
-          type: file.name.endsWith('.js') ? 'function' : file.name,
-          functionName,
+          name: file.name,
+          type: file.name,
           content: file.download_url,
         };
       });
-    return output;
+    const files = otherFiles.concat(
+      ...(await Promise.all([assets, functions]))
+    );
+    return files;
   } catch (err) {
     log(err.message);
     console.error(err);

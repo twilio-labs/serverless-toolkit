@@ -5,10 +5,9 @@ import prompts from 'prompts';
 import { Merge } from 'type-fest';
 import { Arguments, Argv } from 'yargs';
 import checkProjectStructure from '../checks/project-structure';
-import { fetchListOfTemplates, getTemplateFiles } from '../templating/data';
-import { writeFiles } from '../templating/filesystem';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
+import { downloadTemplate, fetchListOfTemplates } from '../templating/actions';
 
 export type NewCliFlags = Arguments<{
   filename?: string;
@@ -129,14 +128,9 @@ export async function handler(flagsInput: NewCliFlags): Promise<void> {
     return;
   }
 
-  const functionName = flags.filename.replace(/\.js$/, '');
-  const files = await getTemplateFiles(flags.template, functionName);
-  try {
-    await writeFiles(files, targetDirectory, functionName);
-    console.log(chalk`{green SUCCESS} Created new function ${functionName}`);
-  } catch (err) {
-    console.error(chalk`{red ERROR} ${err.message}`);
-  }
+  const bundleName = flags.filename.replace(/\.js$/, '');
+
+  downloadTemplate(flags.template, bundleName, targetDirectory);
 }
 
 export const cliInfo: CliInfo = {
