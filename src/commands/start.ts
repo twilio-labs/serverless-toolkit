@@ -89,7 +89,7 @@ export const cliInfo: CliInfo = {
     },
     live: {
       type: 'boolean',
-      default: false,
+      default: true,
       describe: 'Always serve from the current functions (no caching)',
     },
     inspect: {
