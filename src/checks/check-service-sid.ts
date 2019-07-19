@@ -4,6 +4,7 @@ import { errorMessage } from '../printers/utils';
 const EXAMPLE_SERVICE_SID = 'ZSf9dec7e059e0695f4c8axxxxxxxxxxxx';
 
 export default function checkForValidServiceSid(
+  command: string,
   serviceSid?: string
 ): string | never {
   if (
@@ -16,6 +17,10 @@ export default function checkForValidServiceSid(
 
   let message = '';
   let title = '';
+  const listCommand = !command.includes(':')
+    ? `${command.split(' ')[0]} list services`
+    : `${command.substr(0, command.indexOf(':'))}:list services`;
+
   if (typeof serviceSid === 'undefined') {
     title = 'Could not find Service SID';
     message = stripIndent`
@@ -26,6 +31,9 @@ export default function checkForValidServiceSid(
         {
           "serviceSid": "${EXAMPLE_SERVICE_SID}"
         }
+
+      You can list all available services by running:
+      > ${listCommand}
     `;
   } else if (
     typeof serviceSid !== 'string' ||

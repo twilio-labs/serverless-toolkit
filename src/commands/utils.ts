@@ -1,3 +1,4 @@
+import { basename } from 'path';
 import util from 'util';
 import { Arguments } from 'yargs';
 
@@ -6,6 +7,7 @@ export const deprecateProjectName = util.deprecate(() => {},
 
 export function getFullCommand(flags: Arguments<{}>): string {
   let baseCommand = flags.$0;
+  baseCommand = basename(baseCommand);
   if (flags._.length > 0) {
     baseCommand = `${baseCommand} ${flags._[0]}`;
   }

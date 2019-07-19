@@ -15,7 +15,7 @@ import { printListResult } from '../printers/list';
 import { getFunctionServiceSid } from '../serverless-api/utils';
 import { fileExists, readFile } from '../utils/fs';
 import { CliInfo } from './types';
-import { deprecateProjectName } from './utils';
+import { deprecateProjectName, getFullCommand } from './utils';
 
 const log = debug('twilio-run:list');
 
@@ -95,7 +95,6 @@ async function getConfigFromFlags(flags: ListCliFlags): Promise<ListConfig> {
   }
 
   const types = flags.types.split(',') as ListOptions[];
-  console.log(types);
 
   return {
     cwd,
@@ -142,7 +141,8 @@ export async function handler(flags: ListCliFlags): Promise<void> {
   checkConfigForCredentials(config);
 
   if (config.types !== 'services' && config.types[0] !== 'services') {
-    checkForValidServiceSid(config.serviceSid);
+    const command = getFullCommand(flags);
+    checkForValidServiceSid(command, config.serviceSid);
   }
 
   try {

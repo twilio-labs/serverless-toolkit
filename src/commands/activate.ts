@@ -13,6 +13,7 @@ import checkForValidServiceSid from '../checks/check-service-sid';
 import { getFunctionServiceSid } from '../serverless-api/utils';
 import { fileExists, readFile } from '../utils/fs';
 import { CliInfo } from './types';
+import { getFullCommand } from './utils';
 
 const log = debug('twilio-run:activate');
 
@@ -78,7 +79,8 @@ async function getConfigFromFlags(
 
   const readServiceSid = flags.serviceSid || (await getFunctionServiceSid(cwd));
 
-  const serviceSid = checkForValidServiceSid(readServiceSid);
+  const command = getFullCommand(flags);
+  const serviceSid = checkForValidServiceSid(command, readServiceSid);
 
   return {
     cwd,
