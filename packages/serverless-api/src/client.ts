@@ -240,6 +240,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
       }
     }
 
+    let domain = '';
     if (!buildSid && sourceEnvironment) {
       let currentEnv;
       if (!isEnvironmentSid(sourceEnvironment)) {
@@ -255,6 +256,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
           this.client
         );
       }
+      domain = currentEnv.domain_name;
       buildSid = currentEnv.build_sid;
     }
 
@@ -268,6 +270,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
       serviceSid,
       buildSid,
       environmentSid: targetEnvironment,
+      domain,
     };
   }
 
