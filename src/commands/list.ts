@@ -95,6 +95,7 @@ async function getConfigFromFlags(flags: ListCliFlags): Promise<ListConfig> {
   }
 
   const types = flags.types.split(',') as ListOptions[];
+  console.log(types);
 
   return {
     cwd,
@@ -155,7 +156,7 @@ export async function handler(flags: ListCliFlags): Promise<void> {
 
 export const cliInfo: CliInfo = {
   argsDefaults: {
-    types: 'environments,builds',
+    types: 'services',
   },
   options: {
     'service-name': {
@@ -216,8 +217,19 @@ export const cliInfo: CliInfo = {
 };
 
 function optionBuilder(yargs: Argv<any>): Argv<ListCliFlags> {
+  if (cliInfo.argsDefaults) {
+    yargs = Object.keys(cliInfo.argsDefaults).reduce(
+      (yargs: Argv<any>, name: string) => {
+        if (cliInfo.argsDefaults && cliInfo.argsDefaults[name]) {
+          return yargs.default(name, cliInfo.argsDefaults[name]);
+        }
+        return yargs;
+      },
+      yargs
+    );
+  }
+
   yargs = yargs
-    .default('types', 'environments,builds')
     .example(
       '$0 list services',
       'Lists all existing services/projects associated with your Twilio Account'
