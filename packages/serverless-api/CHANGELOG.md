@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.18](https://github.com/twilio-labs/serverless-api/compare/v1.0.0-alpha.17...v1.0.0-alpha.18) (2019-07-19)
+
+
+### Features
+
+* **client:** expose domain in activate command ([8283662](https://github.com/twilio-labs/serverless-api/commit/8283662)), closes [twilio-labs/twilio-run#37](https://github.com/twilio-labs/serverless-api/issues/37)
+
+
+
 ## [1.0.0-alpha.17](https://github.com/twilio-labs/serverless-api/compare/v1.0.0-alpha.16...v1.0.0-alpha.17) (2019-07-19)
 
 
