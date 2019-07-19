@@ -53,7 +53,7 @@ async function createAssetResource(
  * @param {GotClient} client API client
  * @returns {Promise<AssetApiResource[]>}
  */
-async function getAssetResources(serviceSid: string, client: GotClient) {
+export async function listAssetResources(serviceSid: string, client: GotClient) {
   try {
     const resp = await client.get(`/Services/${serviceSid}/Assets`);
     const content = (resp.body as unknown) as AssetList;
@@ -78,7 +78,7 @@ export async function getOrCreateAssetResources(
   client: GotClient
 ): Promise<AssetResource[]> {
   const output: AssetResource[] = [];
-  const existingAssets = await getAssetResources(serviceSid, client);
+  const existingAssets = await listAssetResources(serviceSid, client);
   const assetsToCreate: RawAssetWithPath[] = [];
 
   assets.forEach(asset => {
