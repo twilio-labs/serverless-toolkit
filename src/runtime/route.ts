@@ -1,20 +1,19 @@
-import twilio, { twiml } from 'twilio';
-import debug from 'debug';
-import {
-  Request as ExpressRequest,
-  Response as ExpressResponse,
-  RequestHandler as ExpressRequestHandler,
-  NextFunction,
-} from 'express';
 import {
   Context,
-  ServerlessFunctionSignature,
   ServerlessCallback,
+  ServerlessFunctionSignature,
 } from '@twilio-labs/serverless-runtime-types/types';
-
+import debug from 'debug';
+import {
+  NextFunction,
+  Request as ExpressRequest,
+  RequestHandler as ExpressRequestHandler,
+  Response as ExpressResponse,
+} from 'express';
+import twilio, { twiml } from 'twilio';
+import { StartCliConfig } from './cli/config';
 import { Response } from './internal/response';
 import * as Runtime from './internal/runtime';
-import { StartCliConfig } from './cli/config';
 
 const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
 
@@ -40,8 +39,18 @@ export function constructContext<T extends {} = {}>({
 }
 
 export function constructGlobalScope(config: StartCliConfig): void {
+  const GlobalRuntime = Runtime.create(config);
   (global as any)['Twilio'] = { ...twilio, Response };
-  (global as any)['Runtime'] = Runtime.create(config);
+  (global as any)['Runtime'] = GlobalRuntime;
+  (global as any)['Functions'] = GlobalRuntime.getFunctions();
+  (global as any)['Response'] = Response;
+
+  if (config.env.ACCOUNT_SID && config.env.AUTH_TOKEN) {
+    (global as any)['twilioClient'] = twilio(
+      config.env.ACCOUNT_SID,
+      config.env.AUTH_TOKEN
+    );
+  }
 }
 
 export function handleError(err: Error, res: ExpressResponse) {

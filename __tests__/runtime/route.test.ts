@@ -1,21 +1,20 @@
 import '@twilio-labs/serverless-runtime-types';
-
-import { twiml } from 'twilio';
-import {
-  handleError,
-  handleSuccess,
-  constructEvent,
-  isTwiml,
-  constructContext,
-  constructGlobalScope,
-} from '../../src/runtime/route';
-import { Response } from '../../src/runtime/internal/response';
-import { Response as MockResponse } from 'jest-express/lib/response';
 import {
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from 'express';
+import { Response as MockResponse } from 'jest-express/lib/response';
+import { twiml } from 'twilio';
 import { StartCliConfig } from '../../src/runtime/cli/config';
+import { Response } from '../../src/runtime/internal/response';
+import {
+  constructContext,
+  constructEvent,
+  constructGlobalScope,
+  handleError,
+  handleSuccess,
+  isTwiml,
+} from '../../src/runtime/route';
 
 const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
 
@@ -148,34 +147,49 @@ describe('constructGlobalScope function', () => {
   const AUTH_TOKEN = 'xyz';
   let config: StartCliConfig;
 
+  function resetGlobals() {
+    // @ts-ignore
+    global['Twilio'] = undefined;
+    // @ts-ignore
+    global['Runtime'] = undefined;
+    // @ts-ignore
+    global['Response'] = undefined;
+    // @ts-ignore
+    global['twilioClient'] = null;
+    // @ts-ignore
+    global['Functions'] = undefined;
+  }
+
   beforeEach(() => {
     config = {
       url: 'http://localhost:8000',
       env: { ACCOUNT_SID, AUTH_TOKEN },
     } as StartCliConfig;
-    // @ts-ignore
-    global['Twilio'] = undefined;
-    // @ts-ignore
-    global['Runtime'] = undefined;
+    resetGlobals();
   });
 
   afterEach(() => {
     config = {} as StartCliConfig;
-    // @ts-ignore
-    global['Twilio'] = undefined;
-    // @ts-ignore
-    global['Runtime'] = undefined;
+    resetGlobals();
   });
 
   test('sets the correct global variables', () => {
     expect(global.Twilio).toBeUndefined();
     expect(global.Runtime).toBeUndefined();
+    expect(global.Response).toBeUndefined();
+    expect(global.twilioClient).toBeNull();
+    expect(global.Functions).toBeUndefined();
     constructGlobalScope(config);
+
     const twilio = require('twilio');
+
     expect(global.Twilio).toEqual({ ...twilio, Response });
     expect(typeof global.Runtime.getAssets).toBe('function');
     expect(typeof global.Runtime.getFunctions).toBe('function');
     expect(typeof global.Runtime.getSync).toBe('function');
+    expect(Response).toEqual(Response);
+    expect(twilioClient).not.toBeNull();
+    expect(global.Functions).not.toBeUndefined();
   });
 });
 
