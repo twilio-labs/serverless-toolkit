@@ -138,6 +138,7 @@ export async function handler(flags: ActivateCliFlags): Promise<void> {
     spinner.succeed(
       `Activated new build ${details} on ${config.targetEnvironment}`
     );
+    console.log(result.domain);
   } catch (err) {
     handleError(err, spinner);
   }
