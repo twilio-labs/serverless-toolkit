@@ -22,7 +22,11 @@ import {
 import { EnvironmentVariablesWithAuth } from '../types/generic';
 import { fileExists, readFile } from '../utils/fs';
 import { CliInfo } from './types';
-import { deprecateProjectName, getFullCommand } from './utils';
+import {
+  constructCommandName,
+  deprecateProjectName,
+  getFullCommand,
+} from './utils';
 
 const log = debug('twilio-run:deploy');
 
@@ -147,18 +151,24 @@ function handleError(
   log('%O', err);
   spinner.fail('Failed Deployment');
   if (err.name === 'conflicting-servicename') {
+    const fullCommand = getFullCommand(flags);
     const messageBody = stripIndent`
       Here are a few ways to solve this problem:
       
       - Rename your project in the package.json "name" property
       - Pass an explicit name to your deployment
-        > ${flags.$0} deploy -n my-new-service-name
+        > ${constructCommandName(fullCommand, 'deploy', [
+          '-n',
+          'my-new-service-name',
+        ])}
       - Deploy to the existing service with the name "${(err as any)[
         'serviceName'
       ] || config.serviceName}"
-        > ${flags.$0} deploy --override-existing-project
+        > ${constructCommandName(fullCommand, 'deploy', [
+          '--override-existing-project',
+        ])}
       - Run deployment in force mode
-        > ${flags.$0} deploy --force
+        > ${constructCommandName(fullCommand, 'deploy', ['--force'])} 
     `;
     console.error(errorMessage(err.message, messageBody));
   } else if (err.name === 'HTTPError') {
