@@ -1,5 +1,6 @@
 import * as twilio from 'twilio';
 import { ServiceContext } from 'twilio/lib/rest/sync/v1/service';
+import { TwilioClientOptions } from 'twilio/lib/rest/Twilio';
 
 export type EnvironmentVariables = {
   [key: string]: string | undefined;
@@ -11,6 +12,13 @@ export type ResourceMap = {
   };
 };
 
+export type AssetResourceMap = {
+  [name: string]: {
+    path: string;
+    open(): string;
+  };
+};
+
 export interface TwilioResponse {
   setStatusCode(code: number): void;
   setBody(body: string | object): void;
@@ -18,10 +26,14 @@ export interface TwilioResponse {
   setHeaders(headers: { [key: string]: string }): void;
 }
 
+export type RuntimeSyncClientOptions = TwilioClientOptions & {
+  serviceName?: string;
+};
+
 export type RuntimeInstance = {
-  getAssets(): ResourceMap;
+  getAssets(): AssetResourceMap;
   getFunctions(): ResourceMap;
-  getSync(config?: { serviceName: string }): ServiceContext;
+  getSync(options?: RuntimeSyncClientOptions): ServiceContext;
 };
 
 export type Context<T = {}> = {
