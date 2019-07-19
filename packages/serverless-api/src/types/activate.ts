@@ -16,4 +16,5 @@ export type ActivateResult = {
   serviceSid: Sid;
   buildSid: Sid;
   environmentSid: Sid;
+  domain: string;
 };
