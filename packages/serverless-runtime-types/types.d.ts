@@ -1,5 +1,7 @@
 import * as twilio from 'twilio';
+import { SyncListListInstance } from 'twilio/lib/rest/preview/sync/service/syncList';
 import { ServiceContext } from 'twilio/lib/rest/sync/v1/service';
+import { SyncMapListInstance } from 'twilio/lib/rest/sync/v1/service/syncMap';
 import { TwilioClientOptions } from 'twilio/lib/rest/Twilio';
 
 export type EnvironmentVariables = {
@@ -30,10 +32,15 @@ export type RuntimeSyncClientOptions = TwilioClientOptions & {
   serviceName?: string;
 };
 
+export type RuntimeSyncServiceContext = ServiceContext & {
+  maps: SyncMapListInstance;
+  lists: SyncListListInstance;
+};
+
 export type RuntimeInstance = {
   getAssets(): AssetResourceMap;
   getFunctions(): ResourceMap;
-  getSync(options?: RuntimeSyncClientOptions): ServiceContext;
+  getSync(options?: RuntimeSyncClientOptions): RuntimeSyncServiceContext;
 };
 
 export type Context<T = {}> = {
