@@ -7,6 +7,7 @@ import express, {
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from 'express';
+import nocache from 'nocache';
 import { StartCliConfig } from './cli/config';
 import { createLogger } from './internal/request-logger';
 import { setRoutes } from './internal/route-cache';
@@ -58,6 +59,10 @@ export async function createServer(
     app.use(createLogger(config));
   }
 
+  if (config.live) {
+    app.use(nocache());
+  }
+
   if (config.legacyMode) {
     process.env.TWILIO_FUNCTIONS_LEGACY_MODE = config.legacyMode
       ? 'true'
@@ -92,6 +97,13 @@ export async function createServer(
 
           log('Load & route to function at "%s"', functionPath);
           const twilioFunction = loadTwilioFunction(functionPath, config);
+          if (typeof twilioFunction !== 'function') {
+            return res
+              .status(404)
+              .send(
+                `Could not find a "handler" function in file ${functionPath}`
+              );
+          }
           functionToRoute(twilioFunction, config)(req, res, next);
         } catch (err) {
           log('Failed to retrieve function. %O', err);

@@ -60,6 +60,7 @@
     "lodash.startcase": "^4.4.0",
     "log-symbols": "^2.2.0",
     "ngrok": "^3.0.1",
+    "nocache": "^2.1.0",
     "ora": "^3.3.1",
     "pkg-install": "^1.0.0",
     "prompts": "^2.0.4",
