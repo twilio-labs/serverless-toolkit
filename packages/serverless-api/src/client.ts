@@ -460,7 +460,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
       message: 'Gathering Functions and Assets to deploy',
     });
 
-    log('Deploy config %O', deployConfig);
+    log('Deploy config %P', deployConfig);
 
     const searchConfig: SearchConfig = {};
     if (deployConfig.functionsFolderName) {

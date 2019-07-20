@@ -57,6 +57,7 @@
     "@types/node": "^11.13.2",
     "@types/recursive-readdir": "^2.2.0",
     "debug": "^4.1.1",
+    "fast-redact": "^1.5.0",
     "file-type": "^10.10.0",
     "got": "^9.6.0",
     "mime-types": "^2.1.22",
