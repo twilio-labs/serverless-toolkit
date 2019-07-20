@@ -70,9 +70,6 @@ OPTIONS
 
   --create-environment                     Creates environment if it couldn't find it.
 
-  --cwd=cwd                                Sets the directory of your existing Serverless project. Defaults to current
-                                           directory
-
   --env=env                                Path to .env file for environment variables that should be installed
 
   --environment=environment                The environment suffix or SID to deploy to.
@@ -84,7 +81,7 @@ OPTIONS
   --source-environment=source-environment  SID or suffix of an existing environment you want to deploy from.
 ```
 
-_See code: [src/commands/serverless/activate.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.9/src/commands/serverless/activate.js)_
+_See code: [src/commands/serverless/activate.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-beta.0/src/commands/serverless/activate.js)_
 
 ## `twilio serverless:deploy`
 
@@ -102,7 +99,7 @@ OPTIONS
 
   -u, --account-sid=account-sid        A specific account SID to be used for deployment. Uses fields in .env otherwise
 
-  --assets                             Upload assets. Can be turned off with --no-assets
+  --[no-]assets                        Upload assets. Can be turned off with --no-assets
 
   --assets-folder=assets-folder        Specific folder name to be used for static assets
 
@@ -115,7 +112,7 @@ OPTIONS
 
   --force                              Will run deployment in force mode. Can be dangerous.
 
-  --functions                          Upload functions. Can be turned off with --no-functions
+  --[no-]functions                     Upload functions. Can be turned off with --no-functions
 
   --functions-env=functions-env        [default: dev] The environment name you want to use
 
@@ -123,18 +120,13 @@ OPTIONS
 
   --override-existing-project          Deploys Serverless project to existing service if a naming conflict has been
                                        found.
-
-  --project-name=project-name          DEPRECATED: Overrides the name of the project. Default: the name field in your
-                                       package.json
-
-  --service-sid=service-sid            SID of the Twilio Serverless service you want to deploy to.
 ```
 
-_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.9/src/commands/serverless/deploy.js)_
+_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-beta.0/src/commands/serverless/deploy.js)_
 
 ## `twilio serverless:init NAME`
 
-Creates a new Twilio Serverless project
+Creates a new Twilio Function project
 
 ```
 USAGE
@@ -144,12 +136,17 @@ ARGUMENTS
   NAME  Name of Serverless project and directory that will be created
 
 OPTIONS
-  -p, --project=project      Shorthand identifier for your Twilio project.
-  --account-sid=account-sid  An account SID or API key to be used for your project
-  --auth-token=auth-token    An auth token or API secret to be used for your project
+  -a, --account-sid=account-sid  The Account SID for your Twilio account
+  -p, --project=project          Shorthand identifier for your Twilio project.
+  -t, --auth-token=auth-token    Your Twilio account Auth Token
+
+  --import-credentials           Import credentials from the environment variables TWILIO_ACCOUNT_SID and
+                                 TWILIO_AUTH_TOKEN
+
+  --skip-credentials             Don't ask for Twilio account credentials or import them from the environment
 ```
 
-_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.9/src/commands/serverless/init.js)_
+_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-beta.0/src/commands/serverless/init.js)_
 
 ## `twilio serverless:list [TYPES]`
 
@@ -160,8 +157,7 @@ USAGE
   $ twilio serverless:list [TYPES]
 
 ARGUMENTS
-  TYPES  [default: environments,builds] Comma seperated list of things to list
-         (services,environments,functions,assets,variables)
+  TYPES  [default: services] Comma seperated list of things to list (services,environments,functions,assets,variables)
 
 OPTIONS
   -n, --service-name=service-name  Overrides the name of the Serverless project. Default: the name field in your
@@ -173,23 +169,16 @@ OPTIONS
 
   --auth-token=auth-token          Use a specific auth token for deployment. Uses fields from .env otherwise
 
-  --cwd=cwd                        Sets the directory of your existing Serverless project. Defaults to current directory
-
   --env=env                        Path to .env file for environment variables that should be installed
 
   --environment=environment        [default: dev] The environment to list variables for
 
   --extended-output                Show an extended set of properties on the output
 
-  --project-name=project-name      DEPRECATED: Overrides the name of the project. Default: the name field in your
-                                   package.json
-
-  --properties=properties          Specify the output properties you want to see. Works best on single types
-
   --service-sid=service-sid        Specific Serverless Service SID to run list for
 ```
 
-_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.9/src/commands/serverless/list.js)_
+_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-beta.0/src/commands/serverless/list.js)_
 
 ## `twilio serverless:new [FILENAME]`
 
@@ -207,7 +196,7 @@ OPTIONS
   --template=template
 ```
 
-_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.9/src/commands/serverless/new.js)_
+_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-beta.0/src/commands/serverless/new.js)_
 
 ## `twilio serverless:start [DIR]`
 
@@ -236,9 +225,9 @@ OPTIONS
 
   --legacy-mode              Enables legacy mode, it will prefix your asset paths with /assets
 
-  --live                     Always serve from the current functions (no caching)
+  --[no-]live                Always serve from the current functions (no caching)
 
-  --logs                     Toggles request logging
+  --[no-]logs                Toggles request logging
 
   --ngrok=ngrok              Uses ngrok to create and outfacing url
 
@@ -247,7 +236,7 @@ ALIASES
   $ twilio serverless:run
 ```
 
-_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-alpha.9/src/commands/serverless/start.js)_
+_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-beta.0/src/commands/serverless/start.js)_
 <!-- commandsstop -->
 #  Contributing
 
