@@ -5,6 +5,11 @@ declare module 'columnify' {
 
 declare module 'log-symbols';
 declare module 'boxen';
+declare module 'fast-redact' {
+  function createRedactor(options: {}): <T>(val: T) => string;
+
+  export = createRedactor;
+}
 
 /**
  * Chalk is currently behind on releases. As a result the correct TypeScript

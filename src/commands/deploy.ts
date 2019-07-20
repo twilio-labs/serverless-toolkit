@@ -209,7 +209,7 @@ export async function handler(flags: DeployCliFlags): Promise<void> {
     return;
   }
 
-  log('Deploy Config %O', config);
+  log('Deploy Config %P', config);
 
   checkConfigForCredentials(config);
 

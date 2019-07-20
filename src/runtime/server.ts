@@ -44,7 +44,7 @@ export async function createServer(
     ...config,
   };
 
-  log('Starting server with config: %o', config);
+  log('Starting server with config: %p', config);
 
   const app = express();
   app.use(bodyParser.urlencoded({ extended: false }));

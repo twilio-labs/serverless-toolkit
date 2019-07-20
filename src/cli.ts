@@ -1,10 +1,10 @@
 import yargs from 'yargs';
-
-import * as StartCommand from './commands/start';
-import * as NewCommand from './commands/new';
+import * as ActivateCommand from './commands/activate';
 import * as DeployCommand from './commands/deploy';
 import * as ListCommand from './commands/list';
-import * as ActivateCommand from './commands/activate';
+import * as NewCommand from './commands/new';
+import * as StartCommand from './commands/start';
+import './utils/debug';
 
 export async function run(rawArgs: string[]) {
   yargs

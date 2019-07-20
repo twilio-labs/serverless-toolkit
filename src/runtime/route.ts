@@ -106,7 +106,7 @@ export function functionToRoute(
     const event = constructEvent(req);
     log('Event for %s: %o', req.path, event);
     const context = constructContext(config);
-    log('Context for %s: %o', req.path, context);
+    log('Context for %s: %p', req.path, context);
 
     const callback: ServerlessCallback = function callback(
       err,

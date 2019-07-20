@@ -1,6 +1,6 @@
+import { TwilioResponse } from '@twilio-labs/serverless-runtime-types/types';
 import debug from 'debug';
 import { Response as ExpressResponse } from 'express';
-import { TwilioResponse } from '@twilio-labs/serverless-runtime-types/types';
 
 const log = debug('twilio-run:response');
 
@@ -31,7 +31,7 @@ export class Response implements TwilioResponse {
   }
 
   setHeaders(headersObject: Headers): void {
-    log('Setting headers to: %O', headersObject);
+    log('Setting headers to: %P', headersObject);
     if (typeof headersObject !== 'object') {
       return;
     }
@@ -39,13 +39,13 @@ export class Response implements TwilioResponse {
   }
 
   appendHeader(key: string, value: HeaderValue): void {
-    log('Appending header for %s as %s', key, value);
+    log('Appending header for %s', key, value);
     this.headers = this.headers || {};
     this.headers[key] = value;
   }
 
   applyToExpressResponse(res: ExpressResponse): void {
-    log('Setting values on response: %O', {
+    log('Setting values on response: %P', {
       statusCode: this.statusCode,
       headers: this.headers,
       body: this.body,

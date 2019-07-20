@@ -23,15 +23,15 @@ export async function handler(argv: StartCliFlags): Promise<void> {
   const command = getFullCommand(argv);
   await checkProjectStructure(config.baseDir, command);
 
-  log('Determined configuration: %o', config);
+  log('Determined configuration: %p', config);
   process.title = config.appName;
 
-  log('Set environment variables as: %o', config.env);
+  log('Set environment variables as: %r', config.env);
   process.env = config.env;
 
   if (config.inspect) {
     log(
-      'Starting inspector mode with following configuration: %o',
+      'Starting inspector mode with following configuration: %p',
       config.inspect
     );
     startInspector(config.inspect.hostPort, config.inspect.break);
