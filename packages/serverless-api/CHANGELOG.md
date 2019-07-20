@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.19](https://github.com/twilio-labs/serverless-api/compare/v1.0.0-alpha.18...v1.0.0-alpha.19) (2019-07-20)
+
+
+### Bug Fixes
+
+* **logs:** redact tokens/passwords/env vars from logs ([8ca6e3d](https://github.com/twilio-labs/serverless-api/commit/8ca6e3d))
+
+
+
 ## [1.0.0-alpha.18](https://github.com/twilio-labs/serverless-api/compare/v1.0.0-alpha.17...v1.0.0-alpha.18) (2019-07-19)
 
 
