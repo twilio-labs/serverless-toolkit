@@ -62,12 +62,23 @@ function printPlainRouteInfo(
 function prettyPrintAsset(asset: AssetInfo, config: StartCliConfig): string {
   const prefix = config.legacyMode ? '/asset' : '';
   const assetPath = prefix + asset.assetPath;
-  const link = terminalLink(assetPath, config.url + assetPath);
+  const pathAccess =
+    asset.access === 'public'
+      ? config.url + assetPath
+      : `Runtime.getAssets()['${asset.assetPath}']`;
+  const accessPrefix =
+    asset.access === 'private' ? chalk.cyan.bold('[private] ') : '';
+  const link = terminalLink(`${accessPrefix}${assetPath}`, pathAccess);
   return link;
 }
 
 function prettyPrintFunction(fn: FunctionInfo, config: StartCliConfig) {
-  const link = terminalLink(fn.functionPath, config.url + fn.functionPath);
+  const accessPrefix =
+    fn.access === 'protected' ? chalk.cyan.bold('[protected] ') : '';
+  const link = terminalLink(
+    `${accessPrefix}${fn.functionPath}`,
+    config.url + fn.functionPath
+  );
   return link;
 }
 
