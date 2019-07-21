@@ -30,6 +30,9 @@ export async function saveLatestDeploymentData(
   buildSid: string
 ): Promise<void> {
   const config = getConfig(cwd);
+  if (!config.has('serviceSid')) {
+    config.set('serviceSid', serviceSid);
+  }
   if (!config.has(`projects.${projectId}.serviceSid`)) {
     config.set(`projects.${projectId}.serviceSid`, serviceSid);
   }
