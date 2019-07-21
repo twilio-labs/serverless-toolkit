@@ -1,5 +1,6 @@
 import Conf from 'conf';
 import kebabCase from 'lodash.kebabcase';
+import { SharedFlags } from '../commands/shared';
 import { CliInfo } from '../commands/types';
 import { ActivateCliFlags } from './activate';
 import { DeployCliFlags } from './deploy';
@@ -116,12 +117,10 @@ export function readSpecializedConfig<T extends keyof CommandConfigurations>(
   return result;
 }
 
-export function mergeFlagsAndConfig<T extends { [key: string]: any }>(
-  config: Partial<T>,
-  flags: T,
-  cliInfo: CliInfo
-): T {
-  return Object.keys(flags).reduce(
+export function mergeFlagsAndConfig<
+  T extends SharedFlags & { [key: string]: any }
+>(config: Partial<T>, flags: T, cliInfo: CliInfo): T {
+  const mergedResult = Object.keys(flags).reduce(
     (result: T, key: string) => {
       let value = flags[key];
       const opt = cliInfo.options[kebabCase(key)];
@@ -135,4 +134,14 @@ export function mergeFlagsAndConfig<T extends { [key: string]: any }>(
     },
     { ...(config as T) }
   );
+
+  if (
+    typeof config.cwd === 'string' &&
+    config.cwd !== process.cwd() &&
+    flags.cwd === process.cwd()
+  ) {
+    mergedResult.cwd = config.cwd;
+  }
+
+  return mergedResult;
 }
