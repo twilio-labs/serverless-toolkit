@@ -5,6 +5,17 @@ export type SharedFlags = {
   cwd?: string;
 };
 
+export type SharedFlagsWithCrdentials = SharedFlags & {
+  accountSid?: string;
+  authToken?: string;
+  env?: string;
+} & {
+  _cliDefault?: {
+    username: string;
+    password: string;
+  };
+};
+
 export const sharedCliOptions: { [key: string]: Options } = {
   config: {
     alias: 'c',

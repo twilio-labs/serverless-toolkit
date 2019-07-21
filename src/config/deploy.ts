@@ -1,26 +1,25 @@
 import { DeployLocalProjectConfig } from '@twilio-labs/serverless-api';
-import dotenv from 'dotenv';
 import path from 'path';
 import { Arguments } from 'yargs';
 import { cliInfo } from '../commands/deploy';
-import { SharedFlags } from '../commands/shared';
-import { deprecateFunctionsEnv, deprecateProjectName } from '../commands/utils';
+import { SharedFlagsWithCrdentials } from '../commands/shared';
+import { deprecateFunctionsEnv } from '../commands/utils';
 import { getFunctionServiceSid } from '../serverless-api/utils';
-import { EnvironmentVariablesWithAuth } from '../types/generic';
-import { fileExists, readFile } from '../utils/fs';
 import { mergeFlagsAndConfig, readSpecializedConfig } from './global';
+import {
+  getCredentialsFromFlags,
+  getServiceNameFromFlags,
+  readLocalEnvFile,
+  readPackageJsonContent,
+} from './utils';
 
 export type DeployCliFlags = Arguments<
-  SharedFlags & {
-    cwd?: string;
+  SharedFlagsWithCrdentials & {
     serviceSid?: string;
     functionsEnv?: string;
     environment: string;
     projectName?: string;
     serviceName?: string;
-    accountSid?: string;
-    authToken?: string;
-    env?: string;
     overrideExistingProject: boolean;
     force: boolean;
     functions: boolean;
@@ -28,17 +27,13 @@ export type DeployCliFlags = Arguments<
     assetsFolder?: string;
     functionsFolder?: string;
   }
-> & {
-  _cliDefault?: {
-    username: string;
-    password: string;
-  };
-};
+>;
 
 export async function getConfigFromFlags(
   flags: DeployCliFlags
 ): Promise<DeployLocalProjectConfig> {
-  const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
+  let cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
+  flags.cwd = cwd;
 
   if (typeof flags.functionsEnv !== 'undefined') {
     deprecateFunctionsEnv();
@@ -54,42 +49,16 @@ export async function getConfigFromFlags(
   });
 
   flags = mergeFlagsAndConfig(configFlags, flags, cliInfo);
+  cwd = flags.cwd || cwd;
 
-  let accountSid = '';
-  let authToken = '';
-  let localEnv: EnvironmentVariablesWithAuth = {};
-
-  const envPath = path.resolve(cwd, flags.env || '.env');
-
-  if (await fileExists(envPath)) {
-    const contentEnvFile = await readFile(envPath, 'utf8');
-    localEnv = dotenv.parse(contentEnvFile);
-
-    accountSid =
-      flags.accountSid ||
-      localEnv.ACCOUNT_SID ||
-      (flags._cliDefault && flags._cliDefault.username) ||
-      '';
-    authToken =
-      flags.authToken ||
-      localEnv.AUTH_TOKEN ||
-      (flags._cliDefault && flags._cliDefault.password) ||
-      '';
-  } else if (flags.env) {
-    throw new Error(`Failed to find .env file at "${envPath}"`);
-  }
+  const { accountSid, authToken } = await getCredentialsFromFlags(flags);
+  const { localEnv, envPath } = await readLocalEnvFile(flags);
 
   const serviceSid =
     flags.serviceSid ||
     (await getFunctionServiceSid(cwd, flags.config, 'deployConfig'));
 
-  const pkgJsonPath = path.join(cwd, 'package.json');
-  if (!(await fileExists(pkgJsonPath))) {
-    throw new Error('Failed to find package.json file');
-  }
-
-  const pkgContent = await readFile(pkgJsonPath, 'utf8');
-  const pkgJson = JSON.parse(pkgContent);
+  const pkgJson = await readPackageJsonContent(flags);
 
   const env = {
     ...localEnv,
@@ -105,13 +74,7 @@ export async function getConfigFromFlags(
   delete env.ACCOUNT_SID;
   delete env.AUTH_TOKEN;
 
-  let serviceName: string | undefined = flags.serviceName || pkgJson.name;
-  if (typeof flags.projectName !== 'undefined') {
-    deprecateProjectName();
-    if (!serviceName) {
-      serviceName = flags.projectName;
-    }
-  }
+  let serviceName: string | undefined = await getServiceNameFromFlags(flags);
 
   if (!serviceName) {
     throw new Error(

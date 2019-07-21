@@ -1,13 +1,12 @@
 import { ActivateConfig as ApiActivateConfig } from '@twilio-labs/serverless-api';
-import dotenv from 'dotenv';
 import path from 'path';
 import { Arguments } from 'yargs';
 import checkForValidServiceSid from '../checks/check-service-sid';
 import { cliInfo } from '../commands/activate';
-import { SharedFlags } from '../commands/shared';
+import { SharedFlagsWithCrdentials } from '../commands/shared';
 import { getFullCommand } from '../commands/utils';
-import { fileExists, readFile } from '../utils/fs';
 import { mergeFlagsAndConfig, readSpecializedConfig } from './global';
+import { getCredentialsFromFlags } from './utils';
 
 type ActivateConfig = ApiActivateConfig & {
   cwd: string;
@@ -16,9 +15,7 @@ type ActivateConfig = ApiActivateConfig & {
 };
 
 export type ActivateCliFlags = Arguments<
-  SharedFlags & {
-    accountSid?: string;
-    authToken?: string;
+  SharedFlagsWithCrdentials & {
     cwd?: string;
     serviceSid?: string;
     buildSid?: string;
@@ -26,19 +23,14 @@ export type ActivateCliFlags = Arguments<
     environment: string;
     createEnvironment: boolean;
     force: boolean;
-    env?: string;
   }
-> & {
-  _cliDefault?: {
-    username: string;
-    password: string;
-  };
-};
+>;
 
 export async function getConfigFromFlags(
   flags: ActivateCliFlags
 ): Promise<ActivateConfig> {
-  const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
+  let cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
+  flags.cwd = cwd;
   const configFlags = readSpecializedConfig(
     cwd,
     flags.config,
@@ -50,40 +42,9 @@ export async function getConfigFromFlags(
   );
 
   flags = mergeFlagsAndConfig(configFlags, flags, cliInfo);
+  cwd = flags.cwd || cwd;
 
-  let { accountSid: rawAccountSid, authToken: rawAuthToken } = flags;
-
-  let accountSid = '';
-  if (typeof rawAccountSid === 'string') {
-    accountSid = rawAccountSid;
-  }
-
-  let authToken = '';
-  if (typeof rawAuthToken === 'string') {
-    authToken = rawAuthToken;
-  }
-
-  if (!accountSid || !authToken) {
-    const envPath = path.resolve(cwd, flags.env || '.env');
-    let contentEnvFile;
-    if (!(await fileExists(envPath))) {
-      contentEnvFile = '';
-    } else {
-      contentEnvFile = await readFile(envPath, 'utf8');
-    }
-
-    const localEnv = dotenv.parse(contentEnvFile);
-    accountSid =
-      accountSid ||
-      localEnv.ACCOUNT_SID ||
-      (flags._cliDefault && flags._cliDefault.username) ||
-      '';
-    authToken =
-      authToken ||
-      localEnv.AUTH_TOKEN ||
-      (flags._cliDefault && flags._cliDefault.password) ||
-      '';
-  }
+  const { accountSid, authToken } = await getCredentialsFromFlags(flags);
 
   const command = getFullCommand(flags);
   const serviceSid = checkForValidServiceSid(command, flags.serviceSid);
