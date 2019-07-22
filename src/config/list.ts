@@ -29,6 +29,10 @@ export type ListCliFlags = Arguments<
   }
 >;
 
+function trim(str: string) {
+  return str.trim();
+}
+
 export async function getConfigFromFlags(
   flags: ListCliFlags
 ): Promise<ListConfig> {
@@ -51,7 +55,7 @@ export async function getConfigFromFlags(
 
   let serviceName = await getServiceNameFromFlags(flags);
 
-  const types = flags.types.split(',') as ListOptions[];
+  const types = flags.types.split(',').map(trim) as ListOptions[];
 
   return {
     cwd,
