@@ -1,0 +1,23 @@
+{
+  "name": "twilio-serverless-framework-integration",
+  "version": "1.0.0",
+  "description": "Serverless framework integartion for Twilio runtime",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twilio-labs/serverless-framework-integration.git"
+  },
+  "keywords": [],
+  "author": "stefan judis <stefanjudis@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/twilio-labs/serverless-framework-integration/issues"
+  },
+  "homepage": "https://github.com/twilio-labs/serverless-framework-integration#readme",
+  "dependencies": {
+    "@twilio-labs/serverless-api": "^1.0.0-alpha.19"
+  }
+}
