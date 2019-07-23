@@ -1,46 +1,18 @@
 import {
   fsHelpers,
-  AccessOptions,
-  FileInfo,
+  ServerlessResourceConfigWithFilePath,
 } from '@twilio-labs/serverless-api';
 
-export type FunctionInfo = FileInfo & {
-  functionPath: string;
-  access: AccessOptions;
-};
-
-export type AssetInfo = FileInfo & {
-  assetPath: string;
-  access: AccessOptions;
-};
-
 export type RouteInfo = {
-  functions: FunctionInfo[];
-  assets: AssetInfo[];
+  functions: ServerlessResourceConfigWithFilePath[];
+  assets: ServerlessResourceConfigWithFilePath[];
 };
 
 export async function getFunctionsAndAssets(
   baseDir: string
 ): Promise<RouteInfo> {
-  let {
-    functions: functionsRaw,
-    assets: assetsRaw,
-  } = await fsHelpers.getListOfFunctionsAndAssets(baseDir);
-  const functions = functionsRaw.map<FunctionInfo>(fileInfo => {
-    const info = fsHelpers.getPathAndAccessFromFileInfo(fileInfo, '.js');
-    return {
-      ...fileInfo,
-      functionPath: info.path,
-      access: info.access,
-    };
-  });
-  const assets = assetsRaw.map(fileInfo => {
-    const info = fsHelpers.getPathAndAccessFromFileInfo(fileInfo);
-    return {
-      ...fileInfo,
-      assetPath: info.path,
-      access: info.access,
-    };
-  });
+  let { functions, assets } = await fsHelpers.getListOfFunctionsAndAssets(
+    baseDir
+  );
   return { functions, assets };
 }

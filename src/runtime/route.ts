@@ -45,7 +45,11 @@ export function constructGlobalScope(config: StartCliConfig): void {
   (global as any)['Functions'] = GlobalRuntime.getFunctions();
   (global as any)['Response'] = Response;
 
-  if (config.env.ACCOUNT_SID && config.env.AUTH_TOKEN) {
+  if (
+    config.env.ACCOUNT_SID &&
+    config.env.AUTH_TOKEN &&
+    config.env.ACCOUNT_SID.startsWith('AC')
+  ) {
     (global as any)['twilioClient'] = twilio(
       config.env.ACCOUNT_SID,
       config.env.AUTH_TOKEN

@@ -1,24 +1,20 @@
 import {
+  AssetResource,
   DeployLocalProjectConfig,
   DeployResult,
+  FunctionResource,
 } from '@twilio-labs/serverless-api';
 import chalk from 'chalk';
 import columnify from 'columnify';
 import { stripIndent } from 'common-tags';
 import { MergeExclusive } from 'type-fest';
-import { AssetInfo, FunctionInfo } from '../runtime/internal/runtime-paths';
 import { printObjectWithoutHeaders, shouldPrettyPrint } from './utils';
 
-function sortByAccess<T extends MergeExclusive<AssetInfo, FunctionInfo>>(
-  resA: T,
-  resB: T
-) {
-  if (resA.access === resB.access) {
-    if (resA.functionPath) {
-      return resA.functionPath.localeCompare(resB.functionPath || '');
-    } else if (resA.assetPath) {
-      return resA.assetPath.localeCompare(resB.assetPath || '');
-    }
+function sortByAccess<
+  T extends MergeExclusive<AssetResource, FunctionResource>
+>(resA: T, resB: T) {
+  if (resA.access === resB.access && resA.path && resB.path) {
+    return resA.path.localeCompare(resB.path);
   }
   return resA.access.localeCompare(resB.access);
 }
@@ -30,10 +26,10 @@ function plainPrintDeployedResources(
   const functionsOutput: string = columnify(
     result.functionResources.sort(sortByAccess).map(fn => ({
       ...fn,
-      url: `https://${result.domain}${fn.functionPath}`,
+      url: `https://${result.domain}${fn.path}`,
     })),
     {
-      columns: ['access', 'functionPath', 'url'],
+      columns: ['access', 'path', 'url'],
       showHeaders: false,
     }
   );
@@ -41,10 +37,10 @@ function plainPrintDeployedResources(
   const assetsOutput: string = columnify(
     result.assetResources.sort(sortByAccess).map(asset => ({
       ...asset,
-      url: `https://${result.domain}${asset.assetPath}`,
+      url: `https://${result.domain}${asset.path}`,
     })),
     {
-      columns: ['access', 'assetPath', 'url'],
+      columns: ['access', 'path', 'url'],
       showHeaders: false,
     }
   );
@@ -126,7 +122,7 @@ function prettyPrintDeployedResources(
       .map(fn => {
         const accessPrefix =
           fn.access !== 'public' ? chalk`{bold [${fn.access}]} ` : '';
-        return chalk`   ${accessPrefix}{dim https://${result.domain}}${fn.functionPath}`;
+        return chalk`   ${accessPrefix}{dim https://${result.domain}}${fn.path}`;
       })
       .join('\n');
     console.log(chalk.bold.cyan('Functions:'));
@@ -139,7 +135,7 @@ function prettyPrintDeployedResources(
       .map(fn => {
         const accessPrefix =
           fn.access !== 'public' ? chalk`{bold [${fn.access}]} ` : '';
-        return chalk`   ${accessPrefix}{dim https://${result.domain}}${fn.assetPath}`;
+        return chalk`   ${accessPrefix}{dim https://${result.domain}}${fn.path}`;
       })
       .join('\n');
 

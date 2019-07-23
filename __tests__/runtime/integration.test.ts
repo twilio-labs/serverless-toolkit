@@ -1,12 +1,11 @@
 jest.unmock('twilio');
 
-import request from 'supertest';
-import { createServer } from '../../src/runtime/server';
-import { resolve, basename } from 'path';
-import cheerio from 'cheerio';
+import { Express } from 'express';
 import { readdirSync } from 'fs';
-import { Response as ExpressResponse, Express } from 'express';
+import { basename, resolve } from 'path';
+import request from 'supertest';
 import { StartCliConfig } from '../../src/runtime/cli/config';
+import { createServer } from '../../src/runtime/server';
 
 const TEST_DIR = resolve(__dirname, '../../fixtures');
 
@@ -36,9 +35,9 @@ function responseToSnapshotJson(response: InternalResponse) {
     // stack traces are different in every environment
     // let's not snapshot values that rely on it
     text = `${text.split('\n')[0]} ...`;
-    delete headers['content-length'];
-    delete headers['etag'];
   }
+  delete headers['content-length'];
+  delete headers['etag'];
 
   return {
     statusCode,
