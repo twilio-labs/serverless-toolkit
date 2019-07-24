@@ -52,6 +52,7 @@
     "typescript": "^3.4.2"
   },
   "dependencies": {
+    "@types/form-data": "^2.5.0",
     "@types/got": "^9.4.1",
     "@types/mime-types": "^2.1.0",
     "@types/node": "^11.13.2",
@@ -59,6 +60,7 @@
     "debug": "^4.1.1",
     "fast-redact": "^1.5.0",
     "file-type": "^10.10.0",
+    "form-data": "^2.5.0",
     "got": "^9.6.0",
     "mime-types": "^2.1.22",
     "recursive-readdir": "^2.2.2",

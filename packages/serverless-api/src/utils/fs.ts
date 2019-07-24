@@ -9,8 +9,8 @@ import {
   AccessOptions,
   DirectoryContent,
   FileInfo,
-  ServerlessResourceConfigWithFilePath,
   ResourcePathAndAccess,
+  ServerlessResourceConfigWithFilePath,
 } from '../types';
 
 const log = debug('twilio-serverless-api:fs');
@@ -101,6 +101,10 @@ export async function getDirContent(
       }
 
       if (extension && path.extname(filePath) !== extension) {
+        return undefined;
+      }
+
+      if (path.basename(filePath) === '.DS_Store') {
         return undefined;
       }
 

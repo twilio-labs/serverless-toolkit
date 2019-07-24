@@ -46,11 +46,11 @@ export type ServerlessResourceConfigWithFilePath = ServerlessResourceConfig & {
 
 export type FunctionResource = ServerlessResourceConfig & {
   sid: string;
-};
+} & Partial<ServerlessResourceConfigWithFilePath>;
 
 export type AssetResource = ServerlessResourceConfig & {
   sid: string;
-};
+} & Partial<ServerlessResourceConfigWithFilePath>;
 
 export type Dependency = {
   name: string;
