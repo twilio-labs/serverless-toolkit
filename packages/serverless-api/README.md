@@ -91,6 +91,31 @@ Unless a deployConfig. serviceSid is specified, it will try to create one. If a 
 
 Updates to the deployment will be emitted as events to status-update.
 
+```js
+const result = await client.deployProject({
+  env: {},
+  pkgJson: {},
+  serviceName: 'serverless-example',
+  functionsEnv: 'dev',
+  functions: [
+    {
+      name: 'hello-world',
+      path: '/hello-world-path',
+      content: await readFile(path.join(__dirname, 'some-dir', 'handler.js')),
+      access: 'public',
+    },
+  ],
+  assets: [
+    {
+      name: 'image',
+      path: '/foo/image.jpg',
+      access: 'public',
+      content: await readFile(path.join(__dirname, 'another-dir', 'image.jpg')),
+    },
+  ]
+});
+```
+
 [More in the Docs](https://serverless-api.twilio-labs.com/classes/_twilio_labs_serverless_api.twilioserverlessapiclient.html#deployproject)
 
 ### `client.getClient(): GotClient`

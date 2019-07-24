@@ -2,13 +2,14 @@
 
 import debug from 'debug';
 import fs from 'fs';
-import path from 'path';
+import path, { extname } from 'path';
 import recursiveReadDir from 'recursive-readdir';
 import { promisify } from 'util';
 import {
   AccessOptions,
   DirectoryContent,
   FileInfo,
+  ServerlessResourceConfigWithFilePath,
   ResourcePathAndAccess,
 } from '../types';
 
@@ -80,12 +81,12 @@ export function getPathAndAccessFromFileInfo(
  *
  * @export
  * @param {string} dir the directory to be checked
- * @param {string} [extensionn] extension to be ignored in the results
+ * @param {string} [extension] extension to be ignored in the results
  * @returns {Promise<FileInfo[]>}
  */
 export async function getDirContent(
   dir: string,
-  extensionn?: string
+  extension?: string
 ): Promise<FileInfo[]> {
   const rawFiles: string[] = (await readDir(dir)) as string[];
   const unfilteredFiles: (FileInfo | undefined)[] = await Promise.all(
@@ -99,7 +100,7 @@ export async function getDirContent(
         return undefined;
       }
 
-      if (extensionn && path.extname(filePath) !== extensionn) {
+      if (extension && path.extname(filePath) !== extension) {
         return undefined;
       }
 
@@ -203,9 +204,45 @@ export async function getListOfFunctionsAndAssets(
 
   log('Found Assets Directory "%s"', assetsDir);
 
-  const functions = functionsDir
+  const functionFiles = functionsDir
     ? await getDirContent(functionsDir, '.js')
     : [];
-  const assets = assetsDir ? await getDirContent(assetsDir) : [];
-  return { functions, assets };
+  const functionConfigs = await getServerlessConfigs(functionFiles, '.js');
+
+  const assetFiles = assetsDir ? await getDirContent(assetsDir) : [];
+  const assetConfigs = await getServerlessConfigs(assetFiles);
+
+  return { functions: functionConfigs, assets: assetConfigs };
+}
+
+/**
+ * Retrieve a files from a read directory
+ * and create access and public path from the file name
+ *
+ * @param {FileInfo[]} dirContent read files from a directory
+ * @param {string} [ignoreExtension] file extension to drop for serverless path
+ * @returns {Promise<ServerlessResourceConfigWithFilePath[]>}
+ */
+async function getServerlessConfigs(
+  dirContent: FileInfo[],
+  ignoreExtension?: string
+): Promise<ServerlessResourceConfigWithFilePath[]> {
+  return Promise.all(
+    dirContent.map(async file => {
+      const { path, access } = getPathAndAccessFromFileInfo(
+        file,
+        ignoreExtension
+      );
+      const encoding = extname(file.path) === '.js' ? 'utf8' : undefined;
+      const content = await readFile(file.path, encoding);
+
+      return {
+        name: path,
+        path,
+        access,
+        content,
+        filePath: file.path,
+      };
+    })
+  );
 }
