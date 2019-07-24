@@ -12,7 +12,7 @@ This plugin enables Twilio Functions and Assets support within the Serverless Fr
 
 ### Create a new Twilio service
 
-- Create a new service using the standard Node.js template, specifying a unique name for your app: `serverless create -t azure-nodejs -p <appName>`
+- Create a new service using the standard Node.js template, specifying a unique name for your app: `serverless create -t twilio-nodejs -p <appName>`
 - `cd` into the generated app directory: `cd <appName>`
 - Install the app's NPM dependencies, which includes this plugin: `npm install`
 
@@ -36,10 +36,18 @@ Deploying of a single function is also supported using the `--function` or `-f` 
 serverless deploy --function hello-world
 ```
 
-#### `serverless deploy`
+#### `serverless info` (WIP)
 
-Get information about the currently deployed runtime
+Get information about the currently deployed runtime.
 
 ```
-serverless info
+serverless info --types functions,assets
+```
+
+#### `serverless invoke` (WIP)
+
+Invoke a deployed function and see the result. Define the function using `--function` or `-f` parameter.
+
+```
+serverless invoke --function hello-world
 ```
