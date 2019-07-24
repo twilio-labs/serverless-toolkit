@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-rc.0](https://github.com/twilio-labs/serverless-api/compare/v1.0.0-alpha.19...v1.0.0-rc.0) (2019-07-24)
+
+
+### Bug Fixes
+
+* **api:** use new uploads API ([#9](https://github.com/twilio-labs/serverless-api/issues/9)) ([b349a1e](https://github.com/twilio-labs/serverless-api/commit/b349a1e))
+* **types:** expose friendly_name on environments ([df4cc28](https://github.com/twilio-labs/serverless-api/commit/df4cc28))
+
+
+### Features
+
+* **environments:** make naming of environments predictable ([68c51eb](https://github.com/twilio-labs/serverless-api/commit/68c51eb)), closes [#6](https://github.com/twilio-labs/serverless-api/issues/6)
+
+
+### BREAKING CHANGES
+
+* **api:** Removes uploadToAws as a function
+
+
+
 ## [1.0.0-alpha.19](https://github.com/twilio-labs/serverless-api/compare/v1.0.0-alpha.18...v1.0.0-alpha.19) (2019-07-20)
 
 
