@@ -16,7 +16,7 @@ import {
   createEnvironmentFromSuffix,
   createEnvironmentIfNotExists,
   getEnvironment,
-  getEnvironmnetFromSuffix,
+  getEnvironmentFromSuffix,
   isEnvironmentSid,
   listEnvironments,
 } from './api/environments';
@@ -138,7 +138,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
 
         if (typeof environmentSid === 'string') {
           if (!isEnvironmentSid(environmentSid)) {
-            const environment = await getEnvironmnetFromSuffix(
+            const environment = await getEnvironmentFromSuffix(
               environmentSid,
               serviceSid,
               this.client
@@ -221,7 +221,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
 
     if (!isEnvironmentSid(targetEnvironment)) {
       try {
-        const environment = await getEnvironmnetFromSuffix(
+        const environment = await getEnvironmentFromSuffix(
           targetEnvironment,
           serviceSid,
           this.client
@@ -235,16 +235,16 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
             this.client
           );
           targetEnvironment = environment.sid;
+        } else {
+          throw err;
         }
-        throw err;
       }
     }
 
-    let domain = '';
     if (!buildSid && sourceEnvironment) {
       let currentEnv;
       if (!isEnvironmentSid(sourceEnvironment)) {
-        currentEnv = await getEnvironmnetFromSuffix(
+        currentEnv = await getEnvironmentFromSuffix(
           sourceEnvironment,
           serviceSid,
           this.client
@@ -256,7 +256,6 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
           this.client
         );
       }
-      domain = currentEnv.domain_name;
       buildSid = currentEnv.build_sid;
     }
 
@@ -264,13 +263,18 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
       throw new Error('Could not determine build SID');
     }
 
+    const { domain_name } = await getEnvironment(
+      targetEnvironment,
+      serviceSid,
+      this.client
+    );
     await activateBuild(buildSid, targetEnvironment, serviceSid, this.client);
 
     return {
       serviceSid,
       buildSid,
       environmentSid: targetEnvironment,
-      domain,
+      domain: domain_name,
     };
   }
 

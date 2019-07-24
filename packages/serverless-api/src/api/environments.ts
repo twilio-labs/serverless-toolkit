@@ -12,7 +12,24 @@ const log = debug('twilio-serverless-api:environments');
  * @returns {string}
  */
 function getUniqueNameFromSuffix(suffix: string): string {
-  return suffix + '-environment';
+  return suffix.length === 0 ? 'production' : suffix;
+}
+
+/**
+ * In old versions of the tool, environments were created with the unique name
+ * "{domainSuffix}-environment" this function searches for that
+ *
+ * @param {EnvironmentResource[]} environments list of environment resources
+ * @param {string} domainSuffix the domain suffix that is searched for
+ * @returns {(EnvironmentResource | undefined)}
+ */
+function findLegacyEnvironments(
+  environments: EnvironmentResource[],
+  domainSuffix: string
+): EnvironmentResource | undefined {
+  return environments.find(
+    env => env.unique_name === `${domainSuffix}-environment`
+  );
 }
 
 /**
@@ -66,6 +83,7 @@ export async function createEnvironmentFromSuffix(
     body: {
       UniqueName: uniqueName,
       DomainSuffix: domainSuffix,
+      FriendlyName: `${uniqueName} Environment (Created by CLI)`,
     },
   });
   return (resp.body as unknown) as EnvironmentResource;
@@ -94,16 +112,32 @@ export async function listEnvironments(serviceSid: string, client: GotClient) {
  * @param {GotClient} client API client
  * @returns {Promise<EnvironmentResource>}
  */
-export async function getEnvironmnetFromSuffix(
+export async function getEnvironmentFromSuffix(
   domainSuffix: string,
   serviceSid: string,
   client: GotClient
 ): Promise<EnvironmentResource> {
-  const uniqueName = getUniqueNameFromSuffix(domainSuffix);
   const environments = await listEnvironments(serviceSid, client);
-  const env = environments.find(e => e.unique_name === uniqueName);
+  let foundEnvironments = environments.filter(
+    e => e.domain_suffix === domainSuffix
+  );
+
+  let env: EnvironmentResource | undefined;
+  if (foundEnvironments.length > 1) {
+    // this is an edge case where at one point you could create environments with the same domain suffix
+    env = foundEnvironments.find(
+      e => e.domain_suffix === domainSuffix && e.unique_name === domainSuffix
+    );
+  } else {
+    env = foundEnvironments[0];
+  }
+
   if (!env) {
-    throw new Error('Could not find environment');
+    // in the past the unique_name was set as `{domainSuffix}-environment`
+    env = findLegacyEnvironments(environments, domainSuffix);
+    if (!env) {
+      throw new Error('Could not find environment');
+    }
   }
   return env;
 }
@@ -122,10 +156,10 @@ export async function createEnvironmentIfNotExists(
   serviceSid: string,
   client: GotClient
 ) {
-  return createEnvironmentFromSuffix(domainSuffix, serviceSid, client).catch(
+  return getEnvironmentFromSuffix(domainSuffix, serviceSid, client).catch(
     err => {
       try {
-        return getEnvironmnetFromSuffix(domainSuffix, serviceSid, client);
+        return createEnvironmentFromSuffix(domainSuffix, serviceSid, client);
       } catch (err) {
         log('%O', err);
         throw err;
