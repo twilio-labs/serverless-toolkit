@@ -1,3 +1,5 @@
+jest.mock('window-size');
+
 import '@twilio-labs/serverless-runtime-types';
 import {
   Request as ExpressRequest,
@@ -15,6 +17,7 @@ import {
   handleSuccess,
   isTwiml,
 } from '../../src/runtime/route';
+import { wrapErrorInHtml } from '../../src/utils/error-html';
 
 const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
 
@@ -26,7 +29,7 @@ describe('handleError function', () => {
     const err = new Error('Failed to execute');
     handleError(err, (mockResponse as unknown) as ExpressResponse);
     expect(mockResponse.status).toHaveBeenCalledWith(500);
-    expect(mockResponse.send).toHaveBeenCalledWith(err.stack);
+    expect(mockResponse.send).toHaveBeenCalledWith(wrapErrorInHtml(err));
   });
 });
 
@@ -128,7 +131,7 @@ describe('constructContext function', () => {
   });
 
   test('getTwilioClient calls twilio constructor', () => {
-    const ACCOUNT_SID = 'ACxxxxx';
+    const ACCOUNT_SID = 'ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
     const AUTH_TOKEN = 'xyz';
 
     const config = {
@@ -138,12 +141,15 @@ describe('constructContext function', () => {
     const context = constructContext(config);
     const twilioFn = require('twilio');
     context.getTwilioClient();
-    expect(twilioFn).toHaveBeenCalledWith('ACxxxxx', 'xyz');
+    expect(twilioFn).toHaveBeenCalledWith(
+      'ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      'xyz'
+    );
   });
 });
 
 describe('constructGlobalScope function', () => {
-  const ACCOUNT_SID = 'ACxxxxx';
+  const ACCOUNT_SID = 'ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
   const AUTH_TOKEN = 'xyz';
   let config: StartCliConfig;
 

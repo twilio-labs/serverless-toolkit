@@ -11,6 +11,7 @@ import twilio from 'twilio';
 import { ServiceContext } from 'twilio/lib/rest/sync/v1/service';
 import { SyncListListInstance } from 'twilio/lib/rest/sync/v1/service/syncList';
 import { SyncMapListInstance } from 'twilio/lib/rest/sync/v1/service/syncMap';
+import { checkForValidAccountSid } from '../../checks/check-account-sid';
 import { StartCliConfig } from '../cli/config';
 
 const log = debug('twilio-run:runtime');
@@ -63,6 +64,13 @@ export function create({ env }: StartCliConfig): RuntimeInstance {
     const { serviceName } = options;
     delete options.serviceName;
 
+    checkForValidAccountSid(env.ACCOUNT_SID, {
+      shouldPrintMessage: true,
+      shouldThrowError: true,
+      functionName: `Runtime.getSync(${[...arguments]
+        .map((x: any) => JSON.stringify(x))
+        .join(',')})`,
+    });
     const client = twilio(env.ACCOUNT_SID, env.AUTH_TOKEN, options);
     const service = client.sync.services(
       serviceName || 'default'

@@ -104,7 +104,7 @@ export async function createServer(
                 `Could not find a "handler" function in file ${functionPath}`
               );
           }
-          functionToRoute(twilioFunction, config)(req, res, next);
+          functionToRoute(twilioFunction, config, functionPath)(req, res, next);
         } catch (err) {
           log('Failed to retrieve function. %O', err);
           res.status(404).send(`Could not find function ${functionPath}`);
