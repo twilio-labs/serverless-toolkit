@@ -1,26 +1,29 @@
+import { ServerlessResourceConfig } from '@twilio-labs/serverless-api';
 import boxen from 'boxen';
 import chalk from 'chalk';
 import logSymbols from 'log-symbols';
 import { StartCliConfig } from '../runtime/cli/config';
-import {
-  AssetInfo,
-  FunctionInfo,
-  getFunctionsAndAssets,
-} from '../runtime/internal/runtime-paths';
+import { getFunctionsAndAssets } from '../runtime/internal/runtime-paths';
 import { shouldPrettyPrint, terminalLink } from './utils';
 
-function printAsset(asset: AssetInfo, config: StartCliConfig): string {
+function printAsset(
+  asset: ServerlessResourceConfig,
+  config: StartCliConfig
+): string {
   const prefix = config.legacyMode ? '/asset' : '';
-  return chalk`{dim ${config.url}${prefix}}${asset.assetPath}`;
+  return chalk`{dim ${config.url}${prefix}}${asset.path}`;
 }
 
-function printFunction(fn: FunctionInfo, config: StartCliConfig): string {
-  return chalk`{dim ${config.url}}${fn.functionPath}`;
+function printFunction(
+  fn: ServerlessResourceConfig,
+  config: StartCliConfig
+): string {
+  return chalk`{dim ${config.url}}${fn.path}`;
 }
 
 function printPlainRouteInfo(
-  functions: FunctionInfo[],
-  assets: AssetInfo[],
+  functions: ServerlessResourceConfig[],
+  assets: ServerlessResourceConfig[],
   config: StartCliConfig
 ): string {
   const functionHeading = 'Functions';
@@ -59,32 +62,35 @@ function printPlainRouteInfo(
   return output;
 }
 
-function prettyPrintAsset(asset: AssetInfo, config: StartCliConfig): string {
+function prettyPrintAsset(
+  asset: ServerlessResourceConfig,
+  config: StartCliConfig
+): string {
   const prefix = config.legacyMode ? '/asset' : '';
-  const assetPath = prefix + asset.assetPath;
+  const assetPath = prefix + asset.path;
   const pathAccess =
     asset.access === 'public'
       ? config.url + assetPath
-      : `Runtime.getAssets()['${asset.assetPath}']`;
+      : `Runtime.getAssets()['${asset.path}']`;
   const accessPrefix =
     asset.access === 'private' ? chalk.cyan.bold('[private] ') : '';
   const link = terminalLink(`${accessPrefix}${assetPath}`, pathAccess);
   return link;
 }
 
-function prettyPrintFunction(fn: FunctionInfo, config: StartCliConfig) {
+function prettyPrintFunction(
+  fn: ServerlessResourceConfig,
+  config: StartCliConfig
+) {
   const accessPrefix =
     fn.access === 'protected' ? chalk.cyan.bold('[protected] ') : '';
-  const link = terminalLink(
-    `${accessPrefix}${fn.functionPath}`,
-    config.url + fn.functionPath
-  );
+  const link = terminalLink(`${accessPrefix}${fn.path}`, config.url + fn.path);
   return link;
 }
 
 function printPrettyRouteInfo(
-  functions: FunctionInfo[],
-  assets: AssetInfo[],
+  functions: ServerlessResourceConfig[],
+  assets: ServerlessResourceConfig[],
   config: StartCliConfig
 ): string {
   const functionHeading = chalk`{green.bold Twilio functions available:}`;

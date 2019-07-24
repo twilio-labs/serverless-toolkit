@@ -89,7 +89,7 @@ export async function createServer(
       const routeInfo = routeMap.get(req.path);
 
       if (routeInfo && routeInfo.type === 'function') {
-        const functionPath = routeInfo.path;
+        const functionPath = routeInfo.filePath;
         try {
           if (!functionPath) {
             throw new Error('Missing function path');
@@ -110,11 +110,11 @@ export async function createServer(
           res.status(404).send(`Could not find function ${functionPath}`);
         }
       } else if (routeInfo && routeInfo.type === 'asset') {
-        if (routeInfo.path) {
+        if (routeInfo.filePath) {
           if (routeInfo.access === 'private') {
             res.status(403).send('This asset has been marked as private');
           } else {
-            res.sendFile(routeInfo.path);
+            res.sendFile(routeInfo.filePath);
           }
         } else {
           res.status(404).send('Could not find asset');

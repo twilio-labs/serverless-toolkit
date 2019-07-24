@@ -1,13 +1,14 @@
-import { RouteInfo, AssetInfo, FunctionInfo } from './runtime-paths';
-import { MergeExclusive, Merge } from 'type-fest';
+import { ServerlessResourceConfigWithFilePath } from '@twilio-labs/serverless-api';
+import { Merge } from 'type-fest';
+import { RouteInfo } from './runtime-paths';
 
 type ExtendedRouteInfo =
-  | Merge<{ type: 'function' }, FunctionInfo>
-  | Merge<{ type: 'asset' }, AssetInfo>;
+  | Merge<{ type: 'function' }, ServerlessResourceConfigWithFilePath>
+  | Merge<{ type: 'asset' }, ServerlessResourceConfigWithFilePath>;
 
 const allRoutes = new Map<string, ExtendedRouteInfo>();
-const assetsCache = new Set<AssetInfo>();
-const functionsCache = new Set<FunctionInfo>();
+const assetsCache = new Set<ServerlessResourceConfigWithFilePath>();
+const functionsCache = new Set<ServerlessResourceConfigWithFilePath>();
 
 export function setRoutes({ functions, assets }: RouteInfo) {
   allRoutes.clear();
@@ -15,22 +16,30 @@ export function setRoutes({ functions, assets }: RouteInfo) {
   functionsCache.clear();
 
   functions.forEach(fn => {
-    if (allRoutes.has(fn.functionPath)) {
-      throw new Error(`Duplicate. Path ${fn.functionPath} already exists`);
+    if (!fn.path) {
+      return;
+    }
+
+    if (allRoutes.has(fn.path)) {
+      throw new Error(`Duplicate. Path ${fn.path} already exists`);
     }
     functionsCache.add(fn);
-    allRoutes.set(fn.functionPath, {
+    allRoutes.set(fn.path, {
       ...fn,
       type: 'function',
     });
   });
 
   assets.forEach(asset => {
-    if (allRoutes.has(asset.assetPath)) {
-      throw new Error(`Duplicate. Path ${asset.assetPath} already exists`);
+    if (!asset.path) {
+      return;
+    }
+
+    if (allRoutes.has(asset.path)) {
+      throw new Error(`Duplicate. Path ${asset.path} already exists`);
     }
     assetsCache.add(asset);
-    allRoutes.set(asset.assetPath, {
+    allRoutes.set(asset.path, {
       ...asset,
       type: 'asset',
     });

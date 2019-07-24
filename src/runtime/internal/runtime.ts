@@ -29,8 +29,8 @@ function getAssets(): AssetResourceMap {
     if (asset.access === 'private') {
       const prefix =
         process.env.TWILIO_FUNCTIONS_LEGACY_MODE === 'true' ? '/assets' : '';
-      const open = () => readFileSync(asset.path, 'utf8');
-      result[prefix + asset.assetPath] = { path: asset.path, open };
+      const open = () => readFileSync(asset.filePath, 'utf8');
+      result[prefix + asset.path] = { path: asset.filePath, open };
     }
   }
   log('Found the following assets available: %O', result);
@@ -45,7 +45,7 @@ function getFunctions(): ResourceMap {
 
   const result: ResourceMap = {};
   for (const fn of functions) {
-    result[fn.functionPath.substr(1)] = { path: fn.path };
+    result[fn.path.substr(1)] = { path: fn.filePath };
   }
   log('Found the following functions available: %O', result);
   return result;

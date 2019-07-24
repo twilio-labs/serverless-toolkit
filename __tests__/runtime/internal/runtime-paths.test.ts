@@ -6,22 +6,30 @@ jest.doMock('@twilio-labs/serverless-api', () => {
       return Promise.resolve({
         assets: [
           {
-            name: 'example.html',
-            path: '/var/task/handlers/example.html',
+            name: '/example.html',
+            path: '/example.html',
+            access: 'public',
+            content: '',
           },
           {
-            name: 'secret.private.html',
-            path: '/var/task/handlers/secret.private.html',
+            name: '/secret.html',
+            path: '/secret.html',
+            access: 'private',
+            content: '',
           },
         ],
         functions: [
           {
-            name: 'sms/reply.js',
-            path: '/var/task/handlers/sms/reply.js',
+            name: '/sms/reply.js',
+            path: '/sms/reply.js',
+            access: 'public',
+            content: '',
           },
           {
-            name: 'token.protected.js',
-            path: '/var/task/handlers/token.protected.js',
+            name: '/token.js',
+            path: '/token.js',
+            access: 'protected',
+            content: '',
           },
         ],
       });
@@ -32,30 +40,44 @@ jest.doMock('@twilio-labs/serverless-api', () => {
   return mod;
 });
 
-import { getFunctionsAndAssets } from '../../../src/runtime/internal/runtime-paths';
-
 import { fsHelpers } from '@twilio-labs/serverless-api';
+import { getFunctionsAndAssets } from '../../../src/runtime/internal/runtime-paths';
 
 test('calls the right functions', async () => {
   const result = await getFunctionsAndAssets('/var/task/handlers');
   expect(fsHelpers.getListOfFunctionsAndAssets).toHaveBeenCalled();
-  expect(fsHelpers.getPathAndAccessFromFileInfo).toHaveBeenCalled();
 });
 
 test('returns the right functions and assets', async () => {
-  const { functions } = await getFunctionsAndAssets('/var/task/handlers');
+  const { functions, assets } = await getFunctionsAndAssets(
+    '/var/task/handlers'
+  );
   expect(functions).toEqual([
     {
-      functionPath: '/sms/reply',
+      name: '/sms/reply.js',
+      path: '/sms/reply.js',
       access: 'public',
-      name: 'sms/reply.js',
-      path: '/var/task/handlers/sms/reply.js',
+      content: '',
     },
     {
-      functionPath: '/token',
+      name: '/token.js',
+      path: '/token.js',
       access: 'protected',
-      name: 'token.protected.js',
-      path: '/var/task/handlers/token.protected.js',
+      content: '',
+    },
+  ]);
+  expect(assets).toEqual([
+    {
+      name: '/example.html',
+      path: '/example.html',
+      access: 'public',
+      content: '',
+    },
+    {
+      name: '/secret.html',
+      path: '/secret.html',
+      access: 'private',
+      content: '',
     },
   ]);
 });
