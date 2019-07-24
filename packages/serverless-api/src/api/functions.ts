@@ -1,19 +1,16 @@
 /** @module @twilio-labs/serverless-api/dist/api */
 
 import debug from 'debug';
-import { extname } from 'path';
 import {
-  FileInfo,
   FunctionApiResource,
+  ServerlessResourceConfig,
   FunctionList,
   FunctionResource,
   GotClient,
-  RawFunctionWithPath,
   Sid,
   VersionResource,
 } from '../types';
 import { uploadToAws } from '../utils/aws-upload';
-import { getPathAndAccessFromFileInfo, readFile } from '../utils/fs';
 
 const log = debug('twilio-serverless-api:functions');
 
@@ -76,29 +73,21 @@ export async function listFunctionResources(
  * @returns {Promise<FunctionResource[]>}
  */
 export async function getOrCreateFunctionResources(
-  functions: FileInfo[],
+  functions: ServerlessResourceConfig[],
   serviceSid: string,
   client: GotClient
 ): Promise<FunctionResource[]> {
   const output: FunctionResource[] = [];
   const existingFunctions = await listFunctionResources(serviceSid, client);
-  const functionsToCreate: RawFunctionWithPath[] = [];
+  const functionsToCreate: ServerlessResourceConfig[] = [];
 
   functions.forEach(fn => {
-    const { path: functionPath, access } = getPathAndAccessFromFileInfo(
-      fn,
-      '.js'
-    );
-    const existingFn = existingFunctions.find(
-      f => functionPath === f.friendly_name
-    );
+    const existingFn = existingFunctions.find(f => fn.name === f.friendly_name);
     if (!existingFn) {
-      functionsToCreate.push({ ...fn, functionPath, access });
+      functionsToCreate.push({ ...fn });
     } else {
       output.push({
         ...fn,
-        functionPath,
-        access,
         sid: existingFn.sid,
       });
     }
@@ -107,7 +96,7 @@ export async function getOrCreateFunctionResources(
   const createdFunctions = await Promise.all(
     functionsToCreate.map(async fn => {
       const newFunction = await createFunctionResource(
-        fn.functionPath,
+        fn.name,
         serviceSid,
         client
       );
@@ -135,11 +124,8 @@ async function createFunctionVersion(
   client: GotClient
 ): Promise<VersionResource> {
   if (fn.access === 'private') {
-    throw new Error(`Function ${fn.functionPath} cannnot be "private". 
-Please rename the file "${fn.name}" to "${fn.name.replace(
-      '.private.',
-      '.protected.'
-    )}" or deploy it as an asset.`);
+    throw new Error(`Function ${fn.name} cannnot be "private".
+Please change it to have 'protected' access or deploy it as an asset.`);
   }
   try {
     const resp = await client.post(
@@ -147,7 +133,7 @@ Please rename the file "${fn.name}" to "${fn.name.replace(
       {
         form: true,
         body: {
-          Path: fn.functionPath,
+          Path: fn.path,
           Visibility: fn.access,
         },
       }
@@ -156,7 +142,7 @@ Please rename the file "${fn.name}" to "${fn.name.replace(
     return (resp.body as unknown) as VersionResource;
   } catch (err) {
     log('%O', err);
-    throw new Error(`Failed to upload Function ${fn.functionPath}`);
+    throw new Error(`Failed to upload Function ${fn.name}`);
   }
 }
 
@@ -174,22 +160,12 @@ export async function uploadFunction(
   serviceSid: string,
   client: GotClient
 ): Promise<Sid> {
-  let content: Buffer | string | undefined;
-  if (typeof fn.content !== 'undefined') {
-    content = fn.content;
-  } else if (typeof fn.path !== 'undefined') {
-    const encoding = extname(fn.path) === '.js' ? 'utf8' : undefined;
-    content = await readFile(fn.path, encoding);
-  } else {
-    throw new Error('Missing either content or path for file');
-  }
-
   const version = await createFunctionVersion(fn, serviceSid, client);
   const { pre_signed_upload_url: awsData } = version;
   const awsResult = await uploadToAws(
     awsData.url,
     awsData.kmsARN,
-    content,
+    fn.content,
     fn.name
   );
   return version.sid;

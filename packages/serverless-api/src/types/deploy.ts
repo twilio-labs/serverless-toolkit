@@ -6,7 +6,7 @@ import { DeployStatus } from './consts';
 import {
   AssetResource,
   EnvironmentVariables,
-  FileInfo,
+  ServerlessResourceConfig,
   FunctionResource,
 } from './generic';
 import { Sid } from './serverless-api';
@@ -53,11 +53,11 @@ export type DeployProjectConfig = ClientConfig &
     /**
      * List of functions that should be deployed
      */
-    functions: FileInfo[];
+    functions: ServerlessResourceConfig[];
     /**
      * List of assets that should be deployed
      */
-    assets: FileInfo[];
+    assets: ServerlessResourceConfig[];
   };
 
 /**

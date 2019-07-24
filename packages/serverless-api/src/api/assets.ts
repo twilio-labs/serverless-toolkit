@@ -8,14 +8,12 @@ import {
   AssetApiResource,
   AssetList,
   AssetResource,
-  FileInfo,
   GotClient,
-  RawAssetWithPath,
+  ServerlessResourceConfig,
   Sid,
   VersionResource,
 } from '../types';
 import { uploadToAws } from '../utils/aws-upload';
-import { getPathAndAccessFromFileInfo, readFile } from '../utils/fs';
 
 const log = debug('twilio-serverless-api:assets');
 
@@ -53,7 +51,10 @@ async function createAssetResource(
  * @param {GotClient} client API client
  * @returns {Promise<AssetApiResource[]>}
  */
-export async function listAssetResources(serviceSid: string, client: GotClient) {
+export async function listAssetResources(
+  serviceSid: string,
+  client: GotClient
+) {
   try {
     const resp = await client.get(`/Services/${serviceSid}/Assets`);
     const content = (resp.body as unknown) as AssetList;
@@ -73,26 +74,23 @@ export async function listAssetResources(serviceSid: string, client: GotClient) 
  * @returns {Promise<AssetResource[]>}
  */
 export async function getOrCreateAssetResources(
-  assets: FileInfo[],
+  assets: ServerlessResourceConfig[],
   serviceSid: string,
   client: GotClient
 ): Promise<AssetResource[]> {
   const output: AssetResource[] = [];
   const existingAssets = await listAssetResources(serviceSid, client);
-  const assetsToCreate: RawAssetWithPath[] = [];
+  const assetsToCreate: ServerlessResourceConfig[] = [];
 
   assets.forEach(asset => {
-    const { path: assetPath, access } = getPathAndAccessFromFileInfo(asset);
     const existingAsset = existingAssets.find(
-      x => assetPath === x.friendly_name
+      x => asset.name === x.friendly_name
     );
     if (!existingAsset) {
-      assetsToCreate.push({ ...asset, assetPath, access });
+      assetsToCreate.push(asset);
     } else {
       output.push({
         ...asset,
-        assetPath,
-        access,
         sid: existingAsset.sid,
       });
     }
@@ -101,7 +99,7 @@ export async function getOrCreateAssetResources(
   const createdAssets = await Promise.all(
     assetsToCreate.map(async asset => {
       const newAsset = await createAssetResource(
-        asset.assetPath,
+        asset.name,
         serviceSid,
         client
       );
@@ -134,7 +132,7 @@ async function createAssetVersion(
       {
         form: true,
         body: {
-          Path: asset.assetPath,
+          Path: asset.path,
           Visibility: asset.access,
         },
       }
@@ -161,22 +159,12 @@ export async function uploadAsset(
   serviceSid: string,
   client: GotClient
 ): Promise<Sid> {
-  let content: Buffer | string | undefined;
-  if (typeof asset.content !== 'undefined') {
-    content = asset.content;
-  } else if (typeof asset.path !== 'undefined') {
-    const encoding = extname(asset.path) === '.js' ? 'utf8' : undefined;
-    content = await readFile(asset.path, encoding);
-  } else {
-    throw new Error('Missing either content or path for file');
-  }
-
   const version = await createAssetVersion(asset, serviceSid, client);
   const { pre_signed_upload_url: awsData } = version;
   const awsResult = await uploadToAws(
     awsData.url,
     awsData.kmsARN,
-    content,
+    asset.content,
     asset.name
   );
   return version.sid;
