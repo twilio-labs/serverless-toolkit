@@ -37,6 +37,7 @@ export interface ServiceList {
 export interface EnvironmentResource extends ResourceBase {
   unique_name: string;
   domain_name: string;
+  friendly_name: string;
   build_sid: string;
   domain_suffix: string;
 }
