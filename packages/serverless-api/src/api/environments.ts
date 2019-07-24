@@ -12,24 +12,7 @@ const log = debug('twilio-serverless-api:environments');
  * @returns {string}
  */
 function getUniqueNameFromSuffix(suffix: string): string {
-  return suffix.length === 0 ? 'production' : suffix;
-}
-
-/**
- * In old versions of the tool, environments were created with the unique name
- * "{domainSuffix}-environment" this function searches for that
- *
- * @param {EnvironmentResource[]} environments list of environment resources
- * @param {string} domainSuffix the domain suffix that is searched for
- * @returns {(EnvironmentResource | undefined)}
- */
-function findLegacyEnvironments(
-  environments: EnvironmentResource[],
-  domainSuffix: string
-): EnvironmentResource | undefined {
-  return environments.find(
-    env => env.unique_name === `${domainSuffix}-environment`
-  );
+  return suffix.length === 0 ? 'production' : `${suffix}-environment`;
 }
 
 /**
@@ -83,6 +66,7 @@ export async function createEnvironmentFromSuffix(
     body: {
       UniqueName: uniqueName,
       DomainSuffix: domainSuffix,
+      // this property currently doesn't exist but for the future lets set it
       FriendlyName: `${uniqueName} Environment (Created by CLI)`,
     },
   });
@@ -125,19 +109,18 @@ export async function getEnvironmentFromSuffix(
   let env: EnvironmentResource | undefined;
   if (foundEnvironments.length > 1) {
     // this is an edge case where at one point you could create environments with the same domain suffix
+    // we'll pick the one that suits our naming convention
     env = foundEnvironments.find(
-      e => e.domain_suffix === domainSuffix && e.unique_name === domainSuffix
+      e =>
+        e.domain_suffix === domainSuffix &&
+        e.unique_name === getUniqueNameFromSuffix(domainSuffix)
     );
   } else {
     env = foundEnvironments[0];
   }
 
   if (!env) {
-    // in the past the unique_name was set as `{domainSuffix}-environment`
-    env = findLegacyEnvironments(environments, domainSuffix);
-    if (!env) {
-      throw new Error('Could not find environment');
-    }
+    throw new Error('Could not find environment');
   }
   return env;
 }

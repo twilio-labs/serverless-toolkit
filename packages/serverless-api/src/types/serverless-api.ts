@@ -6,8 +6,10 @@ export type Sid = string;
 
 export interface ResourceBase {
   sid: Sid;
+  account_sid: Sid;
   date_created: string;
   date_updated: string;
+  url: string;
 }
 
 export interface FunctionApiResource extends ResourceBase {
@@ -37,7 +39,6 @@ export interface ServiceList {
 export interface EnvironmentResource extends ResourceBase {
   unique_name: string;
   domain_name: string;
-  friendly_name: string;
   build_sid: string;
   domain_suffix: string;
 }
