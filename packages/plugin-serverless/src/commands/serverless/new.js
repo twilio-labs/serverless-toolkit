@@ -26,9 +26,9 @@ FunctionsNew.description = describe;
 
 FunctionsNew.args = [
   {
-    name: 'filename',
+    name: 'namespace',
     required: false,
-    description: 'Name for the function to be created',
+    description: 'The namespace your assets/functions should be grouped under',
   },
 ];
 
