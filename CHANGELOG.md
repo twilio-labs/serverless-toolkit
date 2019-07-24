@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-rc.0](https://github.com/twilio-labs/twilio-run/compare/v2.0.0-beta.13...v2.0.0-rc.0) (2019-07-24)
+
+
+### Bug Fixes
+
+* update code for new version of severless-api ([#46](https://github.com/twilio-labs/twilio-run/issues/46)) ([06e2b71](https://github.com/twilio-labs/twilio-run/commit/06e2b71)), closes [twilio-labs/serverless-api#8](https://github.com/twilio-labs/twilio-run/issues/8)
+
+
+
 ## [2.0.0-beta.13](https://github.com/twilio-labs/twilio-run/compare/v2.0.0-beta.12...v2.0.0-beta.13) (2019-07-24)
 
 
