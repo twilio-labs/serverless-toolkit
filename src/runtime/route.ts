@@ -11,6 +11,8 @@ import {
   Response as ExpressResponse,
 } from 'express';
 import twilio, { twiml } from 'twilio';
+import { checkForValidAccountSid } from '../checks/check-account-sid';
+import { wrapErrorInHtml } from '../utils/error-html';
 import { StartCliConfig } from './cli/config';
 import { Response } from './internal/response';
 import * as Runtime from './internal/runtime';
@@ -32,6 +34,12 @@ export function constructContext<T extends {} = {}>({
   [key: string]: string | undefined | Function;
 }> {
   function getTwilioClient(): twilio.Twilio {
+    checkForValidAccountSid(env.ACCOUNT_SID, {
+      shouldPrintMessage: true,
+      shouldThrowError: true,
+      functionName: 'context.getTwilioClient()',
+    });
+
     return twilio(env.ACCOUNT_SID, env.AUTH_TOKEN);
   }
   const DOMAIN_NAME = url.replace(/^https?:\/\//, '');
@@ -46,9 +54,8 @@ export function constructGlobalScope(config: StartCliConfig): void {
   (global as any)['Response'] = Response;
 
   if (
-    config.env.ACCOUNT_SID &&
-    config.env.AUTH_TOKEN &&
-    config.env.ACCOUNT_SID.startsWith('AC')
+    checkForValidAccountSid(config.env.ACCOUNT_SID) &&
+    config.env.AUTH_TOKEN
   ) {
     (global as any)['twilioClient'] = twilio(
       config.env.ACCOUNT_SID,
@@ -57,9 +64,14 @@ export function constructGlobalScope(config: StartCliConfig): void {
   }
 }
 
-export function handleError(err: Error, res: ExpressResponse) {
+export function handleError(
+  err: Error,
+  res: ExpressResponse,
+  functionFilePath?: string
+) {
   res.status(500);
-  res.send(err.stack);
+  res.type('text/html');
+  res.send(wrapErrorInHtml(err, functionFilePath));
 }
 
 export function isTwiml(obj: object): boolean {
@@ -98,7 +110,8 @@ export function handleSuccess(
 
 export function functionToRoute(
   fn: ServerlessFunctionSignature,
-  config: StartCliConfig
+  config: StartCliConfig,
+  functionFilePath?: string
 ): ExpressRequestHandler {
   constructGlobalScope(config);
 
@@ -118,7 +131,7 @@ export function functionToRoute(
     ) {
       log('Function execution %s finished', req.path);
       if (err) {
-        handleError(err, res);
+        handleError(err, res, functionFilePath);
         return;
       }
       handleSuccess(responseObject, res);
@@ -128,7 +141,7 @@ export function functionToRoute(
     try {
       fn(context, event, callback);
     } catch (err) {
-      callback(err.message);
+      callback(err);
     }
   };
 }
