@@ -71,6 +71,15 @@ async function getTwilioDeployConfig(serverless, options = {}) {
  */
 async function getFunctionResource(serverless, { name, config }) {
   let { access = 'public', path: fnPath, handler } = config;
+
+  if (!fnPath.startsWith('/')) {
+    throw new Error(
+      `Please start the function \`path\` property with a "/"...
+
+  ->  "${fnPath}" should be "/${fnPath}"`
+    );
+  }
+
   let content = await readFile(
     path.join(serverless.config.servicePath, `${handler}.js`)
   );
@@ -85,6 +94,15 @@ async function getFunctionResource(serverless, { name, config }) {
  */
 async function getAssetResource(serverless, { name, config }) {
   let { access = 'public', filePath, path: urlPath } = config;
+
+  if (!urlPath.startsWith('/')) {
+    throw new Error(
+      `Please start the asset \`path\` property with a "/"...
+
+  ->  "${urlPath}" should be "/${urlPath}"`
+    );
+  }
+
   let content = await readFile(
     path.join(serverless.config.servicePath, filePath)
   );
@@ -92,6 +110,11 @@ async function getAssetResource(serverless, { name, config }) {
   return { access, content, name, path: urlPath };
 }
 
+/**
+ *
+ * @param {*} twilioServerlessClient
+ * @param {*} param1
+ */
 async function getEnvironment(
   twilioServerlessClient,
   { environmentName, serviceName }
