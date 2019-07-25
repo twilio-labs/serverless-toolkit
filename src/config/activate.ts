@@ -3,7 +3,10 @@ import path from 'path';
 import { Arguments } from 'yargs';
 import checkForValidServiceSid from '../checks/check-service-sid';
 import { cliInfo } from '../commands/activate';
-import { SharedFlagsWithCrdentials } from '../commands/shared';
+import {
+  ExternalCliOptions,
+  SharedFlagsWithCrdentials,
+} from '../commands/shared';
 import { getFullCommand } from '../commands/utils';
 import { mergeFlagsAndConfig, readSpecializedConfig } from './global';
 import { getCredentialsFromFlags } from './utils';
@@ -27,7 +30,8 @@ export type ActivateCliFlags = Arguments<
 >;
 
 export async function getConfigFromFlags(
-  flags: ActivateCliFlags
+  flags: ActivateCliFlags,
+  externalCliOptions?: ExternalCliOptions
 ): Promise<ActivateConfig> {
   let cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
   flags.cwd = cwd;
@@ -36,7 +40,10 @@ export async function getConfigFromFlags(
     flags.config,
     'activateConfig',
     {
-      projectId: flags.accountSid,
+      projectId:
+        flags.accountSid ||
+        (externalCliOptions && externalCliOptions.accountSid) ||
+        undefined,
       environmentSuffix: flags.environment,
     }
   );
@@ -44,7 +51,10 @@ export async function getConfigFromFlags(
   flags = mergeFlagsAndConfig(configFlags, flags, cliInfo);
   cwd = flags.cwd || cwd;
 
-  const { accountSid, authToken } = await getCredentialsFromFlags(flags);
+  const { accountSid, authToken } = await getCredentialsFromFlags(
+    flags,
+    externalCliOptions
+  );
 
   const command = getFullCommand(flags);
   const serviceSid = checkForValidServiceSid(command, flags.serviceSid);

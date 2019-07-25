@@ -8,7 +8,7 @@ import ora, { Ora } from 'ora';
 import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
 import { ActivateCliFlags, getConfigFromFlags } from '../config/activate';
-import { sharedCliOptions } from './shared';
+import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 
 const log = debug('twilio-run:activate');
@@ -25,10 +25,13 @@ function handleError(err: Error, spinner: Ora) {
   process.exit(1);
 }
 
-export async function handler(flags: ActivateCliFlags): Promise<void> {
+export async function handler(
+  flags: ActivateCliFlags,
+  externalCliOptions?: ExternalCliOptions
+): Promise<void> {
   let config: ActivateConfig;
   try {
-    config = await getConfigFromFlags(flags);
+    config = await getConfigFromFlags(flags, externalCliOptions);
   } catch (err) {
     log(err);
     logError(err.message);

@@ -6,7 +6,7 @@ import { checkConfigForCredentials } from '../checks/check-credentials';
 import checkForValidServiceSid from '../checks/check-service-sid';
 import { getConfigFromFlags, ListCliFlags, ListConfig } from '../config/list';
 import { printListResult } from '../printers/list';
-import { sharedCliOptions } from './shared';
+import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
 
@@ -22,10 +22,13 @@ function handleError(err: Error) {
   process.exit(1);
 }
 
-export async function handler(flags: ListCliFlags): Promise<void> {
+export async function handler(
+  flags: ListCliFlags,
+  externalCliOptions?: ExternalCliOptions
+): Promise<void> {
   let config: ListConfig;
   try {
-    config = await getConfigFromFlags(flags);
+    config = await getConfigFromFlags(flags, externalCliOptions);
   } catch (err) {
     log(err);
     logError(err.message);

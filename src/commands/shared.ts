@@ -16,6 +16,15 @@ export type SharedFlagsWithCrdentials = SharedFlags & {
   };
 };
 
+export type ExternalCliOptions = {
+  username: string;
+  password: string;
+  accountSid?: string;
+  project?: string;
+  logLevel?: string;
+  outputFormat?: string;
+};
+
 export const sharedCliOptions: { [key: string]: Options } = {
   config: {
     alias: 'c',

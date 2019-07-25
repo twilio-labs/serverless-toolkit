@@ -6,6 +6,7 @@ import { Merge } from 'type-fest';
 import { Arguments, Argv } from 'yargs';
 import checkProjectStructure from '../checks/project-structure';
 import { downloadTemplate, fetchListOfTemplates } from '../templating/actions';
+import { ExternalCliOptions } from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
 
@@ -107,7 +108,10 @@ function getBaseDirectoryPath(): string {
   return currentDir;
 }
 
-export async function handler(flagsInput: NewCliFlags): Promise<void> {
+export async function handler(
+  flagsInput: NewCliFlags,
+  externalCliOptions?: ExternalCliOptions
+): Promise<void> {
   if (flagsInput.list) {
     await listTemplates();
     process.exit(0);

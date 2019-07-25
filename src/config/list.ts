@@ -5,7 +5,10 @@ import {
 import path from 'path';
 import { Arguments } from 'yargs';
 import { cliInfo } from '../commands/list';
-import { SharedFlagsWithCrdentials } from '../commands/shared';
+import {
+  ExternalCliOptions,
+  SharedFlagsWithCrdentials,
+} from '../commands/shared';
 import { getFunctionServiceSid } from '../serverless-api/utils';
 import { mergeFlagsAndConfig, readSpecializedConfig } from './global';
 import { getCredentialsFromFlags, getServiceNameFromFlags } from './utils';
@@ -34,20 +37,27 @@ function trim(str: string) {
 }
 
 export async function getConfigFromFlags(
-  flags: ListCliFlags
+  flags: ListCliFlags,
+  externalCliOptions?: ExternalCliOptions
 ): Promise<ListConfig> {
   let cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
   flags.cwd = cwd;
 
   const configFlags = readSpecializedConfig(cwd, flags.config, 'listConfig', {
-    projectId: flags.accountSid,
+    projectId:
+      flags.accountSid ||
+      (externalCliOptions && externalCliOptions.accountSid) ||
+      undefined,
     environmentSuffix: flags.environment,
   });
 
   flags = mergeFlagsAndConfig(configFlags, flags, cliInfo);
   cwd = flags.cwd || cwd;
 
-  const { accountSid, authToken } = await getCredentialsFromFlags(flags);
+  const { accountSid, authToken } = await getCredentialsFromFlags(
+    flags,
+    externalCliOptions
+  );
 
   const serviceSid =
     flags.serviceSid ||

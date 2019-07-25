@@ -5,7 +5,7 @@ import { readFileSync } from 'fs';
 import logSymbols from 'log-symbols';
 import path, { resolve } from 'path';
 import { Arguments } from 'yargs';
-import { SharedFlags } from '../commands/shared';
+import { ExternalCliOptions, SharedFlags } from '../commands/shared';
 import { CliInfo } from '../commands/types';
 import { EnvironmentVariablesWithAuth } from '../types/generic';
 import { fileExists } from '../utils/fs';
@@ -143,12 +143,17 @@ export function getInspectInfo(cli: StartCliFlags): InspectInfo | undefined {
 
 export async function getConfigFromCli(
   flags: StartCliFlags,
-  cliInfo: CliInfo = { options: {} }
+  cliInfo: CliInfo = { options: {} },
+  externalCliOptions?: ExternalCliOptions
 ): Promise<StartCliConfig> {
   const configFlags = readSpecializedConfig(
     flags.cwd || process.cwd(),
     flags.config,
-    'startConfig'
+    'startConfig',
+    {
+      projectId:
+        (externalCliOptions && externalCliOptions.accountSid) || undefined,
+    }
   ) as StartCliFlags;
   const cli = mergeFlagsAndConfig(configFlags, flags, cliInfo);
   const config = {} as StartCliConfig;

@@ -2,7 +2,10 @@ import { DeployLocalProjectConfig } from '@twilio-labs/serverless-api';
 import path from 'path';
 import { Arguments } from 'yargs';
 import { cliInfo } from '../commands/deploy';
-import { SharedFlagsWithCrdentials } from '../commands/shared';
+import {
+  ExternalCliOptions,
+  SharedFlagsWithCrdentials,
+} from '../commands/shared';
 import { deprecateFunctionsEnv } from '../commands/utils';
 import { getFunctionServiceSid } from '../serverless-api/utils';
 import { mergeFlagsAndConfig, readSpecializedConfig } from './global';
@@ -30,7 +33,8 @@ export type DeployCliFlags = Arguments<
 >;
 
 export async function getConfigFromFlags(
-  flags: DeployCliFlags
+  flags: DeployCliFlags,
+  externalCliOptions?: ExternalCliOptions
 ): Promise<DeployLocalProjectConfig> {
   let cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
   flags.cwd = cwd;
@@ -44,14 +48,20 @@ export async function getConfigFromFlags(
   }
 
   const configFlags = readSpecializedConfig(cwd, flags.config, 'deployConfig', {
-    projectId: flags.accountSid,
+    projectId:
+      flags.accountSid ||
+      (externalCliOptions && externalCliOptions.accountSid) ||
+      undefined,
     environmentSuffix: flags.environment,
   });
 
   flags = mergeFlagsAndConfig(configFlags, flags, cliInfo);
   cwd = flags.cwd || cwd;
 
-  const { accountSid, authToken } = await getCredentialsFromFlags(flags);
+  const { accountSid, authToken } = await getCredentialsFromFlags(
+    flags,
+    externalCliOptions
+  );
   const { localEnv, envPath } = await readLocalEnvFile(flags);
 
   const serviceSid =

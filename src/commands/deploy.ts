@@ -18,7 +18,7 @@ import {
   HttpError,
   saveLatestDeploymentData,
 } from '../serverless-api/utils';
-import { sharedCliOptions } from './shared';
+import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 import { constructCommandName, getFullCommand } from './utils';
 
@@ -73,7 +73,10 @@ function handleError(
   process.exit(1);
 }
 
-export async function handler(flags: DeployCliFlags): Promise<void> {
+export async function handler(
+  flags: DeployCliFlags,
+  externalCliOptions?: ExternalCliOptions
+): Promise<void> {
   const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
   flags.cwd = cwd;
   const command = getFullCommand(flags);
@@ -81,7 +84,7 @@ export async function handler(flags: DeployCliFlags): Promise<void> {
 
   let config: DeployLocalProjectConfig;
   try {
-    config = await getConfigFromFlags(flags);
+    config = await getConfigFromFlags(flags, externalCliOptions);
   } catch (err) {
     log(err);
     logError(err.message);
