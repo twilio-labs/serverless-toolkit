@@ -1,6 +1,6 @@
 # Twilio Runtime Serverless Plugin
 
-This plugin enables Twilio Functions and Assets support within the Serverless Framework.
+Serverless plugin for Twilio Runtime
 
 ## Getting started
 
