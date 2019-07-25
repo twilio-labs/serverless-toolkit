@@ -1,7 +1,7 @@
 import chalk from 'chalk';
+import inquirer from 'inquirer';
 import ora from 'ora';
 import path from 'path';
-import prompts from 'prompts';
 import { Merge } from 'type-fest';
 import { Arguments, Argv } from 'yargs';
 import checkProjectStructure from '../checks/project-structure';
@@ -45,17 +45,17 @@ async function listTemplates(): Promise<void> {
 }
 
 async function getMissingInfo(flags: NewCliFlags): Promise<NewConfig> {
-  const questions: prompts.PromptObject[] = [];
+  const questions: inquirer.Question[] = [];
   if (!flags.template) {
     const templates = await fetchListOfTemplates();
     const choices = templates.map(template => {
       return {
-        title: chalk`${template.name} - {dim ${template.description}}`,
+        name: chalk`${template.name} - {dim ${template.description}}`,
         value: template.id,
       };
     });
     questions.push({
-      type: 'select',
+      type: 'list',
       name: 'template',
       message: 'Select a template',
       choices,
@@ -64,7 +64,7 @@ async function getMissingInfo(flags: NewCliFlags): Promise<NewConfig> {
 
   if (!flags.namespace) {
     questions.push({
-      type: 'text',
+      type: 'input',
       name: 'namespace',
       message:
         'What should be the namespace your function(s) are placed under?',
@@ -85,7 +85,7 @@ async function getMissingInfo(flags: NewCliFlags): Promise<NewConfig> {
     };
   }
 
-  const answers = await prompts(questions);
+  const answers = await inquirer.prompt(questions);
   return {
     ...flags,
     template: flags.template || answers.template,
