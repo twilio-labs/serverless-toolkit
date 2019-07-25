@@ -143,9 +143,9 @@ Please change it to have "private" or "public" access.`);
     };
 
     const form = new FormData();
-    form.append('path', asset.path);
-    form.append('visibility', asset.access);
-    form.append('content', asset.content, contentOpts);
+    form.append('Path', asset.path);
+    form.append('Visibility', asset.access);
+    form.append('Content', asset.content, contentOpts);
 
     const resp = await client.post(
       `/Services/${serviceSid}/Assets/${asset.sid}/Versions`,
