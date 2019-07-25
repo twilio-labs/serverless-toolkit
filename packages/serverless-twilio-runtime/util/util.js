@@ -9,8 +9,10 @@ const { readFile } = utils;
 const { logMessage } = require('./log');
 
 /**
+ * Initialize the Twilio client and attach serverless logging to it
  *
- * @param {*} serverless
+ * @param {Object} serverless
+ * @returns TwilioServerlessApiClient
  */
 function getTwilioClient(serverless) {
   const { accountSid, authToken } = serverless.service.provider.config;
@@ -28,9 +30,11 @@ function getTwilioClient(serverless) {
 }
 
 /**
+ * Extract TwilioServerlessApiClient config from serverless object
  *
- * @param {*} serverless
- * @param {*} options
+ * @param {Object} serverless
+ * @param {Object} options
+ * @returns {Object}
  */
 async function getTwilioDeployConfig(serverless, options = {}) {
   const config = {
@@ -59,15 +63,16 @@ async function getTwilioDeployConfig(serverless, options = {}) {
     )
   );
 
-  console.log(config.assets);
-
   return config;
 }
 
 /**
+ * Retrieve configuration for runtime functions and
+ * load resources from disk
  *
- * @param {*} serverless
- * @param {*} param1
+ * @param {Object} serverless
+ * @param {Object} options
+ * @returns {Object}
  */
 async function getFunctionResource(serverless, { name, config }) {
   let { access = 'public', path: fnPath, handler } = config;
@@ -88,9 +93,12 @@ async function getFunctionResource(serverless, { name, config }) {
 }
 
 /**
+ * Retrieve configuration for runtime functions and
+ * load resources from disk
  *
- * @param {*} serverless
- * @param {*} param1
+ * @param {Object} serverless
+ * @param {Object} options
+ * @returns {Object}
  */
 async function getAssetResource(serverless, { name, config }) {
   let { access = 'public', filePath, path: urlPath } = config;
@@ -112,8 +120,9 @@ async function getAssetResource(serverless, { name, config }) {
 
 /**
  *
- * @param {*} twilioServerlessClient
- * @param {*} param1
+ * @param {TwilioServerlessApiClient} twilioServerlessClient
+ * @param {Object} options
+ * @returns {Object}
  */
 async function getEnvironment(
   twilioServerlessClient,
