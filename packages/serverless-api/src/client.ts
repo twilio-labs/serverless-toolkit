@@ -332,10 +332,10 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
             `Service with name "${config.serviceName}" already exists with SID "${alternativeServiceSid}".`
           );
           error.name = 'conflicting-servicename';
-          Object.defineProperty(err, 'serviceSid', {
+          Object.defineProperty(error, 'serviceSid', {
             value: alternativeServiceSid,
           });
-          Object.defineProperty(err, 'serviceName', {
+          Object.defineProperty(error, 'serviceName', {
             value: config.serviceName,
           });
           throw error;
