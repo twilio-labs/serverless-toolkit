@@ -140,9 +140,9 @@ Please change it to have 'protected' access or deploy it as an asset.`);
     };
 
     const form = new FormData();
-    form.append('path', fn.path);
-    form.append('visibility', fn.access);
-    form.append('content', fn.content, contentOpts);
+    form.append('Path', fn.path);
+    form.append('Visibility', fn.access);
+    form.append('Content', fn.content, contentOpts);
 
     const resp = await client.post(
       `/Services/${serviceSid}/Functions/${fn.sid}/Versions`,
