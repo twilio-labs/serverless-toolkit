@@ -18,7 +18,86 @@ This plugin enables Twilio Functions and Assets support within the Serverless Fr
 
 ### Deploy, test, and diagnose your Twilio runtime
 
-1. Now that you have the service on your local machine you can deploy your service using the credentials you find in [the Twilio Console](https://www.twilio.com/console/).
+Now that you have the service on your local machine you can deploy your service using the credentials you find in [the Twilio Console](https://www.twilio.com/console/). The best way to pass these to the serverless command is to define environment variables in you `serverless.yml`
+
+```yaml
+service: your-service # update this with your service name
+
+provider:
+  name: twilio
+
+  # Twilio access credentials (mandatory)
+  config:
+    accountSid: ${env:TWILIO_ACCOUNT_SID}
+    authToken: ${env:TWILIO_AUTH_TOKEN}
+```
+
+Note that you have to configure `provider.config` with a `accountSid` and `authToken` property.
+
+### Supported configuration - `serverless.yml`
+
+The Twilio runtime supports the following configuration options as of today:
+
+```yaml
+# serverless.yml
+
+# Name of your service
+service: your-service
+
+# Provider definition
+# all functions and assets
+# share the same provider configuration
+provider:
+  # Twilio runtime as your preferred provider
+  name: twilio
+
+  config:
+    accountSid: ${env:TWILIO_ACCOUNT_SID}
+    authToken: ${env:TWILIO_AUTH_TOKEN}
+
+  dependencies:
+    # Dependency definitions similar
+    # to dependencies in a package.json
+    # -> these dependencies will be available in the
+    #    Twilio Node.js runtime
+    asciiart-logo: '*'
+
+  # Twilio runtime supports several domains
+  # your functions and assets will be available under
+  # -> defaulting to 'dev'
+  environment: ${env:TWILIO_RUNTIME_ENV, 'dev'}
+
+  # Environment variables passed to your functions
+  # available in the Twilio runtim via `process.env`
+  environmentVars:
+    MY_MESSAGE: 'THIS IS cool stuff'
+    MY_OTHER_MESSAGE: 'THIS IS cool good stuff'
+
+# Twilio runtime has to be defined here
+plugins:
+  - twilio-runtime
+
+functions:
+  # Function name
+  hello-world:
+    # Path to the JS handler function in the project
+    handler: functions/hello-world
+    # URL path of the function after deployment
+    path: /hello-world-path
+    # visibility of the function (can be "public" or "protected")
+    access: public
+
+resources:
+  assets:
+    # Asset name
+    asset-image:
+      # path to the asset in the project
+      filePath: assets/image.jpg
+      # URL path to the asset after deployment
+      path: image.jpg
+      # visibility of the asset
+      access: public
+```
 
 ### Supported commands
 

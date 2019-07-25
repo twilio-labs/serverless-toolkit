@@ -59,6 +59,8 @@ async function getTwilioDeployConfig(serverless, options = {}) {
     )
   );
 
+  console.log(config.assets);
+
   return config;
 }
 
@@ -82,12 +84,12 @@ async function getFunctionResource(serverless, { name, config }) {
  * @param {*} param1
  */
 async function getAssetResource(serverless, { name, config }) {
-  let { access = 'public', path: assetPath } = config;
+  let { access = 'public', filePath, path: urlPath } = config;
   let content = await readFile(
-    path.join(serverless.config.servicePath, assetPath)
+    path.join(serverless.config.servicePath, filePath)
   );
 
-  return { access, content, name, path: assetPath };
+  return { access, content, name, path: urlPath };
 }
 
 async function getEnvironment(
