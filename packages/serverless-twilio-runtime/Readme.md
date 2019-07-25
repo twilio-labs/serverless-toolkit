@@ -51,15 +51,16 @@ provider:
   # Twilio runtime as your preferred provider
   name: twilio
 
+  # Auth credentials which you'll find at twilio.com/console
   config:
     accountSid: ${env:TWILIO_ACCOUNT_SID}
     authToken: ${env:TWILIO_AUTH_TOKEN}
 
+  # Dependency definitions similar
+  # to dependencies in a package.json
+  # -> these dependencies will be available in the
+  #    Twilio Node.js runtime
   dependencies:
-    # Dependency definitions similar
-    # to dependencies in a package.json
-    # -> these dependencies will be available in the
-    #    Twilio Node.js runtime
     asciiart-logo: '*'
 
   # Twilio runtime supports several domains
@@ -71,16 +72,15 @@ provider:
   # available in the Twilio runtim via `process.env`
   environmentVars:
     MY_MESSAGE: 'THIS IS cool stuff'
-    MY_OTHER_MESSAGE: 'THIS IS cool good stuff'
 
-# Twilio runtime has to be defined here
+# Twilio runtime has to be added a plugin
 plugins:
   - twilio-runtime
 
 functions:
   # Function name
   hello-world:
-    # Path to the JS handler function in the project
+    # Path to the JS handler function in the project (without file extension '.js')
     handler: functions/hello-world
     # URL path of the function after deployment
     path: /hello-world-path
