@@ -18,6 +18,6 @@
   },
   "homepage": "https://github.com/twilio-labs/serverless-framework-integration#readme",
   "dependencies": {
-    "@twilio-labs/serverless-api": "^1.0.0-alpha.19"
+    "@twilio-labs/serverless-api": "^1.0.0-rc.1"
   }
 }

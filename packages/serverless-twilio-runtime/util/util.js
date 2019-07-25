@@ -45,28 +45,19 @@ async function getTwilioDeployConfig(serverless, options = {}) {
     overrideExistingService: true
   };
 
-  if (options.deployAll) {
-    config.functions = await Promise.all(
-      Object.entries(serverless.service.functions).map(
-        async ([name, config]) =>
-          await getFunctionResource(serverless, { name, config })
-      )
-    );
+  config.functions = await Promise.all(
+    Object.entries(serverless.service.functions).map(
+      async ([name, config]) =>
+        await getFunctionResource(serverless, { name, config })
+    )
+  );
 
-    config.assets = await Promise.all(
-      Object.entries(serverless.service.resources.assets).map(
-        async ([name, config]) =>
-          await getAssetResource(serverless, { name, config })
-      )
-    );
-  } else if (options.deploySingleFunction) {
-    config.functions = [
-      await getFunctionResource(serverless, {
-        name: options.deploySingleFunction,
-        config: serverless.service.functions[options.deploySingleFunction]
-      })
-    ];
-  }
+  config.assets = await Promise.all(
+    Object.entries(serverless.service.resources.assets).map(
+      async ([name, config]) =>
+        await getAssetResource(serverless, { name, config })
+    )
+  );
 
   return config;
 }
@@ -99,7 +90,30 @@ async function getAssetResource(serverless, { name, config }) {
   return { access, content, name, path: assetPath };
 }
 
+async function getEnvironment(
+  twilioServerlessClient,
+  { environmentName, serviceName }
+) {
+  const { environments } = await twilioServerlessClient.list({
+    types: ['environments'],
+    serviceName
+  });
+
+  const environment = environments.find(
+    env => env.domain_suffix === environmentName
+  );
+
+  if (!environment) {
+    throw new Error(`
+  Configured environment "${environmentName}" could not be found.
+  Please make sure it is deployed to invoke its functions.`);
+  }
+
+  return environment;
+}
+
 module.exports = {
+  getEnvironment,
   getTwilioClient,
   getTwilioDeployConfig,
   readFile

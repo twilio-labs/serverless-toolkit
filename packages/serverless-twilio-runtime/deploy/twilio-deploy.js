@@ -15,7 +15,7 @@ class TwilioDeploy {
   async deploy() {
     const serverless = this.serverless;
     const twilioServerlessClient = getTwilioClient(serverless);
-    const config = await getTwilioDeployConfig(serverless, { deployAll: true });
+    const config = await getTwilioDeployConfig(serverless);
     const result = await twilioServerlessClient.deployProject(config);
 
     logDeployedResources(serverless, result);
