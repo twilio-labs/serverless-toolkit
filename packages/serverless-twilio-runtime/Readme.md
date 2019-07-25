@@ -12,13 +12,13 @@ Serverless plugin for Twilio Runtime
 
 ### Create a new Twilio service
 
-- Create a new service using the standard Node.js template, specifying a unique name for your app: `serverless create -t twilio-nodejs -p <appName>`
+- Create a new service using the standard Node.js template, specifying a unique name for your app: `serverless create -t twilio-runtime -p <appName>`
 - `cd` into the generated app directory: `cd <appName>`
 - Install the app's NPM dependencies, which includes this plugin: `npm install`
 
 ### Deploy, test, and diagnose your Twilio runtime
 
-Now that you have the service on your local machine you can deploy your service using the credentials you find in [the Twilio Console](https://www.twilio.com/console/). The best way to pass these to the serverless command is to define environment variables in you `serverless.yml`
+To deploy, you will need either some environment variables set or manually input the `accountSid` and `authToken` in the `provider.config` section of your `serverless.yml`. You can find the crednentials in [the Twilio Console](https://www.twilio.com/console/)
 
 ```yaml
 service: your-service # update this with your service name
@@ -34,7 +34,7 @@ provider:
 
 Note that you have to configure `provider.config` with a `accountSid` and `authToken` property.
 
-### Supported configuration - `serverless.yml`
+### All supported configuration - `serverless.yml`
 
 The Twilio runtime supports the following configuration options as of today:
 
@@ -101,7 +101,7 @@ resources:
 
 ### Supported commands
 
-#### `serverless deploy`
+#### Deploy the service - `serverless deploy`
 
 Deploy all functions and assets defined in your `serverless.yml`
 
@@ -126,7 +126,7 @@ Serverless: twilio-runtime: Asset available at: xxx-123-dev.twil.io/image.jpg
 
 ```
 
-#### `serverless info`
+#### Get service information - `serverless info`
 
 Get information about the currently deployed runtime.
 
@@ -161,7 +161,7 @@ Functions:
   url: https://xxx-123-dev.twil.io/hello-world
 ```
 
-#### `serverless invoke`
+#### Invoke a deployed function - `serverless invoke`
 
 Invoke a deployed function and see the result. Define the function using `--function` or `-f` parameter.
 
