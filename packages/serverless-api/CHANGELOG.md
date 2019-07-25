@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-rc.1](https://github.com/twilio-labs/serverless-api/compare/v1.0.0-rc.0...v1.0.0-rc.1) (2019-07-25)
+
+
+### Bug Fixes
+
+* **api:** update form field names to work with serverless-api ([2282def](https://github.com/twilio-labs/serverless-api/commit/2282def))
+
+
+
 ## [1.0.0-rc.0](https://github.com/twilio-labs/serverless-api/compare/v1.0.0-alpha.19...v1.0.0-rc.0) (2019-07-24)
 
 
