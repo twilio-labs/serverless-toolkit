@@ -401,6 +401,14 @@
       "integrity": "sha512-EaObqwIvayI5a8dCzhFrjKzVwKLxjoG9T6Ppd5CEo07LRKfQ8Yokw54r5+Wq7FaBQ+yXRvQAYPrHwya1/UFt9g==",
       "dev": true
     },
+    "@types/form-data": {
+      "version": "2.5.0",
+      "resolved": "https://registry.npmjs.org/@types/form-data/-/form-data-2.5.0.tgz",
+      "integrity": "sha512-23/wYiuckYYtFpL+4RPWiWmRQH2BjFuqCUi2+N3amB1a1Drv+i/byTrGvlLwRVLFNAZbwpbQ7JvTK+VCAPMbcg==",
+      "requires": {
+        "form-data": "*"
+      }
+    },
     "@types/fs-extra": {
       "version": "5.1.0",
       "resolved": "https://registry.npmjs.org/@types/fs-extra/-/fs-extra-5.1.0.tgz",
@@ -422,9 +430,9 @@
       }
     },
     "@types/got": {
-      "version": "9.6.2",
-      "resolved": "https://registry.npmjs.org/@types/got/-/got-9.6.2.tgz",
-      "integrity": "sha512-Md/d9kSfdyZvVqhmUb3l+YPCmvIZG7qmM9hvW7dKJfTwpaZ4HBSqYpPhz3Dh0ywTfaEHKlFvPL+HMXIcNzP2tw==",
+      "version": "9.6.3",
+      "resolved": "https://registry.npmjs.org/@types/got/-/got-9.6.3.tgz",
+      "integrity": "sha512-U6cPjwkJigmTNEsAbbmpsU4+Rb59wTkZ7+7xchi2e6uzimQKD5H0iXJTnqxIEtcF9UNV2fzfGJzbdhvpg0QzAg==",
       "requires": {
         "@types/node": "*",
         "@types/tough-cookie": "*",
@@ -3244,9 +3252,9 @@
       }
     },
     "eslint-plugin-jest": {
-      "version": "22.13.5",
-      "resolved": "https://registry.npmjs.org/eslint-plugin-jest/-/eslint-plugin-jest-22.13.5.tgz",
-      "integrity": "sha512-0SphCFkaHCW6PhTz7cCisuN/9ppBksSJgZVAnwJZ4OQAw8MOLY3DLjI+t4kkei6P3dZkefAfLT6ZPFKLlKbc1Q==",
+      "version": "22.13.6",
+      "resolved": "https://registry.npmjs.org/eslint-plugin-jest/-/eslint-plugin-jest-22.13.6.tgz",
+      "integrity": "sha512-wn3n9Djj+Dyi8AS1kvGOXpzUJfs9SJYhoZxIb49y4cwHRPaSgDHzSJPZX3sliZ3k8l6bYVeEGW76QvvqoOjSEw==",
       "dev": true,
       "requires": {
         "@typescript-eslint/experimental-utils": "^1.13.0"
@@ -8855,9 +8863,9 @@
       }
     },
     "webpack": {
-      "version": "4.36.1",
-      "resolved": "https://registry.npmjs.org/webpack/-/webpack-4.36.1.tgz",
-      "integrity": "sha512-Ej01/N9W8DVyhEpeQnbUdGvOECw0L46FxS12cCOs8gSK7bhUlrbHRnWkjiXckGlHjUrmL89kDpTRIkUk6Y+fKg==",
+      "version": "4.37.0",
+      "resolved": "https://registry.npmjs.org/webpack/-/webpack-4.37.0.tgz",
+      "integrity": "sha512-iJPPvL7XpbcbwOthbzpa2BSPlmGp8lGDokAj/LdWtK80rsPoPOdANSbDBf2GAVLKZD3GhCuQ/gGkgN9HWs0Keg==",
       "dev": true,
       "requires": {
         "@webassemblyjs/ast": "1.8.5",

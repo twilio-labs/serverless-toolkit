@@ -21,6 +21,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/twilio-labs/serverless-api.git"
+  },
   "keywords": [
     "twilio",
     "serverless"
