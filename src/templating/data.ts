@@ -4,7 +4,7 @@ import got from 'got';
 const log = debug('twilio-run:new:template-data');
 
 const TEMPLATES_URL =
-  'https://raw.githubusercontent.com/twilio-labs/function-templates/master/templates.json';
+  'https://raw.githubusercontent.com/twilio-labs/function-templates/next/templates.json';
 const CONTENT_BASE_URL =
   'https://api.github.com/repos/twilio-labs/function-templates/contents';
 
