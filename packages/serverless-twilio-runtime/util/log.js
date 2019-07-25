@@ -14,7 +14,7 @@ function logDeployedResources(serverless, result) {
     result.assetResources.forEach(asset =>
       logMessage(
         serverless,
-        `Asset available at: ${result.domain}/${asset.path}`
+        `Asset available at: ${result.domain}${asset.path}`
       )
     );
   }

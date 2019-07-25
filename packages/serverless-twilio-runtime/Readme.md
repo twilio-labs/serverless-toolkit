@@ -18,7 +18,7 @@ Serverless plugin for Twilio Runtime
 
 ### Deploy, test, and diagnose your Twilio runtime
 
-To deploy, you will need either some environment variables set or manually input the `accountSid` and `authToken` in the `provider.config` section of your `serverless.yml`. You can find the crednentials in [the Twilio Console](https://www.twilio.com/console/)
+To deploy, you will need either some environment variables set or manually input the `accountSid` and `authToken` in the `provider.config` section of your `serverless.yml`. You can find the crednentials in [the Twilio Console](https://www.twilio.com/console/).
 
 ```yaml
 service: your-service # update this with your service name
@@ -94,7 +94,7 @@ resources:
       # path to the asset in the project
       filePath: assets/image.jpg
       # URL path to the asset after deployment
-      path: image.jpg
+      path: /image.jpg
       # visibility of the asset
       access: public
 ```
