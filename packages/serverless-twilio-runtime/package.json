@@ -10,7 +10,11 @@
     "type": "git",
     "url": "git+https://github.com/twilio-labs/serverless-framework-integration.git"
   },
-  "keywords": [],
+  "keywords": [
+    "twilio",
+    "serverless",
+    "serverless framework"
+  ],
   "author": "stefan judis <stefanjudis@gmail.com>",
   "license": "MIT",
   "bugs": {
