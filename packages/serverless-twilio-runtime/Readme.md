@@ -1,6 +1,6 @@
-# Twilio Runtime Serverless Plugin
+# Twilio Runtime Plugin for Serverless Framework
 
-Serverless plugin for Twilio Runtime
+Serverless Framework plugin to deploy to the Twilio Runtime
 
 ## Getting started
 
