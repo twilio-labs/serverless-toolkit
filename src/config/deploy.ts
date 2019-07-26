@@ -67,7 +67,14 @@ export async function getConfigFromFlags(
 
   const serviceSid =
     flags.serviceSid ||
-    (await getFunctionServiceSid(cwd, flags.config, 'deployConfig'));
+    (await getFunctionServiceSid(
+      cwd,
+      flags.config,
+      'deployConfig',
+      flags.accountSid && flags.accountSid.startsWith('AC')
+        ? flags.accountSid
+        : externalCliOptions && externalCliOptions.accountSid
+    ));
 
   const pkgJson = await readPackageJsonContent(flags);
 

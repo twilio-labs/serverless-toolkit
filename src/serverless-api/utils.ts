@@ -17,24 +17,34 @@ export type ApiErrorResponse = {
 export async function getFunctionServiceSid(
   cwd: string,
   configName: string,
-  commandConfig: 'deployConfig' | 'listConfig' | 'activateConfig'
+  commandConfig: 'deployConfig' | 'listConfig' | 'activateConfig',
+  projectId?: string
 ): Promise<string | undefined> {
-  const twilioConfig = readSpecializedConfig(cwd, configName, commandConfig);
+  const twilioConfig = readSpecializedConfig(cwd, configName, commandConfig, {
+    projectId,
+  });
   return twilioConfig.serviceSid;
 }
 
 export async function saveLatestDeploymentData(
   cwd: string,
-  projectId: string,
   serviceSid: string,
-  buildSid: string
+  buildSid: string,
+  projectId?: string
 ): Promise<void> {
   const config = getConfig(cwd);
   if (!config.has('serviceSid')) {
     config.set('serviceSid', serviceSid);
   }
-  if (!config.has(`projects.${projectId}.serviceSid`)) {
-    config.set(`projects.${projectId}.serviceSid`, serviceSid);
+
+  if (config.get('serviceSid') === serviceSid) {
+    config.set('latestBuild', buildSid);
   }
-  config.set(`projects.${projectId}.latestBuild`, buildSid);
+
+  if (projectId) {
+    if (!config.has(`projects.${projectId}.serviceSid`)) {
+      config.set(`projects.${projectId}.serviceSid`, serviceSid);
+    }
+    config.set(`projects.${projectId}.latestBuild`, buildSid);
+  }
 }

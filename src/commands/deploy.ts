@@ -117,9 +117,11 @@ export async function handler(
     const { serviceSid, buildSid } = result;
     await saveLatestDeploymentData(
       config.cwd,
-      config.accountSid,
       serviceSid,
-      buildSid
+      buildSid,
+      config.accountSid.startsWith('AC')
+        ? config.accountSid
+        : externalCliOptions && externalCliOptions.accountSid
     );
   } catch (err) {
     handleError(err, spinner, flags, config);
