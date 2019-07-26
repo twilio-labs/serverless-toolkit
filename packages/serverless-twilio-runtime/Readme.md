@@ -163,7 +163,7 @@ Functions:
 
 #### Invoke a deployed function - `serverless invoke`
 
-Invoke a deployed function and see the result. Define the function using `--function` or `-f` parameter.
+Invoke a deployed function by referencing its name and see the response. Define the function using `--function` or `-f` parameter.
 
 ```
 $ serverless invoke --function hello-world
