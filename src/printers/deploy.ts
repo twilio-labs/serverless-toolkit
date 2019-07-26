@@ -74,10 +74,11 @@ function prettyPrintConfigInfo(config: DeployLocalProjectConfig) {
     dependencyString = Object.keys(config.pkgJson.dependencies).join(', ');
   }
 
+  process.stderr.write(
+    '\nDeploying functions & assets to the Twilio Runtime\n'
+  );
   console.log(
     chalk`
-Deploying functions & assets to Twilio Serverless
-
 {bold.cyan Account}\t\t${config.accountSid}
 {bold.cyan Token}\t\t${redactPartOfString(config.authToken)}
 {bold.cyan Service Name}\t${config.serviceName}
@@ -121,6 +122,7 @@ function prettyPrintDeployedResources(
    ${result.buildSid}
   `.trim()
   );
+
   if (result.functionResources) {
     const functionMessage = result.functionResources
       .sort(sortByAccess)
@@ -137,10 +139,14 @@ function prettyPrintDeployedResources(
   if (result.assetResources) {
     const assetMessage = result.assetResources
       .sort(sortByAccess)
-      .map(fn => {
+      .map(asset => {
         const accessPrefix =
-          fn.access !== 'public' ? chalk`{bold [${fn.access}]} ` : '';
-        return chalk`   ${accessPrefix}{dim https://${result.domain}}${fn.path}`;
+          asset.access !== 'public' ? chalk`{bold [${asset.access}]} ` : '';
+        const accessUrl =
+          asset.access === 'private'
+            ? chalk`{dim Runtime.getAssets()['}${asset.path}{dim ']}`
+            : chalk`{dim https://${result.domain}}${asset.path}`;
+        return `   ${accessPrefix}${accessUrl}`;
       })
       .join('\n');
 
