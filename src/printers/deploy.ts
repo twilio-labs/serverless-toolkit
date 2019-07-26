@@ -8,7 +8,11 @@ import chalk from 'chalk';
 import columnify from 'columnify';
 import { stripIndent } from 'common-tags';
 import { MergeExclusive } from 'type-fest';
-import { printObjectWithoutHeaders, shouldPrettyPrint } from './utils';
+import {
+  printObjectWithoutHeaders,
+  redactPartOfString,
+  shouldPrettyPrint,
+} from './utils';
 
 function sortByAccess<
   T extends MergeExclusive<AssetResource, FunctionResource>
@@ -75,6 +79,7 @@ function prettyPrintConfigInfo(config: DeployLocalProjectConfig) {
 Deploying functions & assets to Twilio Serverless
 
 {bold.cyan Account}\t\t${config.accountSid}
+{bold.cyan Token}\t\t${redactPartOfString(config.authToken)}
 {bold.cyan Service Name}\t${config.serviceName}
 {bold.cyan Environment}\t${config.functionsEnv}
 {bold.cyan Root Directory}\t${config.cwd}

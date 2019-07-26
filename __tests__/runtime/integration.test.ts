@@ -4,7 +4,7 @@ import { Express } from 'express';
 import { readdirSync } from 'fs';
 import { basename, resolve } from 'path';
 import request from 'supertest';
-import { StartCliConfig } from '../../src/runtime/cli/config';
+import { StartCliConfig } from '../../src/config/start';
 import { createServer } from '../../src/runtime/server';
 
 const TEST_DIR = resolve(__dirname, '../../fixtures');

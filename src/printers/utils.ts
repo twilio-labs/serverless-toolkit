@@ -46,3 +46,13 @@ export function warningMessage(title: string, body: string) {
 export function errorMessage(title: string, body: string) {
   return importantMessage('ERROR', 'red', title, body);
 }
+
+export function redactPartOfString(
+  input: string,
+  paddingFront: number = 4
+): string {
+  const unredacted = input.substr(0, paddingFront);
+  const redactedLength = input.length - paddingFront;
+  const redactedStars = '*'.repeat(redactedLength);
+  return unredacted + redactedStars;
+}

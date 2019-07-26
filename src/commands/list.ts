@@ -1,115 +1,16 @@
-import {
-  ListConfig as ApiListConfig,
-  ListOptions,
-  TwilioServerlessApiClient,
-} from '@twilio-labs/serverless-api';
+import { TwilioServerlessApiClient } from '@twilio-labs/serverless-api';
 import chalk from 'chalk';
 import debug from 'debug';
-import dotenv from 'dotenv';
-import path from 'path';
-import { PackageJson } from 'type-fest';
-import { Arguments, Argv } from 'yargs';
+import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
 import checkForValidServiceSid from '../checks/check-service-sid';
+import { getConfigFromFlags, ListCliFlags, ListConfig } from '../config/list';
 import { printListResult } from '../printers/list';
-import { getFunctionServiceSid } from '../serverless-api/utils';
-import { fileExists, readFile } from '../utils/fs';
+import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
-import { deprecateProjectName, getFullCommand } from './utils';
+import { getFullCommand } from './utils';
 
 const log = debug('twilio-run:list');
-
-export type ListConfig = ApiListConfig & {
-  cwd: string;
-  properties?: string[];
-  extendedOutput: boolean;
-};
-
-export type ListCliFlags = Arguments<{
-  types: string;
-  projectName?: string;
-  serviceName?: string;
-  properties?: string;
-  extendedOutput: boolean;
-  cwd?: string;
-  environment?: string;
-  accountSid?: string;
-  authToken?: string;
-  serviceSid?: string;
-  env?: string;
-}> & {
-  _cliDefault?: {
-    username: string;
-    password: string;
-  };
-};
-
-async function getConfigFromFlags(flags: ListCliFlags): Promise<ListConfig> {
-  const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
-
-  let { accountSid, authToken } = flags;
-  if (!accountSid || !authToken) {
-    const envPath = path.resolve(cwd, flags.env || '.env');
-
-    let contentEnvFile;
-    if (!(await fileExists(envPath))) {
-      contentEnvFile = '';
-    } else {
-      contentEnvFile = await readFile(envPath, 'utf8');
-    }
-
-    const localEnv = dotenv.parse(contentEnvFile);
-
-    accountSid =
-      flags.accountSid ||
-      localEnv.ACCOUNT_SID ||
-      (flags._cliDefault && flags._cliDefault.username) ||
-      '';
-    authToken =
-      flags.authToken ||
-      localEnv.AUTH_TOKEN ||
-      (flags._cliDefault && flags._cliDefault.password) ||
-      '';
-  }
-
-  const serviceSid = flags.serviceSid || (await getFunctionServiceSid(cwd));
-
-  let serviceName = flags.serviceName;
-
-  if (typeof flags.projectName !== 'undefined') {
-    deprecateProjectName();
-    if (!serviceName) {
-      serviceName = flags.projectName;
-    }
-  }
-
-  if (!serviceName) {
-    const pkgJsonPath = path.join(cwd, 'package.json');
-    if (await fileExists(pkgJsonPath)) {
-      const pkgContent = await readFile(pkgJsonPath, 'utf8');
-      const pkgJson: PackageJson = JSON.parse(pkgContent);
-      if (typeof pkgJson.name === 'string') {
-        serviceName = pkgJson.name;
-      }
-    }
-  }
-
-  const types = flags.types.split(',') as ListOptions[];
-
-  return {
-    cwd,
-    accountSid,
-    authToken,
-    serviceSid,
-    serviceName,
-    environment: flags.environment,
-    properties: flags.properties
-      ? flags.properties.split(',').map(x => x.trim())
-      : undefined,
-    extendedOutput: flags.extendedOutput,
-    types,
-  };
-}
 
 function logError(msg: string) {
   console.error(chalk`{red.bold ERROR} ${msg}`);
@@ -121,10 +22,13 @@ function handleError(err: Error) {
   process.exit(1);
 }
 
-export async function handler(flags: ListCliFlags): Promise<void> {
+export async function handler(
+  flags: ListCliFlags,
+  externalCliOptions?: ExternalCliOptions
+): Promise<void> {
   let config: ListConfig;
   try {
-    config = await getConfigFromFlags(flags);
+    config = await getConfigFromFlags(flags, externalCliOptions);
   } catch (err) {
     log(err);
     logError(err.message);
@@ -159,6 +63,7 @@ export const cliInfo: CliInfo = {
     types: 'services',
   },
   options: {
+    ...sharedCliOptions,
     'service-name': {
       type: 'string',
       alias: 'n',

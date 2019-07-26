@@ -3,8 +3,9 @@ import {
   getInspectInfo,
   getPort,
   getUrl,
-  WrappedStartCliFlags,
-} from '../../../src/runtime/cli/config';
+  StartCliConfig,
+  StartCliFlags,
+} from '../../src/config/start';
 
 jest.mock('ngrok', () => {
   return {
@@ -20,10 +21,8 @@ jest.mock('ngrok', () => {
 describe('getUrl', () => {
   test('returns localhost if ngrok is not passed', async () => {
     const config = ({
-      flags: {
-        ngrok: undefined,
-      },
-    } as unknown) as WrappedStartCliFlags;
+      ngrok: undefined,
+    } as unknown) as StartCliFlags;
 
     const url = await getUrl(config, 3000);
     expect(url).toBe('http://localhost:3000');
@@ -31,10 +30,8 @@ describe('getUrl', () => {
 
   test('calls ngrok if ngrok is defined', async () => {
     const config = ({
-      flags: {
-        ngrok: '',
-      },
-    } as unknown) as WrappedStartCliFlags;
+      ngrok: '',
+    } as unknown) as StartCliFlags;
 
     const url = await getUrl(config, 3000);
     expect(url).toBe('https://random.ngrok.io');
@@ -42,10 +39,8 @@ describe('getUrl', () => {
 
   test('calls ngrok with custom subdomain if passed', async () => {
     const config = ({
-      flags: {
-        ngrok: 'dom',
-      },
-    } as unknown) as WrappedStartCliFlags;
+      ngrok: 'dom',
+    } as unknown) as StartCliFlags;
 
     const url = await getUrl(config, 3000);
     expect(url).toBe('https://dom.ngrok.io');
@@ -69,10 +64,8 @@ describe('getPort', () => {
 
   test('returns default 3000 if nothing is passed', () => {
     const config = ({
-      flags: {
-        port: undefined,
-      },
-    } as unknown) as WrappedStartCliFlags;
+      port: undefined,
+    } as unknown) as StartCliFlags;
 
     delete process.env.PORT;
     const port = getPort(config);
@@ -81,10 +74,8 @@ describe('getPort', () => {
 
   test('checks for process.env.PORT and returns number', () => {
     const config = ({
-      flags: {
-        port: undefined,
-      },
-    } as unknown) as WrappedStartCliFlags;
+      port: undefined,
+    } as unknown) as StartCliFlags;
 
     process.env.PORT = '9999';
     const port = getPort(config);
@@ -94,10 +85,8 @@ describe('getPort', () => {
 
   test('port passed via flag takes preference', () => {
     const config = ({
-      flags: {
-        port: 1234,
-      },
-    } as unknown) as WrappedStartCliFlags;
+      port: 1234,
+    } as unknown) as StartCliFlags;
 
     process.env.PORT = '9999';
     const port = getPort(config);
@@ -107,10 +96,8 @@ describe('getPort', () => {
 
   test('handles strings and returns number', () => {
     const config = ({
-      flags: {
-        port: '8080',
-      },
-    } as unknown) as WrappedStartCliFlags;
+      port: '8080',
+    } as unknown) as StartCliFlags;
 
     process.env.PORT = '9999';
     const port = getPort(config);
@@ -138,11 +125,9 @@ describe('getBaseDirectory', () => {
 
   test('handles current working directory if none is passed', () => {
     const config = ({
-      flags: {
-        dir: undefined,
-        cwd: undefined,
-      },
-    } as unknown) as WrappedStartCliFlags;
+      dir: undefined,
+      cwd: undefined,
+    } as unknown) as StartCliFlags;
 
     const result = getBaseDirectory(config);
     expect(result).toBe('/home');
@@ -150,11 +135,9 @@ describe('getBaseDirectory', () => {
 
   test('supports dir argument', () => {
     const config = ({
-      flags: {
-        dir: '/usr/local',
-        cwd: undefined,
-      },
-    } as unknown) as WrappedStartCliFlags;
+      dir: '/usr/local',
+      cwd: undefined,
+    } as unknown) as StartCliFlags;
 
     const result = getBaseDirectory(config);
     expect(result).toBe('/usr/local');
@@ -162,11 +145,9 @@ describe('getBaseDirectory', () => {
 
   test('prefers cwd over dir argument', () => {
     const config = ({
-      flags: {
-        dir: '/usr/local',
-        cwd: '/usr/bin',
-      },
-    } as unknown) as WrappedStartCliFlags;
+      dir: '/usr/local',
+      cwd: '/usr/bin',
+    } as unknown) as StartCliFlags;
 
     const result = getBaseDirectory(config);
     expect(result).toBe('/usr/bin');
@@ -174,21 +155,17 @@ describe('getBaseDirectory', () => {
 
   test('handles relative path for dir', () => {
     let config = ({
-      flags: {
-        dir: 'demo',
-        cwd: undefined,
-      },
-    } as unknown) as WrappedStartCliFlags;
+      dir: 'demo',
+      cwd: undefined,
+    } as unknown) as StartCliFlags;
 
     let result = getBaseDirectory(config);
     expect(result).toBe('/home/demo');
 
     config = ({
-      flags: {
-        dir: '../demo',
-        cwd: undefined,
-      },
-    } as unknown) as WrappedStartCliFlags;
+      dir: '../demo',
+      cwd: undefined,
+    } as unknown) as StartCliFlags;
 
     result = getBaseDirectory(config);
     expect(result).toBe('/demo');
@@ -196,21 +173,17 @@ describe('getBaseDirectory', () => {
 
   test('handles relative path for cwd', () => {
     let config = ({
-      flags: {
-        dir: undefined,
-        cwd: 'demo',
-      },
-    } as unknown) as WrappedStartCliFlags;
+      dir: undefined,
+      cwd: 'demo',
+    } as unknown) as StartCliFlags;
 
     let result = getBaseDirectory(config);
     expect(result).toBe('/home/demo');
 
     config = ({
-      flags: {
-        dir: undefined,
-        cwd: '../demo',
-      },
-    } as unknown) as WrappedStartCliFlags;
+      dir: undefined,
+      cwd: '../demo',
+    } as unknown) as StartCliFlags;
 
     result = getBaseDirectory(config);
     expect(result).toBe('/demo');
@@ -220,11 +193,9 @@ describe('getBaseDirectory', () => {
 describe('getInspectInfo', () => {
   test('returns undefined if nothing is passed', () => {
     const config = ({
-      flags: {
-        inspect: undefined,
-        inspectBrk: undefined,
-      },
-    } as unknown) as WrappedStartCliFlags;
+      inspect: undefined,
+      inspectBrk: undefined,
+    } as unknown) as StartCliFlags;
 
     const result = getInspectInfo(config);
     expect(result).toBeUndefined();
@@ -232,11 +203,9 @@ describe('getInspectInfo', () => {
 
   test('handles present but empty inspect flag', () => {
     const config = ({
-      flags: {
-        inspect: '',
-        inspectBrk: undefined,
-      },
-    } as unknown) as WrappedStartCliFlags;
+      inspect: '',
+      inspectBrk: undefined,
+    } as unknown) as StartCliFlags;
 
     const result = getInspectInfo(config);
     expect(result).toEqual({ hostPort: '', break: false });
@@ -244,11 +213,9 @@ describe('getInspectInfo', () => {
 
   test('handles present but empty inspectBrk flag', () => {
     const config = ({
-      flags: {
-        inspect: undefined,
-        inspectBrk: '',
-      },
-    } as unknown) as WrappedStartCliFlags;
+      inspect: undefined,
+      inspectBrk: '',
+    } as unknown) as StartCliFlags;
 
     const result = getInspectInfo(config);
     expect(result).toEqual({ hostPort: '', break: true });
@@ -256,11 +223,9 @@ describe('getInspectInfo', () => {
 
   test('handles passed port in inspect flag', () => {
     const config = ({
-      flags: {
-        inspect: '9999',
-        inspectBrk: undefined,
-      },
-    } as unknown) as WrappedStartCliFlags;
+      inspect: '9999',
+      inspectBrk: undefined,
+    } as unknown) as StartCliFlags;
 
     const result = getInspectInfo(config);
     expect(result).toEqual({ hostPort: '9999', break: false });
@@ -268,11 +233,9 @@ describe('getInspectInfo', () => {
 
   test('handles passed port in inspect flag', () => {
     const config = ({
-      flags: {
-        inspect: undefined,
-        inspectBrk: '1234',
-      },
-    } as unknown) as WrappedStartCliFlags;
+      inspect: undefined,
+      inspectBrk: '1234',
+    } as unknown) as StartCliFlags;
 
     const result = getInspectInfo(config);
     expect(result).toEqual({ hostPort: '1234', break: true });

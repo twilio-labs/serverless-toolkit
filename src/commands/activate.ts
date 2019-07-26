@@ -1,99 +1,17 @@
 import {
-  ActivateConfig as ApiActivateConfig,
+  ActivateConfig,
   TwilioServerlessApiClient,
 } from '@twilio-labs/serverless-api';
 import chalk from 'chalk';
 import debug from 'debug';
-import dotenv from 'dotenv';
 import ora, { Ora } from 'ora';
-import path from 'path';
-import { Arguments, Argv } from 'yargs';
+import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
-import checkForValidServiceSid from '../checks/check-service-sid';
-import { getFunctionServiceSid } from '../serverless-api/utils';
-import { fileExists, readFile } from '../utils/fs';
+import { ActivateCliFlags, getConfigFromFlags } from '../config/activate';
+import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
-import { getFullCommand } from './utils';
 
 const log = debug('twilio-run:activate');
-
-type ActivateConfig = ApiActivateConfig & {
-  cwd: string;
-  accountSid?: string;
-  authToken?: string;
-};
-
-export type ActivateCliFlags = Arguments<{
-  cwd?: string;
-  serviceSid?: string;
-  buildSid?: string;
-  sourceEnvironment?: string;
-  environment: string;
-  createEnvironment: boolean;
-  force: boolean;
-  env?: string;
-}> & {
-  _cliDefault?: {
-    username: string;
-    password: string;
-  };
-};
-
-async function getConfigFromFlags(
-  flags: ActivateCliFlags
-): Promise<ActivateConfig> {
-  const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
-  let { accountSid: rawAccountSid, authToken: rawAuthToken } = flags;
-
-  let accountSid = '';
-  if (typeof rawAccountSid === 'string') {
-    accountSid = rawAccountSid;
-  }
-
-  let authToken = '';
-  if (typeof rawAuthToken === 'string') {
-    authToken = rawAuthToken;
-  }
-
-  if (!accountSid || !authToken) {
-    const envPath = path.resolve(cwd, flags.env || '.env');
-    let contentEnvFile;
-    if (!(await fileExists(envPath))) {
-      contentEnvFile = '';
-    } else {
-      contentEnvFile = await readFile(envPath, 'utf8');
-    }
-
-    const localEnv = dotenv.parse(contentEnvFile);
-    accountSid =
-      accountSid ||
-      localEnv.ACCOUNT_SID ||
-      (flags._cliDefault && flags._cliDefault.username) ||
-      '';
-    authToken =
-      authToken ||
-      localEnv.AUTH_TOKEN ||
-      (flags._cliDefault && flags._cliDefault.password) ||
-      '';
-  }
-
-  const readServiceSid = flags.serviceSid || (await getFunctionServiceSid(cwd));
-
-  const command = getFullCommand(flags);
-  const serviceSid = checkForValidServiceSid(command, readServiceSid);
-
-  return {
-    cwd,
-    accountSid,
-    authToken,
-    serviceSid,
-    force: flags.force,
-    createEnvironment: flags.createEnvironment,
-    buildSid: flags.buildSid,
-    targetEnvironment: flags.environment,
-    sourceEnvironment: flags.sourceEnvironment,
-  };
-}
 
 function logError(msg: string) {
   console.error(chalk`{red.bold ERROR} ${msg}`);
@@ -107,10 +25,13 @@ function handleError(err: Error, spinner: Ora) {
   process.exit(1);
 }
 
-export async function handler(flags: ActivateCliFlags): Promise<void> {
+export async function handler(
+  flags: ActivateCliFlags,
+  externalCliOptions?: ExternalCliOptions
+): Promise<void> {
   let config: ActivateConfig;
   try {
-    config = await getConfigFromFlags(flags);
+    config = await getConfigFromFlags(flags, externalCliOptions);
   } catch (err) {
     log(err);
     logError(err.message);
@@ -146,12 +67,7 @@ export async function handler(flags: ActivateCliFlags): Promise<void> {
 
 export const cliInfo: CliInfo = {
   options: {
-    cwd: {
-      type: 'string',
-      hidden: true,
-      describe:
-        'Sets the directory of your existing Serverless project. Defaults to current directory',
-    },
+    ...sharedCliOptions,
     'service-sid': {
       type: 'string',
       describe: 'SID of the Twilio Serverless Service to deploy to',

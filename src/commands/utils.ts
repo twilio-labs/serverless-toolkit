@@ -20,6 +20,9 @@ export function constructCommandName(
   return `${baseCommand}${action} ${args.join(' ')}`;
 }
 
+export const deprecateFunctionsEnv = util.deprecate(() => {},
+'--functions-env is deprecated. Please use --environnment instead. If both have been passed --environment will be preferred.');
+
 export function getFullCommand(flags: Arguments<{}>): string {
   let baseCommand = flags.$0;
   baseCommand = basename(baseCommand);
