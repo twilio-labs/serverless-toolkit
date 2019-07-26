@@ -49,4 +49,21 @@ function normalizeFlags(flags) {
   return result;
 }
 
-module.exports = { convertYargsOptionsToOclifFlags, normalizeFlags };
+function createExternalCliOptions(flags, twilioClient) {
+  const project = flags.project;
+
+  return {
+    username: twilioClient.username,
+    password: twilioClient.password,
+    accountSid: twilioClient.accountSid,
+    project,
+    logLevel: undefined,
+    outputFormat: undefined,
+  };
+}
+
+module.exports = {
+  convertYargsOptionsToOclifFlags,
+  normalizeFlags,
+  createExternalCliOptions,
+};
