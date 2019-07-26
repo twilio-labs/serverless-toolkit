@@ -16,7 +16,7 @@ import logSymbols from 'log-symbols';
 import title from 'title';
 import size from 'window-size';
 import { ListConfig } from '../config/list';
-import { shouldPrettyPrint } from './utils';
+import { redactPartOfString, shouldPrettyPrint } from './utils';
 
 type KeyMaps = {
   [key in ListOptions]: string[];
@@ -102,7 +102,7 @@ const extendedKeys: KeyMaps = {
 };
 
 function formatDate(dateStr: string) {
-  return new Date(dateStr).toString();
+  return new Date(dateStr).toString().slice(4, 33);
 }
 
 function sortByAccess(resA: CommonType, resB: CommonType) {
@@ -283,7 +283,7 @@ function prettyPrintSection<T extends ListOptions>(
     content = prettyPrintFunctionsOrAssets(data);
   }
   const output = stripIndent`
-    ${sectionHeader}\n\n${content}\n\n${chalk.dim(LONG_LINE)}\n
+    ${sectionHeader}\n\n${content}\n\n\n
   `;
   return output;
 }
@@ -292,8 +292,26 @@ function printListResultTerminal(result: ListResult, config: ListConfig): void {
   const sections = Object.keys(result) as ListOptions[];
   const output = sections
     .map(section => prettyPrintSection(section, result[section]))
-    .join('\n\n');
+    .join(`\n\n${chalk.dim(LONG_LINE)}\n\n`);
 
+  let metaInfo = stripIndent(chalk`
+    {cyan.bold Account}      ${config.accountSid}
+    {cyan.bold Token}        ${redactPartOfString(config.authToken)}
+  `);
+
+  if (config.serviceSid || config.serviceName) {
+    metaInfo += chalk`\n{cyan.bold Service}      ${config.serviceSid ||
+      config.serviceName}`;
+  }
+
+  if (config.environment) {
+    metaInfo += chalk`\n{cyan.bold Environment}  ${config.environment}`;
+  }
+
+  if (config.environment) {
+  }
+
+  process.stderr.write(metaInfo + '\n\n');
   console.log(output);
 }
 
