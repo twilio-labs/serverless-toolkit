@@ -8,6 +8,7 @@ import ora, { Ora } from 'ora';
 import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
 import { ActivateCliFlags, getConfigFromFlags } from '../config/activate';
+import { printActivateConfig } from '../printers/activate';
 import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 
@@ -46,6 +47,8 @@ export async function handler(
   }
 
   checkConfigForCredentials(config);
+
+  printActivateConfig(config);
 
   const details = config.buildSid
     ? `(${config.buildSid})`
