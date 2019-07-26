@@ -10,8 +10,9 @@ import {
   SharedFlagsWithCrdentials,
 } from '../commands/shared';
 import { getFunctionServiceSid } from '../serverless-api/utils';
-import { mergeFlagsAndConfig, readSpecializedConfig } from './global';
+import { readSpecializedConfig } from './global';
 import { getCredentialsFromFlags, getServiceNameFromFlags } from './utils';
+import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 
 export type ListConfig = ApiListConfig & {
   cwd: string;

@@ -8,8 +8,9 @@ import {
   SharedFlagsWithCrdentials,
 } from '../commands/shared';
 import { getFullCommand } from '../commands/utils';
-import { mergeFlagsAndConfig, readSpecializedConfig } from './global';
+import { readSpecializedConfig } from './global';
 import { getCredentialsFromFlags } from './utils';
+import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 
 type ActivateConfig = ApiActivateConfig & {
   cwd: string;

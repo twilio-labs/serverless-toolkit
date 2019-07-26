@@ -9,7 +9,8 @@ import { ExternalCliOptions, SharedFlags } from '../commands/shared';
 import { CliInfo } from '../commands/types';
 import { EnvironmentVariablesWithAuth } from '../types/generic';
 import { fileExists } from '../utils/fs';
-import { mergeFlagsAndConfig, readSpecializedConfig } from './global';
+import { readSpecializedConfig } from './global';
+import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 
 const debug = debugModule('twilio-run:cli:config');
 

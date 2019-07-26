@@ -8,13 +8,14 @@ import {
 } from '../commands/shared';
 import { deprecateFunctionsEnv } from '../commands/utils';
 import { getFunctionServiceSid } from '../serverless-api/utils';
-import { mergeFlagsAndConfig, readSpecializedConfig } from './global';
+import { readSpecializedConfig } from './global';
 import {
   getCredentialsFromFlags,
   getServiceNameFromFlags,
   readLocalEnvFile,
   readPackageJsonContent,
 } from './utils';
+import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 
 export type DeployCliFlags = Arguments<
   SharedFlagsWithCrdentials & {

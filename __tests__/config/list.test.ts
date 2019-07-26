@@ -1,6 +1,7 @@
 import { getConfigFromFlags, ListCliFlags } from '../../src/config/list';
 
 jest.mock('../../src/config/global');
+jest.mock('../../src/config/utils/mergeFlagsAndConfig');
 jest.mock('../../src/config/utils');
 
 const baseFlags = {
@@ -35,7 +36,6 @@ describe('getConfigFromFlags', () => {
     const utilMod = require('../../src/config/utils');
     const config = await getConfigFromFlags({ ...baseFlags });
     expect(globalMod.readSpecializedConfig).toHaveBeenCalled();
-    expect(globalMod.mergeFlagsAndConfig).toHaveBeenCalled();
     expect(utilMod.getServiceNameFromFlags).toHaveBeenCalled();
     expect(utilMod.getCredentialsFromFlags).toHaveBeenCalled();
   });
