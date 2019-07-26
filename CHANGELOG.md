@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-rc.2](https://github.com/twilio-labs/twilio-run/compare/v2.0.0-rc.1...v2.0.0-rc.2) (2019-07-26)
+
+
+### Bug Fixes
+
+* **activate:** print accountSid and token to stderr ([a79ea58](https://github.com/twilio-labs/twilio-run/commit/a79ea58))
+* **activate:** redact printed auth token ([709acd3](https://github.com/twilio-labs/twilio-run/commit/709acd3))
+* **deploy:** change deploy example to use environment flag ([dbed2a4](https://github.com/twilio-labs/twilio-run/commit/dbed2a4))
+* **deploy:** improve deploy output of private assets ([486ae73](https://github.com/twilio-labs/twilio-run/commit/486ae73))
+* **list:** print meta info to list command ([#32](https://github.com/twilio-labs/twilio-run/issues/32)) ([585176a](https://github.com/twilio-labs/twilio-run/commit/585176a))
+* **templates:** switch template list endpoint to next branch ([5a5030e](https://github.com/twilio-labs/twilio-run/commit/5a5030e))
+
+
+### Features
+
+* introduce config file functionality ([#15](https://github.com/twilio-labs/twilio-run/issues/15)) ([#38](https://github.com/twilio-labs/twilio-run/issues/38)) ([a86f017](https://github.com/twilio-labs/twilio-run/commit/a86f017)), closes [#27](https://github.com/twilio-labs/twilio-run/issues/27) [#45](https://github.com/twilio-labs/twilio-run/issues/45) [#46](https://github.com/twilio-labs/twilio-run/issues/46) [twilio-labs/serverless-api#8](https://github.com/twilio-labs/twilio-run/issues/8) [#36](https://github.com/twilio-labs/twilio-run/issues/36) [#36](https://github.com/twilio-labs/twilio-run/issues/36) [#27](https://github.com/twilio-labs/twilio-run/issues/27)
+* **new:** change from prompts to inquirer ([#36](https://github.com/twilio-labs/twilio-run/issues/36)) ([9745010](https://github.com/twilio-labs/twilio-run/commit/9745010))
+
+
+### BREAKING CHANGES
+
+* Deprecating --functions-env as an option
+* Error page layout changed
+* Deprecating --functions-env as an option
+
+
+
 ## [2.0.0-rc.1](https://github.com/twilio-labs/twilio-run/compare/v2.0.0-rc.0...v2.0.0-rc.1) (2019-07-25)
 
 
