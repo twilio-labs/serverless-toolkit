@@ -100,7 +100,6 @@ export async function getTemplateFiles(
     return files;
   } catch (err) {
     log(err.message);
-    console.error(err);
     throw new Error('Invalid template');
   }
 }
