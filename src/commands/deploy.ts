@@ -148,7 +148,7 @@ export const cliInfo: CliInfo = {
     environment: {
       type: 'string',
       describe:
-        'The environment name and domain suffix you want to use for your deployment',
+        'The environment name (domain suffix) you want to use for your deployment',
       default: 'dev',
     },
     'service-name': {
@@ -218,8 +218,8 @@ function optionBuilder(yargs: Argv<any>): Argv<DeployCliFlags> {
       'Deploys all functions and assets in the current working directory'
     )
     .example(
-      '$0 deploy --functions-env=dev',
-      'Creates a specifically named environment'
+      '$0 deploy --environment=prod',
+      'Creates an environment with the domain suffix "prod"'
     );
 
   yargs = Object.keys(cliInfo.options).reduce((yargs, name) => {
