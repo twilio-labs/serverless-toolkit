@@ -5,66 +5,161 @@
 <a href="https://travis-ci.com/twilio-labs/twilio-run"><img alt="Travis (.com)" src="https://img.shields.io/travis/com/twilio-labs/twilio-run.svg?style=flat-square"></a>
 <hr>
 
-## 📦 Installation
+- [Installation](#installation)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`twilio-run start [dir]`](#twilio-run-start-dir)
+    - [Examples](#examples)
+  - [`twilio-run deploy`](#twilio-run-deploy)
+    - [Examples](#examples-1)
+  - [`twilio-run new [namespace]`](#twilio-run-new-namespace)
+    - [Examples](#examples-2)
+  - [`twilio-run list [types]`](#twilio-run-list-types)
+    - [Examples](#examples-3)
+  - [`twilio-run activate`](#twilio-run-activate)
+    - [Examples](#examples-4)
+- [API](#api)
+  - [`runDevServer(port: number, baseDir: string): Promise<Express.Application>`](#rundevserverport-number-basedir-string-promiseexpressapplication)
+    - [`handleToExpressRoute(handler: TwilioHandlerFunction): Express.RequestHandler`](#handletoexpressroutehandler-twiliohandlerfunction-expressrequesthandler)
+- [Contributing](#contributing)
+  - [Code of Conduct](#code-of-conduct)
+- [Contributors](#contributors)
+- [License](#license)
+
+## Installation
 
 You can install the CLI tool via `npm` or another package manager. Ideally install it as a dev dependency instead of global:
 
 ```bash
 # Install it as a dev dependency
-$ npm install twilio-run --save-dev
+npm install twilio-run --save-dev
 
 # Afterwards you can use by using:
-$ node_modules/.bin/twilio-run
+node_modules/.bin/twilio-run
 
-$ npx twilio-run
+npx twilio-run
 
 # Or inside your package.json scripts section as "twilio-run"
 ```
 
-## 📖 Usage
+## Usage
 
-```
-  CLI tool to run Twilio Functions locally for development
+```bash
+# Create a valid project, for example:
+npx create-twilio-function my-project
 
-  Usage
-    $ twilio-run [dir]
+# Navigate into project
+cd my-project
 
-  Options
-    --load-local-env, -f Includes the local environment variables
-    --env, -e [/path/to/.env] Loads .env file, overrides local env variables
-    --port, -p <port> Override default port of 3000
-    --ngrok [subdomain] Uses ngrok to create an outfacing url
-    --no-logs Turns request logging off
-    --detailed-logs Turns on detailed request logging
-    --live Always serve from the current functions (no caching)
-    --inspect [host:port] Enables Node.js debugging protocol
-    --inspect-brk [host:port] Enables Node.js debugging protocol, stops execution until debugger is attached
+# Start local development server
+twilio-run start
 
-  Examples
-    $ twilio-run
-    # Serves all functions in current functions sub directory
-
-    $ twilio-run demo
-    # Serves all functions in demo/functions
-
-    $ PORT=9000 twilio-run
-    # Serves functions on port 9000
-
-    $ twilio-run --port=4200
-    # Serves functions on port 4200
-
-    $ twilio-run --env
-    # Loads environment variables from .env file
-
-    $ twilio-run --ngrok
-    # Exposes the Twilio functions via ngrok to share them
+# Deploy to Twilio
+twilio-run deploy
 ```
 
-## 🔬 API
+## Commands
 
-The module also exposes two functions that you can use outside of the CLI tool:
+The CLI exposes a variety of commands. The best way to find out about the flags and commands available is to run `twilio-run --help` or `twilio-run [command] --help`
 
-#### `runDevServer(port: number, baseDir: string): Promise<Express.Application>`
+### `twilio-run start [dir]`
+- Aliases: `twilio-run dev`, `twilio-run`
+
+Starts a local development server for testing and debugging of your environment. By default only variables in the `.env` file will be available via `process.env` or through the `context` argument inside Twilio Functions.
+
+#### Examples
+
+```bash
+# Serves all functions in current functions sub directory
+twilio-run
+
+# Serves all functions in demo/functions
+twilio-run demo
+
+# Serves functions on port 9000
+PORT=9000 twilio-run
+
+# Serves functions on port 4200
+twilio-run --port=4200
+
+# Starts up the inspector mode for the node process
+twilio-run --inspect
+
+# Exposes the Twilio functions via ngrok to share them
+twilio-run --ngrok
+```
+
+### `twilio-run deploy`
+
+Deploys your project to Twilio. It will read dependencies automatically from your `package.json`'s `dependencies` field and install them. It will also upload and set the variables that are specified in your `.env` file. You can point it against a different `.env` file via command-line flags.
+
+#### Examples
+
+```bash
+# Deploys all functions and assets in the current working directory
+twilio-run deploy
+
+# Creates an environment with the domain suffix "prod"
+twilio-run deploy --environment=prod
+```
+
+### `twilio-run new [namespace]`
+
+Creates a new set of functions and/or assets inside your current project based on a [template](https://github.com/twilio-labs/function-templates). Alternatively it can list all available templates using the `--list` flag.
+
+#### Examples
+
+```bash
+# List available templates
+twilio-run new --list
+
+# Create a new function using the blank template
+# in a subfolder (namespace) demo
+twilio-run new demo --template=blank
+```
+
+### `twilio-run list [types]`
+
+Lists a set of available resources for different types related to your Account. Available resources that can be listed:
+- Services
+- Environments or Builds (requires to pass a Service)
+- Functions, Assets or Variables (requires to pass a Service and Environment)
+
+
+#### Examples
+
+```bash
+# Lists all existing services/projects associated with your Twilio Account
+twilio-run list services
+# Lists all existing functions & assets associated with the `dev` environment of this service/project
+twilio-run ls functions,assets --environment=dev --service-name=demo
+# Outputs all environments for a specific service with extended output for better parsing
+twilio-run ls environments --service-sid=ZSxxxxx --extended-output
+# Only lists the SIDs and date of last update for assets, variables and function
+twilio-run ls assets,variables,functions --properties=sid,date_updated
+```
+
+### `twilio-run activate`
+- Aliases: `twilio-run promote`
+
+Promotes an existing deployment to a new environment. It can also create a new environment if it doesn't exist.
+
+#### Examples
+
+```bash
+# Promotes the same build that is on the "dev" environment to the "prod" environment
+twilio-run activate --environment=prod --source-environment=dev  
+# Duplicates an existing build to a new environment called `demo`
+twilio-run activate --environment=demo --create-environment --build-sid=ZB1234xxxxxxxxxx
+```
+
+## API
+
+The module also exposes two functions that you can use outside of the CLI tool to spin up local development.
+
+If you want to interact with the Runtime API instead, [check out the `@twilio-labs/serverless-api` package](https://github.com/twilio-labs/serverless-api).
+
+### `runDevServer(port: number, baseDir: string): Promise<Express.Application>`
 
 This allows you to trigger running an express server that will expose all functions and assets. Example:
 
@@ -80,7 +175,7 @@ runDevServer(9000)
   });
 ```
 
-##### `handleToExpressRoute(handler: TwilioHandlerFunction): Express.RequestHandler`
+#### `handleToExpressRoute(handler: TwilioHandlerFunction): Express.RequestHandler`
 
 You can take the `handler` function of a Twilio Function file and expose it in an existing Express server. Example:
 
@@ -99,7 +194,7 @@ app.all(handlerToExpressRoute(handler));
 app.listen(3000, () => console.log('Server running on port 3000'));
 ```
 
-## 💞 Contributing
+## Contributing
 
 This project welcomes contributions from the community. Please see the [`CONTRIBUTING.md`](CONTRIBUTING.md) file for more details.
 
@@ -107,7 +202,7 @@ This project welcomes contributions from the community. Please see the [`CONTRIB
 
 Please be aware that this project has a [Code of Conduct](CODE_OF_CONDUCT.md). The tldr; is to just be excellent to each other ❤️
 
-## ✨ Contributors
+## Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
 
@@ -119,6 +214,6 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
 
-## 📜 License
+## License
 
 [MIT](LICENSE)
