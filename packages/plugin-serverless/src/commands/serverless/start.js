@@ -23,7 +23,7 @@ class FunctionsStart extends Command {
     flags = normalizeFlags(flags);
 
     const opts = Object.assign({}, flags, args);
-    return handler(opts);
+    return handler(opts, undefined);
   }
 }
 

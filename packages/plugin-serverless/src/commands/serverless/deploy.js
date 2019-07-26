@@ -8,6 +8,7 @@ const {
 const {
   convertYargsOptionsToOclifFlags,
   normalizeFlags,
+  createExternalCliOptions,
 } = require('../../utils');
 
 class FunctionsDeploy extends TwilioClientCommand {
@@ -21,18 +22,10 @@ class FunctionsDeploy extends TwilioClientCommand {
     let { flags, args } = this.parse(FunctionsDeploy);
     flags = normalizeFlags(flags);
 
-    if (flags.project === 'default') {
-      flags._cliDefault = {
-        username: this.twilioClient.username,
-        password: this.twilioClient.password,
-      };
-    } else {
-      flags.accountSid = flags.accountSid || this.twilioClient.username;
-      flags.authToken = flags.authToken || this.twilioClient.password;
-    }
+    const externalOptions = createExternalCliOptions(flags, this.twilioClient);
 
     const opts = Object.assign({}, flags, args);
-    return handler(opts);
+    return handler(opts, externalOptions);
   }
 }
 
