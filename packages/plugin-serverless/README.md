@@ -59,6 +59,9 @@ USAGE
   $ twilio serverless:activate
 
 OPTIONS
+  -c, --config=config                      [default: .twilio-functions] Location of the config file. Absolute path or
+                                           relative to current working directory (cwd)
+
   -p, --project=project                    Shorthand identifier for your Twilio project.
 
   -u, --account-sid=account-sid            A specific account SID to be used for deployment. Uses fields in .env
@@ -69,6 +72,9 @@ OPTIONS
   --build-sid=build-sid                    An existing Build SID to deploy to the new environment
 
   --create-environment                     Creates environment if it couldn't find it.
+
+  --cwd=cwd                                Sets the directory of your existing Serverless project. Defaults to current
+                                           directory
 
   --env=env                                Path to .env file for environment variables that should be installed
 
@@ -81,7 +87,7 @@ OPTIONS
   --source-environment=source-environment  SID or suffix of an existing environment you want to deploy from.
 ```
 
-_See code: [src/commands/serverless/activate.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.1/src/commands/serverless/activate.js)_
+_See code: [src/commands/serverless/activate.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.2/src/commands/serverless/activate.js)_
 
 ## `twilio serverless:deploy`
 
@@ -92,6 +98,9 @@ USAGE
   $ twilio serverless:deploy
 
 OPTIONS
+  -c, --config=config                  [default: .twilio-functions] Location of the config file. Absolute path or
+                                       relative to current working directory (cwd)
+
   -n, --service-name=service-name      Overrides the name of the Serverless project. Default: the name field in your
                                        package.json
 
@@ -110,11 +119,12 @@ OPTIONS
   --env=env                            Path to .env file. If none, the local .env in the current working directory is
                                        used.
 
+  --environment=environment            [default: dev] The environment name (domain suffix) you want to use for your
+                                       deployment
+
   --force                              Will run deployment in force mode. Can be dangerous.
 
   --[no-]functions                     Upload functions. Can be turned off with --no-functions
-
-  --functions-env=functions-env        [default: dev] The environment name you want to use
 
   --functions-folder=functions-folder  Specific folder name to be used for static functions
 
@@ -122,7 +132,7 @@ OPTIONS
                                        found.
 ```
 
-_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.1/src/commands/serverless/deploy.js)_
+_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.2/src/commands/serverless/deploy.js)_
 
 ## `twilio serverless:init NAME`
 
@@ -144,9 +154,12 @@ OPTIONS
                                  TWILIO_AUTH_TOKEN
 
   --skip-credentials             Don't ask for Twilio account credentials or import them from the environment
+
+  --template=template            Initialize your new project with a template from
+                                 github.com/twilio-labs/function-templates
 ```
 
-_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.1/src/commands/serverless/init.js)_
+_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.2/src/commands/serverless/init.js)_
 
 ## `twilio serverless:list [TYPES]`
 
@@ -160,6 +173,9 @@ ARGUMENTS
   TYPES  [default: services] Comma seperated list of things to list (services,environments,functions,assets,variables)
 
 OPTIONS
+  -c, --config=config              [default: .twilio-functions] Location of the config file. Absolute path or relative
+                                   to current working directory (cwd)
+
   -n, --service-name=service-name  Overrides the name of the Serverless project. Default: the name field in your
                                    package.json
 
@@ -178,7 +194,7 @@ OPTIONS
   --service-sid=service-sid        Specific Serverless Service SID to run list for
 ```
 
-_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.1/src/commands/serverless/list.js)_
+_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.2/src/commands/serverless/list.js)_
 
 ## `twilio serverless:new [NAMESPACE]`
 
@@ -196,7 +212,7 @@ OPTIONS
   --template=template
 ```
 
-_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.1/src/commands/serverless/new.js)_
+_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.2/src/commands/serverless/new.js)_
 
 ## `twilio serverless:start [DIR]`
 
@@ -210,8 +226,13 @@ ARGUMENTS
   DIR  Root directory to serve local Functions/Assets from
 
 OPTIONS
+  -c, --config=config        [default: .twilio-functions] Location of the config file. Absolute path or relative to
+                             current working directory (cwd)
+
   -e, --env=env              Loads .env file, overrides local env variables
+
   -f, --load-local-env       Includes the local environment variables
+
   -p, --port=port            (required) [default: 3000] Override default port of 3000
 
   --cwd=cwd                  Alternative way to define the directory to start the server in. Overrides the [dir]
@@ -236,7 +257,7 @@ ALIASES
   $ twilio serverless:run
 ```
 
-_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.1/src/commands/serverless/start.js)_
+_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.2/src/commands/serverless/start.js)_
 <!-- commandsstop -->
 #  Contributing
 
