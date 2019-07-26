@@ -5,6 +5,7 @@
 <a href="https://travis-ci.com/twilio-labs/twilio-run"><img alt="Travis (.com)" src="https://img.shields.io/travis/com/twilio-labs/twilio-run.svg?style=flat-square"></a>
 <hr>
 
+- [About](#about)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Commands](#commands)
@@ -20,11 +21,15 @@
     - [Examples](#examples-4)
 - [API](#api)
   - [`runDevServer(port: number, baseDir: string): Promise<Express.Application>`](#rundevserverport-number-basedir-string-promiseexpressapplication)
-    - [`handleToExpressRoute(handler: TwilioHandlerFunction): Express.RequestHandler`](#handletoexpressroutehandler-twiliohandlerfunction-expressrequesthandler)
+  - [`handleToExpressRoute(handler: TwilioHandlerFunction): Express.RequestHandler`](#handletoexpressroutehandler-twiliohandlerfunction-expressrequesthandler)
 - [Contributing](#contributing)
   - [Code of Conduct](#code-of-conduct)
 - [Contributors](#contributors)
 - [License](#license)
+
+## About
+
+This project is part of the [Serverless Toolkit](https://github.com/twilio-labs/serverless-toolkit). For a more extended documentation, check out the [Twilio Docs](https://www.twilio.com/labs/serverless-toolkit).
 
 ## Installation
 
@@ -175,7 +180,7 @@ runDevServer(9000)
   });
 ```
 
-#### `handleToExpressRoute(handler: TwilioHandlerFunction): Express.RequestHandler`
+### `handleToExpressRoute(handler: TwilioHandlerFunction): Express.RequestHandler`
 
 You can take the `handler` function of a Twilio Function file and expose it in an existing Express server. Example:
 
