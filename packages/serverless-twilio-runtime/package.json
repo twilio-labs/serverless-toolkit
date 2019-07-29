@@ -15,6 +15,9 @@
     "serverless",
     "serverless framework"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "author": "stefan judis <stefanjudis@gmail.com>",
   "license": "MIT",
   "bugs": {
