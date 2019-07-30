@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import { stripIndent } from 'common-tags';
 import { Request, RequestHandler, Response } from 'express';
 import { StartCliConfig } from '../../config/start';
+import { writePlainOutput } from '../../utils/output';
 
 function simpleLogs(req: Request, res: Response): string {
   const contentType = res.get('Content-Type');
@@ -63,7 +64,7 @@ export function createLogger(config: StartCliConfig): RequestHandler {
       const msg = config.detailedLogs
         ? detailedLogs(req, res)
         : simpleLogs(req, res);
-      console.log(msg);
+      writePlainOutput(msg);
       resEnd(...args);
     };
     next();
