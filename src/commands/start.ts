@@ -5,7 +5,7 @@ import { getConfigFromCli, StartCliFlags } from '../config/start';
 import { printRouteInfo } from '../printers/start';
 import { createServer } from '../runtime/server';
 import { startInspector } from '../runtime/utils/inspector';
-import { getDebugFunction } from '../utils/logger';
+import { getDebugFunction, setLogLevelByName } from '../utils/logger';
 import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
@@ -16,6 +16,8 @@ export async function handler(
   argv: StartCliFlags,
   externalCliOptions?: ExternalCliOptions
 ): Promise<void> {
+  setLogLevelByName(argv.logLevel);
+
   checkNodejsVersion();
 
   const config = await getConfigFromCli(argv, cliInfo, externalCliOptions);

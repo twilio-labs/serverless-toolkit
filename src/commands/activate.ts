@@ -7,7 +7,7 @@ import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
 import { ActivateCliFlags, getConfigFromFlags } from '../config/activate';
 import { printActivateConfig } from '../printers/activate';
-import { getDebugFunction, logger } from '../utils/logger';
+import { getDebugFunction, logger, setLogLevelByName } from '../utils/logger';
 import { writePlainOutput } from '../utils/output';
 import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
@@ -30,6 +30,7 @@ export async function handler(
   flags: ActivateCliFlags,
   externalCliOptions?: ExternalCliOptions
 ): Promise<void> {
+  setLogLevelByName(flags.logLevel);
   let config: ActivateConfig;
   try {
     config = await getConfigFromFlags(flags, externalCliOptions);

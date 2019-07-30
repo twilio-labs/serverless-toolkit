@@ -15,7 +15,7 @@ import {
   HttpError,
   saveLatestDeploymentData,
 } from '../serverless-api/utils';
-import { getDebugFunction, logger } from '../utils/logger';
+import { getDebugFunction, logger, setLogLevelByName } from '../utils/logger';
 import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 import { constructCommandName, getFullCommand } from './utils';
@@ -76,6 +76,8 @@ export async function handler(
   flags: DeployCliFlags,
   externalCliOptions?: ExternalCliOptions
 ): Promise<void> {
+  setLogLevelByName(flags.logLevel);
+
   const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
   flags.cwd = cwd;
   const command = getFullCommand(flags);

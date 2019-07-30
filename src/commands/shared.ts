@@ -1,6 +1,11 @@
 import { Options } from 'yargs';
+import { LoggingLevel, LoggingLevelNames } from '../utils/logger';
 
-export type SharedFlags = {
+export type BaseFlags = {
+  logLevel: LoggingLevelNames;
+};
+
+export type SharedFlags = BaseFlags & {
   config: string;
   cwd?: string;
 };
@@ -9,11 +14,6 @@ export type SharedFlagsWithCrdentials = SharedFlags & {
   accountSid?: string;
   authToken?: string;
   env?: string;
-} & {
-  _cliDefault?: {
-    username: string;
-    password: string;
-  };
 };
 
 export type ExternalCliOptions = {
@@ -25,7 +25,18 @@ export type ExternalCliOptions = {
   outputFormat?: string;
 };
 
+export const baseCliOptions: { [key: string]: Options } = {
+  logLevel: {
+    type: 'string',
+    default: 'info',
+    alias: 'l',
+    describe: 'Level of logging messages.',
+    choices: Object.keys(LoggingLevel),
+  },
+};
+
 export const sharedCliOptions: { [key: string]: Options } = {
+  ...baseCliOptions,
   config: {
     alias: 'c',
     type: 'string',

@@ -1,5 +1,5 @@
 import { stripIndent } from 'common-tags';
-import { warningMessage } from '../printers/utils';
+import { logger } from '../utils/logger';
 
 const SERVERLESS_NODE_JS_VERSION = '8.10';
 
@@ -17,7 +17,7 @@ export function printVersionWarning(
       A tool like nvm (https://github.com/creationix/nvm) can help.
   `;
 
-  console.warn(warningMessage(title, msg));
+  logger.warn(msg, title);
 }
 
 export default function checkNodejsVersion() {
