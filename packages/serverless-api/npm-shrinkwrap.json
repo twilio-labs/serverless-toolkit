@@ -430,9 +430,9 @@
       }
     },
     "@types/got": {
-      "version": "9.6.3",
-      "resolved": "https://registry.npmjs.org/@types/got/-/got-9.6.3.tgz",
-      "integrity": "sha512-U6cPjwkJigmTNEsAbbmpsU4+Rb59wTkZ7+7xchi2e6uzimQKD5H0iXJTnqxIEtcF9UNV2fzfGJzbdhvpg0QzAg==",
+      "version": "9.6.4",
+      "resolved": "https://registry.npmjs.org/@types/got/-/got-9.6.4.tgz",
+      "integrity": "sha512-zFVFoD9YRICaQFe9l8cYvuOWUT65cWRAt7ngNh+lCbTE12EmAvFp1/9WMS75m/jUoSKYjeKl5S2ztC3sHftGVA==",
       "requires": {
         "@types/node": "*",
         "@types/tough-cookie": "*",
@@ -1941,18 +1941,18 @@
       }
     },
     "conventional-changelog-core": {
-      "version": "3.2.2",
-      "resolved": "https://registry.npmjs.org/conventional-changelog-core/-/conventional-changelog-core-3.2.2.tgz",
-      "integrity": "sha512-cssjAKajxaOX5LNAJLB+UOcoWjAIBvXtDMedv/58G+YEmAXMNfC16mmPl0JDOuVJVfIqM0nqQiZ8UCm8IXbE0g==",
+      "version": "3.2.3",
+      "resolved": "https://registry.npmjs.org/conventional-changelog-core/-/conventional-changelog-core-3.2.3.tgz",
+      "integrity": "sha512-LMMX1JlxPIq/Ez5aYAYS5CpuwbOk6QFp8O4HLAcZxe3vxoCtABkhfjetk8IYdRB9CDQGwJFLR3Dr55Za6XKgUQ==",
       "dev": true,
       "requires": {
-        "conventional-changelog-writer": "^4.0.5",
-        "conventional-commits-parser": "^3.0.2",
+        "conventional-changelog-writer": "^4.0.6",
+        "conventional-commits-parser": "^3.0.3",
         "dateformat": "^3.0.0",
         "get-pkg-repo": "^1.0.0",
         "git-raw-commits": "2.0.0",
         "git-remote-origin-url": "^2.0.0",
-        "git-semver-tags": "^2.0.2",
+        "git-semver-tags": "^2.0.3",
         "lodash": "^4.2.1",
         "normalize-package-data": "^2.3.5",
         "q": "^1.5.1",
@@ -1999,6 +1999,16 @@
                 "xtend": "~4.0.1"
               }
             }
+          }
+        },
+        "git-semver-tags": {
+          "version": "2.0.3",
+          "resolved": "https://registry.npmjs.org/git-semver-tags/-/git-semver-tags-2.0.3.tgz",
+          "integrity": "sha512-tj4FD4ww2RX2ae//jSrXZzrocla9db5h0V7ikPl1P/WwoZar9epdUhwR7XHXSgc+ZkNq72BEEerqQuicoEQfzA==",
+          "dev": true,
+          "requires": {
+            "meow": "^4.0.0",
+            "semver": "^6.0.0"
           }
         },
         "is-text-path": {
@@ -2091,21 +2101,21 @@
       }
     },
     "conventional-changelog-preset-loader": {
-      "version": "2.1.1",
-      "resolved": "https://registry.npmjs.org/conventional-changelog-preset-loader/-/conventional-changelog-preset-loader-2.1.1.tgz",
-      "integrity": "sha512-K4avzGMLm5Xw0Ek/6eE3vdOXkqnpf9ydb68XYmCc16cJ99XMMbc2oaNMuPwAsxVK6CC1yA4/I90EhmWNj0Q6HA==",
+      "version": "2.2.0",
+      "resolved": "https://registry.npmjs.org/conventional-changelog-preset-loader/-/conventional-changelog-preset-loader-2.2.0.tgz",
+      "integrity": "sha512-zXB+5vF7D5Y3Cb/rJfSyCCvFphCVmF8mFqOdncX3BmjZwAtGAPfYrBcT225udilCKvBbHgyzgxqz2GWDB5xShQ==",
       "dev": true
     },
     "conventional-changelog-writer": {
-      "version": "4.0.6",
-      "resolved": "https://registry.npmjs.org/conventional-changelog-writer/-/conventional-changelog-writer-4.0.6.tgz",
-      "integrity": "sha512-ou/sbrplJMM6KQpR5rKFYNVQYesFjN7WpNGdudQSWNi6X+RgyFUcSv871YBYkrUYV9EX8ijMohYVzn9RUb+4ag==",
+      "version": "4.0.7",
+      "resolved": "https://registry.npmjs.org/conventional-changelog-writer/-/conventional-changelog-writer-4.0.7.tgz",
+      "integrity": "sha512-p/wzs9eYaxhFbrmX/mCJNwJuvvHR+j4Fd0SQa2xyAhYed6KBiZ780LvoqUUvsayP4R1DtC27czalGUhKV2oabw==",
       "dev": true,
       "requires": {
         "compare-func": "^1.3.1",
         "conventional-commits-filter": "^2.0.2",
         "dateformat": "^3.0.0",
-        "handlebars": "^4.1.0",
+        "handlebars": "^4.1.2",
         "json-stringify-safe": "^5.0.1",
         "lodash": "^4.2.1",
         "meow": "^4.0.0",
@@ -3252,9 +3262,9 @@
       }
     },
     "eslint-plugin-jest": {
-      "version": "22.13.6",
-      "resolved": "https://registry.npmjs.org/eslint-plugin-jest/-/eslint-plugin-jest-22.13.6.tgz",
-      "integrity": "sha512-wn3n9Djj+Dyi8AS1kvGOXpzUJfs9SJYhoZxIb49y4cwHRPaSgDHzSJPZX3sliZ3k8l6bYVeEGW76QvvqoOjSEw==",
+      "version": "22.14.0",
+      "resolved": "https://registry.npmjs.org/eslint-plugin-jest/-/eslint-plugin-jest-22.14.0.tgz",
+      "integrity": "sha512-Xtc9ZTtxdYFC7vu0PHxDeQ9lOMQ8gjwMmSQq/ni83TdflgL3eVh/qg3t99I7gcDxpeXfcp+lHu9C0vN3QAhATw==",
       "dev": true,
       "requires": {
         "@typescript-eslint/experimental-utils": "^1.13.0"
@@ -5065,9 +5075,9 @@
       "dev": true
     },
     "husky": {
-      "version": "3.0.1",
-      "resolved": "https://registry.npmjs.org/husky/-/husky-3.0.1.tgz",
-      "integrity": "sha512-PXBv+iGKw23GHUlgELRlVX9932feFL407/wHFwtsGeArp0dDM4u+/QusSQwPKxmNgjpSL+ustbOdQ2jetgAZbA==",
+      "version": "3.0.2",
+      "resolved": "https://registry.npmjs.org/husky/-/husky-3.0.2.tgz",
+      "integrity": "sha512-WXCtaME2x0o4PJlKY4ap8BzLA+D0zlvefqAvLCPriOOu+x0dpO5uc5tlB7CY6/0SE2EESmoZsj4jW5D09KrJoA==",
       "dev": true,
       "requires": {
         "chalk": "^2.4.2",
@@ -7639,9 +7649,9 @@
       "dev": true
     },
     "simple-git": {
-      "version": "1.122.0",
-      "resolved": "https://registry.npmjs.org/simple-git/-/simple-git-1.122.0.tgz",
-      "integrity": "sha512-plTwhnkIHrw2TFMJbJH/mKwWGgFbj03V9wcfBKa4FsuvgJbpwdlSJnlvkIQWDV1CVLaf2Gl6zSNeRRnxBRhX1g==",
+      "version": "1.124.0",
+      "resolved": "https://registry.npmjs.org/simple-git/-/simple-git-1.124.0.tgz",
+      "integrity": "sha512-ks9mBoO4ODQy/xGLC8Cc+YDvj/hho/IKgPhi6h5LI/sA+YUdHc3v0DEoHzM29VmulubpGCxMJUSFmyXNsjNMEA==",
       "dev": true,
       "requires": {
         "debug": "^4.0.1"
@@ -8863,9 +8873,9 @@
       }
     },
     "webpack": {
-      "version": "4.37.0",
-      "resolved": "https://registry.npmjs.org/webpack/-/webpack-4.37.0.tgz",
-      "integrity": "sha512-iJPPvL7XpbcbwOthbzpa2BSPlmGp8lGDokAj/LdWtK80rsPoPOdANSbDBf2GAVLKZD3GhCuQ/gGkgN9HWs0Keg==",
+      "version": "4.38.0",
+      "resolved": "https://registry.npmjs.org/webpack/-/webpack-4.38.0.tgz",
+      "integrity": "sha512-lbuFsVOq8PZY+1Ytz/mYOvYOo+d4IJ31hHk/7iyoeWtwN33V+5HYotSH+UIb9tq914ey0Hot7z6HugD+je3sWw==",
       "dev": true,
       "requires": {
         "@webassemblyjs/ast": "1.8.5",
