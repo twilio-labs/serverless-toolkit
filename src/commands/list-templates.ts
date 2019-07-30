@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import ora from 'ora';
-import { Argv } from 'yargs';
 import { fetchListOfTemplates } from '../templating/actions';
+import { writePlainOutput } from '../utils/output';
 import { CliInfo } from './types';
 
 export async function handler(): Promise<void> {
@@ -19,7 +19,7 @@ export async function handler(): Promise<void> {
   spinner.stop();
 
   templates.forEach(template => {
-    console.log(
+    writePlainOutput(
       chalk`‣ ${template.name} ({cyan ${template.id}})\n  {dim ${template.description}}`
     );
   });

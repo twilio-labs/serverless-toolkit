@@ -1,18 +1,17 @@
 import { EnvironmentVariables } from '@twilio-labs/serverless-api';
-import debugModule from 'debug';
 import dotenv from 'dotenv';
 import { readFileSync } from 'fs';
-import logSymbols from 'log-symbols';
 import path, { resolve } from 'path';
 import { Arguments } from 'yargs';
 import { ExternalCliOptions, SharedFlags } from '../commands/shared';
 import { CliInfo } from '../commands/types';
 import { EnvironmentVariablesWithAuth } from '../types/generic';
 import { fileExists } from '../utils/fs';
+import { getDebugFunction, logger } from '../utils/logger';
 import { readSpecializedConfig } from './global';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 
-const debug = debugModule('twilio-run:cli:config');
+const debug = getDebugFunction('twilio-run:cli:config');
 
 type NgrokConfig = {
   addr: string | number;
@@ -107,11 +106,11 @@ export async function getEnvironment(
         env[key] = val;
       }
     } catch (err) {
-      console.error(logSymbols.error, 'Failed to read .env file');
+      logger.error('Failed to read .env file');
     }
   } else {
     if (cli.env) {
-      console.error(logSymbols.error, 'Failed to find .env file');
+      logger.error('Failed to find .env file');
     }
     debug('Not loading a .env file');
   }

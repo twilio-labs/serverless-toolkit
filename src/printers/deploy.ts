@@ -8,6 +8,8 @@ import chalk from 'chalk';
 import columnify from 'columnify';
 import { stripIndent } from 'common-tags';
 import { MergeExclusive } from 'type-fest';
+import { logger } from '../utils/logger';
+import { writePlainOutput } from '../utils/output';
 import {
   printObjectWithoutHeaders,
   redactPartOfString,
@@ -65,7 +67,7 @@ functions\n${functionsOutput}
 
 assets\n${assetsOutput}
   `;
-  console.log(stripIndent(output));
+  writePlainOutput(stripIndent(output));
 }
 
 function prettyPrintConfigInfo(config: DeployLocalProjectConfig) {
@@ -74,10 +76,8 @@ function prettyPrintConfigInfo(config: DeployLocalProjectConfig) {
     dependencyString = Object.keys(config.pkgJson.dependencies).join(', ');
   }
 
-  process.stderr.write(
-    '\nDeploying functions & assets to the Twilio Runtime\n'
-  );
-  console.log(
+  logger.info('\nDeploying functions & assets to the Twilio Runtime');
+  writePlainOutput(
     chalk`
 {bold.cyan Account}\t\t${config.accountSid}
 {bold.cyan Token}\t\t${redactPartOfString(config.authToken)}
@@ -103,14 +103,14 @@ function plainPrintConfigInfo(config: DeployLocalProjectConfig) {
     dependencies: dependencyString,
     environmentVariables: Object.keys(config.env).join(','),
   };
-  console.log(`configInfo\n${printObjectWithoutHeaders(printObj)}\n`);
+  writePlainOutput(`configInfo\n${printObjectWithoutHeaders(printObj)}\n`);
 }
 
 function prettyPrintDeployedResources(
   config: DeployLocalProjectConfig,
   result: DeployResult
 ) {
-  console.log(
+  writePlainOutput(
     chalk`
 {bold.cyan.underline Deployment Details}
 {bold.cyan Domain:} ${result.domain}
@@ -132,8 +132,8 @@ function prettyPrintDeployedResources(
         return chalk`   ${accessPrefix}{dim https://${result.domain}}${fn.path}`;
       })
       .join('\n');
-    console.log(chalk.bold.cyan('Functions:'));
-    console.log(functionMessage);
+    writePlainOutput(chalk.bold.cyan('Functions:'));
+    writePlainOutput(functionMessage);
   }
 
   if (result.assetResources) {
@@ -150,8 +150,8 @@ function prettyPrintDeployedResources(
       })
       .join('\n');
 
-    console.log(chalk.bold.cyan('Assets:'));
-    console.log(assetMessage);
+    writePlainOutput(chalk.bold.cyan('Assets:'));
+    writePlainOutput(assetMessage);
   }
 }
 

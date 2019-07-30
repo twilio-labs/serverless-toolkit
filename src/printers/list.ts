@@ -16,6 +16,8 @@ import logSymbols from 'log-symbols';
 import title from 'title';
 import size from 'window-size';
 import { ListConfig } from '../config/list';
+import { logger } from '../utils/logger';
+import { writePlainOutput } from '../utils/output';
 import { redactPartOfString, shouldPrettyPrint } from './utils';
 
 type KeyMaps = {
@@ -153,14 +155,14 @@ function printListResultPlain(result: ListResult, config: ListConfig) {
   const types = Object.keys(result) as ListOptions[];
 
   if (types.length === 1) {
-    console.log(printSection(types[0], result[types[0]], config));
+    writePlainOutput(printSection(types[0], result[types[0]], config));
     return;
   }
 
   for (const type of types) {
     const section = result[type];
     const output = printSection(type, section, config);
-    console.log(startCase(type) + '\n' + output + '\n');
+    writePlainOutput(startCase(type) + '\n' + output + '\n');
   }
 }
 
@@ -308,11 +310,8 @@ function printListResultTerminal(result: ListResult, config: ListConfig): void {
     metaInfo += chalk`\n{cyan.bold Environment}  ${config.environment}`;
   }
 
-  if (config.environment) {
-  }
-
-  process.stderr.write(metaInfo + '\n\n');
-  console.log(output);
+  logger.info(metaInfo + '\n');
+  writePlainOutput(output);
 }
 
 export function printListResult(result: ListResult, config: ListConfig): void {

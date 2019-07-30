@@ -1,5 +1,5 @@
 import { stripIndent } from 'common-tags';
-import { errorMessage } from '../printers/utils';
+import { logger } from '../utils/logger';
 
 const EXAMPLE_SERVICE_SID = 'ZSf9dec7e059e0695f4c8axxxxxxxxxxxx';
 
@@ -51,7 +51,7 @@ export default function checkForValidServiceSid(
   }
 
   if (message) {
-    console.error(errorMessage(title, message));
+    logger.error(message, title);
     process.exit(1);
   }
 

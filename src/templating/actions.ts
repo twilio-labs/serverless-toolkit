@@ -1,6 +1,7 @@
+import chalk from 'chalk';
+import { logger } from '../utils/logger';
 import { getTemplateFiles } from './data';
 import { writeFiles } from './filesystem';
-import chalk from 'chalk';
 
 export async function downloadTemplate(
   templateName: string,
@@ -10,9 +11,9 @@ export async function downloadTemplate(
   const files = await getTemplateFiles(templateName);
   try {
     await writeFiles(files, targetDirectory, bundleName);
-    console.log(chalk`{green SUCCESS} Created new bundle ${bundleName}`);
+    logger.info(chalk`{green SUCCESS} Created new bundle ${bundleName}`);
   } catch (err) {
-    console.error(chalk`{red ERROR} ${err.message}`);
+    logger.error(err.message, err.name);
   }
 }
 

@@ -6,6 +6,7 @@ import windowSize from 'window-size';
 import wrapAnsi from 'wrap-ansi';
 import { StartCliConfig } from '../config/start';
 import { getFunctionsAndAssets } from '../runtime/internal/runtime-paths';
+import { logger } from '../utils/logger';
 import { shouldPrettyPrint, terminalLink } from './utils';
 
 function printAsset(
@@ -155,5 +156,5 @@ export async function printRouteInfo(config: StartCliConfig): Promise<void> {
     output = printPlainRouteInfo(functions, assets, config);
   }
 
-  console.log(output);
+  logger.info(output);
 }
