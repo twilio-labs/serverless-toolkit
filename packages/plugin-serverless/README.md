@@ -87,7 +87,7 @@ OPTIONS
   --source-environment=source-environment  SID or suffix of an existing environment you want to deploy from.
 ```
 
-_See code: [src/commands/serverless/activate.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.2/src/commands/serverless/activate.js)_
+_See code: [src/commands/serverless/activate.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.3/src/commands/serverless/activate.js)_
 
 ## `twilio serverless:deploy`
 
@@ -132,7 +132,7 @@ OPTIONS
                                        found.
 ```
 
-_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.2/src/commands/serverless/deploy.js)_
+_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.3/src/commands/serverless/deploy.js)_
 
 ## `twilio serverless:init NAME`
 
@@ -159,7 +159,7 @@ OPTIONS
                                  github.com/twilio-labs/function-templates
 ```
 
-_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.2/src/commands/serverless/init.js)_
+_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.3/src/commands/serverless/init.js)_
 
 ## `twilio serverless:list [TYPES]`
 
@@ -194,7 +194,7 @@ OPTIONS
   --service-sid=service-sid        Specific Serverless Service SID to run list for
 ```
 
-_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.2/src/commands/serverless/list.js)_
+_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.3/src/commands/serverless/list.js)_
 
 ## `twilio serverless:new [NAMESPACE]`
 
@@ -212,7 +212,7 @@ OPTIONS
   --template=template
 ```
 
-_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.2/src/commands/serverless/new.js)_
+_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.3/src/commands/serverless/new.js)_
 
 ## `twilio serverless:start [DIR]`
 
@@ -257,7 +257,7 @@ ALIASES
   $ twilio serverless:run
 ```
 
-_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.2/src/commands/serverless/start.js)_
+_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.3/src/commands/serverless/start.js)_
 <!-- commandsstop -->
 #  Contributing
 
