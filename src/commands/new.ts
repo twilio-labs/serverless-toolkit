@@ -1,6 +1,5 @@
 import chalk from 'chalk';
 import inquirer from 'inquirer';
-import ora from 'ora';
 import path from 'path';
 import { Merge } from 'type-fest';
 import { Arguments, Argv } from 'yargs';
@@ -13,7 +12,6 @@ import { getFullCommand } from './utils';
 export type NewCliFlags = Arguments<{
   namespace?: string;
   template?: string;
-  list?: string;
 }>;
 
 export type NewConfig = Merge<
@@ -23,27 +21,6 @@ export type NewConfig = Merge<
     template?: string;
   }
 >;
-
-async function listTemplates(): Promise<void> {
-  const spinner = ora('Fetching available templates').start();
-
-  let templates;
-  try {
-    templates = await fetchListOfTemplates();
-  } catch (err) {
-    spinner.fail('Failed to retrieve templates');
-    process.exit(1);
-    return;
-  }
-
-  spinner.stop();
-
-  templates.forEach(template => {
-    console.log(
-      chalk`‣ ${template.name} ({cyan ${template.id}})\n  {dim ${template.description}}`
-    );
-  });
-}
 
 async function getMissingInfo(flags: NewCliFlags): Promise<NewConfig> {
   const questions: inquirer.Question[] = [];
@@ -112,12 +89,6 @@ export async function handler(
   flagsInput: NewCliFlags,
   externalCliOptions?: ExternalCliOptions
 ): Promise<void> {
-  if (flagsInput.list) {
-    await listTemplates();
-    process.exit(0);
-    return;
-  }
-
   const targetDirectory = getBaseDirectoryPath();
   const command = getFullCommand(flagsInput);
   await checkProjectStructure(targetDirectory, command, true);
@@ -144,21 +115,14 @@ export const cliInfo: CliInfo = {
       type: 'string',
       description: 'Name of template to be used',
     },
-    list: {
-      type: 'boolean',
-      alias: 'l',
-      describe: chalk`List available templates. Will {bold not} create a new function`,
-    },
   },
 };
 
 function optionBuilder(yargs: Argv<any>): Argv<NewCliFlags> {
-  yargs = yargs
-    .example(
-      '$0 new hello-world --template=blank',
-      'Creates a basic blank template as hello-world function'
-    )
-    .example('$0 new --list', 'Lists all available templates');
+  yargs = yargs.example(
+    '$0 new hello-world --template=blank',
+    'Creates a basic blank template as hello-world function'
+  );
 
   yargs = Object.keys(cliInfo.options).reduce((yargs, name) => {
     return yargs.option(name, cliInfo.options[name]);

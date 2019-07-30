@@ -13,12 +13,14 @@
     - [Examples](#examples)
   - [`twilio-run deploy`](#twilio-run-deploy)
     - [Examples](#examples-1)
-  - [`twilio-run new [namespace]`](#twilio-run-new-namespace)
+  - [`twilio-run list-templates`](#twilio-run-list-templates)
     - [Examples](#examples-2)
-  - [`twilio-run list [types]`](#twilio-run-list-types)
+- [`twilio-run new [namespace]`](#twilio-run-new-namespace)
     - [Examples](#examples-3)
-  - [`twilio-run activate`](#twilio-run-activate)
+  - [`twilio-run list [types]`](#twilio-run-list-types)
     - [Examples](#examples-4)
+  - [`twilio-run activate`](#twilio-run-activate)
+    - [Examples](#examples-5)
 - [API](#api)
   - [`runDevServer(port: number, baseDir: string): Promise<Express.Application>`](#rundevserverport-number-basedir-string-promiseexpressapplication)
   - [`handleToExpressRoute(handler: TwilioHandlerFunction): Express.RequestHandler`](#handletoexpressroutehandler-twiliohandlerfunction-expressrequesthandler)
@@ -108,16 +110,24 @@ twilio-run deploy
 twilio-run deploy --environment=prod
 ```
 
-### `twilio-run new [namespace]`
+### `twilio-run list-templates`
 
-Creates a new set of functions and/or assets inside your current project based on a [template](https://github.com/twilio-labs/function-templates). Alternatively it can list all available templates using the `--list` flag.
+Lists the [templates available](https://github.com/twilio-labs/function-templates) to that you can use to generate new functions and/or assets inside your current project with the [`twilio-run new` command](#twilio-run-new-namespace) below.
 
 #### Examples
 
 ```bash
 # List available templates
-twilio-run new --list
+twilio-run list-templates
+```
 
+### `twilio-run new [namespace]`
+
+Creates a new set of functions and/or assets inside your current project based on a [template](https://github.com/twilio-labs/function-templates).
+
+#### Examples
+
+```bash
 # Create a new function using the blank template
 # in a subfolder (namespace) demo
 twilio-run new demo --template=blank
@@ -153,7 +163,7 @@ Promotes an existing deployment to a new environment. It can also create a new e
 
 ```bash
 # Promotes the same build that is on the "dev" environment to the "prod" environment
-twilio-run activate --environment=prod --source-environment=dev  
+twilio-run activate --environment=prod --source-environment=dev
 # Duplicates an existing build to a new environment called `demo`
 twilio-run activate --environment=demo --create-environment --build-sid=ZB1234xxxxxxxxxx
 ```
