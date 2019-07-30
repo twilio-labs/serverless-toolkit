@@ -138,7 +138,7 @@ function printPrettyRouteInfo(
     .join('\n')
     .trim();
 
-  const wrappedOutput = wrapAnsi(output, windowSize.width - 6, {
+  const wrappedOutput = wrapAnsi(output, windowSize.width - 8, {
     wordWrap: true,
   });
 
