@@ -71,7 +71,7 @@ function prettyPrintAsset(
   const prefix = config.legacyMode ? '/asset' : '';
   const assetPath = prefix + asset.path;
   const pathAccess =
-    asset.access === 'public'
+    asset.access !== 'private'
       ? config.url + assetPath
       : `Runtime.getAssets()['${asset.path}']`;
   const accessPrefix =
