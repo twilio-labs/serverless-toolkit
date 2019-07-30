@@ -88,7 +88,7 @@ export function handleSuccess(
   res.status(200);
   if (typeof responseObject === 'string') {
     log('Sending basic string response');
-    res.send(responseObject);
+    res.type('text/plain').send(responseObject);
     return;
   }
 

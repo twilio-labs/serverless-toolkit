@@ -204,14 +204,7 @@ describe('handleSuccess function', () => {
     handleSuccess('Yay', mockResponse);
     expect(mockResponse.status).toHaveBeenCalledWith(200);
     expect(mockResponse.send).toHaveBeenCalledWith('Yay');
-    expect(mockResponse.type).not.toHaveBeenCalled();
-  });
-
-  test('handles string responses', () => {
-    handleSuccess('Yay', mockResponse);
-    expect(mockResponse.status).toHaveBeenCalledWith(200);
-    expect(mockResponse.send).toHaveBeenCalledWith('Yay');
-    expect(mockResponse.type).not.toHaveBeenCalled();
+    expect(mockResponse.type).toHaveBeenCalledWith('text/plain');
   });
 
   test('handles twiml responses', () => {
