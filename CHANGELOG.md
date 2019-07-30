@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-rc.3](https://github.com/twilio-labs/twilio-run/compare/v2.0.0-rc.2...v2.0.0-rc.3) (2019-07-30)
+
+
+### Bug Fixes
+
+* **server:** return better error for invalid function code ([#49](https://github.com/twilio-labs/twilio-run/issues/49)) ([7bc82c2](https://github.com/twilio-labs/twilio-run/commit/7bc82c2))
+* **server:** set plain text content-type for string responses ([#52](https://github.com/twilio-labs/twilio-run/issues/52)) ([ca4f541](https://github.com/twilio-labs/twilio-run/commit/ca4f541))
+* **start:** fix asset path for protected assets ([84dafcf](https://github.com/twilio-labs/twilio-run/commit/84dafcf))
+* **start:** improve margin for text wrapping ([1d221e7](https://github.com/twilio-labs/twilio-run/commit/1d221e7))
+* **start:** wrap output for smaller terminals ([#47](https://github.com/twilio-labs/twilio-run/issues/47)) ([e5ae37d](https://github.com/twilio-labs/twilio-run/commit/e5ae37d))
+* removes console.error ([#48](https://github.com/twilio-labs/twilio-run/issues/48)) ([e2b374d](https://github.com/twilio-labs/twilio-run/commit/e2b374d))
+
+
+
 ## [2.0.0-rc.2](https://github.com/twilio-labs/twilio-run/compare/v2.0.0-rc.1...v2.0.0-rc.2) (2019-07-26)
 
 
