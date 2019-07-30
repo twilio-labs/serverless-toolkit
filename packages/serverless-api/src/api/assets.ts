@@ -126,10 +126,6 @@ async function createAssetVersion(
   serviceSid: string,
   client: GotClient
 ): Promise<VersionResource> {
-  if (asset.access === 'protected') {
-    throw new Error(`Asset ${asset.name} cannot be "protected".
-Please change it to have "private" or "public" access.`);
-  }
   try {
     const contentType = getContentType(
       asset.content,
