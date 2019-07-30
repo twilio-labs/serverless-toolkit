@@ -76,6 +76,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
   private client: GotClient;
 
   constructor(config: ClientConfig) {
+    debug.enable(process.env.DEBUG || '');
     super();
     this.config = config;
     this.client = createGotClient(config);
@@ -86,6 +87,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
    * @returns {GotClient} A client instance with set-up credentials
    */
   getClient(): GotClient {
+    debug.enable(process.env.DEBUG || '');
     return this.client;
   }
 
