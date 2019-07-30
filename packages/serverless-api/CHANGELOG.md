@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-rc.3](https://github.com/twilio-labs/serverless-api/compare/v1.0.0-rc.2...v1.0.0-rc.3) (2019-07-30)
+
+
+### Bug Fixes
+
+* **assets:** enable protected asset upload ([87db602](https://github.com/twilio-labs/serverless-api/commit/87db602))
+
+
+
 ## [1.0.0-rc.2](https://github.com/twilio-labs/serverless-api/compare/v1.0.0-rc.1...v1.0.0-rc.2) (2019-07-25)
 
 
