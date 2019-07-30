@@ -1,5 +1,13 @@
 import debug from 'debug';
+import ora from 'ora';
+import { Writable } from 'stream';
 import { errorMessage, warningMessage } from '../printers/utils';
+
+// an empty stream that immediately drops everything. Like /dev/null
+const EmptyStream = new Writable();
+EmptyStream._write = (chunk, encoding, callback) => {
+  setImmediate(callback);
+};
 
 export const LoggingLevel = {
   debug: -1,
@@ -90,6 +98,29 @@ export function getDebugFunction(namespace: string) {
 
 export function setLogLevelByName(name: LoggingLevelNames) {
   logger.config = { level: LoggingLevel[name] };
+}
+
+export function getOraSpinner(options?: string | ora.Options): ora.Ora {
+  let oraOptions: ora.Options;
+  if (typeof options === 'string') {
+    oraOptions = {
+      text: options,
+    };
+  } else if (typeof options === 'undefined') {
+    oraOptions = {};
+  } else {
+    oraOptions = options;
+  }
+
+  if (logger.config.level > LoggingLevel.info) {
+    oraOptions = {
+      ...oraOptions,
+      // write to a stream that drops the content
+      stream: EmptyStream,
+    };
+  }
+
+  return ora(oraOptions);
 }
 
 export let logger: ILogger = new Logger({

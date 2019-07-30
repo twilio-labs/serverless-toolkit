@@ -2,12 +2,17 @@ import {
   ActivateConfig,
   TwilioServerlessApiClient,
 } from '@twilio-labs/serverless-api';
-import ora, { Ora } from 'ora';
+import { Ora } from 'ora';
 import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
 import { ActivateCliFlags, getConfigFromFlags } from '../config/activate';
 import { printActivateConfig } from '../printers/activate';
-import { getDebugFunction, logger, setLogLevelByName } from '../utils/logger';
+import {
+  getDebugFunction,
+  getOraSpinner,
+  logger,
+  setLogLevelByName,
+} from '../utils/logger';
 import { writePlainOutput } from '../utils/output';
 import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
@@ -54,7 +59,7 @@ export async function handler(
   const details = config.buildSid
     ? `(${config.buildSid})`
     : `from ${config.sourceEnvironment}`;
-  const spinner = ora(
+  const spinner = getOraSpinner(
     `Activating build ${details} to ${config.targetEnvironment}`
   ).start();
   try {

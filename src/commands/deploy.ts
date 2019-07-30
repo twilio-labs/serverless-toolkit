@@ -3,7 +3,7 @@ import {
   TwilioServerlessApiClient,
 } from '@twilio-labs/serverless-api';
 import { stripIndent } from 'common-tags';
-import ora, { Ora } from 'ora';
+import { Ora } from 'ora';
 import path from 'path';
 import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
@@ -15,7 +15,12 @@ import {
   HttpError,
   saveLatestDeploymentData,
 } from '../serverless-api/utils';
-import { getDebugFunction, logger, setLogLevelByName } from '../utils/logger';
+import {
+  getDebugFunction,
+  getOraSpinner,
+  logger,
+  setLogLevelByName,
+} from '../utils/logger';
 import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 import { constructCommandName, getFullCommand } from './utils';
@@ -105,7 +110,7 @@ export async function handler(
 
   printConfigInfo(config);
 
-  const spinner = ora('Deploying Function').start();
+  const spinner = getOraSpinner('Deploying Function').start();
   try {
     const client = new TwilioServerlessApiClient(config);
     client.on('status-update', evt => {
