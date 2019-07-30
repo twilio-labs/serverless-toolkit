@@ -9,6 +9,7 @@ import express, {
 } from 'express';
 import nocache from 'nocache';
 import { StartCliConfig } from '../config/start';
+import { wrapErrorInHtml } from '../utils/error-html';
 import { createLogger } from './internal/request-logger';
 import { setRoutes } from './internal/route-cache';
 import { getFunctionsAndAssets } from './internal/runtime-paths';
@@ -107,7 +108,11 @@ export async function createServer(
           functionToRoute(twilioFunction, config, functionPath)(req, res, next);
         } catch (err) {
           log('Failed to retrieve function. %O', err);
-          res.status(404).send(`Could not find function ${functionPath}`);
+          if (err.code === 'ENOENT') {
+            res.status(404).send(`Could not find function ${functionPath}`);
+          } else {
+            res.status(500).send(wrapErrorInHtml(err, functionPath));
+          }
         }
       } else if (routeInfo && routeInfo.type === 'asset') {
         if (routeInfo.filePath) {
