@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { Arguments } from 'yargs';
 import { fetchListOfTemplates } from '../templating/actions';
 import { getOraSpinner, setLogLevelByName } from '../utils/logger';
-import { writePlainOutput } from '../utils/output';
+import { writeOutput } from '../utils/output';
 import { baseCliOptions, BaseFlags } from './shared';
 import { CliInfo } from './types';
 
@@ -22,7 +22,7 @@ export async function handler(flags: Arguments<BaseFlags>): Promise<void> {
   spinner.stop();
 
   templates.forEach(template => {
-    writePlainOutput(
+    writeOutput(
       chalk`‣ ${template.name} ({cyan ${template.id}})\n  {dim ${template.description}}`
     );
   });

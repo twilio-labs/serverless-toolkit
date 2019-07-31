@@ -1,3 +1,3 @@
-export function writePlainOutput(...args: any[]) {
+export function writeOutput(...args: any[]) {
   console.log(...args);
 }

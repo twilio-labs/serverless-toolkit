@@ -9,7 +9,7 @@ import columnify from 'columnify';
 import { stripIndent } from 'common-tags';
 import { MergeExclusive } from 'type-fest';
 import { logger } from '../utils/logger';
-import { writePlainOutput } from '../utils/output';
+import { writeOutput } from '../utils/output';
 import {
   printObjectWithoutHeaders,
   redactPartOfString,
@@ -67,7 +67,7 @@ functions\n${functionsOutput}
 
 assets\n${assetsOutput}
   `;
-  writePlainOutput(stripIndent(output));
+  writeOutput(stripIndent(output));
 }
 
 function prettyPrintConfigInfo(config: DeployLocalProjectConfig) {
@@ -77,7 +77,7 @@ function prettyPrintConfigInfo(config: DeployLocalProjectConfig) {
   }
 
   logger.info('\nDeploying functions & assets to the Twilio Runtime');
-  writePlainOutput(
+  writeOutput(
     chalk`
 {bold.cyan Account}\t\t${config.accountSid}
 {bold.cyan Token}\t\t${redactPartOfString(config.authToken)}
@@ -103,14 +103,14 @@ function plainPrintConfigInfo(config: DeployLocalProjectConfig) {
     dependencies: dependencyString,
     environmentVariables: Object.keys(config.env).join(','),
   };
-  writePlainOutput(`configInfo\n${printObjectWithoutHeaders(printObj)}\n`);
+  writeOutput(`configInfo\n${printObjectWithoutHeaders(printObj)}\n`);
 }
 
 function prettyPrintDeployedResources(
   config: DeployLocalProjectConfig,
   result: DeployResult
 ) {
-  writePlainOutput(
+  writeOutput(
     chalk`
 {bold.cyan.underline Deployment Details}
 {bold.cyan Domain:} ${result.domain}
@@ -132,8 +132,8 @@ function prettyPrintDeployedResources(
         return chalk`   ${accessPrefix}{dim https://${result.domain}}${fn.path}`;
       })
       .join('\n');
-    writePlainOutput(chalk.bold.cyan('Functions:'));
-    writePlainOutput(functionMessage);
+    writeOutput(chalk.bold.cyan('Functions:'));
+    writeOutput(functionMessage);
   }
 
   if (result.assetResources) {
@@ -150,8 +150,8 @@ function prettyPrintDeployedResources(
       })
       .join('\n');
 
-    writePlainOutput(chalk.bold.cyan('Assets:'));
-    writePlainOutput(assetMessage);
+    writeOutput(chalk.bold.cyan('Assets:'));
+    writeOutput(assetMessage);
   }
 }
 

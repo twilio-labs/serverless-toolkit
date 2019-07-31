@@ -13,7 +13,7 @@ import {
   logger,
   setLogLevelByName,
 } from '../utils/logger';
-import { writePlainOutput } from '../utils/output';
+import { writeOutput } from '../utils/output';
 import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 
@@ -68,7 +68,7 @@ export async function handler(
     spinner.succeed(
       `Activated new build ${details} on ${config.targetEnvironment}`
     );
-    writePlainOutput(result.domain);
+    writeOutput(result.domain);
   } catch (err) {
     handleError(err, spinner);
   }
