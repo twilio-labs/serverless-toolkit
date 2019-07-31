@@ -6,7 +6,7 @@ Serverless Framework plugin to deploy to the Twilio Runtime
 
 ### Pre-requisites
 
-- Node.js v8.10.0 (this is the runtime version supported by Azure Functions)
+- Node.js v8.10.0 (this is the runtime version supported by Twilio Functions)
 - Serverless CLI v1.48.0+. You can run npm i -g serverless if you don't already have it.
 - A Twilio account. If you don't have one you can [sign up quickly](https://www.twilio.com/try-twilio).
 
