@@ -7,6 +7,7 @@ import { getServiceNameFromFlags } from '../../../src/config/utils/service-name'
 
 const baseFlags = {
   config: '.twilio-functions',
+  logLevel: 'info' as 'info',
 };
 
 describe('getServiceNameFromFlags', () => {

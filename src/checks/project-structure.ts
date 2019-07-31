@@ -1,7 +1,7 @@
 import { fsHelpers } from '@twilio-labs/serverless-api';
 import chalk from 'chalk';
 import { commaListsOr, stripIndent } from 'common-tags';
-import { errorMessage, warningMessage } from '../printers/utils';
+import { logger } from '../utils/logger';
 
 export async function doesAnyDirectoryExist(
   basePath: string,
@@ -61,9 +61,9 @@ export default async function checkProjectStructure(
   const title = 'Invalid Serverless Project Structure';
 
   if (shouldExit) {
-    console.error(errorMessage(title, messageBody));
+    logger.error(messageBody, title);
     process.exit(1);
   } else {
-    console.warn(warningMessage(title, messageBody));
+    logger.warn(messageBody, title);
   }
 }

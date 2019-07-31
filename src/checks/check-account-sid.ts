@@ -1,5 +1,5 @@
 import { stripIndent } from 'common-tags';
-import { errorMessage } from '../printers/utils';
+import { logger } from '../utils/logger';
 import chalk = require('chalk');
 
 type Options = {
@@ -35,7 +35,7 @@ export function checkForValidAccountSid(
   }
 
   if (options.shouldPrintMessage && message) {
-    console.error(errorMessage(title, message));
+    logger.error(message, title);
   }
 
   if (options.shouldThrowError && message) {

@@ -5,14 +5,17 @@ import { Merge } from 'type-fest';
 import { Arguments, Argv } from 'yargs';
 import checkProjectStructure from '../checks/project-structure';
 import { downloadTemplate, fetchListOfTemplates } from '../templating/actions';
-import { ExternalCliOptions } from './shared';
+import { setLogLevelByName } from '../utils/logger';
+import { baseCliOptions, BaseFlags, ExternalCliOptions } from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
 
-export type NewCliFlags = Arguments<{
-  namespace?: string;
-  template?: string;
-}>;
+export type NewCliFlags = Arguments<
+  BaseFlags & {
+    namespace?: string;
+    template?: string;
+  }
+>;
 
 export type NewConfig = Merge<
   NewCliFlags,
@@ -89,6 +92,8 @@ export async function handler(
   flagsInput: NewCliFlags,
   externalCliOptions?: ExternalCliOptions
 ): Promise<void> {
+  setLogLevelByName(flagsInput.logLevel);
+
   const targetDirectory = getBaseDirectoryPath();
   const command = getFullCommand(flagsInput);
   await checkProjectStructure(targetDirectory, command, true);
@@ -111,6 +116,7 @@ export async function handler(
 
 export const cliInfo: CliInfo = {
   options: {
+    ...baseCliOptions,
     template: {
       type: 'string',
       description: 'Name of template to be used',

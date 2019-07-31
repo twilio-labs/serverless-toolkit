@@ -5,7 +5,6 @@ import {
   RuntimeSyncClientOptions,
   RuntimeSyncServiceContext,
 } from '@twilio-labs/serverless-runtime-types/types';
-import debug from 'debug';
 import { readFileSync } from 'fs';
 import twilio from 'twilio';
 import { ServiceContext } from 'twilio/lib/rest/sync/v1/service';
@@ -13,8 +12,9 @@ import { SyncListListInstance } from 'twilio/lib/rest/sync/v1/service/syncList';
 import { SyncMapListInstance } from 'twilio/lib/rest/sync/v1/service/syncMap';
 import { checkForValidAccountSid } from '../../checks/check-account-sid';
 import { StartCliConfig } from '../../config/start';
+import { getDebugFunction } from '../../utils/logger';
 
-const log = debug('twilio-run:runtime');
+const debug = getDebugFunction('twilio-run:runtime');
 
 const { getCachedResources } = require('./route-cache');
 
@@ -33,7 +33,7 @@ function getAssets(): AssetResourceMap {
       result[prefix + asset.path] = { path: asset.filePath, open };
     }
   }
-  log('Found the following assets available: %O', result);
+  debug('Found the following assets available: %O', result);
   return result;
 }
 
@@ -47,7 +47,7 @@ function getFunctions(): ResourceMap {
   for (const fn of functions) {
     result[fn.path.substr(1)] = { path: fn.filePath };
   }
-  log('Found the following functions available: %O', result);
+  debug('Found the following functions available: %O', result);
   return result;
 }
 

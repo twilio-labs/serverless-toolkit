@@ -1,9 +1,9 @@
-import debug from 'debug';
 import { SharedFlags } from '../../commands/shared';
 import { deprecateProjectName } from '../../commands/utils';
+import { getDebugFunction } from '../../utils/logger';
 import { readPackageJsonContent } from './package-json';
 
-const log = debug('twilio-run:config:utils');
+const debug = getDebugFunction('twilio-run:config:utils');
 
 type FlagsWithServiceName = SharedFlags & {
   serviceName?: string;
@@ -29,7 +29,7 @@ export async function getServiceNameFromFlags<T extends FlagsWithServiceName>(
         serviceName = pkgJson.name;
       }
     } catch (err) {
-      log('%O', err);
+      debug('%O', err);
     }
   }
 

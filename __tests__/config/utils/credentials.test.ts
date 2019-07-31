@@ -2,7 +2,11 @@ jest.mock('../../../src/config/utils/env');
 
 import { getCredentialsFromFlags } from '../../../src/config/utils/credentials';
 
-const baseFlags = { config: '.twilio-function', cwd: process.cwd() };
+const baseFlags = {
+  config: '.twilio-function',
+  cwd: process.cwd(),
+  logLevel: 'info' as 'info',
+};
 const baseExternalCliOptions = {};
 
 describe('getCredentialsFromFlags', () => {

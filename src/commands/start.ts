@@ -1,4 +1,3 @@
-import debug from 'debug';
 import { Argv } from 'yargs';
 import checkNodejsVersion from '../checks/nodejs-version';
 import checkProjectStructure from '../checks/project-structure';
@@ -6,16 +5,19 @@ import { getConfigFromCli, StartCliFlags } from '../config/start';
 import { printRouteInfo } from '../printers/start';
 import { createServer } from '../runtime/server';
 import { startInspector } from '../runtime/utils/inspector';
+import { getDebugFunction, setLogLevelByName } from '../utils/logger';
 import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
 
-const log = debug('twilio-run:start');
+const debug = getDebugFunction('twilio-run:start');
 
 export async function handler(
   argv: StartCliFlags,
   externalCliOptions?: ExternalCliOptions
 ): Promise<void> {
+  setLogLevelByName(argv.logLevel);
+
   checkNodejsVersion();
 
   const config = await getConfigFromCli(argv, cliInfo, externalCliOptions);
@@ -23,14 +25,14 @@ export async function handler(
   const command = getFullCommand(argv);
   await checkProjectStructure(config.baseDir, command);
 
-  log('Determined configuration: %p', config);
+  debug('Determined configuration: %p', config);
   process.title = config.appName;
 
-  log('Set environment variables as: %r', config.env);
+  debug('Set environment variables as: %r', config.env);
   process.env = config.env;
 
   if (config.inspect) {
-    log(
+    debug(
       'Starting inspector mode with following configuration: %p',
       config.inspect
     );
@@ -38,7 +40,7 @@ export async function handler(
   }
 
   const app = await createServer(config.port, config);
-  log('Start server on port %d', config.port);
+  debug('Start server on port %d', config.port);
   return new Promise(resolve => {
     app.listen(config.port, async () => {
       printRouteInfo(config);

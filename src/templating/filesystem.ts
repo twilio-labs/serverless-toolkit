@@ -1,6 +1,5 @@
 import { fsHelpers } from '@twilio-labs/serverless-api';
 import chalk from 'chalk';
-import debug from 'debug';
 import dotenv from 'dotenv';
 import { mkdir as oldMkdir } from 'fs';
 import got from 'got';
@@ -9,10 +8,11 @@ import path from 'path';
 import { install, InstallResult } from 'pkg-install';
 import { promisify } from 'util';
 import { downloadFile, fileExists, readFile, writeFile } from '../utils/fs';
+import { getDebugFunction, logger } from '../utils/logger';
 import { TemplateFileInfo } from './data';
 const mkdir = promisify(oldMkdir);
 
-const log = debug('twilio-run:templating:filesystem');
+const debug = getDebugFunction('twilio-run:templating:filesystem');
 
 async function writeEnvFile(
   contentUrl: string,
@@ -102,7 +102,7 @@ export async function writeFiles(
       try {
         await mkdir(functionsTargetDir);
       } catch (err) {
-        log(err);
+        debug(err);
         throw new Error(
           `Template with name "${namespace}" already exists in "${functionsDir}"`
         );
@@ -113,7 +113,7 @@ export async function writeFiles(
       try {
         await mkdir(assetsTargetDir);
       } catch (err) {
-        log(err);
+        debug(err);
         throw new Error(
           `Template with name "${namespace}" already exists in "${assetsDir}"`
         );
@@ -162,7 +162,7 @@ export async function writeFiles(
 
   const newKeys = context.env.newEnvironmentVariableKeys;
   if (newKeys.length > 0) {
-    console.log(
+    logger.info(
       chalk`{cyan INFO} Make sure to configure ${newKeys.join(
         ','
       )} in the .env file`

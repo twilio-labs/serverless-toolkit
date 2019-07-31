@@ -1,6 +1,5 @@
 import { ServerlessFunctionSignature } from '@twilio-labs/serverless-runtime-types/types';
 import bodyParser from 'body-parser';
-import debug from 'debug';
 import express, {
   Express,
   NextFunction,
@@ -10,12 +9,13 @@ import express, {
 import nocache from 'nocache';
 import { StartCliConfig } from '../config/start';
 import { wrapErrorInHtml } from '../utils/error-html';
+import { getDebugFunction } from '../utils/logger';
 import { createLogger } from './internal/request-logger';
 import { setRoutes } from './internal/route-cache';
 import { getFunctionsAndAssets } from './internal/runtime-paths';
 import { functionToRoute } from './route';
 
-const log = debug('twilio-run:server');
+const debug = getDebugFunction('twilio-run:server');
 const DEFAULT_PORT = process.env.PORT || 3000;
 
 function requireUncached(module: string): any {
@@ -28,7 +28,7 @@ function loadTwilioFunction(
   config: StartCliConfig
 ): ServerlessFunctionSignature {
   if (config.live) {
-    log('Uncached loading of %s', fnPath);
+    debug('Uncached loading of %s', fnPath);
     return requireUncached(fnPath).handler;
   } else {
     return require(fnPath).handler;
@@ -45,7 +45,7 @@ export async function createServer(
     ...config,
   };
 
-  log('Starting server with config: %p', config);
+  debug('Starting server with config: %p', config);
 
   const app = express();
   app.use(bodyParser.urlencoded({ extended: false }));
@@ -68,7 +68,7 @@ export async function createServer(
     process.env.TWILIO_FUNCTIONS_LEGACY_MODE = config.legacyMode
       ? 'true'
       : undefined;
-    log('Legacy mode enabled');
+    debug('Legacy mode enabled');
     app.use('/assets/*', (req, res, next) => {
       req.path = req.path.replace('/assets/', '/');
       next();
@@ -96,7 +96,7 @@ export async function createServer(
             throw new Error('Missing function path');
           }
 
-          log('Load & route to function at "%s"', functionPath);
+          debug('Load & route to function at "%s"', functionPath);
           const twilioFunction = loadTwilioFunction(functionPath, config);
           if (typeof twilioFunction !== 'function') {
             return res
@@ -107,7 +107,7 @@ export async function createServer(
           }
           functionToRoute(twilioFunction, config, functionPath)(req, res, next);
         } catch (err) {
-          log('Failed to retrieve function. %O', err);
+          debug('Failed to retrieve function. %O', err);
           if (err.code === 'ENOENT') {
             res.status(404).send(`Could not find function ${functionPath}`);
           } else {

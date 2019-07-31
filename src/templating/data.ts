@@ -1,7 +1,7 @@
-import debug from 'debug';
 import got from 'got';
+import { getDebugFunction } from '../utils/logger';
 
-const log = debug('twilio-run:new:template-data');
+const debug = getDebugFunction('twilio-run:new:template-data');
 
 const TEMPLATES_URL =
   'https://raw.githubusercontent.com/twilio-labs/function-templates/next/templates.json';
@@ -99,7 +99,7 @@ export async function getTemplateFiles(
     );
     return files;
   } catch (err) {
-    log(err.message);
+    debug(err.message);
     throw new Error('Invalid template');
   }
 }

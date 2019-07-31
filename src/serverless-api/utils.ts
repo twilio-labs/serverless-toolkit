@@ -1,7 +1,7 @@
-import debug from 'debug';
 import { getConfig, readSpecializedConfig } from '../config/global';
+import { getDebugFunction } from '../utils/logger';
 
-const log = debug('twilio-run:internal:utils');
+const log = getDebugFunction('twilio-run:internal:utils');
 
 export interface HttpError extends Error {
   name: 'HTTPError';

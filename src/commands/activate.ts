@@ -2,24 +2,29 @@ import {
   ActivateConfig,
   TwilioServerlessApiClient,
 } from '@twilio-labs/serverless-api';
-import chalk from 'chalk';
-import debug from 'debug';
-import ora, { Ora } from 'ora';
+import { Ora } from 'ora';
 import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
 import { ActivateCliFlags, getConfigFromFlags } from '../config/activate';
 import { printActivateConfig } from '../printers/activate';
+import {
+  getDebugFunction,
+  getOraSpinner,
+  logger,
+  setLogLevelByName,
+} from '../utils/logger';
+import { writeOutput } from '../utils/output';
 import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 
-const log = debug('twilio-run:activate');
+const debug = getDebugFunction('twilio-run:activate');
 
 function logError(msg: string) {
-  console.error(chalk`{red.bold ERROR} ${msg}`);
+  logger.error(msg);
 }
 
 function handleError(err: Error, spinner: Ora) {
-  log('%O', err);
+  debug('%O', err);
   if (spinner) {
     spinner.fail(err.message);
   }
@@ -30,11 +35,12 @@ export async function handler(
   flags: ActivateCliFlags,
   externalCliOptions?: ExternalCliOptions
 ): Promise<void> {
+  setLogLevelByName(flags.logLevel);
   let config: ActivateConfig;
   try {
     config = await getConfigFromFlags(flags, externalCliOptions);
   } catch (err) {
-    log(err);
+    debug(err);
     logError(err.message);
     process.exit(1);
     return;
@@ -53,7 +59,7 @@ export async function handler(
   const details = config.buildSid
     ? `(${config.buildSid})`
     : `from ${config.sourceEnvironment}`;
-  const spinner = ora(
+  const spinner = getOraSpinner(
     `Activating build ${details} to ${config.targetEnvironment}`
   ).start();
   try {
@@ -62,7 +68,7 @@ export async function handler(
     spinner.succeed(
       `Activated new build ${details} on ${config.targetEnvironment}`
     );
-    console.log(result.domain);
+    writeOutput(result.domain);
   } catch (err) {
     handleError(err, spinner);
   }

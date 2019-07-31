@@ -2,30 +2,33 @@ import {
   DeployLocalProjectConfig,
   TwilioServerlessApiClient,
 } from '@twilio-labs/serverless-api';
-import chalk from 'chalk';
 import { stripIndent } from 'common-tags';
-import debug from 'debug';
-import ora, { Ora } from 'ora';
+import { Ora } from 'ora';
 import path from 'path';
 import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
 import checkProjectStructure from '../checks/project-structure';
 import { DeployCliFlags, getConfigFromFlags } from '../config/deploy';
 import { printConfigInfo, printDeployedResources } from '../printers/deploy';
-import { errorMessage } from '../printers/utils';
 import {
   ApiErrorResponse,
   HttpError,
   saveLatestDeploymentData,
 } from '../serverless-api/utils';
+import {
+  getDebugFunction,
+  getOraSpinner,
+  logger,
+  setLogLevelByName,
+} from '../utils/logger';
 import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 import { constructCommandName, getFullCommand } from './utils';
 
-const log = debug('twilio-run:deploy');
+const debug = getDebugFunction('twilio-run:deploy');
 
 function logError(msg: string) {
-  console.error(chalk`{red.bold ERROR} ${msg}`);
+  logger.error(msg);
 }
 
 function handleError(
@@ -34,7 +37,7 @@ function handleError(
   flags: DeployCliFlags,
   config: DeployLocalProjectConfig
 ) {
-  log('%O', err);
+  debug('%O', err);
   spinner.fail('Failed Deployment');
   if (err.name === 'conflicting-servicename') {
     const fullCommand = getFullCommand(flags);
@@ -56,7 +59,7 @@ function handleError(
       - Run deployment in force mode
         > ${constructCommandName(fullCommand, 'deploy', ['--force'])} 
     `;
-    console.error(errorMessage(err.message, messageBody));
+    logger.error(messageBody, err.message);
   } else if (err.name === 'HTTPError') {
     const responseBody = JSON.parse(
       (err as HttpError).body
@@ -66,9 +69,10 @@ function handleError(
 
       More info: ${responseBody.more_info}
     `;
-    console.error(errorMessage('', messageBody));
+
+    logger.error(messageBody);
   } else {
-    console.error(err.message);
+    logger.error(err.message);
   }
   process.exit(1);
 }
@@ -77,6 +81,8 @@ export async function handler(
   flags: DeployCliFlags,
   externalCliOptions?: ExternalCliOptions
 ): Promise<void> {
+  setLogLevelByName(flags.logLevel);
+
   const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
   flags.cwd = cwd;
   const command = getFullCommand(flags);
@@ -86,7 +92,7 @@ export async function handler(
   try {
     config = await getConfigFromFlags(flags, externalCliOptions);
   } catch (err) {
-    log(err);
+    debug(err);
     logError(err.message);
     process.exit(1);
     return;
@@ -98,13 +104,13 @@ export async function handler(
     return;
   }
 
-  log('Deploy Config %P', config);
+  debug('Deploy Config %P', config);
 
   checkConfigForCredentials(config);
 
   printConfigInfo(config);
 
-  const spinner = ora('Deploying Function').start();
+  const spinner = getOraSpinner('Deploying Function').start();
   try {
     const client = new TwilioServerlessApiClient(config);
     client.on('status-update', evt => {

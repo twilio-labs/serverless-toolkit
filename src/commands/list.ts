@@ -1,23 +1,22 @@
 import { TwilioServerlessApiClient } from '@twilio-labs/serverless-api';
-import chalk from 'chalk';
-import debug from 'debug';
 import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
 import checkForValidServiceSid from '../checks/check-service-sid';
 import { getConfigFromFlags, ListCliFlags, ListConfig } from '../config/list';
 import { printListResult } from '../printers/list';
+import { getDebugFunction, logger, setLogLevelByName } from '../utils/logger';
 import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
 
-const log = debug('twilio-run:list');
+const debug = getDebugFunction('twilio-run:list');
 
 function logError(msg: string) {
-  console.error(chalk`{red.bold ERROR} ${msg}`);
+  logger.error(msg);
 }
 
 function handleError(err: Error) {
-  log('%O', err);
+  debug('%O', err);
   logError(err.message);
   process.exit(1);
 }
@@ -26,11 +25,13 @@ export async function handler(
   flags: ListCliFlags,
   externalCliOptions?: ExternalCliOptions
 ): Promise<void> {
+  setLogLevelByName(flags.logLevel);
+
   let config: ListConfig;
   try {
     config = await getConfigFromFlags(flags, externalCliOptions);
   } catch (err) {
-    log(err);
+    debug(err);
     logError(err.message);
     process.exit(1);
     return;

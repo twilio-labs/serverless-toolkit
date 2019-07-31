@@ -3,7 +3,6 @@ import {
   ServerlessCallback,
   ServerlessFunctionSignature,
 } from '@twilio-labs/serverless-runtime-types/types';
-import debug from 'debug';
 import {
   NextFunction,
   Request as ExpressRequest,
@@ -14,12 +13,13 @@ import twilio, { twiml } from 'twilio';
 import { checkForValidAccountSid } from '../checks/check-account-sid';
 import { StartCliConfig } from '../config/start';
 import { wrapErrorInHtml } from '../utils/error-html';
+import { getDebugFunction } from '../utils/logger';
 import { Response } from './internal/response';
 import * as Runtime from './internal/runtime';
 
 const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
 
-const log = debug('twilio-run:route');
+const debug = getDebugFunction('twilio-run:route');
 
 export function constructEvent<T extends {} = {}>(req: ExpressRequest): T {
   return { ...req.query, ...req.body };
@@ -87,24 +87,24 @@ export function handleSuccess(
 ) {
   res.status(200);
   if (typeof responseObject === 'string') {
-    log('Sending basic string response');
+    debug('Sending basic string response');
     res.type('text/plain').send(responseObject);
     return;
   }
 
   if (responseObject && isTwiml(responseObject)) {
-    log('Sending TwiML response as XML string');
+    debug('Sending TwiML response as XML string');
     res.type('text/xml').send(responseObject.toString());
     return;
   }
 
   if (responseObject && responseObject instanceof Response) {
-    log('Sending custom response');
+    debug('Sending custom response');
     responseObject.applyToExpressResponse(res);
     return;
   }
 
-  log('Sending JSON response');
+  debug('Sending JSON response');
   res.send(responseObject);
 }
 
@@ -121,15 +121,15 @@ export function functionToRoute(
     next: NextFunction
   ) {
     const event = constructEvent(req);
-    log('Event for %s: %o', req.path, event);
+    debug('Event for %s: %o', req.path, event);
     const context = constructContext(config);
-    log('Context for %s: %p', req.path, context);
+    debug('Context for %s: %p', req.path, context);
 
     const callback: ServerlessCallback = function callback(
       err,
       responseObject?
     ) {
-      log('Function execution %s finished', req.path);
+      debug('Function execution %s finished', req.path);
       if (err) {
         handleError(err, res, functionFilePath);
         return;
@@ -137,7 +137,7 @@ export function functionToRoute(
       handleSuccess(responseObject, res);
     };
 
-    log('Calling function for %s', req.path);
+    debug('Calling function for %s', req.path);
     try {
       fn(context, event, callback);
     } catch (err) {
