@@ -84,7 +84,7 @@ function hasFilesOfType(files: TemplateFileInfo[], type: string) {
 export async function writeFiles(
   files: TemplateFileInfo[],
   targetDir: string,
-  bundleName: string
+  namespace: string
 ): Promise<void> {
   const functionsDir = fsHelpers.getFirstMatchingDirectory(targetDir, [
     'functions',
@@ -94,8 +94,8 @@ export async function writeFiles(
     'assets',
     'static',
   ]);
-  const functionsTargetDir = path.join(functionsDir, bundleName);
-  const assetsTargetDir = path.join(assetsDir, bundleName);
+  const functionsTargetDir = path.join(functionsDir, namespace);
+  const assetsTargetDir = path.join(assetsDir, namespace);
 
   if (functionsTargetDir !== functionsDir) {
     if (hasFilesOfType(files, 'functions')) {
@@ -104,7 +104,7 @@ export async function writeFiles(
       } catch (err) {
         debug(err);
         throw new Error(
-          `Bundle with name "${bundleName}" already exists in "${functionsDir}"`
+          `Template with name "${namespace}" already exists in "${functionsDir}"`
         );
       }
     }
@@ -115,7 +115,7 @@ export async function writeFiles(
       } catch (err) {
         debug(err);
         throw new Error(
-          `Bundle with name "${bundleName}" already exists in "${assetsDir}"`
+          `Template with name "${namespace}" already exists in "${assetsDir}"`
         );
       }
     }

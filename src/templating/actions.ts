@@ -5,13 +5,15 @@ import { writeFiles } from './filesystem';
 
 export async function downloadTemplate(
   templateName: string,
-  bundleName: string,
+  namespace: string,
   targetDirectory: string
 ): Promise<void> {
   const files = await getTemplateFiles(templateName);
   try {
-    await writeFiles(files, targetDirectory, bundleName);
-    logger.info(chalk`{green SUCCESS} Created new bundle ${bundleName}`);
+    await writeFiles(files, targetDirectory, namespace);
+    logger.info(
+      chalk`{green SUCCESS} Downloaded new template into the "${namespace}" subdirectories`
+    );
   } catch (err) {
     logger.error(err.message, err.name);
   }

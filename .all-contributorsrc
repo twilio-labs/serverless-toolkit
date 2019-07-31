@@ -46,6 +46,27 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "stefanjudis",
+      "name": "Stefan Judis",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/962099?v=4",
+      "profile": "https://www.stefanjudis.com/",
+      "contributions": [
+        "bug",
+        "code"
+      ]
+    },
+    {
+      "login": "philnash",
+      "name": "Phil Nash",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/31462?v=4",
+      "profile": "https://philna.sh",
+      "contributions": [
+        "bug",
+        "code",
+        "review"
+      ]
     }
   ]
 }

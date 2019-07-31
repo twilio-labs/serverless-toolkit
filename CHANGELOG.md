@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-rc.4](https://github.com/twilio-labs/twilio-run/compare/v2.0.0-rc.3...v2.0.0-rc.4) (2019-07-31)
+
+
+
 ## [2.0.0-rc.3](https://github.com/twilio-labs/twilio-run/compare/v2.0.0-rc.2...v2.0.0-rc.3) (2019-07-30)
 
 
