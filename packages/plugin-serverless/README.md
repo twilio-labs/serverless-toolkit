@@ -43,12 +43,21 @@ USAGE
 
 # Commands
 <!-- commands -->
-* [`twilio serverless:activate`](#twilio-serverlessactivate)
-* [`twilio serverless:deploy`](#twilio-serverlessdeploy)
-* [`twilio serverless:init NAME`](#twilio-serverlessinit-name)
-* [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-types)
-* [`twilio serverless:new [NAMESPACE]`](#twilio-serverlessnew-namespace)
-* [`twilio serverless:start [DIR]`](#twilio-serverlessstart-dir)
+- [Requirements](#requirements)
+  - [Install the Twilio CLI](#install-the-twilio-cli)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`twilio serverless:activate`](#twilio-serverlessactivate)
+  - [`twilio serverless:deploy`](#twilio-serverlessdeploy)
+  - [`twilio serverless:init NAME`](#twilio-serverlessinit-name)
+  - [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-types)
+  - [`twilio serverless:list-templates`](#twilio-serverlesslist-templates)
+  - [`twilio serverless:new [NAMESPACE]`](#twilio-serverlessnew-namespace)
+  - [`twilio serverless:start [DIR]`](#twilio-serverlessstart-dir)
+- [Contributing](#contributing)
+  - [Code of Conduct](#code-of-conduct)
+  - [Contributors](#contributors)
+- [License](#license)
 
 ## `twilio serverless:activate`
 
@@ -158,9 +167,6 @@ OPTIONS
                                  TWILIO_AUTH_TOKEN
 
   --skip-credentials             Don't ask for Twilio account credentials or import them from the environment
-
-  --template=template            Initialize your new project with a template from
-                                 github.com/twilio-labs/function-templates
 ```
 
 _See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.4/src/commands/serverless/init.js)_
@@ -201,6 +207,17 @@ OPTIONS
 ```
 
 _See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.4/src/commands/serverless/list.js)_
+
+## `twilio serverless:list-templates`
+
+Lists the available Twilio Function templates
+
+```
+USAGE
+  $ twilio serverless:list-templates
+```
+
+_See code: [src/commands/serverless/list-templates.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.3/src/commands/serverless/list-templates.js)_
 
 ## `twilio serverless:new [NAMESPACE]`
 
