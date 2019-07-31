@@ -62,6 +62,8 @@ OPTIONS
   -c, --config=config                      [default: .twilio-functions] Location of the config file. Absolute path or
                                            relative to current working directory (cwd)
 
+  -l, --logLevel=logLevel                  [default: info] Level of logging messages.
+
   -p, --project=project                    Shorthand identifier for your Twilio project.
 
   -u, --account-sid=account-sid            A specific account SID to be used for deployment. Uses fields in .env
@@ -87,7 +89,7 @@ OPTIONS
   --source-environment=source-environment  SID or suffix of an existing environment you want to deploy from.
 ```
 
-_See code: [src/commands/serverless/activate.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.3/src/commands/serverless/activate.js)_
+_See code: [src/commands/serverless/activate.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.4/src/commands/serverless/activate.js)_
 
 ## `twilio serverless:deploy`
 
@@ -100,6 +102,8 @@ USAGE
 OPTIONS
   -c, --config=config                  [default: .twilio-functions] Location of the config file. Absolute path or
                                        relative to current working directory (cwd)
+
+  -l, --logLevel=logLevel              [default: info] Level of logging messages.
 
   -n, --service-name=service-name      Overrides the name of the Serverless project. Default: the name field in your
                                        package.json
@@ -132,7 +136,7 @@ OPTIONS
                                        found.
 ```
 
-_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.3/src/commands/serverless/deploy.js)_
+_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.4/src/commands/serverless/deploy.js)_
 
 ## `twilio serverless:init NAME`
 
@@ -159,7 +163,7 @@ OPTIONS
                                  github.com/twilio-labs/function-templates
 ```
 
-_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.3/src/commands/serverless/init.js)_
+_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.4/src/commands/serverless/init.js)_
 
 ## `twilio serverless:list [TYPES]`
 
@@ -175,6 +179,8 @@ ARGUMENTS
 OPTIONS
   -c, --config=config              [default: .twilio-functions] Location of the config file. Absolute path or relative
                                    to current working directory (cwd)
+
+  -l, --logLevel=logLevel          [default: info] Level of logging messages.
 
   -n, --service-name=service-name  Overrides the name of the Serverless project. Default: the name field in your
                                    package.json
@@ -194,7 +200,7 @@ OPTIONS
   --service-sid=service-sid        Specific Serverless Service SID to run list for
 ```
 
-_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.3/src/commands/serverless/list.js)_
+_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.4/src/commands/serverless/list.js)_
 
 ## `twilio serverless:new [NAMESPACE]`
 
@@ -208,11 +214,11 @@ ARGUMENTS
   NAMESPACE  The namespace your assets/functions should be grouped under
 
 OPTIONS
-  -l, --list           List available templates. Will not create a new function
+  -l, --logLevel=logLevel  [default: info] Level of logging messages.
   --template=template
 ```
 
-_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.3/src/commands/serverless/new.js)_
+_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.4/src/commands/serverless/new.js)_
 
 ## `twilio serverless:start [DIR]`
 
@@ -232,6 +238,8 @@ OPTIONS
   -e, --env=env              Loads .env file, overrides local env variables
 
   -f, --load-local-env       Includes the local environment variables
+
+  -l, --logLevel=logLevel    [default: info] Level of logging messages.
 
   -p, --port=port            (required) [default: 3000] Override default port of 3000
 
@@ -257,7 +265,7 @@ ALIASES
   $ twilio serverless:run
 ```
 
-_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.3/src/commands/serverless/start.js)_
+_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0-rc.4/src/commands/serverless/start.js)_
 <!-- commandsstop -->
 #  Contributing
 
