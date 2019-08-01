@@ -1,6 +1,6 @@
 {
   "name": "twilio-run",
-  "version": "2.0.0-rc.5",
+  "version": "2.0.0-rc.6",
   "bin": {
     "twilio-functions": "./bin/twilio-run.js",
     "twilio-run": "./bin/twilio-run.js"
@@ -38,7 +38,7 @@
   "author": "Dominik Kundel <dkundel@twilio.com>",
   "license": "MIT",
   "dependencies": {
-    "@twilio-labs/serverless-api": "^1.0.0-rc.4",
+    "@twilio-labs/serverless-api": "^1.0.0-rc.5",
     "@twilio-labs/serverless-runtime-types": "^1.1.7",
     "@types/express": "^4.17.0",
     "@types/inquirer": "^6.0.3",
