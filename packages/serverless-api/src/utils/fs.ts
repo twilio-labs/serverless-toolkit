@@ -3,6 +3,7 @@
 import debug from 'debug';
 import fs from 'fs';
 import path, { extname } from 'path';
+import { toUnix } from 'upath';
 import recursiveReadDir from 'recursive-readdir';
 import { promisify } from 'util';
 import {
@@ -67,6 +68,7 @@ export function getPathAndAccessFromFileInfo(
     resourcePath += ext;
   }
   resourcePath = resourcePath.replace(/\s/g, '-');
+  resourcePath = toUnix(resourcePath);
 
   return {
     path: resourcePath,
