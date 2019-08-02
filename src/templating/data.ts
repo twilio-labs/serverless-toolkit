@@ -4,7 +4,7 @@ import { getDebugFunction } from '../utils/logger';
 const debug = getDebugFunction('twilio-run:new:template-data');
 
 const TEMPLATES_URL =
-  'https://raw.githubusercontent.com/twilio-labs/function-templates/next/templates.json';
+  'https://raw.githubusercontent.com/twilio-labs/function-templates/master/templates.json';
 const CONTENT_BASE_URL =
   'https://api.github.com/repos/twilio-labs/function-templates/contents';
 
@@ -51,12 +51,9 @@ async function getFiles(
   templateId: string,
   directory: string
 ): Promise<TemplateFileInfo[]> {
-  const response = await got(
-    CONTENT_BASE_URL + `/${templateId}/${directory}?ref=next`,
-    {
-      json: true,
-    }
-  );
+  const response = await got(CONTENT_BASE_URL + `/${templateId}/${directory}`, {
+    json: true,
+  });
   const repoContents = response.body as RawContentsPayload;
   return repoContents.map(file => {
     return {
@@ -71,7 +68,7 @@ export async function getTemplateFiles(
   templateId: string
 ): Promise<TemplateFileInfo[]> {
   try {
-    const response = await got(CONTENT_BASE_URL + `/${templateId}?ref=next`, {
+    const response = await got(CONTENT_BASE_URL + `/${templateId}`, {
       json: true,
     });
     const repoContents = response.body as RawContentsPayload;
