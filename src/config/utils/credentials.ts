@@ -15,10 +15,11 @@ export type Credentials = {
 /**
  * Determines the credentials by the following order of preference:
  * 1. value via explicit flags
- * 2. value passed in through externalCliOptions if `project` exists
- * 3. value in .env file
- * 4. value passed in through externalCliOptions
- * 5. empty string
+ * 2. value passed in through externalCliOptions if `profile` exists
+ * 3. value passed in through externalCliOptions if `project` (deprecated and removed in `@twilio/cli-core` v3) exists
+ * 4. value in .env file
+ * 5. value passed in through externalCliOptions
+ * 6. empty string
  * @param flags Flags passed into command
  * @param externalCliOptions Any external information for example passed by the Twilio CLI
  */
@@ -28,12 +29,12 @@ export async function getCredentialsFromFlags<
   // default Twilio CLI credentials (4) or empty string (5)
   let accountSid =
     (externalCliOptions &&
-      !externalCliOptions.project &&
+      !(externalCliOptions.profile || externalCliOptions.project) &&
       externalCliOptions.username) ||
     '';
   let authToken =
     (externalCliOptions &&
-      !externalCliOptions.project &&
+      !(externalCliOptions.profile || externalCliOptions.project) &&
       externalCliOptions.password) ||
     '';
 
@@ -50,9 +51,12 @@ export async function getCredentialsFromFlags<
     }
   }
 
-  // specific project specified. override both credentials (2)
-  if (externalCliOptions && externalCliOptions.project) {
-    debug('Values read from explicit CLI project');
+  // specific profile specified. override both credentials (2)
+  if (
+    externalCliOptions &&
+    (externalCliOptions.profile || externalCliOptions.project)
+  ) {
+    debug('Values read from explicit CLI profile');
     accountSid = externalCliOptions.username;
     authToken = externalCliOptions.password;
   }

@@ -7,7 +7,6 @@ const baseFlags = {
   cwd: process.cwd(),
   logLevel: 'info' as 'info',
 };
-const baseExternalCliOptions = {};
 
 describe('getCredentialsFromFlags', () => {
   test('should return empty if nothing is passed', async () => {
@@ -57,7 +56,7 @@ describe('getCredentialsFromFlags', () => {
 
     const credentials = await getCredentialsFromFlags(
       { ...baseFlags },
-      { username: 'ACzzzzzzz', password: 'api-secret', project: undefined }
+      { username: 'ACzzzzzzz', password: 'api-secret', profile: undefined }
     );
     expect(credentials).toEqual({
       accountSid: 'ACzzzzzzz',
@@ -76,11 +75,30 @@ describe('getCredentialsFromFlags', () => {
 
     const credentials = await getCredentialsFromFlags(
       { ...baseFlags },
-      { username: 'ACzzzzzzz', password: 'api-secret', project: undefined }
+      { username: 'ACzzzzzzz', password: 'api-secret', profile: undefined }
     );
     expect(credentials).toEqual({
       accountSid: 'ACyyyyyyyyy',
       authToken: 'example-token',
+    });
+  });
+
+  test('external options with profile should override env variables', async () => {
+    require('../../../src/config/utils/env').__setVariables(
+      {
+        ACCOUNT_SID: 'ACyyyyyyyyy',
+        AUTH_TOKEN: 'example-token',
+      },
+      ''
+    );
+
+    const credentials = await getCredentialsFromFlags(
+      { ...baseFlags },
+      { username: 'ACzzzzzzz', password: 'api-secret', profile: 'demo' }
+    );
+    expect(credentials).toEqual({
+      accountSid: 'ACzzzzzzz',
+      authToken: 'api-secret',
     });
   });
 
@@ -103,7 +121,7 @@ describe('getCredentialsFromFlags', () => {
     });
   });
 
-  test('should prefer external CLI if project is passed', async () => {
+  test('should prefer external CLI if profile is passed', async () => {
     require('../../../src/config/utils/env').__setVariables(
       {
         ACCOUNT_SID: 'ACyyyyyyyyy',
@@ -114,7 +132,7 @@ describe('getCredentialsFromFlags', () => {
 
     const credentials = await getCredentialsFromFlags(
       { ...baseFlags },
-      { username: 'ACzzzzzzz', password: 'api-secret', project: 'demo' }
+      { username: 'ACzzzzzzz', password: 'api-secret', profile: 'demo' }
     );
     expect(credentials).toEqual({
       accountSid: 'ACzzzzzzz',
@@ -133,7 +151,7 @@ describe('getCredentialsFromFlags', () => {
 
     const credentials = await getCredentialsFromFlags(
       { ...baseFlags, accountSid: 'ACxxxxx', authToken: 'some-token' },
-      { username: 'ACzzzzzzz', password: 'api-secret', project: 'demo' }
+      { username: 'ACzzzzzzz', password: 'api-secret', profile: 'demo' }
     );
     expect(credentials).toEqual({
       accountSid: 'ACxxxxx',
