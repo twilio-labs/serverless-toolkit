@@ -103,6 +103,8 @@ describe('getCredentialsFromFlags', () => {
   });
 
   test('external options with project should override env variables', async () => {
+    // project flag is deprecated and removed in v3 @twilio/cli-core but
+    // included here just to make sure
     require('../../../src/config/utils/env').__setVariables(
       {
         ACCOUNT_SID: 'ACyyyyyyyyy',
@@ -112,8 +114,14 @@ describe('getCredentialsFromFlags', () => {
     );
 
     const credentials = await getCredentialsFromFlags(
-      { ...baseFlags },
-      { username: 'ACzzzzzzz', password: 'api-secret', project: 'demo' }
+      {
+        ...baseFlags,
+      },
+      {
+        username: 'ACzzzzzzz',
+        password: 'api-secret',
+        project: 'demo',
+      }
     );
     expect(credentials).toEqual({
       accountSid: 'ACzzzzzzz',
@@ -140,6 +148,27 @@ describe('getCredentialsFromFlags', () => {
     });
   });
 
+  test('should prefer external CLI if project is passed', async () => {
+    // project flag is deprecated and removed in v3 @twilio/cli-core but
+    // included here just to make sure
+    require('../../../src/config/utils/env').__setVariables(
+      {
+        ACCOUNT_SID: 'ACyyyyyyyyy',
+        AUTH_TOKEN: 'example-token',
+      },
+      ''
+    );
+
+    const credentials = await getCredentialsFromFlags(
+      { ...baseFlags },
+      { username: 'ACzzzzzzz', password: 'api-secret', project: 'demo' }
+    );
+    expect(credentials).toEqual({
+      accountSid: 'ACzzzzzzz',
+      authToken: 'api-secret',
+    });
+  });
+
   test('should prefer flag over everything', async () => {
     require('../../../src/config/utils/env').__setVariables(
       {
@@ -151,7 +180,12 @@ describe('getCredentialsFromFlags', () => {
 
     const credentials = await getCredentialsFromFlags(
       { ...baseFlags, accountSid: 'ACxxxxx', authToken: 'some-token' },
-      { username: 'ACzzzzzzz', password: 'api-secret', profile: 'demo' }
+      {
+        username: 'ACzzzzzzz',
+        password: 'api-secret',
+        profile: 'demo',
+        project: 'demo',
+      }
     );
     expect(credentials).toEqual({
       accountSid: 'ACxxxxx',
