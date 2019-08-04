@@ -7,3 +7,4 @@ export * from './environments';
 export * from './functions';
 export * from './services';
 export * from './variables';
+export * from './logs';
