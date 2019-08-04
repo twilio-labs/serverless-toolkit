@@ -1,7 +1,7 @@
 /** @module @twilio-labs/serverless-api/dist/api */
 
 import debug from 'debug';
-import { GotClient, ServiceList, ServiceResource } from '../types';
+import { GotClient, ServiceList, ServiceResource, Sid } from '../types';
 
 const log = debug('twilio-serverless-api:services');
 
@@ -74,4 +74,17 @@ export async function findServiceSid(
     throw err;
   }
   return undefined;
+}
+
+export async function getService(
+  sid: Sid,
+  client: GotClient
+): Promise<ServiceResource> {
+  try {
+    const resp = await client.get(`/Services/${sid}`);
+    return (resp.body as unknown) as ServiceResource;
+  } catch (err) {
+    log('%O', err);
+    throw err;
+  }
 }

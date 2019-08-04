@@ -8,11 +8,14 @@ export interface ResourceBase {
   sid: Sid;
   account_sid: Sid;
   date_created: string;
-  date_updated: string;
   url: string;
 }
 
-export interface FunctionApiResource extends ResourceBase {
+export interface UpdateableResourceBase extends ResourceBase {
+  date_updated: string;
+}
+
+export interface FunctionApiResource extends UpdateableResourceBase {
   friendly_name: string;
 }
 
@@ -20,7 +23,7 @@ export interface FunctionList {
   functions: FunctionApiResource[];
 }
 
-export interface AssetApiResource extends ResourceBase {
+export interface AssetApiResource extends UpdateableResourceBase {
   friendly_name: string;
 }
 
@@ -28,7 +31,7 @@ export interface AssetList {
   assets: AssetApiResource[];
 }
 
-export interface ServiceResource extends ResourceBase {
+export interface ServiceResource extends UpdateableResourceBase {
   unique_name: string;
 }
 
@@ -36,7 +39,7 @@ export interface ServiceList {
   services: ServiceResource[];
 }
 
-export interface EnvironmentResource extends ResourceBase {
+export interface EnvironmentResource extends UpdateableResourceBase {
   unique_name: string;
   domain_name: string;
   build_sid: string;
@@ -47,7 +50,7 @@ export interface EnvironmentList {
   environments: EnvironmentResource[];
 }
 
-export interface VersionResource extends ResourceBase {
+export interface VersionResource extends UpdateableResourceBase {
   pre_signed_upload_url: {
     url: string;
     kmsARN: string;
@@ -56,12 +59,10 @@ export interface VersionResource extends ResourceBase {
 
 export type BuildStatus = 'building' | 'completed' | 'failed';
 
-export interface VersionOnBuild extends ResourceBase {
+export interface VersionOnBuild extends UpdateableResourceBase {
   path: string;
   visibility: 'public' | 'protected' | 'private';
-  date_created: string;
   service_sid: string;
-  account_sid: string;
 }
 
 export interface FunctionVersion extends VersionOnBuild {
@@ -72,7 +73,7 @@ export interface AssetVersion extends VersionOnBuild {
   asset_sid: string;
 }
 
-export interface BuildResource extends ResourceBase {
+export interface BuildResource extends UpdateableResourceBase {
   status: BuildStatus;
   function_versions: FunctionVersion[];
   asset_versions: AssetVersion[];
@@ -82,15 +83,10 @@ export interface BuildList {
   builds: BuildResource[];
 }
 
-export interface VariableResource extends ResourceBase {
-  date_updated: string;
+export interface VariableResource extends UpdateableResourceBase {
   environment_sid: string;
   value: string;
-  account_sid: string;
-  url: string;
   key: string;
-  sid: string;
-  date_created: string;
   service_sid: string;
 }
 
@@ -103,3 +99,17 @@ export type BuildConfig = {
   functionVersions?: Sid[];
   assetVersions?: Sid[];
 };
+
+export interface LogApiResource extends ResourceBase {
+  service_sid: string;
+  environment_sid: string;
+  deployment_sid: string;
+  function_sid: string;
+  request_sid: string;
+  level: string;
+  message: string;
+}
+
+export interface LogList {
+  logs: LogApiResource[];
+}
