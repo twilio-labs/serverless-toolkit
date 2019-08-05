@@ -102,7 +102,7 @@ describe('createTwilioFunction', () => {
   it('scaffolds a Twilio Function with a template', async () => {
     const gitHubAPI = nock('https://api.github.com');
     gitHubAPI
-      .get('/repos/twilio-labs/function-templates/contents/blank?ref=next')
+      .get('/repos/twilio-labs/function-templates/contents/blank')
       .reply(200, [
         {
           name: 'functions'
@@ -110,23 +110,21 @@ describe('createTwilioFunction', () => {
         {
           name: '.env',
           download_url:
-            'https://raw.githubusercontent.com/twilio-labs/function-templates/next/blank/.env'
+            'https://raw.githubusercontent.com/twilio-labs/function-templates/master/blank/.env'
         }
       ]);
     gitHubAPI
-      .get(
-        '/repos/twilio-labs/function-templates/contents/blank/functions?ref=next'
-      )
+      .get('/repos/twilio-labs/function-templates/contents/blank/functions')
       .reply(200, [
         {
           name: 'blank.js',
           download_url:
-            'https://raw.githubusercontent.com/twilio-labs/function-templates/next/blank/functions/blank.js'
+            'https://raw.githubusercontent.com/twilio-labs/function-templates/master/blank/functions/blank.js'
         }
       ]);
     const gitHubRaw = nock('https://raw.githubusercontent.com');
     gitHubRaw
-      .get('/twilio-labs/function-templates/next/blank/functions/blank.js')
+      .get('/twilio-labs/function-templates/master/blank/functions/blank.js')
       .reply(
         200,
         `exports.handler = function(context, event, callback) {
@@ -137,7 +135,7 @@ describe('createTwilioFunction', () => {
       .get('/github/gitignore/master/Node.gitignore')
       .reply(200, 'node_modules/');
     gitHubRaw
-      .get('/twilio-labs/function-templates/next/blank/.env')
+      .get('/twilio-labs/function-templates/master/blank/.env')
       .reply(200, '');
 
     const name = 'test-function';
@@ -187,9 +185,7 @@ describe('createTwilioFunction', () => {
     const name = 'test-function';
     const gitHubAPI = nock('https://api.github.com');
     gitHubAPI
-      .get(
-        `/repos/twilio-labs/function-templates/contents/${templateName}?ref=next`
-      )
+      .get(`/repos/twilio-labs/function-templates/contents/${templateName}`)
       .reply(404);
 
     const fail = jest.spyOn(spinner, 'fail');
