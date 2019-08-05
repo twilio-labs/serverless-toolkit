@@ -49,19 +49,23 @@ async function getTwilioDeployConfig(serverless, options = {}) {
     overrideExistingService: true
   };
 
-  config.functions = await Promise.all(
-    Object.entries(serverless.service.functions).map(
-      async ([name, config]) =>
-        await getFunctionResource(serverless, { name, config })
-    )
-  );
+  if (serverless.service.functions) {
+    config.functions = await Promise.all(
+      Object.entries(serverless.service.functions).map(
+        async ([name, config]) =>
+          await getFunctionResource(serverless, { name, config })
+      )
+    );
+  }
 
-  config.assets = await Promise.all(
-    Object.entries(serverless.service.resources.assets).map(
-      async ([name, config]) =>
-        await getAssetResource(serverless, { name, config })
-    )
-  );
+  if (serverless.service.resources && serverless.service.resources.assets) {
+    config.assets = await Promise.all(
+      Object.entries(serverless.service.resources.assets).map(
+        async ([name, config]) =>
+          await getAssetResource(serverless, { name, config })
+      )
+    );
+  }
 
   return config;
 }

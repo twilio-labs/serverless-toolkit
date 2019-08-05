@@ -12,9 +12,40 @@ Serverless Framework plugin to deploy to the Twilio Runtime
 
 ### Create a new Twilio service
 
-- Create a new service using the standard Node.js template, specifying a unique name for your app: `serverless create -t twilio-runtime -p <appName>`
-- `cd` into the generated app directory: `cd <appName>`
-- Install the app's NPM dependencies, which includes this plugin: `npm install`
+- Create a new directory: `mkdir your-runtime`
+- Create a new `package.json`: `npm init`
+- Install Twilio Runtime plugin: `npm install save @twilio-labs/serverless-twilio-runtime`
+- Create a runtime function at `./functions/hello-world.js`
+  - Define your function `exports.handler = function() { callback(null, "hello world!"); };`
+- Create a `serverless.yml` and define minimal configuration
+
+#### Minimal `serverless.yml` configuration
+
+```yaml
+service: your-service # update this with your service name
+
+provider:
+  name: twilio
+
+  # Twilio access credentials (mandatory)
+  config:
+    accountSid: ${env:TWILIO_ACCOUNT_SID}
+    authToken: ${env:TWILIO_AUTH_TOKEN}
+
+# Twilio runtime has to be added as a plugin
+plugins:
+  - '@twilio-labs/serverless-twilio-runtime'
+
+functions:
+  # Function name
+  hello-world:
+    # Path to the JS handler function in the project (without file extension '.js')
+    handler: functions/hello-world
+    # URL path of the function after deployment
+    path: /hello-world-path
+    # visibility of the function (can be "public" or "protected")
+    access: public
+```
 
 ### Deploy, test, and diagnose your Twilio runtime
 
@@ -71,11 +102,11 @@ provider:
   # Environment variables passed to your functions
   # available in the Twilio runtim via `process.env`
   environmentVars:
-    MY_MESSAGE: 'THIS IS cool stuff'
+    MY_MESSAGE: 'This is cool stuff'
 
-# Twilio runtime has to be added a plugin
+# Twilio runtime has to be added as a plugin
 plugins:
-  - twilio-runtime
+  - '@twilio-labs/serverless-twilio-runtime'
 
 functions:
   # Function name
