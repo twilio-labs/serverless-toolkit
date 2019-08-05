@@ -10,7 +10,6 @@
     "build:noemit": "tsc --noEmit",
     "postbuild": "npm shrinkwrap",
     "docs": "typedoc --options typedoc.json",
-    "postinstall": "node scripts/not-for-production-warning.js",
     "clean": "rimraf ./dist",
     "prepack": "run-s clean build",
     "lint-staged": "lint-staged",
