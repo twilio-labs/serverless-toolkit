@@ -1,6 +1,10 @@
 # Changelog for `create-twilio-function`
 
-## Ongoing [☰](https://github.com/twilio-labs/create-twilio-function/compare/v1.0.2...next)
+## Ongoing [☰](https://github.com/twilio-labs/create-twilio-function/compare/v2.0.0...master)
+
+...
+
+## 2.0.0 (August 4, 2019) [☰](https://github.com/twilio-labs/create-twilio-function/compare/v1.0.2...v2.0.0)
 
 - Exports details about the cli command so that other projects can consume it. Fixes #12
 - Generates new project from the ./templates directory in this project
