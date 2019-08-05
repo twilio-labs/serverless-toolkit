@@ -8,12 +8,24 @@ This plugin adds functionality to the [Twilio CLI](https://github.com/twilio/twi
 debug and deploy to Twilio Serverless. It's a wrapper around [twilio-run](https://github.com/twilio-labs/twilio-run) and [create-twilio-function](https://github.com/philnash/create-twilio-function).
 
 <!-- toc -->
-* [Requirements](#requirements)
-* [Usage](#usage)
-* [Commands](#commands)
-* [ Contributing](#contributing)
-* [License](#license)
-<!-- tocstop -->
+
+- [Requirements](#requirements)
+  - [Install the Twilio CLI](#install-the-twilio-cli)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`twilio serverless:activate`](#twilio-serverlessactivate)
+  - [`twilio serverless:deploy`](#twilio-serverlessdeploy)
+  - [`twilio serverless:init NAME`](#twilio-serverlessinit-name)
+  - [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-types)
+  - [`twilio serverless:list-templates`](#twilio-serverlesslist-templates)
+  - [`twilio serverless:new [NAMESPACE]`](#twilio-serverlessnew-namespace)
+  - [`twilio serverless:start [DIR]`](#twilio-serverlessstart-dir)
+- [Contributing](#contributing)
+  - [Code of Conduct](#code-of-conduct)
+  - [Contributors](#contributors)
+- [License](#license)
+  <!-- tocstop -->
+
 # Requirements
 
 ## Install the Twilio CLI
@@ -42,14 +54,24 @@ USAGE
 ```
 
 # Commands
+
 <!-- commands -->
-* [`twilio serverless:activate`](#twilio-serverlessactivate)
-* [`twilio serverless:deploy`](#twilio-serverlessdeploy)
-* [`twilio serverless:init NAME`](#twilio-serverlessinit-name)
-* [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-types)
-* [`twilio serverless:list-templates`](#twilio-serverlesslist-templates)
-* [`twilio serverless:new [NAMESPACE]`](#twilio-serverlessnew-namespace)
-* [`twilio serverless:start [DIR]`](#twilio-serverlessstart-dir)
+
+- [Requirements](#requirements)
+  - [Install the Twilio CLI](#install-the-twilio-cli)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`twilio serverless:activate`](#twilio-serverlessactivate)
+  - [`twilio serverless:deploy`](#twilio-serverlessdeploy)
+  - [`twilio serverless:init NAME`](#twilio-serverlessinit-name)
+  - [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-types)
+  - [`twilio serverless:list-templates`](#twilio-serverlesslist-templates)
+  - [`twilio serverless:new [NAMESPACE]`](#twilio-serverlessnew-namespace)
+  - [`twilio serverless:start [DIR]`](#twilio-serverlessstart-dir)
+- [Contributing](#contributing)
+  - [Code of Conduct](#code-of-conduct)
+  - [Contributors](#contributors)
+- [License](#license)
 
 ## `twilio serverless:activate`
 
@@ -65,7 +87,7 @@ OPTIONS
 
   -l, --logLevel=logLevel                  [default: info] Level of logging messages.
 
-  -p, --project=project                    Shorthand identifier for your Twilio project.
+  -p, --profile=profile                    Shorthand identifier for your Twilio profile.
 
   -u, --account-sid=account-sid            A specific account SID to be used for deployment. Uses fields in .env
                                            otherwise
@@ -109,7 +131,7 @@ OPTIONS
   -n, --service-name=service-name      Overrides the name of the Serverless project. Default: the name field in your
                                        package.json
 
-  -p, --project=project                Shorthand identifier for your Twilio project.
+  -p, --profile=profile                Shorthand identifier for your Twilio profile.
 
   -u, --account-sid=account-sid        A specific account SID to be used for deployment. Uses fields in .env otherwise
 
@@ -152,7 +174,7 @@ ARGUMENTS
 
 OPTIONS
   -a, --account-sid=account-sid  The Account SID for your Twilio account
-  -p, --project=project          Shorthand identifier for your Twilio project.
+  -p, --profile=profile          Shorthand identifier for your Twilio profile.
   -t, --auth-token=auth-token    Your Twilio account Auth Token
 
   --import-credentials           Import credentials from the environment variables TWILIO_ACCOUNT_SID and
@@ -186,7 +208,7 @@ OPTIONS
   -n, --service-name=service-name  Overrides the name of the Serverless project. Default: the name field in your
                                    package.json
 
-  -p, --project=project            Shorthand identifier for your Twilio project.
+  -p, --profile=profile            Shorthand identifier for your Twilio profile.
 
   -u, --account-sid=account-sid    A specific account SID to be used for deployment. Uses fields in .env otherwise
 
@@ -281,8 +303,10 @@ ALIASES
 ```
 
 _See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.0/src/commands/serverless/start.js)_
+
 <!-- commandsstop -->
-#  Contributing
+
+# Contributing
 
 This project welcomes contributions from the community. Please see the [`CONTRIBUTING.md`](CONTRIBUTING.md) file for more details.
 

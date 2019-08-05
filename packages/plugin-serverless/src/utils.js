@@ -50,13 +50,13 @@ function normalizeFlags(flags) {
 }
 
 function createExternalCliOptions(flags, twilioClient) {
-  const project = flags.project;
+  const profile = flags.profile;
 
   return {
     username: twilioClient.username,
     password: twilioClient.password,
     accountSid: twilioClient.accountSid,
-    project,
+    profile,
     logLevel: undefined,
     outputFormat: undefined,
   };

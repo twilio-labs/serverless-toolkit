@@ -34,7 +34,7 @@ FunctionsActivate.description = describe;
 FunctionsActivate.flags = Object.assign(
   {},
   convertYargsOptionsToOclifFlags(cliInfo.options),
-  { project: TwilioClientCommand.flags.project }
+  { profile: TwilioClientCommand.flags.profile }
 );
 
 module.exports = FunctionsActivate;
