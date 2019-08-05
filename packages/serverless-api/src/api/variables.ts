@@ -8,6 +8,7 @@ import {
   VariableList,
   VariableResource,
 } from '../types';
+import { getPaginatedResource } from './utils/pagination';
 
 const log = debug('twilio-serverless-api:variables');
 
@@ -98,11 +99,10 @@ export async function listVariablesForEnvironment(
   client: GotClient
 ): Promise<VariableResource[]> {
   try {
-    const resp = await client.get(
+    return getPaginatedResource<VariableList, VariableResource>(
+      client,
       `/Services/${serviceSid}/Environments/${environmentSid}/Variables`
     );
-    const { variables } = (resp.body as unknown) as VariableList;
-    return variables;
   } catch (err) {
     log('%O', err);
     throw err;

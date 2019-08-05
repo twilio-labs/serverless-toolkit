@@ -11,6 +11,19 @@ export interface ResourceBase {
   url: string;
 }
 
+export interface BaseList<TKey extends string> {
+  [key: string]: any;
+  meta: {
+    first_page_url: string;
+    key: TKey;
+    next_page_url: string | null;
+    page: number;
+    page_size: number;
+    previous_page_url: string | null;
+    url: string;
+  };
+}
+
 export interface UpdateableResourceBase extends ResourceBase {
   date_updated: string;
 }
@@ -19,7 +32,7 @@ export interface FunctionApiResource extends UpdateableResourceBase {
   friendly_name: string;
 }
 
-export interface FunctionList {
+export interface FunctionList extends BaseList<'functions'> {
   functions: FunctionApiResource[];
 }
 
@@ -27,15 +40,17 @@ export interface AssetApiResource extends UpdateableResourceBase {
   friendly_name: string;
 }
 
-export interface AssetList {
+export interface AssetList extends BaseList<'assets'> {
   assets: AssetApiResource[];
 }
 
 export interface ServiceResource extends UpdateableResourceBase {
   unique_name: string;
+  include_credentials: boolean;
+  friendly_name: string;
 }
 
-export interface ServiceList {
+export interface ServiceList extends BaseList<'services'> {
   services: ServiceResource[];
 }
 
@@ -46,7 +61,7 @@ export interface EnvironmentResource extends UpdateableResourceBase {
   domain_suffix: string;
 }
 
-export interface EnvironmentList {
+export interface EnvironmentList extends BaseList<'environments'> {
   environments: EnvironmentResource[];
 }
 
@@ -79,7 +94,7 @@ export interface BuildResource extends UpdateableResourceBase {
   asset_versions: AssetVersion[];
 }
 
-export interface BuildList {
+export interface BuildList extends BaseList<'builds'> {
   builds: BuildResource[];
 }
 
@@ -90,7 +105,7 @@ export interface VariableResource extends UpdateableResourceBase {
   service_sid: string;
 }
 
-export interface VariableList {
+export interface VariableList extends BaseList<'variables'> {
   variables: VariableResource[];
 }
 
@@ -110,6 +125,6 @@ export interface LogApiResource extends ResourceBase {
   message: string;
 }
 
-export interface LogList {
+export interface LogList extends BaseList<'logs'> {
   logs: LogApiResource[];
 }
