@@ -38,20 +38,28 @@ create-twilio-function <name>
 
 Creates a new Twilio Function project
 
+Commands:
+  create-twilio-function <name>          Creates a new Twilio Function
+                                         project                    [default]
+  create-twilio-function list-templates  List the available templates you can
+                                         create a project with.
+
 Positionals:
-  name  Name of your project.                                           [string]
+  name  Name of your project.                                        [string]
 
 Options:
-  --account-sid, -a     The Account SID for your Twilio account         [string]
-  --auth-token, -t      Your Twilio account Auth Token                  [string]
-  --skip-credentials    Don't ask for Twilio account credentials or import them
-                        from the environment          [boolean] [default: false]
+  --account-sid, -a     The Account SID for your Twilio account      [string]
+  --auth-token, -t      Your Twilio account Auth Token               [string]
+  --skip-credentials    Don't ask for Twilio account credentials or import
+                        them from the environment  [boolean] [default: false]
   --import-credentials  Import credentials from the environment variables
                         TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN
-                                                      [boolean] [default: false]
-  -h, --help            Show help                                      [boolean]
-  -v, --version         Show version number                            [boolean]
-  --path                                                        [default: (cwd)]
+                                                   [boolean] [default: false]
+  --template            Initialize your new project with a template from
+                        github.com/twilio-labs/function-templates    [string]
+  -h, --help            Show help                                   [boolean]
+  -v, --version         Show version number                         [boolean]
+  --path                                                     [default: (cwd)]
 ```
 
 ## Contributing

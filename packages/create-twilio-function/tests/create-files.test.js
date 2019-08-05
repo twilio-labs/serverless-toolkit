@@ -1,7 +1,7 @@
 const {
   createPackageJSON,
   createDirectory,
-  createExampleFunction,
+  createExampleFromTemplates,
   createEnvFile,
   createNvmrcFile
 } = require('../src/create-twilio-function/create-files');
@@ -12,6 +12,7 @@ const rimraf = promisify(require('rimraf'));
 const mkdir = promisify(fs.mkdir);
 const readFile = promisify(fs.readFile);
 const stat = promisify(fs.stat);
+const readdir = promisify(fs.readdir);
 
 beforeAll(async () => {
   await rimraf('./scratch');
@@ -67,22 +68,28 @@ describe('createPackageJSON', () => {
   });
 });
 
-describe('createExampleFunction', () => {
-  test('it creates a new example function', async () => {
-    await createExampleFunction('./scratch');
-    const file = await stat('./scratch/example.js');
-    expect(file.isFile());
-    const contents = await readFile('./scratch/example.js', {
-      encoding: 'utf-8'
-    });
-    expect(contents).toMatch('Twilio.twiml.VoiceResponse');
+describe('createExampleFromTemplates', () => {
+  test('it creates functions and assets directories', async () => {
+    await createExampleFromTemplates('./scratch');
+
+    const dirs = await readdir('./scratch');
+    const templateDirs = await readdir('./templates');
+    expect(dirs).toEqual(templateDirs);
   });
 
-  test('it rejects if there is already an example function', async () => {
-    fs.closeSync(fs.openSync('./scratch/example.js', 'w'));
+  test('it copies the functions from the templates/functions directory', async () => {
+    await createExampleFromTemplates('./scratch');
+
+    const functions = await readdir('./scratch/functions');
+    const templateFunctions = await readdir('./templates/functions');
+    expect(functions).toEqual(templateFunctions);
+  });
+
+  test('it rejects if there is already a functions directory', async () => {
+    await mkdir('./scratch/functions');
     expect.assertions(1);
     try {
-      await createExampleFunction('./scratch');
+      await createExampleFromTemplates('./scratch');
     } catch (e) {
       expect(e.toString()).toMatch('file already exists');
     }
