@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/twilio-labs/twilio-run/compare/v2.0.0-rc.5...v2.0.0) (2019-08-05)
+
+
+### Bug Fixes
+
+* **runtime:** fix wrong service name in getSync ([#14](https://github.com/twilio-labs/twilio-run/issues/14)) ([bd2e04d](https://github.com/twilio-labs/twilio-run/commit/bd2e04d))
+
+
+### Features
+
+* **runtime:** support better error formatting ([#67](https://github.com/twilio-labs/twilio-run/issues/67)) ([e36594e](https://github.com/twilio-labs/twilio-run/commit/e36594e)), closes [#64](https://github.com/twilio-labs/twilio-run/issues/64) [#65](https://github.com/twilio-labs/twilio-run/issues/65)
+
+
+
+### [1.1.2](https://github.com/twilio-labs/twilio-run/compare/v2.0.0-beta.9...v1.1.2) (2019-07-09)
+
+
+### Build System
+
+* **npm:** update jest dependency ([30cade1](https://github.com/twilio-labs/twilio-run/commit/30cade1))
+
+
+
+### [1.1.1](https://github.com/twilio-labs/twilio-run/compare/v1.1.0...v1.1.1) (2019-06-28)
+
+
+
+## [1.1.0](https://github.com/twilio-labs/twilio-run/compare/v2.0.0-beta.7...v1.1.0) (2019-06-28)
+
+
+
 ## [2.0.0-rc.5](https://github.com/twilio-labs/twilio-run/compare/v2.0.0-rc.4...v2.0.0-rc.5) (2019-07-31)
 
 
