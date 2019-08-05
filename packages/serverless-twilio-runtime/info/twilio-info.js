@@ -29,8 +29,6 @@ class TwilioInfo {
       env => env.domain_suffix === serverless.service.provider.environment
     );
 
-    // console.log(currentService, currentEnvironment);
-
     const info = await twilioServerlessClient.list({
       serviceName: serverless.service.service,
       environment: currentEnvironment.sid,

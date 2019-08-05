@@ -18,7 +18,7 @@ Serverless Framework plugin to deploy to the Twilio Runtime
 - Create a new `package.json`: `npm init`
 - Install Twilio Runtime plugin: `npm install save @twilio-labs/serverless-twilio-runtime`
 - Create a runtime function at `./functions/hello-world.js`
-  - Define your function: `exports.handler = function() { callback(null, "hello world!"); };`
+  - Define your function: `exports.handler = function(context, event, callback) { callback(null, "hello world!"); };`
 - Create a `serverless.yml` and define minimal configuration
 
 #### Minimal `serverless.yml` configuration
@@ -33,6 +33,11 @@ provider:
   config:
     accountSid: ${env:TWILIO_ACCOUNT_SID}
     authToken: ${env:TWILIO_AUTH_TOKEN}
+
+  # Twilio runtime supports several domains
+  # your functions and assets will be available under
+  # -> defaulting to 'dev'
+  environment: ${env:TWILIO_RUNTIME_ENV, 'dev'}
 
 # Twilio runtime has to be added as a plugin
 plugins:
