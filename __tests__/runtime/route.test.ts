@@ -5,6 +5,7 @@ import {
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from 'express';
+import { Request as MockRequest } from 'jest-express/lib/request';
 import { Response as MockResponse } from 'jest-express/lib/response';
 import { twiml } from 'twilio';
 import { StartCliConfig } from '../../src/config/start';
@@ -25,11 +26,69 @@ const mockResponse = (new MockResponse() as unknown) as ExpressResponse;
 mockResponse.type = jest.fn(() => mockResponse);
 
 describe('handleError function', () => {
-  test('calls correct response methods', () => {
+  test('returns string error', () => {
+    const mockRequest = (new MockRequest() as unknown) as ExpressRequest;
+    mockRequest['useragent'] = {
+      isDesktop: true,
+      isMobile: false,
+    } as ExpressUseragent.UserAgent;
+
+    handleError('string error', mockRequest, mockResponse);
+
+    expect(mockResponse.status).toHaveBeenCalledWith(500);
+    expect(mockResponse.send).toHaveBeenCalledWith('string error');
+  });
+
+  test('handles objects as error argument', () => {
+    const mockRequest = (new MockRequest() as unknown) as ExpressRequest;
+    mockRequest['useragent'] = {
+      isDesktop: true,
+      isMobile: false,
+    } as ExpressUseragent.UserAgent;
+
+    handleError({ errorMessage: 'oh no' }, mockRequest, mockResponse);
+
+    expect(mockResponse.status).toHaveBeenCalledWith(500);
+    expect(mockResponse.send).toHaveBeenCalledWith({ errorMessage: 'oh no' });
+  });
+
+  test('wraps error object for desktop requests', () => {
+    const mockRequest = (new MockRequest() as unknown) as ExpressRequest;
+    mockRequest['useragent'] = {
+      isDesktop: true,
+      isMobile: false,
+    } as ExpressUseragent.UserAgent;
+
     const err = new Error('Failed to execute');
-    handleError(err, (mockResponse as unknown) as ExpressResponse);
+    handleError(err, mockRequest, mockResponse);
     expect(mockResponse.status).toHaveBeenCalledWith(500);
     expect(mockResponse.send).toHaveBeenCalledWith(wrapErrorInHtml(err));
+  });
+
+  test('wraps error object for mobile requests', () => {
+    const mockRequest = (new MockRequest() as unknown) as ExpressRequest;
+    mockRequest['useragent'] = {
+      isDesktop: false,
+      isMobile: true,
+    } as ExpressUseragent.UserAgent;
+
+    const err = new Error('Failed to execute');
+    handleError(err, mockRequest, mockResponse);
+    expect(mockResponse.status).toHaveBeenCalledWith(500);
+    expect(mockResponse.send).toHaveBeenCalledWith(wrapErrorInHtml(err));
+  });
+
+  test('returns string version of error for other requests', () => {
+    const mockRequest = (new MockRequest() as unknown) as ExpressRequest;
+    mockRequest['useragent'] = {
+      isDesktop: false,
+      isMobile: false,
+    } as ExpressUseragent.UserAgent;
+
+    const err = new Error('Failed to execute');
+    handleError(err, mockRequest, mockResponse);
+    expect(mockResponse.status).toHaveBeenCalledWith(500);
+    expect(mockResponse.send).toHaveBeenCalledWith(err.toString());
   });
 });
 
