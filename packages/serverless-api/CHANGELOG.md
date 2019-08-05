@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/twilio-labs/serverless-api/compare/v1.0.0-rc.5...v1.0.0) (2019-08-05)
+
+
+### Features
+
+* **logs:** implements fetch and list of logs ([#12](https://github.com/twilio-labs/serverless-api/issues/12)) ([87695cd](https://github.com/twilio-labs/serverless-api/commit/87695cd))
+
+
+
 ## [1.0.0-rc.5](https://github.com/twilio-labs/serverless-api/compare/v1.0.0-rc.4...v1.0.0-rc.5) (2019-08-01)
 
 
