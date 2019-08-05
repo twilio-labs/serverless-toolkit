@@ -21,6 +21,8 @@ Serverless Framework plugin to deploy to the Twilio Runtime
   - Define your function: `exports.handler = function(context, event, callback) { callback(null, "hello world!"); };`
 - Create a `serverless.yml` and define minimal configuration
 
+Very soon the `serverless create -t twilio-runtime` command will be available. 🤞
+
 #### Minimal `serverless.yml` configuration
 
 ```yaml
