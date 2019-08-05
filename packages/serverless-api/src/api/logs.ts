@@ -2,6 +2,7 @@
 
 import debug from 'debug';
 import { GotClient, LogApiResource, LogList, Sid } from '../types';
+import { getPaginatedResource } from './utils/pagination';
 
 const log = debug('twilio-serverless-api:logs');
 
@@ -19,11 +20,10 @@ export async function listLogResources(
   client: GotClient
 ) {
   try {
-    const resp = await client.get(
+    return getPaginatedResource<LogList, LogApiResource>(
+      client,
       `/Services/${serviceSid}/Environments/${environmentSid}/Logs`
     );
-    const content = (resp.body as unknown) as LogList;
-    return content.logs;
   } catch (err) {
     log('%O', err);
     throw err;

@@ -2,6 +2,7 @@
 
 import debug from 'debug';
 import { GotClient, ServiceList, ServiceResource, Sid } from '../types';
+import { getPaginatedResource } from './utils/pagination';
 
 const log = debug('twilio-serverless-api:services');
 
@@ -45,9 +46,10 @@ export async function createService(
 export async function listServices(
   client: GotClient
 ): Promise<ServiceResource[]> {
-  const resp = await client.get('/Services');
-  const { services } = (resp.body as unknown) as ServiceList;
-  return services;
+  return getPaginatedResource<ServiceList, ServiceResource>(
+    client,
+    '/Services'
+  );
 }
 
 /**

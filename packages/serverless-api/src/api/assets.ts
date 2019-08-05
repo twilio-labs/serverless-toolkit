@@ -14,6 +14,7 @@ import {
   VersionResource,
 } from '../types';
 import { getContentType } from '../utils/content-type';
+import { getPaginatedResource } from './utils/pagination';
 
 const log = debug('twilio-serverless-api:assets');
 
@@ -56,9 +57,10 @@ export async function listAssetResources(
   client: GotClient
 ) {
   try {
-    const resp = await client.get(`/Services/${serviceSid}/Assets`);
-    const content = (resp.body as unknown) as AssetList;
-    return content.assets;
+    return getPaginatedResource<AssetList, AssetApiResource>(
+      client,
+      `/Services/${serviceSid}/Assets`
+    );
   } catch (err) {
     log('%O', err);
     throw err;

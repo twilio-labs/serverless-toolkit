@@ -12,6 +12,7 @@ import {
 } from '../types';
 import { DeployStatus } from '../types/consts';
 import { sleep } from '../utils/sleep';
+import { getPaginatedResource } from './utils/pagination';
 
 import events = require('events');
 
@@ -69,9 +70,10 @@ export async function listBuilds(
   serviceSid: string,
   client: GotClient
 ): Promise<BuildResource[]> {
-  const resp = await client.get(`/Services/${serviceSid}/Builds`);
-  const { builds } = (resp.body as unknown) as BuildList;
-  return builds;
+  return getPaginatedResource<BuildList, BuildResource>(
+    client,
+    `/Services/${serviceSid}/Builds`
+  );
 }
 
 /**

@@ -12,6 +12,7 @@ import {
   VersionResource,
 } from '../types';
 import { getContentType } from '../utils/content-type';
+import { getPaginatedResource } from './utils/pagination';
 
 const log = debug('twilio-serverless-api:functions');
 
@@ -55,9 +56,10 @@ export async function listFunctionResources(
   client: GotClient
 ) {
   try {
-    const resp = await client.get(`/Services/${serviceSid}/Functions`);
-    const content = (resp.body as unknown) as FunctionList;
-    return content.functions;
+    return getPaginatedResource<FunctionList, FunctionApiResource>(
+      client,
+      `/Services/${serviceSid}/Functions`
+    );
   } catch (err) {
     log('%O', err);
     throw err;

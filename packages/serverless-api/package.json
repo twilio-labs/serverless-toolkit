@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "run-s build:noemit",
+    "jest": "jest",
+    "test": "run-s build:noemit jest",
     "build": "tsc",
     "build:noemit": "tsc --noEmit",
     "postbuild": "npm shrinkwrap",
@@ -32,6 +33,7 @@
   "license": "MIT",
   "files": [
     "dist/",
+    "!dist/**/__tests__/*",
     "README.md",
     "scripts/",
     "npm-shrinkwrap.json",

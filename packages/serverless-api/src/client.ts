@@ -43,7 +43,7 @@ import { getListOfFunctionsAndAssets, SearchConfig } from './utils/fs';
 
 const log = debug('twilio-serverless-api:client');
 
-function createGotClient(config: ClientConfig): GotClient {
+export function createGotClient(config: ClientConfig): GotClient {
   // @ts-ignore
   const client = got.extend({
     baseUrl: 'https://serverless.twilio.com/v1',

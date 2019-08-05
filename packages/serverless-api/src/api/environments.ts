@@ -2,6 +2,7 @@
 
 import debug from 'debug';
 import { EnvironmentList, EnvironmentResource, GotClient, Sid } from '../types';
+import { getPaginatedResource } from './utils/pagination';
 
 const log = debug('twilio-serverless-api:environments');
 
@@ -82,9 +83,10 @@ export async function createEnvironmentFromSuffix(
  * @returns
  */
 export async function listEnvironments(serviceSid: string, client: GotClient) {
-  const resp = await client.get(`/Services/${serviceSid}/Environments`);
-  const content = (resp.body as unknown) as EnvironmentList;
-  return content.environments;
+  return getPaginatedResource<EnvironmentList, EnvironmentResource>(
+    client,
+    `/Services/${serviceSid}/Environments`
+  );
 }
 
 /**
