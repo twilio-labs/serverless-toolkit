@@ -6,6 +6,7 @@ import express, {
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from 'express';
+import userAgentMiddleware from 'express-useragent';
 import nocache from 'nocache';
 import { StartCliConfig } from '../config/start';
 import { wrapErrorInHtml } from '../utils/error-html';
@@ -48,6 +49,7 @@ export async function createServer(
   debug('Starting server with config: %p', config);
 
   const app = express();
+  app.use(userAgentMiddleware.express());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
   app.get('/favicon.ico', (req, res) => {

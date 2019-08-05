@@ -65,13 +65,22 @@ export function constructGlobalScope(config: StartCliConfig): void {
 }
 
 export function handleError(
-  err: Error,
+  err: Error | string | object,
+  req: ExpressRequest,
   res: ExpressResponse,
   functionFilePath?: string
 ) {
   res.status(500);
-  res.type('text/html');
-  res.send(wrapErrorInHtml(err, functionFilePath));
+  if (!(err instanceof Error)) {
+    res.send(err);
+  } else {
+    if (req.useragent && (req.useragent.isDesktop || req.useragent.isMobile)) {
+      res.type('text/html');
+      res.send(wrapErrorInHtml(err, functionFilePath));
+    } else {
+      res.send(err.toString());
+    }
+  }
 }
 
 export function isTwiml(obj: object): boolean {
@@ -131,7 +140,7 @@ export function functionToRoute(
     ) {
       debug('Function execution %s finished', req.path);
       if (err) {
-        handleError(err, res, functionFilePath);
+        handleError(err, req, res, functionFilePath);
         return;
       }
       handleSuccess(responseObject, res);
