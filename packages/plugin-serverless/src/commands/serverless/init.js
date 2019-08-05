@@ -44,7 +44,7 @@ FunctionsInit.args = [
 FunctionsInit.flags = Object.assign(
   {},
   convertYargsOptionsToOclifFlags(cliInfo.options),
-  { project: TwilioClientCommand.flags.project }
+  { profile: TwilioClientCommand.flags.profile }
 );
 
 module.exports = FunctionsInit;
