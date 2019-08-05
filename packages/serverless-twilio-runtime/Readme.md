@@ -1,5 +1,7 @@
 # Twilio Runtime Plugin for Serverless Framework
 
+![Npm Version](https://img.shields.io/npm/v/@twilio-labs/serverless-twilio-runtime.svg?style=flat-square)
+
 Serverless Framework plugin to deploy to the Twilio Runtime
 
 ## Getting started
