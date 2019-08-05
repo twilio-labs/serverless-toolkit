@@ -9,6 +9,11 @@ const stat = promisify(fs.stat);
 
 beforeAll(async () => {
   await rimraf('./scratch');
+  nock.disableNetConnect();
+});
+
+afterAll(() => {
+  nock.enableNetConnect();
 });
 
 beforeEach(async () => {
@@ -20,6 +25,7 @@ beforeEach(async () => {
 
 afterEach(async () => {
   await rimraf('./scratch');
+  nock.cleanAll();
 });
 
 describe('createGitignore', () => {

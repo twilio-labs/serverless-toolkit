@@ -4,8 +4,6 @@ const {
 const inquirer = require('inquirer');
 
 describe('promptForAccountDetails', () => {
-  beforeEach(() => jest.clearAllMocks());
-
   test(`should ask for an accountSid if not specified`, async () => {
     inquirer.prompt = jest.fn(() =>
       Promise.resolve({

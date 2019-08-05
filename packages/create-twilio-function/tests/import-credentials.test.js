@@ -2,8 +2,6 @@ const importCredentials = require('../src/create-twilio-function/import-credenti
 const inquirer = require('inquirer');
 
 describe('importCredentials', () => {
-  beforeEach(() => jest.clearAllMocks());
-
   describe('if credentials are present in the env', () => {
     afterEach(() => {
       delete process.env.TWILIO_ACCOUNT_SID;

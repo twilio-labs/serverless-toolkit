@@ -4,9 +4,14 @@ const { promisify } = require('util');
 const mkdir = promisify(fs.mkdir);
 const open = promisify(fs.open);
 const write = promisify(fs.write);
+const readdir = promisify(fs.readdir);
+const copyFile = promisify(fs.copyFile);
+const { COPYFILE_EXCL } = fs.constants;
+const stat = promisify(fs.stat);
+const path = require('path');
 
-function createDirectory(path, dirName) {
-  return mkdir(path + '/' + dirName);
+function createDirectory(pathName, dirName) {
+  return mkdir(path.join(pathName, dirName));
 }
 
 function createFile(fullPath, content) {
@@ -15,8 +20,8 @@ function createFile(fullPath, content) {
   });
 }
 
-function createPackageJSON(path, name) {
-  const fullPath = `${path}/package.json`;
+function createPackageJSON(pathName, name) {
+  const fullPath = path.join(pathName, 'package.json');
   const packageJSON = JSON.stringify(
     {
       name: name,
@@ -37,25 +42,44 @@ function createPackageJSON(path, name) {
   return createFile(fullPath, packageJSON);
 }
 
-function createExampleFunction(path) {
-  const content = `exports.handler = function(context, event, callback) {
-  const twiml = new Twilio.twiml.VoiceResponse();
-  twiml.say("Hello World!");
-  callback(null, twiml);
-};`;
-  const fullPath = `${path}/example.js`;
-  return createFile(fullPath, content);
+function copyRecursively(src, dest) {
+  return readdir(src).then(children => {
+    return Promise.all(
+      children.map(child =>
+        stat(path.join(src, child)).then(stat => {
+          if (stat.isDirectory()) {
+            return mkdir(path.join(dest, child)).then(() =>
+              copyRecursively(path.join(src, child), path.join(dest, child))
+            );
+          } else {
+            return copyFile(
+              path.join(src, child),
+              path.join(dest, child),
+              COPYFILE_EXCL
+            ).catch(console.error);
+          }
+        })
+      )
+    );
+  });
 }
 
-function createEnvFile(path, { accountSid, authToken }) {
-  const fullPath = `${path}/.env`;
+function createExampleFromTemplates(pathName) {
+  return copyRecursively(
+    path.join(__dirname, '..', '..', 'templates'),
+    pathName
+  );
+}
+
+function createEnvFile(pathName, { accountSid, authToken }) {
+  const fullPath = path.join(pathName, '.env');
   const content = `ACCOUNT_SID=${accountSid}
 AUTH_TOKEN=${authToken}`;
   return createFile(fullPath, content);
 }
 
-function createNvmrcFile(path) {
-  const fullPath = `${path}/.nvmrc`;
+function createNvmrcFile(pathName) {
+  const fullPath = path.join(pathName, '.nvmrc');
   const content = versions.node;
   return createFile(fullPath, content);
 }
@@ -63,7 +87,7 @@ function createNvmrcFile(path) {
 module.exports = {
   createDirectory,
   createPackageJSON,
-  createExampleFunction,
+  createExampleFromTemplates,
   createEnvFile,
   createNvmrcFile
 };
