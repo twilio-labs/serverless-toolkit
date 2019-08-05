@@ -14,14 +14,15 @@ Serverless Framework plugin to deploy to the Twilio Runtime
 
 ### Create a new Twilio service
 
-- Create a new directory: `mkdir your-runtime`
+Very soon the `serverless create -t twilio-runtime` command will be available. But for now the project bootstrap has to be done manually.
+
+- Create a new directory: `mkdir your-runtime && cd your-runtime`
 - Create a new `package.json`: `npm init`
 - Install Twilio Runtime plugin: `npm install save @twilio-labs/serverless-twilio-runtime`
 - Create a runtime function at `./functions/hello-world.js`
   - Define your function: `exports.handler = function(context, event, callback) { callback(null, "hello world!"); };`
-- Create a `serverless.yml` and define minimal configuration
-
-Very soon the `serverless create -t twilio-runtime` command will be available. 🤞
+- Create a `serverless.yml` and define the minimal configuration
+- Run `serverless deploy`, `serverless info` or `serverless invoke -f hello-world`
 
 #### Minimal `serverless.yml` configuration
 
