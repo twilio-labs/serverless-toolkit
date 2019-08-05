@@ -4,26 +4,19 @@
 <img alt="npm (scoped)" src="https://img.shields.io/npm/v/@twilio-labs/serverless-api.svg?style=flat-square"> <img alt="npm" src="https://img.shields.io/npm/dt/@twilio-labs/serverless-api.svg?style=flat-square"> <img alt="GitHub" src="https://img.shields.io/github/license/twilio-labs/serverless-api.svg?style=flat-square"> <a href="#contributors"><img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square" /></a> <a href="https://github.com/twilio-labs/.github/blob/master/CODE_OF_CONDUCT.md"><img alt="Code of Conduct" src="https://img.shields.io/badge/%F0%9F%92%96-Code%20of%20Conduct-blueviolet.svg?style=flat-square"></a> <a href="http://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" /></a> </<a>
 <hr>
 
-## ⚠️ **IMPORTANT**
-
-This is a module for an experimental API that is still in preview mode.
-
-You won't be able to use this library unless you have been granted prior access to the underlying API.
-
-- [⚠️ **IMPORTANT**](#%E2%9A%A0%EF%B8%8F-IMPORTANT)
-- [Installation](#Installation)
-- [Example](#Example)
-- [API](#API)
-  - [`client.activateBuild(activateConfig: ActivateConfig): Promise<ActivateResult>`](#clientactivateBuildactivateConfig-ActivateConfig-PromiseActivateResult)
-  - [`client.deployLocalProject(deployConfig: DeployLocalProjectConfig): Promise<DeployResult>`](#clientdeployLocalProjectdeployConfig-DeployLocalProjectConfig-PromiseDeployResult)
-  - [`client.deployProject(deployConfig: DeployProjectConfig): Promise<DeployResult>`](#clientdeployProjectdeployConfig-DeployProjectConfig-PromiseDeployResult)
-  - [`client.getClient(): GotClient`](#clientgetClient-GotClient)
-  - [`client.list(listConfig: ListConfig): Promise<ListResult>`](#clientlistlistConfig-ListConfig-PromiseListResult)
-  - [`api` and `fsHelpers`](#api-and-fsHelpers)
-- [Contributing](#Contributing)
-  - [Code of Conduct](#Code-of-Conduct)
-  - [Contributors](#Contributors)
-- [License](#License)
+- [Installation](#installation)
+- [Example](#example)
+- [API](#api)
+  - [`client.activateBuild(activateConfig: ActivateConfig): Promise<ActivateResult>`](#clientactivatebuildactivateconfig-activateconfig-promiseactivateresult)
+  - [`client.deployLocalProject(deployConfig: DeployLocalProjectConfig): Promise<DeployResult>`](#clientdeploylocalprojectdeployconfig-deploylocalprojectconfig-promisedeployresult)
+  - [`client.deployProject(deployConfig: DeployProjectConfig): Promise<DeployResult>`](#clientdeployprojectdeployconfig-deployprojectconfig-promisedeployresult)
+  - [`client.getClient(): GotClient`](#clientgetclient-gotclient)
+  - [`client.list(listConfig: ListConfig): Promise<ListResult>`](#clientlistlistconfig-listconfig-promiselistresult)
+  - [`api` and `fsHelpers`](#api-and-fshelpers)
+- [Contributing](#contributing)
+  - [Code of Conduct](#code-of-conduct)
+  - [Contributors](#contributors)
+- [License](#license)
 
 ## Installation
 
