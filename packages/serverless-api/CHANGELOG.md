@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.1](https://github.com/twilio-labs/serverless-api/compare/v1.0.0...v1.0.1) (2019-08-05)
+
+
+### Bug Fixes
+
+* add pagination to list requests ([#1](https://github.com/twilio-labs/serverless-api/issues/1)) ([#13](https://github.com/twilio-labs/serverless-api/issues/13)) ([a57f997](https://github.com/twilio-labs/serverless-api/commit/a57f997))
+
+
+
 ## [1.0.0](https://github.com/twilio-labs/serverless-api/compare/v1.0.0-rc.5...v1.0.0) (2019-08-05)
 
 
