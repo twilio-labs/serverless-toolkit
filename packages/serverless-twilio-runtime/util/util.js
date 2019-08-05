@@ -38,7 +38,7 @@ function getTwilioClient(serverless) {
  */
 async function getTwilioDeployConfig(serverless, options = {}) {
   const config = {
-    env: serverless.service.provider.environmentVars,
+    env: serverless.service.provider.environmentVars || {},
     pkgJson: {
       dependencies: serverless.service.provider.dependencies
     },
