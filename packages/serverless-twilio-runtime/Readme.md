@@ -18,11 +18,13 @@ Very soon the `serverless create -t twilio-runtime` command will be available. B
 
 - Create a new directory: `mkdir your-runtime && cd your-runtime`
 - Create a new `package.json`: `npm init`
-- Install Twilio Runtime plugin: `npm install save @twilio-labs/serverless-twilio-runtime`
+- Install Twilio Runtime plugin: `npm install --save @twilio-labs/serverless-twilio-runtime`
 - Create a runtime function at `./functions/hello-world.js`
   - Define your function: `exports.handler = function(context, event, callback) { callback(null, "hello world!"); };`
-- Create a `serverless.yml` and define the minimal configuration
+- Create a `serverless.yml` and define the minimal configuration (see below)
 - Run `serverless deploy`, `serverless info` or `serverless invoke -f hello-world`
+
+_Make sure to define `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN` as environment vars when you run `serverless [CMD]`._
 
 #### Minimal `serverless.yml` configuration
 
