@@ -1,19 +1,30 @@
 <h1 align="center">@twilio-labs/plugin-serverless</h1>
-<p align="center">Plugin for the <a href="https://github.com/twilio/twilio-cli">Twilio CLI</a> to locally develop, debug and deploy to <a href="https://www.twilio.com/functions">Twilio Serverless</a>.</p>
+<p align="center">Plugin for the <a href="https://github.com/twilio/twilio-cli">Twilio CLI</a> to locally develop, debug and deploy to <a href="https://www.twilio.com/functions">Twilio Serverless</a>. Part of the <a href="https://github.com/twilio-labs/serverless-toolkit">Serverless Toolkit</a></p>
 <p align="center">
 <img alt="npm (scoped)" src="https://img.shields.io/npm/v/@twilio-labs/plugin-serverless.svg?style=flat-square"> <img alt="npm" src="https://img.shields.io/npm/dt/@twilio-labs/plugin-serverless.svg?style=flat-square"> <img alt="GitHub" src="https://img.shields.io/github/license/twilio-labs/plugin-serverless.svg?style=flat-square"> <a href="#contributors"><img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square" /></a> <a href="https://github.com/twilio-labs/.github/blob/master/CODE_OF_CONDUCT.md"><img alt="Code of Conduct" src="https://img.shields.io/badge/%F0%9F%92%96-Code%20of%20Conduct-blueviolet.svg?style=flat-square"></a> <a href="http://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" /></a> </<a>
 <hr>
 
 This plugin adds functionality to the [Twilio CLI](https://github.com/twilio/twilio-cli) to locally develop,
-debug and deploy to Twilio Serverless. It's a wrapper around [twilio-run](https://github.com/twilio-labs/twilio-run) and [create-twilio-function](https://github.com/philnash/create-twilio-function).
+debug and deploy to Twilio Serverless. It's a part of the [Serverless Toolkit](https://github.com/twilio-labs/serverless-toolkit) and wraps [twilio-run](https://github.com/twilio-labs/twilio-run) and [create-twilio-function](https://github.com/philnash/create-twilio-function).
 
 <!-- toc -->
-* [Requirements](#requirements)
-* [Usage](#usage)
-* [Commands](#commands)
-* [Contributing](#contributing)
-* [License](#license)
-<!-- tocstop -->
+
+- [Requirements](#requirements)
+  - [Install the Twilio CLI](#install-the-twilio-cli)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`twilio serverless:activate`](#twilio-serverlessactivate)
+  - [`twilio serverless:deploy`](#twilio-serverlessdeploy)
+  - [`twilio serverless:init NAME`](#twilio-serverlessinit-name)
+  - [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-types)
+  - [`twilio serverless:list-templates`](#twilio-serverlesslist-templates)
+  - [`twilio serverless:new [NAMESPACE]`](#twilio-serverlessnew-namespace)
+  - [`twilio serverless:start [DIR]`](#twilio-serverlessstart-dir)
+- [Contributing](#contributing)
+  - [Code of Conduct](#code-of-conduct)
+  - [Contributors](#contributors)
+- [License](#license)
+  <!-- tocstop -->
 
 # Requirements
 
@@ -45,13 +56,22 @@ USAGE
 # Commands
 
 <!-- commands -->
-* [`twilio serverless:activate`](#twilio-serverlessactivate)
-* [`twilio serverless:deploy`](#twilio-serverlessdeploy)
-* [`twilio serverless:init NAME`](#twilio-serverlessinit-name)
-* [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-types)
-* [`twilio serverless:list-templates`](#twilio-serverlesslist-templates)
-* [`twilio serverless:new [NAMESPACE]`](#twilio-serverlessnew-namespace)
-* [`twilio serverless:start [DIR]`](#twilio-serverlessstart-dir)
+
+- [Requirements](#requirements)
+  - [Install the Twilio CLI](#install-the-twilio-cli)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`twilio serverless:activate`](#twilio-serverlessactivate)
+  - [`twilio serverless:deploy`](#twilio-serverlessdeploy)
+  - [`twilio serverless:init NAME`](#twilio-serverlessinit-name)
+  - [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-types)
+  - [`twilio serverless:list-templates`](#twilio-serverlesslist-templates)
+  - [`twilio serverless:new [NAMESPACE]`](#twilio-serverlessnew-namespace)
+  - [`twilio serverless:start [DIR]`](#twilio-serverlessstart-dir)
+- [Contributing](#contributing)
+  - [Code of Conduct](#code-of-conduct)
+  - [Contributors](#contributors)
+- [License](#license)
 
 ## `twilio serverless:activate`
 
@@ -283,6 +303,7 @@ ALIASES
 ```
 
 _See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.0.2/src/commands/serverless/start.js)_
+
 <!-- commandsstop -->
 
 # Contributing
