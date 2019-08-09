@@ -94,7 +94,7 @@ describe('createTwilioFunction', () => {
     const asset = await stat(`./scratch/${name}/assets/index.html`);
     expect(asset.isFile());
 
-    expect(installDependencies).toHaveBeenCalledWith(`./scratch/${name}`);
+    expect(installDependencies).toHaveBeenCalledWith(`scratch/${name}`);
 
     expect(console.log).toHaveBeenCalledWith('success message');
   });
@@ -175,7 +175,7 @@ describe('createTwilioFunction', () => {
     const exampleAssets = await readdir(`./scratch/${name}/assets`);
     expect(exampleAssets).toEqual(expect.not.arrayContaining(['index.html']));
 
-    expect(installDependencies).toHaveBeenCalledWith(`./scratch/${name}`);
+    expect(installDependencies).toHaveBeenCalledWith(`scratch/${name}`);
 
     expect(console.log).toHaveBeenCalledWith('success message');
   });
