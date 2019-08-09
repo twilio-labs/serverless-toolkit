@@ -17,6 +17,7 @@ const boxen = require('boxen');
 const { downloadTemplate } = require('twilio-run/dist/templating/actions');
 const { promisify } = require('util');
 const rimraf = promisify(require('rimraf'));
+const path = require('path');
 
 async function cleanUpAndExit(projectDir, spinner, errorMessage) {
   spinner.fail(errorMessage);
@@ -27,7 +28,7 @@ async function cleanUpAndExit(projectDir, spinner, errorMessage) {
 }
 
 async function createTwilioFunction(config) {
-  const projectDir = `${config.path}/${config.name}`;
+  const projectDir = path.join(config.path, config.name);
   const spinner = ora();
 
   try {
