@@ -1,0 +1,3 @@
+{
+  "exclude_patterns": ["templates/", "tests/", "**/node_modules/"]
+}
