@@ -7,6 +7,9 @@ import {
   StartCliFlags,
 } from '../../src/config/start';
 
+import os from 'os';
+import path from 'path';
+
 jest.mock('ngrok', () => {
   return {
     connect: jest
@@ -116,7 +119,7 @@ describe('getBaseDirectory', () => {
   const initialWorkingDirectory = process.cwd();
 
   beforeAll(() => {
-    process.chdir('/home');
+    process.chdir(os.homedir());
   });
 
   afterAll(() => {
@@ -130,7 +133,7 @@ describe('getBaseDirectory', () => {
     } as unknown) as StartCliFlags;
 
     const result = getBaseDirectory(config);
-    expect(result).toBe('/home');
+    expect(result).toBe(os.homedir());
   });
 
   test('supports dir argument', () => {
@@ -140,7 +143,7 @@ describe('getBaseDirectory', () => {
     } as unknown) as StartCliFlags;
 
     const result = getBaseDirectory(config);
-    expect(result).toBe('/usr/local');
+    expect(result).toBe(path.resolve('/usr/local'));
   });
 
   test('prefers cwd over dir argument', () => {
@@ -150,7 +153,7 @@ describe('getBaseDirectory', () => {
     } as unknown) as StartCliFlags;
 
     const result = getBaseDirectory(config);
-    expect(result).toBe('/usr/bin');
+    expect(result).toBe(path.resolve('/usr/bin'));
   });
 
   test('handles relative path for dir', () => {
@@ -160,7 +163,7 @@ describe('getBaseDirectory', () => {
     } as unknown) as StartCliFlags;
 
     let result = getBaseDirectory(config);
-    expect(result).toBe('/home/demo');
+    expect(result).toBe(path.resolve('demo'));
 
     config = ({
       dir: '../demo',
@@ -168,7 +171,7 @@ describe('getBaseDirectory', () => {
     } as unknown) as StartCliFlags;
 
     result = getBaseDirectory(config);
-    expect(result).toBe('/demo');
+    expect(result).toBe(path.resolve('../demo'));
   });
 
   test('handles relative path for cwd', () => {
@@ -178,7 +181,7 @@ describe('getBaseDirectory', () => {
     } as unknown) as StartCliFlags;
 
     let result = getBaseDirectory(config);
-    expect(result).toBe('/home/demo');
+    expect(result).toBe(path.resolve('demo'));
 
     config = ({
       dir: undefined,
@@ -186,7 +189,7 @@ describe('getBaseDirectory', () => {
     } as unknown) as StartCliFlags;
 
     result = getBaseDirectory(config);
-    expect(result).toBe('/demo');
+    expect(result).toBe(path.resolve('../demo'));
   });
 });
 
