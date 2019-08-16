@@ -9,22 +9,17 @@ Serverless Framework plugin to deploy to the Twilio Runtime
 ### Pre-requisites
 
 - Node.js v8.10.0 (this is the runtime version supported by Twilio Functions)
-- Serverless CLI v1.48.0+. You can run npm i -g serverless if you don't already have it.
+- Serverless CLI v1.50.0+. You can run npm i -g serverless if you don't already have it.
 - A Twilio account. If you don't have one you can [sign up quickly](https://www.twilio.com/try-twilio).
 
 ### Create a new Twilio service
 
-Very soon the `serverless create -t twilio-runtime` command will be available. But for now the project bootstrap has to be done manually.
-
-- Create a new directory: `mkdir your-runtime && cd your-runtime`
-- Create a new `package.json`: `npm init`
-- Install Twilio Runtime plugin: `npm install --save @twilio-labs/serverless-twilio-runtime`
-- Create a runtime function at `./functions/hello-world.js`
-  - Define your function: `exports.handler = function(context, event, callback) { callback(null, "hello world!"); };`
-- Create a `serverless.yml` and define the minimal configuration (see below)
-- Run `serverless deploy`, `serverless info` or `serverless invoke -f hello-world`
-
-_Make sure to define `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN` as environment vars when you run `serverless [CMD]`._
+- Run `serverless create -t twilio-nodejs -p my-twilio-project`
+- `cd my-twilio-project`
+- define `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN` as [environment vars](https://www.twilio.com/blog/2017/01/how-to-set-environment-variables.html)
+- run `serverless deploy` to deploy the service
+- run `serverless invoke -f hello-world` to invoke the deployed `hello-world` function
+- run `serverless info` to retreive information about your Twilio Runtime service
 
 #### Minimal `serverless.yml` configuration
 
@@ -112,7 +107,7 @@ provider:
   environment: ${env:TWILIO_RUNTIME_ENV, 'dev'}
 
   # Environment variables passed to your functions
-  # available in the Twilio runtim via `process.env`
+  # available in the Twilio runtim via `context` function parameter
   environmentVars:
     MY_MESSAGE: 'This is cool stuff'
 
@@ -207,6 +202,8 @@ Functions:
 #### Invoke a deployed function - `serverless invoke`
 
 Invoke a deployed function by referencing its name and see the response. Define the function using `--function` or `-f` parameter.
+
+_Make sure that you deployed the service first._
 
 ```
 $ serverless invoke --function hello-world
