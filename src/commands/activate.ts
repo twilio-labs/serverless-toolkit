@@ -93,7 +93,7 @@ export const cliInfo: CliInfo = {
     environment: {
       type: 'string',
       describe: 'The environment suffix or SID to deploy to.',
-      required: true,
+      requiresArg: true,
     },
     'account-sid': {
       type: 'string',
