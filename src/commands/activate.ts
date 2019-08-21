@@ -6,14 +6,13 @@ import { Ora } from 'ora';
 import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
 import { ActivateCliFlags, getConfigFromFlags } from '../config/activate';
-import { printActivateConfig } from '../printers/activate';
+import { printActivateConfig, printActivateResult } from '../printers/activate';
 import {
   getDebugFunction,
   getOraSpinner,
   logger,
   setLogLevelByName,
 } from '../utils/logger';
-import { writeOutput } from '../utils/output';
 import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 
@@ -68,7 +67,7 @@ export async function handler(
     spinner.succeed(
       `Activated new build ${details} on ${config.targetEnvironment}`
     );
-    writeOutput(result.domain);
+    printActivateResult(result);
   } catch (err) {
     handleError(err, spinner);
   }

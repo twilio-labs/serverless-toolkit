@@ -8,6 +8,13 @@ export const shouldPrettyPrint = process.stdout.isTTY && !isCi;
 export const supportsEmoji =
   process.platform !== 'win32' || isCi || process.env.TERM === 'xterm-256color';
 
+export function getTwilioConsoleDeploymentUrl(
+  serviceSid: string,
+  environmentSid: string
+) {
+  return `https://www.twilio.com/console/assets/api/${serviceSid}/environment/${environmentSid}`;
+}
+
 export function printObjectWithoutHeaders(obj: {}): string {
   return columnify(obj, { showHeaders: false });
 }

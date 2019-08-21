@@ -7,10 +7,12 @@ import {
 import chalk from 'chalk';
 import columnify from 'columnify';
 import { stripIndent } from 'common-tags';
+import terminalLink from 'terminal-link';
 import { MergeExclusive } from 'type-fest';
 import { logger } from '../utils/logger';
 import { writeOutput } from '../utils/output';
 import {
+  getTwilioConsoleDeploymentUrl,
   printObjectWithoutHeaders,
   redactPartOfString,
   shouldPrettyPrint,
@@ -58,6 +60,10 @@ function plainPrintDeployedResources(
     environmentSuffix: config.functionsEnv,
     environmentSid: result.environmentSid,
     buildSid: result.buildSid,
+    viewLiveLogs: getTwilioConsoleDeploymentUrl(
+      result.serviceSid,
+      result.environmentSid
+    ),
   };
 
   const output = `
@@ -110,6 +116,14 @@ function prettyPrintDeployedResources(
   config: DeployLocalProjectConfig,
   result: DeployResult
 ) {
+  const twilioConsoleLogsLink = terminalLink(
+    'Open the Twilio Console',
+    getTwilioConsoleDeploymentUrl(result.serviceSid, result.environmentSid),
+    {
+      fallback: (text: string, url: string) => chalk.dim(url),
+    }
+  );
+
   writeOutput(
     chalk`
 {bold.cyan.underline Deployment Details}
@@ -120,6 +134,8 @@ function prettyPrintDeployedResources(
    ${config.functionsEnv} {dim (${result.environmentSid})} 
 {bold.cyan Build SID:}
    ${result.buildSid}
+{bold.cyan View Live Logs:}
+   ${twilioConsoleLogsLink}
   `.trim()
   );
 
