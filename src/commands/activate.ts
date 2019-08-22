@@ -60,13 +60,14 @@ export async function handler(
     ? `(${config.buildSid})`
     : `from ${config.sourceEnvironment}`;
   const spinner = getOraSpinner(
-    `Activating build ${details} to ${config.targetEnvironment}`
+    `Activating build ${details} to ${config.targetEnvironment || 'production'}`
   ).start();
   try {
     const client = new TwilioServerlessApiClient(config);
     const result = await client.activateBuild(config);
     spinner.succeed(
-      `Activated new build ${details} on ${config.targetEnvironment}`
+      `Activated new build ${details} on ${config.targetEnvironment ||
+        'production'}`
     );
     writeOutput(result.domain);
   } catch (err) {
@@ -94,6 +95,11 @@ export const cliInfo: CliInfo = {
       type: 'string',
       describe: 'The environment suffix or SID to deploy to.',
       requiresArg: true,
+    },
+    production: {
+      type: 'boolean',
+      describe:
+        'Promote build to the production environment (no domain suffix). Overrides environment flag',
     },
     'account-sid': {
       type: 'string',
