@@ -1,4 +1,5 @@
 const inquirer = require('inquirer');
+const validateProjectName = require('./validate-project-name');
 
 function validateAccountSid(input) {
   if (input.startsWith('AC') || input === '') {
@@ -16,9 +17,7 @@ async function promptForAccountDetails(config) {
       type: 'input',
       name: 'accountSid',
       message: 'Twilio Account SID',
-      validate: input => {
-        return validateAccountSid(input);
-      }
+      validate: validateAccountSid
     });
   }
   if (typeof config.authToken === 'undefined') {
@@ -31,4 +30,26 @@ async function promptForAccountDetails(config) {
   return await inquirer.prompt(questions);
 }
 
-module.exports = { promptForAccountDetails };
+async function promptForProjectName(errors) {
+  const questions = [
+    {
+      type: 'input',
+      name: 'name',
+      message: `Project names ${errors.join(
+        ', '
+      )}. Please choose a new project name.`,
+      validate: name => {
+        const { valid, errors } = validateProjectName(name);
+        if (valid) return valid;
+        return `Project ${errors.join(', ')}.`;
+      }
+    }
+  ];
+  return await inquirer.prompt(questions);
+}
+
+module.exports = {
+  promptForAccountDetails,
+  promptForProjectName,
+  validateAccountSid
+};
