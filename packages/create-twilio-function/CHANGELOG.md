@@ -2,7 +2,9 @@
 
 ## Ongoing [☰](https://github.com/twilio-labs/create-twilio-function/compare/v2.0.0...master)
 
-...
+- minor updates
+  - Validates project names. Names can only include letters, numbers and hyphens
+  - Adds `npm run deploy` command to generated project which will run `twilio-run deploy`
 
 ## 2.0.0 (August 4, 2019) [☰](https://github.com/twilio-labs/create-twilio-function/compare/v1.0.2...v2.0.0)
 
