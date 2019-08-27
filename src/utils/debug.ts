@@ -28,15 +28,29 @@ export const generalRedactor = fastRedact({
       'TWILIO_API_SECRET',
     ]),
   ],
-});
+  serialize: false,
+}) as <T>(x: T) => T;
 
 export const allPropertiesRedactor = fastRedact({
   paths: ['*'],
-});
+  serialize: false,
+}) as <T>(x: T) => T;
+
+export function copyObject(obj: object) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+export function createRedactedObject(
+  obj: object,
+  redactor: typeof generalRedactor
+) {
+  const copiedObject = copyObject(obj);
+  return redactor(copiedObject);
+}
 
 debug.formatters.P = function protectedFormatterMultiline(v: any): string {
   if (typeof v === 'object') {
-    v = JSON.parse(generalRedactor(v));
+    v = createRedactedObject(v, generalRedactor);
   }
 
   return debug.formatters.O.bind(debug)(v);
@@ -44,7 +58,7 @@ debug.formatters.P = function protectedFormatterMultiline(v: any): string {
 
 debug.formatters.p = function protectedFormatterSameline(v: any): string {
   if (typeof v === 'object') {
-    v = JSON.parse(generalRedactor(v));
+    v = createRedactedObject(v, generalRedactor);
   }
 
   return debug.formatters.o.bind(debug)(v);
@@ -52,14 +66,14 @@ debug.formatters.p = function protectedFormatterSameline(v: any): string {
 
 debug.formatters.R = function redactedFormatterMultiline(v: any): string {
   if (typeof v === 'object') {
-    v = JSON.parse(allPropertiesRedactor(v));
+    v = createRedactedObject(v, allPropertiesRedactor);
   }
   return debug.formatters.O.bind(debug)(v);
 };
 
 debug.formatters.r = function redactedFormatterSameline(v: any): string {
   if (typeof v === 'object') {
-    v = JSON.parse(allPropertiesRedactor(v));
+    v = createRedactedObject(v, allPropertiesRedactor);
   }
   return debug.formatters.o.bind(debug)(v);
 };
