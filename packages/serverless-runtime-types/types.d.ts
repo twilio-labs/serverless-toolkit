@@ -49,8 +49,8 @@ export type Context<T = {}> = {
 } & T;
 
 export type ServerlessCallback = (
-  error: null | Error,
-  payload?: object
+  error: null | Error | string | object,
+  payload?: object | string | number | boolean
 ) => void;
 
 export type ServerlessFunctionSignature<
