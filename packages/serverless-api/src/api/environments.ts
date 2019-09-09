@@ -66,7 +66,7 @@ export async function createEnvironmentFromSuffix(
     form: true,
     body: {
       UniqueName: uniqueName,
-      DomainSuffix: domainSuffix,
+      DomainSuffix: domainSuffix || undefined,
       // this property currently doesn't exist but for the future lets set it
       FriendlyName: `${uniqueName} Environment (Created by CLI)`,
     },
@@ -105,7 +105,9 @@ export async function getEnvironmentFromSuffix(
 ): Promise<EnvironmentResource> {
   const environments = await listEnvironments(serviceSid, client);
   let foundEnvironments = environments.filter(
-    e => e.domain_suffix === domainSuffix
+    e =>
+      e.domain_suffix === domainSuffix ||
+      (domainSuffix.length === 0 && e.domain_suffix === null)
   );
 
   let env: EnvironmentResource | undefined;
