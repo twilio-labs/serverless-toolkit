@@ -347,7 +347,9 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
 
     this.emit('status-update', {
       status: DeployStatus.CONFIGURING_ENVIRONMENT,
-      message: `Configuring "${config.functionsEnv}" environment`,
+      message: `Configuring ${
+        config.functionsEnv.length === 0 ? 'bare' : `"${config.functionsEnv}"`
+      } environment`,
     });
     const environment = await createEnvironmentIfNotExists(
       config.functionsEnv,
