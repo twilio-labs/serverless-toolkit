@@ -14,7 +14,7 @@ import { getDebugFunction } from '../utils/logger';
 import { createLogger } from './internal/request-logger';
 import { setRoutes } from './internal/route-cache';
 import { getFunctionsAndAssets } from './internal/runtime-paths';
-import { functionToRoute } from './route';
+import { functionToRoute, constructGlobalScope } from './route';
 
 const debug = getDebugFunction('twilio-run:server');
 const DEFAULT_PORT = process.env.PORT || 3000;
@@ -79,6 +79,8 @@ export async function createServer(
 
   const routes = await getFunctionsAndAssets(config.baseDir);
   const routeMap = setRoutes(routes);
+
+  constructGlobalScope(config);
 
   app.set('port', port);
   app.all(
