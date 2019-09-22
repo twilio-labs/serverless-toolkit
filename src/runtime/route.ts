@@ -133,21 +133,35 @@ export function functionToRoute(
     debug('Event for %s: %o', req.path, event);
     const context = constructContext(config);
     debug('Context for %s: %p', req.path, context);
+    let run_timings: {
+      start: bigint;
+      end: bigint;
+    } = {
+      start: BigInt(0),
+      end: BigInt(0),
+    };
 
     const callback: ServerlessCallback = function callback(
       err,
       responseObject?
     ) {
+      run_timings.end = process.hrtime.bigint();
       debug('Function execution %s finished', req.path);
       if (err) {
         handleError(err, req, res, functionFilePath);
         return;
       }
       handleSuccess(responseObject, res);
+      debug(
+        `(Estimated) Total Execution Time: ${Number(
+          run_timings.end - run_timings.start
+        ) / 1e6}ms`
+      );
     };
 
     debug('Calling function for %s', req.path);
     try {
+      run_timings.start = process.hrtime.bigint();
       fn(context, event, callback);
     } catch (err) {
       callback(err);
