@@ -159,6 +159,13 @@ export function waitForSuccessfulBuild(
       if (isBuilt) {
         break;
       }
+
+      const hasFailed = status === 'failed';
+      if (hasFailed) {
+        reject(status);
+        return;
+      }
+
       if (eventEmitter) {
         eventEmitter.emit('status-update', {
           status: DeployStatus.BUILDING,
