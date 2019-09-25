@@ -25,6 +25,7 @@ export type ActivateCliFlags = Arguments<
     buildSid?: string;
     sourceEnvironment?: string;
     environment: string;
+    production: boolean;
     createEnvironment: boolean;
     force: boolean;
   }
@@ -51,6 +52,10 @@ export async function getConfigFromFlags(
 
   flags = mergeFlagsAndConfig(configFlags, flags, cliInfo);
   cwd = flags.cwd || cwd;
+
+  if (flags.production) {
+    flags.environment = '';
+  }
 
   const { accountSid, authToken } = await getCredentialsFromFlags(
     flags,

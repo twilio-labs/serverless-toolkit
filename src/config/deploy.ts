@@ -22,6 +22,7 @@ export type DeployCliFlags = Arguments<
     serviceSid?: string;
     functionsEnv?: string;
     environment: string;
+    production: boolean;
     projectName?: string;
     serviceName?: string;
     overrideExistingProject: boolean;
@@ -58,6 +59,10 @@ export async function getConfigFromFlags(
 
   flags = mergeFlagsAndConfig(configFlags, flags, cliInfo);
   cwd = flags.cwd || cwd;
+
+  if (flags.production) {
+    flags.environment = '';
+  }
 
   const { accountSid, authToken } = await getCredentialsFromFlags(
     flags,

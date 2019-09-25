@@ -157,6 +157,12 @@ export const cliInfo: CliInfo = {
         'The environment name (domain suffix) you want to use for your deployment',
       default: 'dev',
     },
+    production: {
+      type: 'boolean',
+      describe:
+        'Please prefer the "activate" command! Deploys to the production environment (no domain suffix). Overrides the value passed via the environment flag.',
+      default: false,
+    },
     'service-name': {
       type: 'string',
       alias: 'n',
@@ -224,8 +230,8 @@ function optionBuilder(yargs: Argv<any>): Argv<DeployCliFlags> {
       'Deploys all functions and assets in the current working directory'
     )
     .example(
-      '$0 deploy --environment=prod',
-      'Creates an environment with the domain suffix "prod"'
+      '$0 deploy --environment=stage',
+      'Creates an environment with the domain suffix "stage"'
     );
 
   yargs = Object.keys(cliInfo.options).reduce((yargs, name) => {
