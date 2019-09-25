@@ -122,8 +122,6 @@ export function functionToRoute(
   config: StartCliConfig,
   functionFilePath?: string
 ): ExpressRequestHandler {
-  constructGlobalScope(config);
-
   return function twilioFunctionHandler(
     req: ExpressRequest,
     res: ExpressResponse,
