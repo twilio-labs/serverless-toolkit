@@ -134,18 +134,18 @@ export function functionToRoute(
     const context = constructContext(config);
     debug('Context for %s: %p', req.path, context);
     let run_timings: {
-      start: bigint;
-      end: bigint;
+      start: [number, number];
+      end: [number, number];
     } = {
-      start: BigInt(0),
-      end: BigInt(0),
+      start: [0, 0],
+      end: [0, 0],
     };
 
     const callback: ServerlessCallback = function callback(
       err,
       responseObject?
     ) {
-      run_timings.end = process.hrtime.bigint();
+      run_timings.end = process.hrtime();
       debug('Function execution %s finished', req.path);
       if (err) {
         handleError(err, req, res, functionFilePath);
@@ -153,15 +153,16 @@ export function functionToRoute(
       }
       handleSuccess(responseObject, res);
       debug(
-        `(Estimated) Total Execution Time: ${Number(
-          run_timings.end - run_timings.start
-        ) / 1e6}ms`
+        `(Estimated) Total Execution Time: ${(run_timings.end[0] * 1e9 +
+          run_timings.end[1] -
+          (run_timings.start[0] * 1e9 + run_timings.start[1])) /
+          1e6}ms`
       );
     };
 
     debug('Calling function for %s', req.path);
     try {
-      run_timings.start = process.hrtime.bigint();
+      run_timings.start = process.hrtime();
       fn(context, event, callback);
     } catch (err) {
       callback(err);
