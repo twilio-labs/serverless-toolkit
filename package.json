@@ -38,7 +38,7 @@
   "author": "Dominik Kundel <dkundel@twilio.com>",
   "license": "MIT",
   "dependencies": {
-    "@twilio-labs/serverless-api": "^1.0.1",
+    "@twilio-labs/serverless-api": "^1.0.3",
     "@twilio-labs/serverless-runtime-types": "^1.1.7",
     "@types/express": "^4.17.0",
     "@types/inquirer": "^6.0.3",
