@@ -147,17 +147,17 @@ export function functionToRoute(
     ) {
       run_timings.end = process.hrtime();
       debug('Function execution %s finished', req.path);
-      if (err) {
-        handleError(err, req, res, functionFilePath);
-        return;
-      }
-      handleSuccess(responseObject, res);
       debug(
         `(Estimated) Total Execution Time: ${(run_timings.end[0] * 1e9 +
           run_timings.end[1] -
           (run_timings.start[0] * 1e9 + run_timings.start[1])) /
           1e6}ms`
       );
+      if (err) {
+        handleError(err, req, res, functionFilePath);
+        return;
+      }
+      handleSuccess(responseObject, res);
     };
 
     debug('Calling function for %s', req.path);
