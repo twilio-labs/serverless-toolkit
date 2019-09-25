@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/twilio-labs/twilio-run/compare/v2.0.0...v2.1.0) (2019-09-25)
+
+
+### Bug Fixes
+
+* **activate:** change environment flag from 'required' to 'requiresArg' ([#75](https://github.com/twilio-labs/twilio-run/issues/75)) ([a6367fa](https://github.com/twilio-labs/twilio-run/commit/a6367fa))
+* **debug:** fix redaction of logger overwriting values ([#79](https://github.com/twilio-labs/twilio-run/issues/79)) ([c5c6081](https://github.com/twilio-labs/twilio-run/commit/c5c6081)), closes [#78](https://github.com/twilio-labs/twilio-run/issues/78)
+* **server:** object Runtime not available before function run ([#80](https://github.com/twilio-labs/twilio-run/issues/80)) ([ce63952](https://github.com/twilio-labs/twilio-run/commit/ce63952))
+* **tests:** update paths to support win32 ([#73](https://github.com/twilio-labs/twilio-run/issues/73)) ([f6ea72d](https://github.com/twilio-labs/twilio-run/commit/f6ea72d))
+
+
+### Features
+
+* add estimated execution time to function run ([#81](https://github.com/twilio-labs/twilio-run/issues/81)) ([cf8b21d](https://github.com/twilio-labs/twilio-run/commit/cf8b21d))
+* add link to Twilio Console logs to deploy/activate ([#77](https://github.com/twilio-labs/twilio-run/issues/77)) ([7bd4f7c](https://github.com/twilio-labs/twilio-run/commit/7bd4f7c))
+* **deploy,activate:** add flag to deploy/promote to production ([#76](https://github.com/twilio-labs/twilio-run/issues/76)) ([77c95e4](https://github.com/twilio-labs/twilio-run/commit/77c95e4))
+
+
+
 ## [2.0.0](https://github.com/twilio-labs/twilio-run/compare/v2.0.0-rc.5...v2.0.0) (2019-08-05)
 
 
