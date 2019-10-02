@@ -4,6 +4,7 @@ import isCi from 'is-ci';
 import size from 'window-size';
 import wrapAnsi from 'wrap-ansi';
 
+export const windowSize = size || { width: 80, height: 300 };
 export const shouldPrettyPrint = process.stdout.isTTY && !isCi;
 export const supportsEmoji =
   process.platform !== 'win32' || isCi || process.env.TERM === 'xterm-256color';
@@ -31,7 +32,7 @@ export function borderLeft(text: string, color: string): string {
 }
 
 const wrapText = (text: string) =>
-  wrapAnsi(text, size.width - 5, { trim: false });
+  wrapAnsi(text, windowSize.width - 5, { trim: false });
 
 export function importantMessage(
   label: string,
