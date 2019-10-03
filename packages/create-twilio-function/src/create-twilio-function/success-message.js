@@ -1,6 +1,6 @@
 const { getPackageManager } = require('pkg-install');
 const chalk = require('chalk');
-const windowSize = require('window-size');
+const getWindowSize = require('./window-size');
 const wrap = require('wrap-ansi');
 
 async function successMessage(config) {
@@ -20,7 +20,7 @@ Get started by running:
 
 {blue cd ${config.name}}
 {blue ${packageManager} start}`,
-    windowSize.get().width - 8,
+    getWindowSize().width - 8,
     { trim: false, hard: true }
   );
 }
