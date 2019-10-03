@@ -14,17 +14,16 @@ import { stripIndent } from 'common-tags';
 import startCase from 'lodash.startcase';
 import logSymbols from 'log-symbols';
 import title from 'title';
-import size from 'window-size';
 import { ListConfig } from '../config/list';
 import { logger } from '../utils/logger';
 import { writeOutput } from '../utils/output';
-import { redactPartOfString, shouldPrettyPrint } from './utils';
+import { redactPartOfString, shouldPrettyPrint, windowSize } from './utils';
 
 type KeyMaps = {
   [key in ListOptions]: string[];
 };
 
-const LONG_LINE = '─'.repeat(size.width);
+const LONG_LINE = '─'.repeat(windowSize.width);
 
 const baseKeys: KeyMaps = {
   environments: [

@@ -2,12 +2,11 @@ import { ServerlessResourceConfig } from '@twilio-labs/serverless-api';
 import boxen from 'boxen';
 import chalk from 'chalk';
 import logSymbols from 'log-symbols';
-import windowSize from 'window-size';
 import wrapAnsi from 'wrap-ansi';
 import { StartCliConfig } from '../config/start';
 import { getFunctionsAndAssets } from '../runtime/internal/runtime-paths';
 import { logger } from '../utils/logger';
-import { shouldPrettyPrint, terminalLink } from './utils';
+import { shouldPrettyPrint, terminalLink, windowSize } from './utils';
 
 function printAsset(
   asset: ServerlessResourceConfig,
