@@ -273,7 +273,7 @@ OPTIONS
 
   --inspect=inspect          Enables Node.js debugging protocol
 
-  --inspect-brk=inspect-brk  Enables Node.js debugging protocol, stops executioin until debugger is attached
+  --inspect-brk=inspect-brk  Enables Node.js debugging protocol, stops execution until debugger is attached
 
   --legacy-mode              Enables legacy mode, it will prefix your asset paths with /assets
 
