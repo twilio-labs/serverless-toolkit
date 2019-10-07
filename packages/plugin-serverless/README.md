@@ -183,7 +183,7 @@ USAGE
   $ twilio serverless:list [TYPES]
 
 ARGUMENTS
-  TYPES  [default: services] Comma seperated list of things to list (services,environments,functions,assets,variables)
+  TYPES  [default: services] Comma separated list of things to list (services,environments,functions,assets,variables)
 
 OPTIONS
   -c, --config=config              [default: .twilio-functions] Location of the config file. Absolute path or relative
