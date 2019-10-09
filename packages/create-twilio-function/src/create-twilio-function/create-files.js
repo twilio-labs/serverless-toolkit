@@ -2,9 +2,7 @@ const versions = require('./versions');
 const fs = require('fs');
 const { promisify } = require('util');
 const mkdir = promisify(fs.mkdir);
-const open = promisify(fs.open);
-const close = promisify(fs.close);
-const write = promisify(fs.write);
+const writeFile = promisify(fs.writeFile);
 const readdir = promisify(fs.readdir);
 const copyFile = promisify(fs.copyFile);
 const { COPYFILE_EXCL } = fs.constants;
@@ -16,9 +14,7 @@ function createDirectory(pathName, dirName) {
 }
 
 async function createFile(fullPath, content) {
-  const fd = await open(fullPath, 'wx');
-  await write(fd, content);
-  await close(fd);
+  return writeFile(fullPath, content, { flag: 'wx' });
 }
 
 function createPackageJSON(pathName, name) {
