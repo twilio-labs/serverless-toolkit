@@ -6,9 +6,12 @@ const fs = require('fs');
 const mkdir = promisify(fs.mkdir);
 const readFile = promisify(fs.readFile);
 const stat = promisify(fs.stat);
+const path = require('path');
+
+const scratchDir = path.join(process.cwd(), 'scratch');
 
 beforeAll(async () => {
-  await rimraf('./scratch');
+  await rimraf(scratchDir);
   nock.disableNetConnect();
 });
 
@@ -17,23 +20,23 @@ afterAll(() => {
 });
 
 beforeEach(async () => {
-  await mkdir('./scratch');
+  await mkdir(scratchDir);
   nock('https://raw.githubusercontent.com')
     .get('/github/gitignore/master/Node.gitignore')
     .reply(200, '*.log\n.env');
 });
 
 afterEach(async () => {
-  await rimraf('./scratch');
+  await rimraf(scratchDir);
   nock.cleanAll();
 });
 
 describe('createGitignore', () => {
   test('it creates a new .gitignore file', async () => {
-    await createGitignore('./scratch');
-    const file = await stat('./scratch/.gitignore');
+    await createGitignore(scratchDir);
+    const file = await stat(path.join(scratchDir, '.gitignore'));
     expect(file.isFile());
-    const contents = await readFile('./scratch/.gitignore', {
+    const contents = await readFile(path.join(scratchDir, '.gitignore'), {
       encoding: 'utf-8'
     });
     expect(contents).toMatch('*.log');
@@ -41,10 +44,10 @@ describe('createGitignore', () => {
   });
 
   test('it rejects if there is already a .gitignore file', async () => {
-    fs.closeSync(fs.openSync('./scratch/.gitignore', 'w'));
+    fs.closeSync(fs.openSync(path.join(scratchDir, '.gitignore'), 'w'));
     expect.assertions(1);
     try {
-      await createGitignore('./scratch');
+      await createGitignore(scratchDir);
     } catch (e) {
       expect(e.toString()).toMatch('file already exists');
     }

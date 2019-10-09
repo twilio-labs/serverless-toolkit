@@ -13,31 +13,34 @@ const mkdir = promisify(fs.mkdir);
 const readFile = promisify(fs.readFile);
 const stat = promisify(fs.stat);
 const readdir = promisify(fs.readdir);
+const path = require('path');
+
+const scratchDir = path.join(process.cwd(), 'scratch');
 
 beforeAll(async () => {
-  await rimraf('./scratch');
+  await rimraf(scratchDir);
 });
 
 beforeEach(async () => {
-  await mkdir('./scratch');
+  await mkdir(scratchDir);
 });
 
 afterEach(async () => {
-  await rimraf('./scratch');
+  await rimraf(scratchDir);
 });
 
 describe('createDirectory', () => {
   test('it creates a new directory with the project name', async () => {
-    await createDirectory('./scratch', 'test-project');
-    const dir = await stat('./scratch/test-project');
+    await createDirectory(scratchDir, 'test-project');
+    const dir = await stat(path.join(scratchDir, 'test-project'));
     expect(dir.isDirectory());
   });
 
   test('it throws an error if the directory exists', async () => {
-    await mkdir('./scratch/test-project');
+    await mkdir(path.join(scratchDir, 'test-project'));
     expect.assertions(1);
     try {
-      await createDirectory('./scratch', 'test-project');
+      await createDirectory(scratchDir, 'test-project');
     } catch (e) {
       expect(e.toString()).toMatch('EEXIST');
     }
@@ -46,10 +49,12 @@ describe('createDirectory', () => {
 
 describe('createPackageJSON', () => {
   test('it creates a new package.json file with the name of the project', async () => {
-    await createPackageJSON('./scratch', 'project-name');
-    const file = await stat('./scratch/package.json');
+    await createPackageJSON(scratchDir, 'project-name');
+    const file = await stat(path.join(scratchDir, 'package.json'));
     expect(file.isFile());
-    const packageJSON = JSON.parse(await readFile('./scratch/package.json'));
+    const packageJSON = JSON.parse(
+      await readFile(path.join(scratchDir, 'package.json'))
+    );
     expect(packageJSON.name).toEqual('project-name');
     expect(packageJSON.engines.node).toEqual(versions.node);
     expect(packageJSON.devDependencies['twilio-run']).toEqual(
@@ -58,10 +63,10 @@ describe('createPackageJSON', () => {
   });
 
   test('it rejects if there is already a package.json', async () => {
-    fs.closeSync(fs.openSync('./scratch/package.json', 'w'));
+    fs.closeSync(fs.openSync(path.join(scratchDir, 'package.json'), 'w'));
     expect.assertions(1);
     try {
-      await createPackageJSON('./scratch', 'project-name');
+      await createPackageJSON(scratchDir, 'project-name');
     } catch (e) {
       expect(e.toString()).toMatch('file already exists');
     }
@@ -69,27 +74,30 @@ describe('createPackageJSON', () => {
 });
 
 describe('createExampleFromTemplates', () => {
+  const templatesDir = path.join(process.cwd(), 'templates');
   test('it creates functions and assets directories', async () => {
-    await createExampleFromTemplates('./scratch');
+    await createExampleFromTemplates(scratchDir);
 
-    const dirs = await readdir('./scratch');
-    const templateDirs = await readdir('./templates');
-    expect(dirs).toEqual(templateDirs);
+    const dirs = await readdir(scratchDir);
+    const templateDirContents = await readdir(templatesDir);
+    expect(dirs).toEqual(templateDirContents);
   });
 
   test('it copies the functions from the templates/functions directory', async () => {
-    await createExampleFromTemplates('./scratch');
+    await createExampleFromTemplates(scratchDir);
 
-    const functions = await readdir('./scratch/functions');
-    const templateFunctions = await readdir('./templates/functions');
+    const functions = await readdir(path.join(scratchDir, 'functions'));
+    const templateFunctions = await readdir(
+      path.join(templatesDir, 'functions')
+    );
     expect(functions).toEqual(templateFunctions);
   });
 
   test('it rejects if there is already a functions directory', async () => {
-    await mkdir('./scratch/functions');
+    await mkdir(path.join(scratchDir, 'functions'));
     expect.assertions(1);
     try {
-      await createExampleFromTemplates('./scratch');
+      await createExampleFromTemplates(scratchDir);
     } catch (e) {
       expect(e.toString()).toMatch('file already exists');
     }
@@ -98,22 +106,24 @@ describe('createExampleFromTemplates', () => {
 
 describe('createEnvFile', () => {
   test('it creates a new .env file', async () => {
-    await createEnvFile('./scratch', {
+    await createEnvFile(scratchDir, {
       accountSid: 'AC123',
       authToken: 'qwerty123456'
     });
-    const file = await stat('./scratch/.env');
+    const file = await stat(path.join(scratchDir, '.env'));
     expect(file.isFile());
-    const contents = await readFile('./scratch/.env', { encoding: 'utf-8' });
+    const contents = await readFile(path.join(scratchDir, '.env'), {
+      encoding: 'utf-8'
+    });
     expect(contents).toMatch('ACCOUNT_SID=AC123');
     expect(contents).toMatch('AUTH_TOKEN=qwerty123456');
   });
 
   test('it rejects if there is already an .env file', async () => {
-    fs.closeSync(fs.openSync('./scratch/.env', 'w'));
+    fs.closeSync(fs.openSync(path.join(scratchDir, '.env'), 'w'));
     expect.assertions(1);
     try {
-      await createEnvFile('./scratch', {
+      await createEnvFile(scratchDir, {
         accountSid: 'AC123',
         authToken: 'qwerty123456'
       });
@@ -125,18 +135,20 @@ describe('createEnvFile', () => {
 
 describe('createNvmrcFile', () => {
   test('it creates a new .nvmrc file', async () => {
-    await createNvmrcFile('./scratch');
-    const file = await stat('./scratch/.nvmrc');
+    await createNvmrcFile(scratchDir);
+    const file = await stat(path.join(scratchDir, '.nvmrc'));
     expect(file.isFile());
-    const contents = await readFile('./scratch/.nvmrc', { encoding: 'utf-8' });
+    const contents = await readFile(path.join(scratchDir, '.nvmrc'), {
+      encoding: 'utf-8'
+    });
     expect(contents).toMatch(versions.node);
   });
 
   test('it rejects if there is already an .nvmrc file', async () => {
-    fs.closeSync(fs.openSync('./scratch/.nvmrc', 'w'));
+    fs.closeSync(fs.openSync(path.join(scratchDir, '.nvmrc'), 'w'));
     expect.assertions(1);
     try {
-      await createNvmrcFile('./scratch');
+      await createNvmrcFile(scratchDir);
     } catch (e) {
       expect(e.toString()).toMatch('file already exists');
     }

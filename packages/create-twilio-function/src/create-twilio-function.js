@@ -48,16 +48,12 @@ async function createTwilioFunction(config) {
     switch (e.code) {
       case 'EEXIST':
         spinner.fail(
-          `A directory called '${
-            config.name
-          }' already exists. Please create your function in a new directory.`
+          `A directory called '${config.name}' already exists. Please create your function in a new directory.`
         );
         break;
       case 'EACCES':
         spinner.fail(
-          `You do not have permission to create files or directories in the path '${
-            config.path
-          }'.`
+          `You do not have permission to create files or directories in the path '${config.path}'.`
         );
         break;
       default:
@@ -122,9 +118,7 @@ async function createTwilioFunction(config) {
   } catch (err) {
     spinner.fail();
     console.log(
-      `There was an error installing the dependencies, but your project is otherwise complete in ./${
-        config.name
-      }`
+      `There was an error installing the dependencies, but your project is otherwise complete in ./${config.name}`
     );
   }
 
