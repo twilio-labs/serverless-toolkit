@@ -3,6 +3,7 @@ const fs = require('fs');
 const { promisify } = require('util');
 const mkdir = promisify(fs.mkdir);
 const open = promisify(fs.open);
+const close = promisify(fs.close);
 const write = promisify(fs.write);
 const readdir = promisify(fs.readdir);
 const copyFile = promisify(fs.copyFile);
@@ -14,10 +15,10 @@ function createDirectory(pathName, dirName) {
   return mkdir(path.join(pathName, dirName));
 }
 
-function createFile(fullPath, content) {
-  return open(fullPath, 'wx').then(fd => {
-    return write(fd, content);
-  });
+async function createFile(fullPath, content) {
+  const fd = await open(fullPath, 'wx');
+  await write(fd, content);
+  await close(fd);
 }
 
 function createPackageJSON(pathName, name) {
