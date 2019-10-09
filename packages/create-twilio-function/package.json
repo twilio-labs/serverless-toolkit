@@ -24,7 +24,7 @@
   "license": "MIT",
   "devDependencies": {
     "jest": "^24.5.0",
-    "nock": "^10.0.6"
+    "nock": "^11.3.4"
   },
   "dependencies": {
     "boxen": "^3.0.0",
