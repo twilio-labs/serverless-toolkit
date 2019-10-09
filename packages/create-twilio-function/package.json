@@ -12,7 +12,7 @@
     "twilio-functions",
     "serverless"
   ],
-  "author": "Phil Nash <philnash@twilio.com> (http://philna.sh)",
+  "author": "Phil Nash <philnash@twilio.com> (https://philna.sh)",
   "repository": {
     "type": "git",
     "url": "https://github.com/twilio-labs/create-twilio-function.git"
