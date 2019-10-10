@@ -47,6 +47,11 @@ type RawContentsPayload = {
   };
 }[];
 
+type GitHubError = {
+  message: string;
+  documentation_url?: string;
+};
+
 async function getFiles(
   templateId: string,
   directory: string
@@ -97,6 +102,14 @@ export async function getTemplateFiles(
     return files;
   } catch (err) {
     debug(err.message);
+
+    if (err.response) {
+      const bodyMessage = err.response.body as GitHubError;
+      throw new Error(
+        bodyMessage ? `${err.message}\n${bodyMessage.message}` : err.message
+      );
+    }
+
     throw new Error('Invalid template');
   }
 }

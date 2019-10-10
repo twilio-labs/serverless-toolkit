@@ -8,8 +8,8 @@ export async function downloadTemplate(
   namespace: string,
   targetDirectory: string
 ): Promise<void> {
-  const files = await getTemplateFiles(templateName);
   try {
+    const files = await getTemplateFiles(templateName);
     await writeFiles(files, targetDirectory, namespace);
     logger.info(
       chalk`{green SUCCESS} Downloaded new template into the "${namespace}" subdirectories`
