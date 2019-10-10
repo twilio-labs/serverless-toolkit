@@ -19,7 +19,7 @@ Serverless Framework plugin to deploy to the Twilio Runtime
 - define `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN` as [environment vars](https://www.twilio.com/blog/2017/01/how-to-set-environment-variables.html)
 - run `serverless deploy` to deploy the service
 - run `serverless invoke -f hello-world` to invoke the deployed `hello-world` function
-- run `serverless info` to retreive information about your Twilio Runtime service
+- run `serverless info` to retrieve information about your Twilio Runtime service
 
 #### Minimal `serverless.yml` configuration
 
@@ -56,7 +56,7 @@ functions:
 
 ### Deploy, test, and diagnose your Twilio runtime
 
-To deploy, you will need either some environment variables set or manually input the `accountSid` and `authToken` in the `provider.config` section of your `serverless.yml`. You can find the crednentials in [the Twilio Console](https://www.twilio.com/console/).
+To deploy, you will need either some environment variables set or manually input the `accountSid` and `authToken` in the `provider.config` section of your `serverless.yml`. You can find the credentials in [the Twilio Console](https://www.twilio.com/console/).
 
 ```yaml
 service: your-service # update this with your service name
@@ -107,7 +107,7 @@ provider:
   environment: ${env:TWILIO_RUNTIME_ENV, 'dev'}
 
   # Environment variables passed to your functions
-  # available in the Twilio runtim via `context` function parameter
+  # available in the Twilio runtime via `context` function parameter
   environmentVars:
     MY_MESSAGE: 'This is cool stuff'
 
