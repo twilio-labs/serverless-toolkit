@@ -112,7 +112,7 @@ twilio-run deploy --environment=prod
 
 ### `twilio-run list-templates`
 
-Lists the [templates available](https://github.com/twilio-labs/function-templates) to that you can use to generate new functions and/or assets inside your current project with the [`twilio-run new` command](#twilio-run-new-namespace) below.
+Lists the [available templates](https://github.com/twilio-labs/function-templates) that you can use to generate new functions and/or assets inside your current project with the [`twilio-run new` command](#twilio-run-new-namespace) below.
 
 #### Examples
 
@@ -150,7 +150,7 @@ twilio-run list services
 twilio-run ls functions,assets --environment=dev --service-name=demo
 # Outputs all environments for a specific service with extended output for better parsing
 twilio-run ls environments --service-sid=ZSxxxxx --extended-output
-# Only lists the SIDs and date of last update for assets, variables and function
+# Only lists the SIDs and dates of last update for assets, variables and functions
 twilio-run ls assets,variables,functions --properties=sid,date_updated
 ```
 
