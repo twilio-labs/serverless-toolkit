@@ -60,6 +60,9 @@ typings/
 # next.js build output
 .next
 
+# MacOS directory cache
+.DS_Store
+
 .vscode/settings.json
 dist/
 
