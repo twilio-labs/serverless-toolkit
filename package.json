@@ -9,6 +9,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "start": "./bin/twilio-run.js",
+    "watch": "./node_modules/.bin/tsc-watch --onSuccess ./bin/twilio-run.js",
     "clean": "rimraf dist",
     "build": "tsc",
     "build:noemit": "tsc --noEmit",
