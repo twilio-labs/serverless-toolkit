@@ -1,16 +1,13 @@
 import { fsHelpers } from '@twilio-labs/serverless-api';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
-import { mkdir as oldMkdir } from 'fs';
 import got from 'got';
 import Listr, { ListrTask } from 'listr';
 import path from 'path';
 import { install, InstallResult } from 'pkg-install';
-import { promisify } from 'util';
-import { downloadFile, fileExists, readFile, writeFile } from '../utils/fs';
+import { downloadFile, fileExists, readFile, writeFile, mkdir } from '../utils/fs';
 import { getDebugFunction, logger } from '../utils/logger';
 import { TemplateFileInfo } from './data';
-const mkdir = promisify(oldMkdir);
 
 const debug = getDebugFunction('twilio-run:templating:filesystem');
 
