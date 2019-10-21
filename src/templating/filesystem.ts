@@ -170,5 +170,3 @@ export async function writeFiles(
     );
   }
 }
-
-export { fileExists } from '../utils/fs';
