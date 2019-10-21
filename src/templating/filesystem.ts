@@ -6,10 +6,8 @@ import Listr, { ListrTask } from 'listr';
 import path from 'path';
 import { install, InstallResult } from 'pkg-install';
 import { downloadFile, fileExists, readFile, writeFile, mkdir } from '../utils/fs';
-import { getDebugFunction, logger } from '../utils/logger';
+import { logger } from '../utils/logger';
 import { TemplateFileInfo } from './data';
-
-const debug = getDebugFunction('twilio-run:templating:filesystem');
 
 async function writeEnvFile(
   contentUrl: string,
