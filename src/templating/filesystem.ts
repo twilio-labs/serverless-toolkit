@@ -1,7 +1,7 @@
 import { fsHelpers } from '@twilio-labs/serverless-api';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
-import { mkdir as oldMkdir, access as oldAccess, constants as fsConstants } from 'fs';
+import { mkdir as oldMkdir } from 'fs';
 import got from 'got';
 import Listr, { ListrTask } from 'listr';
 import path from 'path';
@@ -11,7 +11,6 @@ import { downloadFile, fileExists, readFile, writeFile } from '../utils/fs';
 import { getDebugFunction, logger } from '../utils/logger';
 import { TemplateFileInfo } from './data';
 const mkdir = promisify(oldMkdir);
-const access = promisify(oldAccess);
 
 const debug = getDebugFunction('twilio-run:templating:filesystem');
 
@@ -112,28 +111,19 @@ export async function writeFiles(
     if (file.type === 'functions') {
       let filepath = path.join(functionsTargetDir, file.name);
 
-      try {
-        await access(filepath, fsConstants.F_OK);
-      } catch (err) {
-        continue;
+      if (await fileExists(filepath)) {
+        throw new Error(
+          `Template with name "${namespace}" has duplicate file "${file.name}" in "${functionsDir}"`
+        );
       }
-
-      throw new Error(
-        `Template with name "${namespace}" has duplicate file "${file.name}" in "${functionsDir}"`
-      );
-
     } else if (file.type === 'assets') {
       let filepath = path.join(assetsTargetDir, file.name);
 
-      try {
-        await access(filepath, fsConstants.F_OK);
-      } catch (err) {
-        continue;
+      if (await fileExists(filepath)) {
+        throw new Error(
+          `Template with name "${namespace}" has duplicate file "${file.name}" in "${assetsDir}"`
+        );
       }
-
-      throw new Error(
-        `Template with name "${namespace}" has duplicate file "${file.name}" in "${assetsDir}"`
-      );
     }
   }
 
