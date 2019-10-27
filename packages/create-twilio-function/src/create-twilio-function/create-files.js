@@ -49,13 +49,12 @@ function copyRecursively(src, dest) {
             return mkdir(path.join(dest, child)).then(() =>
               copyRecursively(path.join(src, child), path.join(dest, child))
             );
-          } else {
-            return copyFile(
-              path.join(src, child),
-              path.join(dest, child),
-              COPYFILE_EXCL
-            ).catch(console.error);
           }
+          return copyFile(
+            path.join(src, child),
+            path.join(dest, child),
+            COPYFILE_EXCL
+          );
         })
       )
     );
