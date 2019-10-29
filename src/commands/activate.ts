@@ -83,15 +83,18 @@ export const cliInfo: CliInfo = {
     },
     'build-sid': {
       type: 'string',
+      alias: 'from-build',
       describe: 'An existing Build SID to deploy to the new environment',
     },
     'source-environment': {
       type: 'string',
+      alias: 'from',
       describe:
         'SID or suffix of an existing environment you want to deploy from.',
     },
     environment: {
       type: 'string',
+      alias: 'to',
       describe: 'The environment suffix or SID to deploy to.',
       requiresArg: true,
     },
@@ -132,11 +135,19 @@ export const cliInfo: CliInfo = {
 function optionBuilder<T>(yargs: Argv<any>): Argv<ActivateCliFlags> {
   yargs = yargs
     .example(
-      '$0 activate --environment=prod --source-environment=dev  ',
+      '$0 promote --environment=prod --source-environment=dev  ',
       'Promotes the same build that is on the "dev" environment to the "prod" environment'
     )
     .example(
-      '$0 activate --environment=demo --create-environment --build-sid=ZB1234xxxxxxxxxx',
+      '$0 promote --to=prod --from=dev  ',
+      'Promotes the same build that is on the "dev" environment to the "prod" environment'
+    )
+    .example(
+      '$0 promote --environment=demo --create-environment --build-sid=ZB1234xxxxxxxxxx',
+      'Duplicates an existing build to a new environment called `demo`'
+    )
+    .example(
+      '$0 promote --to=demo --create-environment --from-build=ZB1234xxxxxxxxxx',
       'Duplicates an existing build to a new environment called `demo`'
     );
 
@@ -147,6 +158,6 @@ function optionBuilder<T>(yargs: Argv<any>): Argv<ActivateCliFlags> {
   return yargs;
 }
 
-export const command = ['activate', 'promote'];
+export const command = ['promote', 'activate'];
 export const describe = 'Promotes an existing deployment to a new environment';
 export const builder = optionBuilder;
