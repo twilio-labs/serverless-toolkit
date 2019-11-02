@@ -8,6 +8,10 @@ import express, {
 } from 'express';
 import userAgentMiddleware from 'express-useragent';
 import nocache from 'nocache';
+import {printRouteInfo} from '../printers/start';
+import chokidar from 'chokidar';
+import debounce from 'lodash.debounce';
+import path from 'path';
 import { StartCliConfig } from '../config/start';
 import { wrapErrorInHtml } from '../utils/error-html';
 import { getDebugFunction } from '../utils/logger';
@@ -18,6 +22,7 @@ import { functionToRoute, constructGlobalScope } from './route';
 
 const debug = getDebugFunction('twilio-run:server');
 const DEFAULT_PORT = process.env.PORT || 3000;
+const RELOAD_DEBOUNCE_MS = 250;
 
 function requireUncached(module: string): any {
   delete require.cache[require.resolve(module)];
@@ -77,8 +82,43 @@ export async function createServer(
     });
   }
 
-  const routes = await getFunctionsAndAssets(config.baseDir);
-  const routeMap = setRoutes(routes);
+  let routes = await getFunctionsAndAssets(config.baseDir);
+  let routeMap = setRoutes(routes);
+
+  if (config.live) {
+    const watcher = chokidar.watch(
+      [
+        path.join(config.baseDir, '/functions/**/*.js'),
+        path.join(config.baseDir, '/assets/'),
+      ],
+      {
+        ignoreInitial: true
+      }
+    );
+
+    const reloadRoutes = async () => {
+      routes = await getFunctionsAndAssets(config.baseDir);
+      routeMap = setRoutes(routes);
+
+      await printRouteInfo(config);
+    };
+
+    // Debounce so we don't needlessly reload when multiple files are changed
+    const debouncedReloadRoutes = debounce(reloadRoutes, RELOAD_DEBOUNCE_MS);
+
+    watcher
+      .on('add', path => {
+        debug(`Reloading Routes: add @ ${path}`);
+        debouncedReloadRoutes();
+      })
+      .on('unlink', path => {
+        debug(`Reloading Routes: unlink @ ${path}`);
+        debouncedReloadRoutes();
+      });
+
+    // Clean the watcher up when exiting.
+    process.on('exit', () => watcher.close());
+  }
 
   constructGlobalScope(config);
 
