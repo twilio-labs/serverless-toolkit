@@ -1,5 +1,6 @@
-const importCredentials = require('../src/create-twilio-function/import-credentials');
 const inquirer = require('inquirer');
+
+const importCredentials = require('../src/create-twilio-function/import-credentials');
 
 describe('importCredentials', () => {
   describe('if credentials are present in the env', () => {
@@ -12,11 +13,7 @@ describe('importCredentials', () => {
       process.env.TWILIO_ACCOUNT_SID = 'AC1234';
       process.env.TWILIO_AUTH_TOKEN = 'auth-token';
 
-      inquirer.prompt = jest.fn(() =>
-        Promise.resolve({
-          importCredentials: true
-        })
-      );
+      inquirer.prompt = jest.fn(() => Promise.resolve({ importedCredentials: true }));
 
       const credentials = await importCredentials({});
       expect(inquirer.prompt).toHaveBeenCalledTimes(1);
@@ -29,11 +26,7 @@ describe('importCredentials', () => {
       process.env.TWILIO_ACCOUNT_SID = 'AC1234';
       process.env.TWILIO_AUTH_TOKEN = 'auth-token';
 
-      inquirer.prompt = jest.fn(() =>
-        Promise.resolve({
-          importCredentials: false
-        })
-      );
+      inquirer.prompt = jest.fn(() => Promise.resolve({ importedCredentials: false }));
 
       const credentials = await importCredentials({});
       expect(inquirer.prompt).toHaveBeenCalledTimes(1);
@@ -46,7 +39,7 @@ describe('importCredentials', () => {
       process.env.TWILIO_ACCOUNT_SID = 'AC1234';
       process.env.TWILIO_AUTH_TOKEN = 'auth-token';
 
-      const credentials = await importCredentials({ importCredentials: true });
+      const credentials = await importCredentials({ importedCredentials: true });
       expect(inquirer.prompt).not.toHaveBeenCalled();
       expect(credentials.accountSid).toBe('AC1234');
       expect(credentials.authToken).toBe('auth-token');
@@ -58,7 +51,7 @@ describe('importCredentials', () => {
 
       const credentials = await importCredentials({
         skipCredentials: true,
-        importCredentials: true
+        importedCredentials: true,
       });
       expect(inquirer.prompt).not.toHaveBeenCalled();
       expect(credentials.accountSid).toBe(undefined);

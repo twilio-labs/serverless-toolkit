@@ -1,6 +1,7 @@
 const yargs = require('yargs');
-const DefaultCommand = require('./command');
 const ListTemplateCommand = require('twilio-run/dist/commands/list-templates');
+
+const DefaultCommand = require('./command');
 
 function cli(cwd) {
   yargs.help();

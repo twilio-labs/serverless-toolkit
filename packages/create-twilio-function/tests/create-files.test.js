@@ -1,19 +1,22 @@
+const fs = require('fs');
+const path = require('path');
+const { promisify } = require('util');
+
+const rimraf = promisify(require('rimraf'));
+
+const mkdir = promisify(fs.mkdir);
+const readFile = promisify(fs.readFile);
+const stat = promisify(fs.stat);
+const readdir = promisify(fs.readdir);
+
+const versions = require('../src/create-twilio-function/versions');
 const {
   createPackageJSON,
   createDirectory,
   createExampleFromTemplates,
   createEnvFile,
-  createNvmrcFile
+  createNvmrcFile,
 } = require('../src/create-twilio-function/create-files');
-const versions = require('../src/create-twilio-function/versions');
-const fs = require('fs');
-const { promisify } = require('util');
-const rimraf = promisify(require('rimraf'));
-const mkdir = promisify(fs.mkdir);
-const readFile = promisify(fs.readFile);
-const stat = promisify(fs.stat);
-const readdir = promisify(fs.readdir);
-const path = require('path');
 
 const scratchDir = path.join(process.cwd(), 'scratch');
 
@@ -52,14 +55,10 @@ describe('createPackageJSON', () => {
     await createPackageJSON(scratchDir, 'project-name');
     const file = await stat(path.join(scratchDir, 'package.json'));
     expect(file.isFile());
-    const packageJSON = JSON.parse(
-      await readFile(path.join(scratchDir, 'package.json'))
-    );
+    const packageJSON = JSON.parse(await readFile(path.join(scratchDir, 'package.json')));
     expect(packageJSON.name).toEqual('project-name');
     expect(packageJSON.engines.node).toEqual(versions.node);
-    expect(packageJSON.devDependencies['twilio-run']).toEqual(
-      versions.twilioRun
-    );
+    expect(packageJSON.devDependencies['twilio-run']).toEqual(versions.twilioRun);
   });
 
   test('it rejects if there is already a package.json', async () => {
@@ -87,9 +86,7 @@ describe('createExampleFromTemplates', () => {
     await createExampleFromTemplates(scratchDir);
 
     const functions = await readdir(path.join(scratchDir, 'functions'));
-    const templateFunctions = await readdir(
-      path.join(templatesDir, 'functions')
-    );
+    const templateFunctions = await readdir(path.join(templatesDir, 'functions'));
     expect(functions).toEqual(templateFunctions);
   });
 
@@ -108,13 +105,11 @@ describe('createEnvFile', () => {
   test('it creates a new .env file', async () => {
     await createEnvFile(scratchDir, {
       accountSid: 'AC123',
-      authToken: 'qwerty123456'
+      authToken: 'qwerty123456',
     });
     const file = await stat(path.join(scratchDir, '.env'));
     expect(file.isFile());
-    const contents = await readFile(path.join(scratchDir, '.env'), {
-      encoding: 'utf-8'
-    });
+    const contents = await readFile(path.join(scratchDir, '.env'), { encoding: 'utf-8' });
     expect(contents).toMatch('ACCOUNT_SID=AC123');
     expect(contents).toMatch('AUTH_TOKEN=qwerty123456');
   });
@@ -125,7 +120,7 @@ describe('createEnvFile', () => {
     try {
       await createEnvFile(scratchDir, {
         accountSid: 'AC123',
-        authToken: 'qwerty123456'
+        authToken: 'qwerty123456',
       });
     } catch (e) {
       expect(e.toString()).toMatch('file already exists');
@@ -138,9 +133,7 @@ describe('createNvmrcFile', () => {
     await createNvmrcFile(scratchDir);
     const file = await stat(path.join(scratchDir, '.nvmrc'));
     expect(file.isFile());
-    const contents = await readFile(path.join(scratchDir, '.nvmrc'), {
-      encoding: 'utf-8'
-    });
+    const contents = await readFile(path.join(scratchDir, '.nvmrc'), { encoding: 'utf-8' });
     expect(contents).toMatch(versions.node);
   });
 
