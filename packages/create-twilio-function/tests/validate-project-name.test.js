@@ -7,9 +7,7 @@ describe('validateProjectName', () => {
   });
 
   it('should disallow names longer than 32 characters', () => {
-    const { valid, errors } = validateProjectName(
-      'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-    );
+    const { valid, errors } = validateProjectName('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
     expect(valid).toBe(false);
     expect(errors[0]).toEqual('must be shorter than 32 characters');
   });
@@ -24,9 +22,7 @@ describe('validateProjectName', () => {
     names.forEach(name => {
       const { valid, errors } = validateProjectName(name);
       expect(valid).toBe(false);
-      expect(errors[0]).toEqual(
-        'must only include letters, numbers and hyphens'
-      );
+      expect(errors[0]).toEqual('must only include letters, numbers and hyphens');
     });
   });
 

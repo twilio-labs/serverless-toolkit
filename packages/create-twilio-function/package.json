@@ -5,7 +5,9 @@
   "bin": "./bin/create-twilio-function",
   "main": "./src/create-twilio-function.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint src tests",
+    "lint:fix": "npm run lint -- --fix"
   },
   "keywords": [
     "twilio",
@@ -23,6 +25,13 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "eslint": "^6.5.1",
+    "eslint-config-twilio": "^1.13.2",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^22.17.0",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "jest": "^24.5.0",
     "nock": "^11.3.4"
   },
