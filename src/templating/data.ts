@@ -1,7 +1,8 @@
 import got from 'got';
 import { getDebugFunction } from '../utils/logger';
 import { stripIndent } from 'common-tags';
-
+import { readLocalEnvFile } from '../config/utils/env';
+import { OutgoingHttpHeaders } from 'http';
 const debug = getDebugFunction('twilio-run:new:template-data');
 
 const TEMPLATES_URL =
@@ -57,8 +58,10 @@ async function getFiles(
   templateId: string,
   directory: string
 ): Promise<TemplateFileInfo[]> {
+  const headers = await buildHeaders();
   const response = await got(CONTENT_BASE_URL + `/${templateId}/${directory}`, {
     json: true,
+    headers,
   });
   const repoContents = response.body as RawContentsPayload;
   return repoContents.map(file => {
@@ -74,8 +77,10 @@ export async function getTemplateFiles(
   templateId: string
 ): Promise<TemplateFileInfo[]> {
   try {
+    const headers = await buildHeaders();
     const response = await got(CONTENT_BASE_URL + `/${templateId}`, {
       json: true,
+      headers,
     });
     const repoContents = response.body as RawContentsPayload;
 
@@ -130,4 +135,19 @@ export async function getTemplateFiles(
 
     throw new Error('Invalid template');
   }
+}
+
+async function buildHeaders(): Promise<OutgoingHttpHeaders> {
+  let githubToken = '';
+  const { localEnv } = await readLocalEnvFile({ cwd: process.cwd() });
+
+  if (localEnv.TWILIO_SERVERLESS_GITHUB_TOKEN) {
+    githubToken = localEnv.TWILIO_SERVERLESS_GITHUB_TOKEN;
+  }
+
+  if (process.env.TWILIO_SERVERLESS_GITHUB_TOKEN) {
+    githubToken = process.env.TWILIO_SERVERLESS_GITHUB_TOKEN;
+  }
+
+  return githubToken ? { Authorization: `token ${githubToken}` } : {};
 }
