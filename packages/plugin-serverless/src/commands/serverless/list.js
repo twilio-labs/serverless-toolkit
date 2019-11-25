@@ -1,4 +1,3 @@
-// const { Command } = require('@oclif/command');
 const { TwilioClientCommand } = require('@twilio/cli-core').baseCommands;
 
 const { handler, cliInfo, describe } = require('twilio-run/dist/commands/list');
@@ -9,13 +8,9 @@ const {
 } = require('../../utils');
 
 class FunctionsList extends TwilioClientCommand {
-  constructor(argv, config, secureStorage) {
-    super(argv, config, secureStorage);
+  async run() {
+    await super.run();
 
-    this.showHeaders = true;
-  }
-
-  async runCommand() {
     let { flags, args } = this.parse(FunctionsList);
     flags = normalizeFlags(flags);
 
@@ -34,7 +29,7 @@ FunctionsList.args = [
     required: false,
     default: cliInfo.argsDefaults.types,
     description:
-      'Comma seperated list of things to list (services,environments,functions,assets,variables)',
+      'Comma separated list of things to list (services,environments,functions,assets,variables)',
   },
 ];
 
