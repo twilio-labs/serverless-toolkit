@@ -11,12 +11,6 @@ const {
 } = require('../../utils');
 
 class FunctionsStart extends Command {
-  constructor(argv, config, secureStorage) {
-    super(argv, config, secureStorage);
-
-    this.showHeaders = true;
-  }
-
   async run() {
     let { flags, args } = this.parse(FunctionsStart);
 

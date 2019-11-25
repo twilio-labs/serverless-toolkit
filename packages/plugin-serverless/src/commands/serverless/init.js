@@ -11,13 +11,9 @@ const {
 } = require('../../utils');
 
 class FunctionsInit extends TwilioClientCommand {
-  constructor(argv, config, secureStorage) {
-    super(argv, config, secureStorage);
+  async run() {
+    await super.run();
 
-    this.showHeaders = true;
-  }
-
-  async runCommand() {
     let { flags, args } = this.parse(FunctionsInit);
     flags = normalizeFlags(flags);
 
