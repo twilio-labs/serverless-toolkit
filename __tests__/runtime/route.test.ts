@@ -18,6 +18,7 @@ import {
   handleSuccess,
   isTwiml,
 } from '../../src/runtime/route';
+import { EnvironmentVariablesWithAuth } from '../../src/types/generic';
 import { wrapErrorInHtml } from '../../src/utils/error-html';
 
 const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
@@ -182,8 +183,28 @@ describe('constructContext function', () => {
         AUTH_TOKEN: 'xyz',
       },
     } as StartCliConfig;
-    const context = constructContext(config);
+    const context = constructContext(config, '/test');
     expect(context.DOMAIN_NAME).toBe('localhost:8000');
+    expect(context.PATH).toBe('/test');
+    expect(context.ACCOUNT_SID).toBe('ACxxxxxxxxxxx');
+    expect(context.AUTH_TOKEN).toBe('xyz');
+    expect(typeof context.getTwilioClient).toBe('function');
+  });
+
+  test('overrides existing PATH', () => {
+    const env: EnvironmentVariablesWithAuth = {
+      ACCOUNT_SID: 'ACxxxxxxxxxxx',
+      AUTH_TOKEN: 'xyz',
+      PATH: '/usr/bin:/bin',
+    };
+
+    const config = {
+      url: 'http://localhost:8000',
+      env,
+    } as StartCliConfig;
+    const context = constructContext(config, '/test2');
+    expect(context.DOMAIN_NAME).toBe('localhost:8000');
+    expect(context.PATH).toBe('/test2');
     expect(context.ACCOUNT_SID).toBe('ACxxxxxxxxxxx');
     expect(context.AUTH_TOKEN).toBe('xyz');
     expect(typeof context.getTwilioClient).toBe('function');
@@ -197,7 +218,7 @@ describe('constructContext function', () => {
       url: 'http://localhost:8000',
       env: { ACCOUNT_SID, AUTH_TOKEN },
     } as StartCliConfig;
-    const context = constructContext(config);
+    const context = constructContext(config, '/test');
     const twilioFn = require('twilio');
     context.getTwilioClient();
     expect(twilioFn).toHaveBeenCalledWith(
