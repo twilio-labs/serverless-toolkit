@@ -1,7 +1,7 @@
 import { stripIndent } from 'common-tags';
 import { logger } from '../utils/logger';
 
-const SERVERLESS_NODE_JS_VERSION = '8.10';
+const SERVERLESS_NODE_JS_VERSION = '10.17';
 
 export function printVersionWarning(
   nodeVersion: string,
