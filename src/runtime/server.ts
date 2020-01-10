@@ -88,8 +88,8 @@ export async function createServer(
   if (config.live) {
     const watcher = chokidar.watch(
       [
-        path.join(config.baseDir, '/functions/**/*.js'),
-        path.join(config.baseDir, '/assets/'),
+        path.join(config.baseDir, '/(functions|src)/**/*.js'),
+        path.join(config.baseDir, '/(assets|static)/**/*'),
       ],
       {
         ignoreInitial: true
