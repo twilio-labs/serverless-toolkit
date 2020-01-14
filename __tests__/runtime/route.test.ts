@@ -191,7 +191,7 @@ describe('constructContext function', () => {
     expect(typeof context.getTwilioClient).toBe('function');
   });
 
-  test('overrides existing PATH', () => {
+  test('does not override existing PATH values', () => {
     const env: EnvironmentVariablesWithAuth = {
       ACCOUNT_SID: 'ACxxxxxxxxxxx',
       AUTH_TOKEN: 'xyz',
@@ -203,11 +203,22 @@ describe('constructContext function', () => {
       env,
     } as StartCliConfig;
     const context = constructContext(config, '/test2');
-    expect(context.DOMAIN_NAME).toBe('localhost:8000');
-    expect(context.PATH).toBe('/test2');
-    expect(context.ACCOUNT_SID).toBe('ACxxxxxxxxxxx');
-    expect(context.AUTH_TOKEN).toBe('xyz');
-    expect(typeof context.getTwilioClient).toBe('function');
+    expect(context.PATH).toBe('/usr/bin:/bin');
+  });
+
+  test('does not override existing DOMAIN_NAME values', () => {
+    const env: EnvironmentVariablesWithAuth = {
+      ACCOUNT_SID: 'ACxxxxxxxxxxx',
+      AUTH_TOKEN: 'xyz',
+      DOMAIN_NAME: 'hello.world',
+    };
+
+    const config = {
+      url: 'http://localhost:8000',
+      env,
+    } as StartCliConfig;
+    const context = constructContext(config, '/test2');
+    expect(context.DOMAIN_NAME).toBe('hello.world');
   });
 
   test('getTwilioClient calls twilio constructor', () => {

@@ -46,7 +46,7 @@ export function constructContext<T extends {} = {}>(
   }
   const DOMAIN_NAME = url.replace(/^https?:\/\//, '');
   const PATH = functionPath;
-  return { ...env, DOMAIN_NAME, PATH, getTwilioClient };
+  return { PATH, DOMAIN_NAME, ...env, getTwilioClient };
 }
 
 export function constructGlobalScope(config: StartCliConfig): void {
