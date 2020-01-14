@@ -8,16 +8,22 @@ import express, {
 } from 'express';
 import userAgentMiddleware from 'express-useragent';
 import nocache from 'nocache';
+import { printRouteInfo } from '../printers/start';
+import chokidar from 'chokidar';
+import debounce from 'lodash.debounce';
+import path from 'path';
 import { StartCliConfig } from '../config/start';
 import { wrapErrorInHtml } from '../utils/error-html';
 import { getDebugFunction } from '../utils/logger';
 import { createLogger } from './internal/request-logger';
 import { setRoutes } from './internal/route-cache';
 import { getFunctionsAndAssets } from './internal/runtime-paths';
-import { functionToRoute, constructGlobalScope } from './route';
+import { constructGlobalScope, functionToRoute } from './route';
 
 const debug = getDebugFunction('twilio-run:server');
 const DEFAULT_PORT = process.env.PORT || 3000;
+const RELOAD_DEBOUNCE_MS = 250;
+const DEFAULT_BODY_SIZE_LAMBDA = '6mb';
 
 function requireUncached(module: string): any {
   delete require.cache[require.resolve(module)];
@@ -50,8 +56,10 @@ export async function createServer(
 
   const app = express();
   app.use(userAgentMiddleware.express());
-  app.use(bodyParser.urlencoded({ extended: false }));
-  app.use(bodyParser.json());
+  app.use(
+    bodyParser.urlencoded({ extended: false, limit: DEFAULT_BODY_SIZE_LAMBDA })
+  );
+  app.use(bodyParser.json({ limit: DEFAULT_BODY_SIZE_LAMBDA }));
   app.get('/favicon.ico', (req, res) => {
     res.redirect(
       'https://www.twilio.com/marketing/bundles/marketing/img/favicons/favicon.ico'
@@ -77,8 +85,43 @@ export async function createServer(
     });
   }
 
-  const routes = await getFunctionsAndAssets(config.baseDir);
-  const routeMap = setRoutes(routes);
+  let routes = await getFunctionsAndAssets(config.baseDir);
+  let routeMap = setRoutes(routes);
+
+  if (config.live) {
+    const watcher = chokidar.watch(
+      [
+        path.join(config.baseDir, '/(functions|src)/**/*.js'),
+        path.join(config.baseDir, '/(assets|static)/**/*'),
+      ],
+      {
+        ignoreInitial: true
+      }
+    );
+
+    const reloadRoutes = async () => {
+      routes = await getFunctionsAndAssets(config.baseDir);
+      routeMap = setRoutes(routes);
+
+      await printRouteInfo(config);
+    };
+
+    // Debounce so we don't needlessly reload when multiple files are changed
+    const debouncedReloadRoutes = debounce(reloadRoutes, RELOAD_DEBOUNCE_MS);
+
+    watcher
+      .on('add', path => {
+        debug(`Reloading Routes: add @ ${path}`);
+        debouncedReloadRoutes();
+      })
+      .on('unlink', path => {
+        debug(`Reloading Routes: unlink @ ${path}`);
+        debouncedReloadRoutes();
+      });
+
+    // Clean the watcher up when exiting.
+    process.on('exit', () => watcher.close());
+  }
 
   constructGlobalScope(config);
 

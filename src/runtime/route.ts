@@ -25,12 +25,14 @@ export function constructEvent<T extends {} = {}>(req: ExpressRequest): T {
   return { ...req.query, ...req.body };
 }
 
-export function constructContext<T extends {} = {}>({
-  url,
-  env,
-}: StartCliConfig): Context<{
+export function constructContext<T extends {} = {}>(
+  { url, env }: StartCliConfig,
+  functionPath: string
+): Context<{
   ACCOUNT_SID?: string;
   AUTH_TOKEN?: string;
+  DOMAIN_NAME: string;
+  PATH: string;
   [key: string]: string | undefined | Function;
 }> {
   function getTwilioClient(): twilio.Twilio {
@@ -43,7 +45,8 @@ export function constructContext<T extends {} = {}>({
     return twilio(env.ACCOUNT_SID, env.AUTH_TOKEN);
   }
   const DOMAIN_NAME = url.replace(/^https?:\/\//, '');
-  return { ...env, DOMAIN_NAME, getTwilioClient };
+  const PATH = functionPath;
+  return { PATH, DOMAIN_NAME, ...env, getTwilioClient };
 }
 
 export function constructGlobalScope(config: StartCliConfig): void {
@@ -91,7 +94,7 @@ export function isTwiml(obj: object): boolean {
 }
 
 export function handleSuccess(
-  responseObject: string | object | undefined,
+  responseObject: string | number | boolean | object | undefined,
   res: ExpressResponse
 ) {
   res.status(200);
@@ -101,7 +104,11 @@ export function handleSuccess(
     return;
   }
 
-  if (responseObject && isTwiml(responseObject)) {
+  if (
+    responseObject &&
+    typeof responseObject === 'object' &&
+    isTwiml(responseObject)
+  ) {
     debug('Sending TwiML response as XML string');
     res.type('text/xml').send(responseObject.toString());
     return;
@@ -129,7 +136,7 @@ export function functionToRoute(
   ) {
     const event = constructEvent(req);
     debug('Event for %s: %o', req.path, event);
-    const context = constructContext(config);
+    const context = constructContext(config, req.path);
     debug('Context for %s: %p', req.path, context);
     let run_timings: {
       start: [number, number];
@@ -139,10 +146,7 @@ export function functionToRoute(
       end: [0, 0],
     };
 
-    const callback: ServerlessCallback = function callback(
-      err,
-      responseObject?
-    ) {
+    const callback: ServerlessCallback = function callback(err, payload?) {
       run_timings.end = process.hrtime();
       debug('Function execution %s finished', req.path);
       debug(
@@ -155,7 +159,7 @@ export function functionToRoute(
         handleError(err, req, res, functionFilePath);
         return;
       }
-      handleSuccess(responseObject, res);
+      handleSuccess(payload, res);
     };
 
     debug('Calling function for %s', req.path);

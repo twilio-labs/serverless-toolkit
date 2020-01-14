@@ -26,7 +26,7 @@ export type NewConfig = Merge<
 >;
 
 async function getMissingInfo(flags: NewCliFlags): Promise<NewConfig> {
-  const questions: inquirer.Question[] = [];
+  const questions: inquirer.QuestionCollection[] = [];
   if (!flags.template) {
     const templates = await fetchListOfTemplates();
     const choices = templates.map(template => {

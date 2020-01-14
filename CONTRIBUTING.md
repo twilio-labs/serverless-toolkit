@@ -12,8 +12,8 @@ This project contains the CLI aspects of deploying Twilio Serverless as well as 
 
 ## Requirements
 
-Make sure you have Node.js 8.10 or newer installed. Due to compatibility with Twilio
-Functions this project has to support at least Node.js 8.10.
+Make sure you have Node.js 10.17 or newer installed. Due to compatibility with Twilio
+Functions this project has to support at least Node.js 10.17.
 
 ## Setup
 
@@ -28,7 +28,7 @@ npm install
 
 1. Perform changes
 2. Make sure tests pass by running `npm test`
-3. Run `git commit`  to kick off validation and enter your commit message. We are using [conventional commits](https://www.conventionalcommits.org/en/) for this project. When you run `git commit` it will trigger [`commitizen`](https://npm.im/commitizen) to assist you with your commit message.
+3. Run `git commit`  to kick off validation and enter your commit message. We are using [conventional commits](https://www.conventionalcommits.org/en/) for this project. When you run `npm run cm` it will trigger [`commitizen`](https://npm.im/commitizen) to assist you with your commit message.
 4. Submit a Pull Request 
 
 **Working on your first Pull Request?** You can learn how from this *free* series [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github) 
