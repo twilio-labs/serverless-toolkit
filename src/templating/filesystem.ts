@@ -1,18 +1,13 @@
 import { fsHelpers } from '@twilio-labs/serverless-api';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
-import { mkdir as oldMkdir } from 'fs';
 import got from 'got';
 import Listr, { ListrTask } from 'listr';
 import path from 'path';
 import { install, InstallResult } from 'pkg-install';
-import { promisify } from 'util';
-import { downloadFile, fileExists, readFile, writeFile } from '../utils/fs';
-import { getDebugFunction, logger } from '../utils/logger';
+import { downloadFile, fileExists, readFile, writeFile, mkdir } from '../utils/fs';
+import { logger } from '../utils/logger';
 import { TemplateFileInfo } from './data';
-const mkdir = promisify(oldMkdir);
-
-const debug = getDebugFunction('twilio-run:templating:filesystem');
 
 async function writeEnvFile(
   contentUrl: string,
@@ -99,23 +94,29 @@ export async function writeFiles(
 
   if (functionsTargetDir !== functionsDir) {
     if (hasFilesOfType(files, 'functions')) {
-      try {
-        await mkdir(functionsTargetDir);
-      } catch (err) {
-        debug(err);
-        throw new Error(
-          `Template with name "${namespace}" already exists in "${functionsDir}"`
-        );
-      }
+      await mkdir(functionsTargetDir, { recursive: true });
     }
 
     if (hasFilesOfType(files, 'assets')) {
-      try {
-        await mkdir(assetsTargetDir);
-      } catch (err) {
-        debug(err);
+      await mkdir(assetsTargetDir, { recursive: true });
+    }
+  }
+
+  for (let file of files) {
+    if (file.type === 'functions') {
+      let filepath = path.join(functionsTargetDir, file.name);
+
+      if (await fileExists(filepath)) {
         throw new Error(
-          `Template with name "${namespace}" already exists in "${assetsDir}"`
+          `Template with name "${namespace}" has duplicate file "${file.name}" in "${functionsDir}"`
+        );
+      }
+    } else if (file.type === 'assets') {
+      let filepath = path.join(assetsTargetDir, file.name);
+
+      if (await fileExists(filepath)) {
+        throw new Error(
+          `Template with name "${namespace}" has duplicate file "${file.name}" in "${assetsDir}"`
         );
       }
     }
@@ -169,5 +170,3 @@ export async function writeFiles(
     );
   }
 }
-
-export { fileExists } from '../utils/fs';

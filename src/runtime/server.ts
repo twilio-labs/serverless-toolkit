@@ -18,11 +18,12 @@ import { getDebugFunction } from '../utils/logger';
 import { createLogger } from './internal/request-logger';
 import { setRoutes } from './internal/route-cache';
 import { getFunctionsAndAssets } from './internal/runtime-paths';
-import { functionToRoute, constructGlobalScope } from './route';
+import { constructGlobalScope, functionToRoute } from './route';
 
 const debug = getDebugFunction('twilio-run:server');
 const DEFAULT_PORT = process.env.PORT || 3000;
 const RELOAD_DEBOUNCE_MS = 250;
+const DEFAULT_BODY_SIZE_LAMBDA = '6mb';
 
 function requireUncached(module: string): any {
   delete require.cache[require.resolve(module)];
@@ -55,8 +56,10 @@ export async function createServer(
 
   const app = express();
   app.use(userAgentMiddleware.express());
-  app.use(bodyParser.urlencoded({ extended: false }));
-  app.use(bodyParser.json());
+  app.use(
+    bodyParser.urlencoded({ extended: false, limit: DEFAULT_BODY_SIZE_LAMBDA })
+  );
+  app.use(bodyParser.json({ limit: DEFAULT_BODY_SIZE_LAMBDA }));
   app.get('/favicon.ico', (req, res) => {
     res.redirect(
       'https://www.twilio.com/marketing/bundles/marketing/img/favicons/favicon.ico'
