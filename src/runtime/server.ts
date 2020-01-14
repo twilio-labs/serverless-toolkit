@@ -8,7 +8,7 @@ import express, {
 } from 'express';
 import userAgentMiddleware from 'express-useragent';
 import nocache from 'nocache';
-import {printRouteInfo} from '../printers/start';
+import { printRouteInfo } from '../printers/start';
 import chokidar from 'chokidar';
 import debounce from 'lodash.debounce';
 import path from 'path';
