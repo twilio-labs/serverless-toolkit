@@ -120,9 +120,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "run-s lint-staged test",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "post-checkout": "reset-dependencies",
-      "post-merge": "reset-dependencies"
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
   "lint-staged": {
