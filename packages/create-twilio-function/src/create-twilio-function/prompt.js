@@ -1,4 +1,5 @@
 const inquirer = require('inquirer');
+const terminalLink = require('terminal-link');
 
 const validateProjectName = require('./validate-project-name');
 
@@ -28,6 +29,14 @@ function promptForAccountDetails(config) {
       name: 'authToken',
       message: 'Twilio auth token',
     });
+  }
+  if (questions.length > 0) {
+    console.log(
+      `Please enter your Twilio credentials which you can find in your ${terminalLink(
+        'Twilio console',
+        'https://twil.io/your-console',
+      )}.`,
+    );
   }
   return inquirer.prompt(questions);
 }
