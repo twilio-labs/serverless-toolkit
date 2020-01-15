@@ -20,6 +20,7 @@ import {
 } from '../../src/runtime/route';
 import { EnvironmentVariablesWithAuth } from '../../src/types/generic';
 import { wrapErrorInHtml } from '../../src/utils/error-html';
+import { cleanUpStackTrace } from '../../src/utils/stack-trace/clean-up';
 
 const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
 
@@ -87,9 +88,14 @@ describe('handleError function', () => {
     } as ExpressUseragent.UserAgent;
 
     const err = new Error('Failed to execute');
+    const cleanedupError = cleanUpStackTrace(err);
     handleError(err, mockRequest, mockResponse);
     expect(mockResponse.status).toHaveBeenCalledWith(500);
-    expect(mockResponse.send).toHaveBeenCalledWith(err.toString());
+    expect(mockResponse.send).toHaveBeenCalledWith({
+      message: 'Failed to execute',
+      name: 'Error',
+      stack: cleanedupError.stack,
+    });
   });
 });
 

@@ -209,6 +209,47 @@ app.all(handlerToExpressRoute(handler));
 app.listen(3000, () => console.log('Server running on port 3000'));
 ```
 
+## Error Handling in Dev Server
+
+If your local Twilio Function throws an unhandled error or returns an `Error` instance via the `callback` method, we will return an HTTP status code of `500` and return the error object as JSON.
+
+By default we will clean up the stack trace for you to remove internal code of the dev server and add it as `at [Twilio Dev Server internals]` into the stack trace.
+
+An example would look like this:
+
+```
+Error: What?
+    at format (/Users/dkundel/dev/twilio-run/examples/basic/functions/hello.js:5:9)
+    at exports.handler (/Users/dkundel/dev/twilio-run/examples/basic/functions/hello.js:13:3)
+    at [Twilio Dev Server internals]
+```
+
+If you want to have the full un-modified stack trace instead, set the following environment variable, either in your Twilio Function or via `.env`:
+
+```
+TWILIO_SERVERLESS_FULL_ERRORS=true
+```
+
+This will result into a stack trace like this:
+
+```
+Error: What?
+    at format (/Users/dkundel/dev/twilio-run/examples/basic/functions/hello.js:5:9)
+    at exports.handler (/Users/dkundel/dev/twilio-run/examples/basic/functions/hello.js:13:3)
+    at twilioFunctionHandler (/Users/dkundel/dev/twilio-run/dist/runtime/route.js:125:13)
+    at app.all (/Users/dkundel/dev/twilio-run/dist/runtime/server.js:122:82)
+    at Layer.handle [as handle_request] (/Users/dkundel/dev/twilio-run/node_modules/express/lib/router/layer.js:95:5)
+    at next (/Users/dkundel/dev/twilio-run/node_modules/express/lib/router/route.js:137:13)
+    at next (/Users/dkundel/dev/twilio-run/node_modules/express/lib/router/route.js:131:14)
+    at next (/Users/dkundel/dev/twilio-run/node_modules/express/lib/router/route.js:131:14)
+    at next (/Users/dkundel/dev/twilio-run/node_modules/express/lib/router/route.js:131:14)
+    at next (/Users/dkundel/dev/twilio-run/node_modules/express/lib/router/route.js:131:14)
+```
+
+In general you'll want to use the cleaned-up stack trace since the internals might change throughout time. 
+
+
+
 ## Contributing
 
 This project welcomes contributions from the community. Please see the [`CONTRIBUTING.md`](CONTRIBUTING.md) file for more details.
