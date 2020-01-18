@@ -5,7 +5,7 @@ import checkForValidServiceSid from '../checks/check-service-sid';
 import { cliInfo } from '../commands/activate';
 import {
   ExternalCliOptions,
-  SharedFlagsWithCrdentials,
+  SharedFlagsWithCredentials,
 } from '../commands/shared';
 import { getFullCommand } from '../commands/utils';
 import { readSpecializedConfig } from './global';
@@ -19,7 +19,7 @@ type ActivateConfig = ApiActivateConfig & {
 };
 
 export type ActivateCliFlags = Arguments<
-  SharedFlagsWithCrdentials & {
+  SharedFlagsWithCredentials & {
     cwd?: string;
     serviceSid?: string;
     buildSid?: string;

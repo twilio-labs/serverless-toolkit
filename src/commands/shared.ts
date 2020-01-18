@@ -10,7 +10,7 @@ export type SharedFlags = BaseFlags & {
   cwd?: string;
 };
 
-export type SharedFlagsWithCrdentials = SharedFlags & {
+export type SharedFlagsWithCredentials = SharedFlags & {
   accountSid?: string;
   authToken?: string;
   env?: string;
