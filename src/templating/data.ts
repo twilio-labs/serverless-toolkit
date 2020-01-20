@@ -58,7 +58,7 @@ async function getFiles(
   templateId: string,
   directory: string
 ): Promise<TemplateFileInfo[]> {
-  const headers = await buildHeaders();
+  const headers = buildHeader();
   const response = await got(CONTENT_BASE_URL + `/${templateId}/${directory}`, {
     json: true,
     headers,
@@ -77,7 +77,7 @@ export async function getTemplateFiles(
   templateId: string
 ): Promise<TemplateFileInfo[]> {
   try {
-    const headers = await buildHeaders();
+    const headers = buildHeader();
     const response = await got(CONTENT_BASE_URL + `/${templateId}`, {
       json: true,
       headers,
@@ -137,14 +137,8 @@ export async function getTemplateFiles(
   }
 }
 
-async function buildHeaders(): Promise<OutgoingHttpHeaders> {
+function buildHeader(): OutgoingHttpHeaders {
   let githubToken = '';
-  const { localEnv } = await readLocalEnvFile({ cwd: process.cwd() });
-
-  if (localEnv.TWILIO_SERVERLESS_GITHUB_TOKEN) {
-    githubToken = localEnv.TWILIO_SERVERLESS_GITHUB_TOKEN;
-  }
-
   if (process.env.TWILIO_SERVERLESS_GITHUB_TOKEN) {
     githubToken = process.env.TWILIO_SERVERLESS_GITHUB_TOKEN;
   }
