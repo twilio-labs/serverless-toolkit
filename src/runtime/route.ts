@@ -14,6 +14,7 @@ import { checkForValidAccountSid } from '../checks/check-account-sid';
 import { StartCliConfig } from '../config/start';
 import { wrapErrorInHtml } from '../utils/error-html';
 import { getDebugFunction } from '../utils/logger';
+import { cleanUpStackTrace } from '../utils/stack-trace/clean-up';
 import { Response } from './internal/response';
 import * as Runtime from './internal/runtime';
 
@@ -67,6 +68,10 @@ export function constructGlobalScope(config: StartCliConfig): void {
   }
 }
 
+function isError(obj: any): obj is Error {
+  return obj instanceof Error;
+}
+
 export function handleError(
   err: Error | string | object,
   req: ExpressRequest,
@@ -74,15 +79,21 @@ export function handleError(
   functionFilePath?: string
 ) {
   res.status(500);
-  if (!(err instanceof Error)) {
-    res.send(err);
-  } else {
+  if (isError(err)) {
+    const cleanedupError = cleanUpStackTrace(err);
+
     if (req.useragent && (req.useragent.isDesktop || req.useragent.isMobile)) {
       res.type('text/html');
-      res.send(wrapErrorInHtml(err, functionFilePath));
+      res.send(wrapErrorInHtml(cleanedupError, functionFilePath));
     } else {
-      res.send(err.toString());
+      res.send({
+        message: cleanedupError.message,
+        name: cleanedupError.name,
+        stack: cleanedupError.stack,
+      });
     }
+  } else {
+    res.send(err);
   }
 }
 
