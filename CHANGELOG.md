@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/twilio-labs/twilio-run/compare/v2.1.1...v2.2.0) (2020-01-27)
+
+
+### Features
+
+* **activate:** change activate to alias, promote to command ([#95](https://github.com/twilio-labs/twilio-run/issues/95)) ([9b2a981](https://github.com/twilio-labs/twilio-run/commit/9b2a9813928b504481cdb2f061b399a9196075ec)), closes [twilio-labs/serverless-toolkit#8](https://github.com/twilio-labs/serverless-toolkit/issues/8)
+* allow the same namespace but different files ([#92](https://github.com/twilio-labs/twilio-run/issues/92)) ([b4fde66](https://github.com/twilio-labs/twilio-run/commit/b4fde660d2eded1daf6a1933fd6f0e536626b05a))
+* **server:** expose function path to context ([95866a7](https://github.com/twilio-labs/twilio-run/commit/95866a75d96418777e22e40e084785e40aacc47c))
+* support loading of new files automatically with `--live` ([#94](https://github.com/twilio-labs/twilio-run/issues/94)) ([955efbe](https://github.com/twilio-labs/twilio-run/commit/955efbed093e4fa8cd8a306100bba012f7bffd20))
+* **server:** hide internals from stack trace ([#105](https://github.com/twilio-labs/twilio-run/issues/105)) ([f965275](https://github.com/twilio-labs/twilio-run/commit/f965275182e2749f0054993b156bf1e5370a345c))
+* **templates:** report GitHub api error ([#86](https://github.com/twilio-labs/twilio-run/issues/86)) ([1de3853](https://github.com/twilio-labs/twilio-run/commit/1de3853275417638db8f0aa96555a5311fa3eaad))
+
+
+### Bug Fixes
+
+* **checks:** change the expected node version ([726d66f](https://github.com/twilio-labs/twilio-run/commit/726d66fc2e3a4097725c10c3d7d98285d23dd737))
+* **examples:** remove unnecessary console.log ([c7c5b0a](https://github.com/twilio-labs/twilio-run/commit/c7c5b0a14e411adc4818b3001b18e39076e12aa7))
+* **server:** avoid overriding env variables ([e2c75cb](https://github.com/twilio-labs/twilio-run/commit/e2c75cb9ec1b4c9e00c703af160d7e9a9379ee89))
+* **server:** update request body size ([#102](https://github.com/twilio-labs/twilio-run/issues/102)) ([8689f00](https://github.com/twilio-labs/twilio-run/commit/8689f00d217151d5f7b21c325747c50fb1f60082)), closes [#98](https://github.com/twilio-labs/twilio-run/issues/98)
+
 ### [2.1.1](https://github.com/twilio-labs/twilio-run/compare/v2.1.0...v2.1.1) (2019-10-03)
 
 
