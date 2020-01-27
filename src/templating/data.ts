@@ -1,6 +1,8 @@
 import got from 'got';
 import { getDebugFunction } from '../utils/logger';
-
+import { stripIndent } from 'common-tags';
+import { readLocalEnvFile } from '../config/utils/env';
+import { OutgoingHttpHeaders } from 'http';
 const debug = getDebugFunction('twilio-run:new:template-data');
 
 const TEMPLATES_URL =
@@ -56,8 +58,10 @@ async function getFiles(
   templateId: string,
   directory: string
 ): Promise<TemplateFileInfo[]> {
+  const headers = buildHeader();
   const response = await got(CONTENT_BASE_URL + `/${templateId}/${directory}`, {
     json: true,
+    headers,
   });
   const repoContents = response.body as RawContentsPayload;
   return repoContents.map(file => {
@@ -73,8 +77,10 @@ export async function getTemplateFiles(
   templateId: string
 ): Promise<TemplateFileInfo[]> {
   try {
+    const headers = buildHeader();
     const response = await got(CONTENT_BASE_URL + `/${templateId}`, {
       json: true,
+      headers,
     });
     const repoContents = response.body as RawContentsPayload;
 
@@ -104,12 +110,38 @@ export async function getTemplateFiles(
     debug(err.message);
 
     if (err.response) {
-      const bodyMessage = err.response.body as GitHubError;
-      throw new Error(
-        bodyMessage ? `${err.message}\n${bodyMessage.message}` : err.message
-      );
+      if (err.response.statusCode === 403) {
+        throw new Error(
+          stripIndent`
+          We are sorry but we failed fetching the requested template from GitHub because your IP address has been rate limited. Please try the following to resolve the issue:
+
+          - Change your WiFi or make sure you are not connected to a VPN that might cause the rate limiting
+
+
+          If the issue persists you can try one of the two options:
+
+          - Get a GitHub developer token following https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line (no permissions needed) and add it as TWILIO_SERVERLESS_GITHUB_TOKEN to your environment variables
+
+          - Wait for a few minutes up to an hour and try again.
+          `
+        );
+      } else {
+        const bodyMessage = err.response.body as GitHubError;
+        throw new Error(
+          bodyMessage ? `${err.message}\n${bodyMessage.message}` : err.message
+        );
+      }
     }
 
     throw new Error('Invalid template');
   }
+}
+
+function buildHeader(): OutgoingHttpHeaders {
+  let githubToken = '';
+  if (process.env.TWILIO_SERVERLESS_GITHUB_TOKEN) {
+    githubToken = process.env.TWILIO_SERVERLESS_GITHUB_TOKEN;
+  }
+
+  return githubToken ? { Authorization: `token ${githubToken}` } : {};
 }
