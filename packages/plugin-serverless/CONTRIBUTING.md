@@ -2,8 +2,8 @@
 
 ## About the Project
 
-This plugin is a wrapper around other existing tools. When planning to submit a 
-fix please consider submitting the fix to the respective project. When in doubt, 
+This plugin is a wrapper around other existing tools. When planning to submit a
+fix please consider submitting the fix to the respective project. When in doubt,
 create an issue and we are happy to point you into the right direction.
 
 - [`plugin-serverless`](https://github.com/twilio-labs/plugin-serverless) - Wrapper code needed to interact between the [`twilio-run` CLI](https://github.com/twilio-labs/twilio-run) and the [Twilio CLI](https://github.com/twilio/twilio-cli)
@@ -13,34 +13,46 @@ create an issue and we are happy to point you into the right direction.
 
 ## Requirements
 
-Make sure you have Node.js 8.10 or newer installed
+Make sure you have Node.js 10.17 or newer installed
 
 ## Setup
 
-1. Clone project and install dependencies_
+1. Clone project and install dependencies\_
+
 ```bash
 git clone https://github.com/twilio-labs/plugin-serverless.git
 cd plugin-serverless
 npm install
 ```
+
 2. [Install the Twilio CLI](https://github.com/twilio/twilio-cli)
 3. Locally link your plugin
+
 ```bash
 twilio plugins:link <path_to_your_project>
 ```
 
 ## Contributing
+
 1. Perform changes
 2. Test changes manually using `twilio serverless`
 3. Make sure tests pass by running `npm test`
-4. Submit a PR 
+4. Submit a PR
 
-**Working on your first Pull Request?** You can learn how from this *free* series [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github) 
+**Working on your first Pull Request?** You can learn how from this _free_ series [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github)
+
+## Releasing
+
+```bash
+npm version <major|minor|patch>
+git push origin master --follow-tags
+npm publish
+```
 
 ## Code of Conduct
 
 Please be aware that this project has a [Code of Conduct](https://github.com/twilio-labs/.github/blob/master/CODE_OF_CONDUCT.md). The tldr; is to just be excellent to each other ❤️
 
-## Licensing 
+## Licensing
 
 All third party contributors acknowledge that any contributions they provide will be made under the same open source license that the open source project is provided under.
