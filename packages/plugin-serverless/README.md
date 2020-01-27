@@ -62,40 +62,40 @@ USAGE
   $ twilio serverless:activate
 
 OPTIONS
-  -c, --config=config                      [default: .twilio-functions] Location of the config file. Absolute path or
-                                           relative to current working directory (cwd)
+  -c, --config=config                          [default: .twilio-functions] Location of the config file. Absolute path
+                                               or relative to current working directory (cwd)
 
-  -l, --logLevel=logLevel                  [default: info] Level of logging messages.
+  -f, --source-environment=source-environment  SID or suffix of an existing environment you want to deploy from.
 
-  -p, --profile=profile                    Shorthand identifier for your profile.
+  -f, --build-sid=build-sid                    An existing Build SID to deploy to the new environment
 
-  -u, --account-sid=account-sid            A specific account SID to be used for deployment. Uses fields in .env
-                                           otherwise
+  -l, --logLevel=logLevel                      [default: info] Level of logging messages.
 
-  --auth-token=auth-token                  Use a specific auth token for deployment. Uses fields from .env otherwise
+  -p, --profile=profile                        Shorthand identifier for your profile.
 
-  --build-sid=build-sid                    An existing Build SID to deploy to the new environment
+  -t, --environment=environment                (required) The environment suffix or SID to deploy to.
 
-  --create-environment                     Creates environment if it couldn't find it.
+  -u, --account-sid=account-sid                A specific account SID to be used for deployment. Uses fields in .env
+                                               otherwise
 
-  --cwd=cwd                                Sets the directory of your existing Serverless project. Defaults to current
-                                           directory
+  --auth-token=auth-token                      Use a specific auth token for deployment. Uses fields from .env otherwise
 
-  --env=env                                Path to .env file for environment variables that should be installed
+  --create-environment                         Creates environment if it couldn't find it.
 
-  --environment=environment                (required) The environment suffix or SID to deploy to.
+  --cwd=cwd                                    Sets the directory of your existing Serverless project. Defaults to
+                                               current directory
 
-  --force                                  Will run deployment in force mode. Can be dangerous.
+  --env=env                                    Path to .env file for environment variables that should be installed
 
-  --production                             Promote build to the production environment (no domain suffix). Overrides
-                                           environment flag
+  --force                                      Will run deployment in force mode. Can be dangerous.
 
-  --service-sid=service-sid                SID of the Twilio Serverless Service to deploy to
+  --production                                 Promote build to the production environment (no domain suffix). Overrides
+                                               environment flag
 
-  --source-environment=source-environment  SID or suffix of an existing environment you want to deploy from.
+  --service-sid=service-sid                    SID of the Twilio Serverless Service to deploy to
 ```
 
-_See code: [src/commands/serverless/activate.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.2.0/src/commands/serverless/activate.js)_
+_See code: [src/commands/serverless/activate.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.3.0/src/commands/serverless/activate.js)_
 
 ## `twilio serverless:deploy`
 
@@ -145,7 +145,7 @@ OPTIONS
                                        domain suffix). Overrides the value passed via the environment flag.
 ```
 
-_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.2.0/src/commands/serverless/deploy.js)_
+_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.3.0/src/commands/serverless/deploy.js)_
 
 ## `twilio serverless:init NAME`
 
@@ -172,7 +172,7 @@ OPTIONS
                                  github.com/twilio-labs/function-templates
 ```
 
-_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.2.0/src/commands/serverless/init.js)_
+_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.3.0/src/commands/serverless/init.js)_
 
 ## `twilio serverless:list [TYPES]`
 
@@ -209,7 +209,7 @@ OPTIONS
   --service-sid=service-sid        Specific Serverless Service SID to run list for
 ```
 
-_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.2.0/src/commands/serverless/list.js)_
+_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.3.0/src/commands/serverless/list.js)_
 
 ## `twilio serverless:list-templates`
 
@@ -223,7 +223,7 @@ OPTIONS
   -l, --logLevel=logLevel  [default: info] Level of logging messages.
 ```
 
-_See code: [src/commands/serverless/list-templates.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.2.0/src/commands/serverless/list-templates.js)_
+_See code: [src/commands/serverless/list-templates.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.3.0/src/commands/serverless/list-templates.js)_
 
 ## `twilio serverless:new [NAMESPACE]`
 
@@ -241,7 +241,7 @@ OPTIONS
   --template=template
 ```
 
-_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.2.0/src/commands/serverless/new.js)_
+_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.3.0/src/commands/serverless/new.js)_
 
 ## `twilio serverless:start [DIR]`
 
@@ -288,7 +288,7 @@ ALIASES
   $ twilio serverless:run
 ```
 
-_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.2.0/src/commands/serverless/start.js)_
+_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.3.0/src/commands/serverless/start.js)_
 <!-- commandsstop -->
 
 # Contributing
