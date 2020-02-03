@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.1](https://github.com/twilio-labs/twilio-run/compare/v2.2.0...v2.2.1) (2020-02-03)
+
+
+### Bug Fixes
+
+* **activate:** remove required to flag because of production option ([21c8309](https://github.com/twilio-labs/twilio-run/commit/21c830903b9559718574ce630eba0cb3d3b13d65))
+
 ## [2.2.0](https://github.com/twilio-labs/twilio-run/compare/v2.1.1...v2.2.0) (2020-01-27)
 
 
