@@ -96,7 +96,6 @@ export const cliInfo: CliInfo = {
       type: 'string',
       alias: 'to',
       describe: 'The environment suffix or SID to deploy to.',
-      requiresArg: true,
     },
     production: {
       type: 'boolean',
