@@ -11,7 +11,7 @@
     "create-twilio-function": "^2.1.0",
     "lodash.camelcase": "^4.3.0",
     "lodash.kebabcase": "^4.1.1",
-    "twilio-run": "^2.2.0"
+    "twilio-run": "^2.2.1"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.2",
@@ -60,7 +60,7 @@
       "serverless:init": {
         "description": "creates a new Twilio Serverless project"
       },
-      "serverless:activate": {
+      "serverless:promote": {
         "description": "moves an active deployment from one environment to another"
       },
       "serverless:start": {

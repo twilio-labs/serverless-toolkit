@@ -45,57 +45,13 @@ USAGE
 # Commands
 
 <!-- commands -->
-* [`twilio serverless:activate`](#twilio-serverlessactivate)
 * [`twilio serverless:deploy`](#twilio-serverlessdeploy)
 * [`twilio serverless:init NAME`](#twilio-serverlessinit-name)
 * [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-types)
 * [`twilio serverless:list-templates`](#twilio-serverlesslist-templates)
 * [`twilio serverless:new [NAMESPACE]`](#twilio-serverlessnew-namespace)
+* [`twilio serverless:promote`](#twilio-serverlesspromote)
 * [`twilio serverless:start [DIR]`](#twilio-serverlessstart-dir)
-
-## `twilio serverless:activate`
-
-Promotes an existing deployment to a new environment
-
-```
-USAGE
-  $ twilio serverless:activate
-
-OPTIONS
-  -c, --config=config                          [default: .twilio-functions] Location of the config file. Absolute path
-                                               or relative to current working directory (cwd)
-
-  -f, --source-environment=source-environment  SID or suffix of an existing environment you want to deploy from.
-
-  -f, --build-sid=build-sid                    An existing Build SID to deploy to the new environment
-
-  -l, --logLevel=logLevel                      [default: info] Level of logging messages.
-
-  -p, --profile=profile                        Shorthand identifier for your profile.
-
-  -t, --environment=environment                (required) The environment suffix or SID to deploy to.
-
-  -u, --account-sid=account-sid                A specific account SID to be used for deployment. Uses fields in .env
-                                               otherwise
-
-  --auth-token=auth-token                      Use a specific auth token for deployment. Uses fields from .env otherwise
-
-  --create-environment                         Creates environment if it couldn't find it.
-
-  --cwd=cwd                                    Sets the directory of your existing Serverless project. Defaults to
-                                               current directory
-
-  --env=env                                    Path to .env file for environment variables that should be installed
-
-  --force                                      Will run deployment in force mode. Can be dangerous.
-
-  --production                                 Promote build to the production environment (no domain suffix). Overrides
-                                               environment flag
-
-  --service-sid=service-sid                    SID of the Twilio Serverless Service to deploy to
-```
-
-_See code: [src/commands/serverless/activate.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.3.0/src/commands/serverless/activate.js)_
 
 ## `twilio serverless:deploy`
 
@@ -242,6 +198,53 @@ OPTIONS
 ```
 
 _See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.3.0/src/commands/serverless/new.js)_
+
+## `twilio serverless:promote`
+
+Promotes an existing deployment to a new environment
+
+```
+USAGE
+  $ twilio serverless:promote
+
+OPTIONS
+  -c, --config=config                          [default: .twilio-functions] Location of the config file. Absolute path
+                                               or relative to current working directory (cwd)
+
+  -f, --source-environment=source-environment  SID or suffix of an existing environment you want to deploy from.
+
+  -f, --build-sid=build-sid                    An existing Build SID to deploy to the new environment
+
+  -l, --logLevel=logLevel                      [default: info] Level of logging messages.
+
+  -p, --profile=profile                        Shorthand identifier for your profile.
+
+  -t, --environment=environment                (required) The environment suffix or SID to deploy to.
+
+  -u, --account-sid=account-sid                A specific account SID to be used for deployment. Uses fields in .env
+                                               otherwise
+
+  --auth-token=auth-token                      Use a specific auth token for deployment. Uses fields from .env otherwise
+
+  --create-environment                         Creates environment if it couldn't find it.
+
+  --cwd=cwd                                    Sets the directory of your existing Serverless project. Defaults to
+                                               current directory
+
+  --env=env                                    Path to .env file for environment variables that should be installed
+
+  --force                                      Will run deployment in force mode. Can be dangerous.
+
+  --production                                 Promote build to the production environment (no domain suffix). Overrides
+                                               environment flag
+
+  --service-sid=service-sid                    SID of the Twilio Serverless Service to deploy to
+
+ALIASES
+  $ twilio serverless:activate
+```
+
+_See code: [src/commands/serverless/promote.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.3.0/src/commands/serverless/promote.js)_
 
 ## `twilio serverless:start [DIR]`
 
