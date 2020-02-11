@@ -3,6 +3,7 @@ import { ActivateCliFlags } from './activate';
 import { DeployCliFlags } from './deploy';
 import { ListCliFlags } from './list';
 import { StartCliFlags } from './start';
+import { LogsCliFlags } from './logs';
 
 const DEFAULT_CONFIG_NAME = '.twilio-functions';
 
@@ -11,6 +12,7 @@ type CommandConfigurations = {
   listConfig: Partial<ListCliFlags>;
   startConfig: Partial<StartCliFlags & { serviceSid: string }>;
   activateConfig: Partial<ActivateCliFlags>;
+  logsConfig: Partial<LogsCliFlags>;
 };
 
 type ProjectConfigurations = Partial<CommandConfigurations> & {
