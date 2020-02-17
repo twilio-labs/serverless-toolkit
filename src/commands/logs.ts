@@ -54,10 +54,7 @@ export async function handler(
     const client = new TwilioServerlessApiClient(config);
     if (flags.tail) {
       const stream = await client.getLogsStream({ ...config });
-      stream.on('data', (data: string) => {
-        const log = JSON.parse(data) as LogApiResource;
-        printLog(log);
-      });
+      stream.on('data', printLog);
     } else {
       const result = (await client.getLogs({ ...config })) as LogApiResource[];
       printLogs(result, config);
