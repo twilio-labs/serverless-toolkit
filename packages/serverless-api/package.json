@@ -8,6 +8,7 @@
     "jest": "jest",
     "test": "run-s build:noemit jest",
     "build": "tsc",
+    "watch": "tsc --watch",
     "build:noemit": "tsc --noEmit",
     "postbuild": "npm shrinkwrap",
     "docs": "typedoc --options typedoc.json",
@@ -16,7 +17,7 @@
     "lint-staged": "lint-staged",
     "cm": "git-cz",
     "release": "HUSKY_SKIP_HOOKS=1 standard-version",
-    "reset-dependencies": "bash ./hooks/update-dependencies"
+    "reset-dependencies": "bash ./hooks/update-dependencies.sh"
   },
   "publishConfig": {
     "access": "public"
