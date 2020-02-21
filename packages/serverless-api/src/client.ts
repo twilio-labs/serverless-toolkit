@@ -20,7 +20,12 @@ import {
   isEnvironmentSid,
   listEnvironments,
 } from './api/environments';
-import { getOrCreateFunctionResources, uploadFunction } from './api/functions';
+import {
+  getOrCreateFunctionResources,
+  uploadFunction,
+  isFunctionSid,
+  listFunctionResources,
+} from './api/functions';
 import { createService, findServiceSid, listServices } from './api/services';
 import {
   listVariablesForEnvironment,
@@ -37,9 +42,13 @@ import {
   GotClient,
   ListConfig,
   ListResult,
+  LogApiResource,
+  LogsConfig,
 } from './types';
 import { DeployStatus } from './types/consts';
 import { getListOfFunctionsAndAssets, SearchConfig } from './utils/fs';
+import { LogsStream } from './streams/logs';
+import { listOnePageLogResources } from './api/logs';
 
 const log = debug('twilio-serverless-api:client');
 
@@ -195,6 +204,75 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
     }
 
     return result;
+  }
+
+  async getLogsStream(logsConfig: LogsConfig): Promise<LogsStream> {
+    let { serviceSid, environment, filterByFunction } = logsConfig;
+    if (!isEnvironmentSid(environment)) {
+      const environmentResource = await getEnvironmentFromSuffix(
+        environment,
+        serviceSid,
+        this.client
+      );
+      environment = environmentResource.sid;
+    }
+
+    if (filterByFunction && !isFunctionSid(filterByFunction)) {
+      const availableFunctions = await listFunctionResources(
+        serviceSid,
+        this.client
+      );
+      const foundFunction = availableFunctions.find(
+        fn => fn.friendly_name === filterByFunction
+      );
+      if (!foundFunction) {
+        throw new Error('Invalid Function Name or SID');
+      }
+      filterByFunction = foundFunction.sid;
+    }
+    const logsStream = new LogsStream(
+      environment,
+      serviceSid,
+      this.client,
+      logsConfig
+    );
+
+    return logsStream;
+  }
+
+  async getLogs(logsConfig: LogsConfig): Promise<LogApiResource[]> {
+    let { serviceSid, environment, filterByFunction } = logsConfig;
+    if (!isEnvironmentSid(environment)) {
+      const environmentResource = await getEnvironmentFromSuffix(
+        environment,
+        serviceSid,
+        this.client
+      );
+      environment = environmentResource.sid;
+    }
+
+    if (filterByFunction && !isFunctionSid(filterByFunction)) {
+      const availableFunctions = await listFunctionResources(
+        serviceSid,
+        this.client
+      );
+      const foundFunction = availableFunctions.find(
+        fn => fn.friendly_name === filterByFunction
+      );
+      if (!foundFunction) {
+        throw new Error('Invalid Function Name or SID');
+      }
+      filterByFunction = foundFunction.sid;
+    }
+
+    try {
+      return listOnePageLogResources(environment, serviceSid, this.client, {
+        pageSize: 50,
+        functionSid: filterByFunction,
+      });
+    } catch (e) {
+      throw e;
+    }
   }
 
   /**

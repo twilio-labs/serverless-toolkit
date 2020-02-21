@@ -180,3 +180,14 @@ export async function uploadFunction(
   const version = await createFunctionVersion(fn, serviceSid, client);
   return version.sid;
 }
+
+/**
+ * Checks if a string is an function SID by checking its prefix and length
+ *
+ * @export
+ * @param {string} str the string to check
+ * @returns
+ */
+export function isFunctionSid(str: string) {
+  return str.startsWith('ZH') && str.length === 34;
+}
