@@ -81,10 +81,9 @@
   "husky": {
     "hooks": {
       "pre-commit": "run-s lint-staged test",
-      "prepare-commit-msg": "exec < /dev/tty && git-cz --hook",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "post-checkout": "reset-dependencies",
-      "post-merge": "reset-dependencies"
+      "post-checkout": "npm run reset-dependencies",
+      "post-merge": "npm run reset-dependencies"
     }
   },
   "lint-staged": {
