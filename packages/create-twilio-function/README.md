@@ -4,7 +4,11 @@ A command line tool to setup a new [Twilio Function](https://www.twilio.com/docs
 
 [![Build Status](https://travis-ci.com/twilio-labs/create-twilio-function.svg?branch=master)](https://travis-ci.com/twilio-labs/create-twilio-function) [![Maintainability](https://api.codeclimate.com/v1/badges/e6f9eb67589927df5d72/maintainability)](https://codeclimate.com/github/twilio-labs/create-twilio-function/maintainability)
 
+Read more about this tool in the post [start a new Twilio Functions project the easy way](https://www.twilio.com/blog/start-a-new-twilio-functions-project-the-easy-way)
+
 ## Usage
+
+### `npm init`
 
 There are a number of ways to use this tool. The quickest and easiest is with `npm init`:
 
@@ -16,13 +20,41 @@ npm start
 
 This will create a new directory named "function-name" and include all the files you need to write and run a Twilio Function locally. Starting the application will host the example function at localhost:3000/example.
 
-### Alternatives
+### Twilio CLI
+
+Make sure you have the [Twilio CLI installed](https://www.twilio.com/docs/twilio-cli/quickstart) with either:
+
+```bash
+npm install twilio-cli -g
+```
+
+or
+
+```bash
+brew tap twilio/brew && brew install twilio
+```
+
+Install the [Twilio Serverless Toolkit](https://www.twilio.com/docs/labs/serverless-toolkit) plugin:
+
+```bash
+twilio plugins:install @twilio-labs/plugin-serverless
+```
+
+Then initialise a new Functions project with:
+
+```bash
+twilio serverless:init function-name
+```
+
+### `npx`
 
 You can also use `npx` to run `create-twilio-function`:
 
 ```bash
 npx create-twilio-function function-name
 ```
+
+### Global installation
 
 Or you can install the module globally:
 
