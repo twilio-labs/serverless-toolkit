@@ -1,14 +1,17 @@
-import got from 'got';
-import { getDebugFunction } from '../utils/logger';
 import { stripIndent } from 'common-tags';
-import { readLocalEnvFile } from '../config/utils/env';
+import got from 'got';
 import { OutgoingHttpHeaders } from 'http';
+import { getDebugFunction } from '../utils/logger';
 const debug = getDebugFunction('twilio-run:new:template-data');
 
-const TEMPLATES_URL =
-  'https://raw.githubusercontent.com/twilio-labs/function-templates/master/templates.json';
-const CONTENT_BASE_URL =
-  'https://api.github.com/repos/twilio-labs/function-templates/contents';
+const TEMPLATE_BASE_REPO =
+  process.env.TWILIO_SERVERLESS_TEMPLATE_REPO ||
+  'twilio-labs/function-templates';
+const TEMPLATE_BASE_BRANCH =
+  process.env.TWILIO_SERVERLESS_TEMPLATE_BRANCH || 'master';
+
+export const TEMPLATES_URL = `https://raw.githubusercontent.com/${TEMPLATE_BASE_REPO}/${TEMPLATE_BASE_BRANCH}/templates.json`;
+export const CONTENT_BASE_URL = `https://api.github.com/repos/${TEMPLATE_BASE_REPO}/contents`;
 
 export type Template = {
   id: string;
@@ -59,10 +62,14 @@ async function getFiles(
   directory: string
 ): Promise<TemplateFileInfo[]> {
   const headers = buildHeader();
-  const response = await got(CONTENT_BASE_URL + `/${templateId}/${directory}`, {
-    json: true,
-    headers,
-  });
+  const response = await got(
+    CONTENT_BASE_URL +
+      `/${templateId}/${directory}?ref=${TEMPLATE_BASE_BRANCH}`,
+    {
+      json: true,
+      headers,
+    }
+  );
   const repoContents = response.body as RawContentsPayload;
   return repoContents.map(file => {
     return {
@@ -78,10 +85,13 @@ export async function getTemplateFiles(
 ): Promise<TemplateFileInfo[]> {
   try {
     const headers = buildHeader();
-    const response = await got(CONTENT_BASE_URL + `/${templateId}`, {
-      json: true,
-      headers,
-    });
+    const response = await got(
+      CONTENT_BASE_URL + `/${templateId}?ref=${TEMPLATE_BASE_BRANCH}`,
+      {
+        json: true,
+        headers,
+      }
+    );
     const repoContents = response.body as RawContentsPayload;
 
     const assets = repoContents.find(file => file.name === 'assets')
