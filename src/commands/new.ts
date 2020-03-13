@@ -81,7 +81,8 @@ function getBaseDirectoryPath(): string {
     baseName === 'functions' ||
     baseName === 'assets' ||
     baseName === 'src' ||
-    baseName === 'static'
+    baseName === 'static' ||
+    baseName === 'readmes'
   ) {
     return path.resolve(currentDir, '..');
   }

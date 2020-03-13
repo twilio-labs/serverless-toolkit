@@ -5,7 +5,13 @@ import got from 'got';
 import Listr, { ListrTask } from 'listr';
 import path from 'path';
 import { install, InstallResult } from 'pkg-install';
-import { downloadFile, fileExists, readFile, writeFile, mkdir } from '../utils/fs';
+import {
+  downloadFile,
+  fileExists,
+  readFile,
+  writeFile,
+  mkdir,
+} from '../utils/fs';
 import { logger } from '../utils/logger';
 import { TemplateFileInfo } from './data';
 
@@ -91,6 +97,7 @@ export async function writeFiles(
   ]);
   const functionsTargetDir = path.join(functionsDir, namespace);
   const assetsTargetDir = path.join(assetsDir, namespace);
+  const readmesTargetDir = path.join(targetDir, 'readmes');
 
   if (functionsTargetDir !== functionsDir) {
     if (hasFilesOfType(files, 'functions')) {
@@ -99,6 +106,10 @@ export async function writeFiles(
 
     if (hasFilesOfType(files, 'assets')) {
       await mkdir(assetsTargetDir, { recursive: true });
+    }
+
+    if (hasFilesOfType(files, 'README.md')) {
+      await mkdir(readmesTargetDir, { recursive: true });
     }
   }
 
@@ -155,6 +166,17 @@ export async function writeFiles(
         return {
           title: 'Installing Dependencies',
           task: () => installDependencies(file.content, targetDir),
+        };
+      } else if (file.type === 'README.md') {
+        const readmePath = path.join(readmesTargetDir, namespace + '.md');
+        return {
+          title: `Saving README to ${readmePath}`,
+          task: async () => {
+            if (await fileExists(readmePath)) {
+              return;
+            }
+            return downloadFile(file.content, readmePath);
+          },
         };
       }
     })
