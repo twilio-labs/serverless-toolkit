@@ -12,8 +12,8 @@ This project contains the CLI aspects of deploying Twilio Serverless as well as 
 
 ## Requirements
 
-Make sure you have Node.js 10.17 or newer installed. Due to compatibility with Twilio
-Functions this project has to support at least Node.js 10.17.
+Make sure you have Node.js 10 or newer installed. Due to compatibility with Twilio
+Functions this project has to support at least Node.js 10.0.0.
 
 ## Setup
 

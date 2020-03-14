@@ -1,7 +1,7 @@
 import { stripIndent } from 'common-tags';
 import { logger } from '../utils/logger';
 
-const SERVERLESS_NODE_JS_VERSION = '10.17';
+const SERVERLESS_NODE_JS_VERSION = '10.';
 
 export function printVersionWarning(
   nodeVersion: string,
@@ -9,7 +9,7 @@ export function printVersionWarning(
 ): void {
   const title = 'Different Node.js Version Found';
   const msg = stripIndent`
-      You are currently running Node.js ${nodeVersion} on this local machine. The production environment for Twilio Serverless is currently on ${expectedVersion}.
+      You are currently running Node.js ${nodeVersion} on this local machine. The production environment for Twilio Serverless currently supports versions ${expectedVersion}x.
 
       When you deploy to Twilio Serverless, you may encounter differences between local development and production.
 
