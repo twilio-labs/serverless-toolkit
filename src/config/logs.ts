@@ -17,7 +17,7 @@ export type LogsConfig = ApiLogsConfig & {
   accountSid: string;
   authToken: string;
   properties?: string[];
-  output?: string;
+  outputFormat?: string;
 };
 
 export type LogsCliFlags = Arguments<
@@ -27,7 +27,7 @@ export type LogsCliFlags = Arguments<
     serviceSid?: string;
     functionSid?: string;
     tail: boolean;
-    output?: string;
+    outputFormat?: string;
   }
 >;
 
@@ -61,7 +61,7 @@ export async function getConfigFromFlags(
   const command = getFullCommand(flags);
   const serviceSid = checkForValidServiceSid(command, flags.serviceSid);
   const tail = !!flags.tail;
-  const output = flags.output || externalCliOptions?.outputFormat;
+  const outputFormat = flags.outputFormat || externalCliOptions?.outputFormat;
 
   return {
     cwd,
@@ -70,6 +70,6 @@ export async function getConfigFromFlags(
     environment,
     serviceSid,
     tail,
-    output,
+    outputFormat,
   };
 }

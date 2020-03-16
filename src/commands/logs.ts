@@ -55,11 +55,11 @@ export async function handler(
     if (flags.tail) {
       const stream = await client.getLogsStream({ ...config });
       stream.on('data', (log: LogApiResource) => {
-        printLog(log, config.output);
+        printLog(log, config.outputFormat);
       });
     } else {
       const result = (await client.getLogs({ ...config })) as LogApiResource[];
-      printLogs(result, config, config.output);
+      printLogs(result, config, config.outputFormat);
     }
   } catch (err) {
     handleError(err);

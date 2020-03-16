@@ -5,13 +5,13 @@ import { logger } from '../utils/logger';
 export function printLogs(
   result: LogApiResource[],
   config: LogsConfig,
-  output?: string
+  outputFormat?: string
 ) {
-  result.forEach(log => printLog(log, output));
+  result.forEach(log => printLog(log, outputFormat));
 }
 
-export function printLog(log: LogApiResource, output?: string) {
-  if (output === 'json') {
+export function printLog(log: LogApiResource, outputFormat?: string) {
+  if (outputFormat === 'json') {
     logger.info(JSON.stringify(log));
   } else {
     logger.info(`[${log.level}][${log.date_created}]: ${log.message}`);
