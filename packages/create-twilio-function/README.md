@@ -6,6 +6,16 @@ A command line tool to setup a new [Twilio Function](https://www.twilio.com/docs
 
 Read more about this tool in the post [start a new Twilio Functions project the easy way](https://www.twilio.com/blog/start-a-new-twilio-functions-project-the-easy-way)
 
+* [Usage](#usage)
+  * [`npm init`](#npm-init)
+  * [Twilio CLI](#twilio-cli)
+  * [`npx`](#npx)
+  * [Global installation](#global-installation)
+* [Function Templates](#function-templates)
+* [Command line arguments](#command-line-arguments)
+* [Contributing](#contributing)
+* [LICENSE](#license)
+
 ## Usage
 
 ### `npm init`
@@ -62,6 +72,16 @@ Or you can install the module globally:
 npm install create-twilio-function -g
 create-twilio-function function-name
 ```
+
+## Function Templates
+
+`create-twilio-function` enables you to generate a new empty project or to build a project using any of the templates from [the Function Templates](https://github.com/twilio-labs/function-templates) repo. All you need to do is pass a `--template` option with the name of the template you want to download. Like this:
+
+```bash
+npm init twilio-function function-name --template blank
+```
+
+This works with any of the other ways of calling `create-twilio-function`. Check out the [ever expanding list of function templates here](https://github.com/twilio-labs/function-templates).
 
 ## Command line arguments
 
