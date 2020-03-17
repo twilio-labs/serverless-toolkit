@@ -11,14 +11,15 @@ export async function downloadTemplate(
 ): Promise<void> {
   try {
     const files = await getTemplateFiles(templateName);
-    await writeFiles(files, targetDirectory, namespace);
+    await writeFiles(files, targetDirectory, namespace, templateName);
     logger.info(
       chalk`{green SUCCESS} Downloaded new template into the "${namespace}" subdirectories.`
     );
     logger.info(
       `Check ${path.join(
         'readmes',
-        namespace + '.md'
+        namespace,
+        `${templateName}.md`
       )} for template instructions.`
     );
   } catch (err) {

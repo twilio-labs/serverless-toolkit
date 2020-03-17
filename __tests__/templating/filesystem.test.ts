@@ -43,7 +43,9 @@ test('bubbles up an exception when functions directory is missing', async () => 
     }
   );
 
-  await expect(writeFiles([], './testing/', 'example')).rejects.toThrowError(
+  await expect(
+    writeFiles([], './testing/', 'example', 'hello')
+  ).rejects.toThrowError(
     'Could not find any of these directories "functions", "src"'
   );
 });
@@ -62,7 +64,9 @@ test('bubbles up an exception when assets directory is missing', async () => {
     }
   );
 
-  await expect(writeFiles([], './testing/', 'example')).rejects.toThrowError(
+  await expect(
+    writeFiles([], './testing/', 'example', 'hello')
+  ).rejects.toThrowError(
     'Could not find any of these directories "assets", "static"'
   );
 });
@@ -90,7 +94,8 @@ test('installation with basic functions', async () => {
       },
     ],
     './testing/',
-    'example'
+    'example',
+    'hello'
   );
 
   expect(downloadFile).toHaveBeenCalledTimes(3);
@@ -104,14 +109,16 @@ test('installation with basic functions', async () => {
   );
   expect(downloadFile).toHaveBeenCalledWith(
     'https://example.com/README.md',
-    'testing/readmes/example.md'
+    'testing/readmes/example/hello.md'
   );
 
   expect(mkdir).toHaveBeenCalledTimes(2);
   expect(mkdir).toHaveBeenCalledWith('testing/functions/example', {
     recursive: true,
   });
-  expect(mkdir).toHaveBeenCalledWith('testing/readmes', { recursive: true });
+  expect(mkdir).toHaveBeenCalledWith('testing/readmes/example', {
+    recursive: true,
+  });
 });
 
 test('installation with functions and assets', async () => {
@@ -137,7 +144,8 @@ test('installation with functions and assets', async () => {
       { name: '.env', type: '.env', content: 'https://example.com/.env' },
     ],
     './testing/',
-    'example'
+    'example',
+    'hello'
   );
 
   expect(downloadFile).toHaveBeenCalledTimes(3);
@@ -163,6 +171,62 @@ test('installation with functions and assets', async () => {
   });
 });
 
+test('installation with functions and assets and blank namespace', async () => {
+  // For this test, getFirstMatchingDirectory never errors.
+  mocked(
+    fsHelpers.getFirstMatchingDirectory
+  ).mockImplementation((basePath: string, directories: Array<string>): string =>
+    path.join(basePath, directories[0])
+  );
+
+  await writeFiles(
+    [
+      {
+        name: 'hello.js',
+        type: 'functions',
+        content: 'https://example.com/hello.js',
+      },
+      {
+        name: 'hello.wav',
+        type: 'assets',
+        content: 'https://example.com/hello.wav',
+      },
+      {
+        name: 'README.md',
+        type: 'README.md',
+        content: 'https://example.com/README.md',
+      },
+      { name: '.env', type: '.env', content: 'https://example.com/.env' },
+    ],
+    './testing/',
+    '',
+    'hello'
+  );
+
+  expect(downloadFile).toHaveBeenCalledTimes(4);
+  expect(downloadFile).toHaveBeenCalledWith(
+    'https://example.com/.env',
+    'testing/.env'
+  );
+  expect(downloadFile).toHaveBeenCalledWith(
+    'https://example.com/hello.js',
+    'testing/functions/hello.js'
+  );
+  expect(downloadFile).toHaveBeenCalledWith(
+    'https://example.com/hello.wav',
+    'testing/assets/hello.wav'
+  );
+  expect(downloadFile).toHaveBeenCalledWith(
+    'https://example.com/README.md',
+    'testing/readmes/hello.md'
+  );
+
+  expect(mkdir).toHaveBeenCalledTimes(1);
+  expect(mkdir).toHaveBeenCalledWith('testing/readmes', {
+    recursive: true,
+  });
+});
+
 test('installation without dot-env file causes unexpected crash', async () => {
   // I don't believe this is the intended behavior but it's the current behavior.
   // As such, let's create a test for it which can be removed / changed later
@@ -179,9 +243,9 @@ test('installation without dot-env file causes unexpected crash', async () => {
     "Cannot read property 'newEnvironmentVariableKeys' of undefined"
   );
 
-  await expect(writeFiles([], './testing/', 'example')).rejects.toThrowError(
-    expected
-  );
+  await expect(
+    writeFiles([], './testing/', 'example', 'hello')
+  ).rejects.toThrowError(expected);
 });
 
 test('installation with an empty dependency file', async () => {
@@ -209,7 +273,8 @@ test('installation with an empty dependency file', async () => {
       { name: '.env', type: '.env', content: 'https://example.com/.env' },
     ],
     './testing/',
-    'example'
+    'example',
+    'hello'
   );
 
   expect(downloadFile).toHaveBeenCalledTimes(1);
@@ -253,7 +318,8 @@ test('installation with a dependency file', async () => {
       { name: '.env', type: '.env', content: 'https://example.com/.env' },
     ],
     './testing/',
-    'example'
+    'example',
+    'hello'
   );
 
   expect(downloadFile).toHaveBeenCalledTimes(1);
@@ -295,7 +361,8 @@ test('installation with an existing dot-env file', async () => {
   await writeFiles(
     [{ name: '.env', type: '.env', content: 'https://example.com/.env' }],
     './testing/',
-    'example'
+    'example',
+    'hello'
   );
 
   expect(downloadFile).toHaveBeenCalledTimes(0);
@@ -335,7 +402,8 @@ test('installation with overlapping function files throws errors before writing'
         { name: '.env', type: '.env', content: 'https://example.com/.env' },
       ],
       './',
-      'example'
+      'example',
+      'hello'
     )
   ).rejects.toThrowError(
     'Template with name "example" has duplicate file "hello.js" in "functions"'
@@ -372,7 +440,8 @@ test('installation with overlapping asset files throws errors before writing', a
         { name: '.env', type: '.env', content: 'https://example.com/.env' },
       ],
       './',
-      'example'
+      'example',
+      'hello'
     )
   ).rejects.toThrowError(
     'Template with name "example" has duplicate file "hello.wav" in "assets"'

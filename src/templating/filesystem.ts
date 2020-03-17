@@ -85,7 +85,8 @@ function hasFilesOfType(files: TemplateFileInfo[], type: string) {
 export async function writeFiles(
   files: TemplateFileInfo[],
   targetDir: string,
-  namespace: string
+  namespace: string,
+  templateName: string
 ): Promise<void> {
   const functionsDir = fsHelpers.getFirstMatchingDirectory(targetDir, [
     'functions',
@@ -97,7 +98,7 @@ export async function writeFiles(
   ]);
   const functionsTargetDir = path.join(functionsDir, namespace);
   const assetsTargetDir = path.join(assetsDir, namespace);
-  const readmesTargetDir = path.join(targetDir, 'readmes');
+  const readmesTargetDir = path.join(targetDir, 'readmes', namespace);
 
   if (functionsTargetDir !== functionsDir) {
     if (hasFilesOfType(files, 'functions')) {
@@ -107,10 +108,10 @@ export async function writeFiles(
     if (hasFilesOfType(files, 'assets')) {
       await mkdir(assetsTargetDir, { recursive: true });
     }
+  }
 
-    if (hasFilesOfType(files, 'README.md')) {
-      await mkdir(readmesTargetDir, { recursive: true });
-    }
+  if (hasFilesOfType(files, 'README.md')) {
+    await mkdir(readmesTargetDir, { recursive: true });
   }
 
   for (let file of files) {
@@ -168,7 +169,7 @@ export async function writeFiles(
           task: () => installDependencies(file.content, targetDir),
         };
       } else if (file.type === 'README.md') {
-        const readmePath = path.join(readmesTargetDir, namespace + '.md');
+        const readmePath = path.join(readmesTargetDir, templateName + '.md');
         return {
           title: `Saving README to ${readmePath}`,
           task: async () => {
