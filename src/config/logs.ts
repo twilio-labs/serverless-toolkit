@@ -60,9 +60,7 @@ export async function getConfigFromFlags(
 
   const command = getFullCommand(flags);
   const serviceSid = checkForValidServiceSid(command, flags.serviceSid);
-  const tail = !!flags.tail;
   const outputFormat = flags.outputFormat || externalCliOptions?.outputFormat;
-  const filterByFunction = flags.functionSid;
 
   return {
     cwd,
@@ -70,8 +68,8 @@ export async function getConfigFromFlags(
     authToken,
     environment,
     serviceSid,
-    tail,
     outputFormat,
-    filterByFunction,
+    filterByFunction: flags.functionSid,
+    tail: flags.tail,
   };
 }
