@@ -5,7 +5,13 @@ import got from 'got';
 import Listr, { ListrTask } from 'listr';
 import path from 'path';
 import { install, InstallResult } from 'pkg-install';
-import { downloadFile, fileExists, readFile, writeFile, mkdir } from '../utils/fs';
+import {
+  downloadFile,
+  fileExists,
+  readFile,
+  writeFile,
+  mkdir,
+} from '../utils/fs';
 import { logger } from '../utils/logger';
 import { TemplateFileInfo } from './data';
 
@@ -79,7 +85,8 @@ function hasFilesOfType(files: TemplateFileInfo[], type: string) {
 export async function writeFiles(
   files: TemplateFileInfo[],
   targetDir: string,
-  namespace: string
+  namespace: string,
+  templateName: string
 ): Promise<void> {
   const functionsDir = fsHelpers.getFirstMatchingDirectory(targetDir, [
     'functions',
@@ -91,6 +98,7 @@ export async function writeFiles(
   ]);
   const functionsTargetDir = path.join(functionsDir, namespace);
   const assetsTargetDir = path.join(assetsDir, namespace);
+  const readmesTargetDir = path.join(targetDir, 'readmes', namespace);
 
   if (functionsTargetDir !== functionsDir) {
     if (hasFilesOfType(files, 'functions')) {
@@ -100,6 +108,10 @@ export async function writeFiles(
     if (hasFilesOfType(files, 'assets')) {
       await mkdir(assetsTargetDir, { recursive: true });
     }
+  }
+
+  if (hasFilesOfType(files, 'README.md')) {
+    await mkdir(readmesTargetDir, { recursive: true });
   }
 
   for (let file of files) {
@@ -155,6 +167,17 @@ export async function writeFiles(
         return {
           title: 'Installing Dependencies',
           task: () => installDependencies(file.content, targetDir),
+        };
+      } else if (file.type === 'README.md') {
+        const readmePath = path.join(readmesTargetDir, templateName + '.md');
+        return {
+          title: `Saving README to ${readmePath}`,
+          task: async () => {
+            if (await fileExists(readmePath)) {
+              return;
+            }
+            return downloadFile(file.content, readmePath);
+          },
         };
       }
     })

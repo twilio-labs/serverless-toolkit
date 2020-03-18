@@ -93,7 +93,11 @@ export async function getTemplateFiles(
 
     const otherFiles = repoContents
       .filter(file => {
-        return file.name === 'package.json' || file.name === '.env';
+        return (
+          file.name === 'package.json' ||
+          file.name === '.env' ||
+          file.name === 'README.md'
+        );
       })
       .map(file => {
         return {
