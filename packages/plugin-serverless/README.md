@@ -49,6 +49,7 @@ USAGE
 * [`twilio serverless:init NAME`](#twilio-serverlessinit-name)
 * [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-types)
 * [`twilio serverless:list-templates`](#twilio-serverlesslist-templates)
+* [`twilio serverless:logs`](#twilio-serverlesslogs)
 * [`twilio serverless:new [NAMESPACE]`](#twilio-serverlessnew-namespace)
 * [`twilio serverless:promote`](#twilio-serverlesspromote)
 * [`twilio serverless:start [DIR]`](#twilio-serverlessstart-dir)
@@ -101,7 +102,7 @@ OPTIONS
                                        domain suffix). Overrides the value passed via the environment flag.
 ```
 
-_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.3.1/src/commands/serverless/deploy.js)_
+_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.4.0/src/commands/serverless/deploy.js)_
 
 ## `twilio serverless:init NAME`
 
@@ -128,7 +129,7 @@ OPTIONS
                                  github.com/twilio-labs/function-templates
 ```
 
-_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.3.1/src/commands/serverless/init.js)_
+_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.4.0/src/commands/serverless/init.js)_
 
 ## `twilio serverless:list [TYPES]`
 
@@ -165,7 +166,7 @@ OPTIONS
   --service-sid=service-sid        Specific Serverless Service SID to run list for
 ```
 
-_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.3.1/src/commands/serverless/list.js)_
+_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.4.0/src/commands/serverless/list.js)_
 
 ## `twilio serverless:list-templates`
 
@@ -179,7 +180,45 @@ OPTIONS
   -l, --logLevel=logLevel  [default: info] Level of logging messages.
 ```
 
-_See code: [src/commands/serverless/list-templates.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.3.1/src/commands/serverless/list-templates.js)_
+_See code: [src/commands/serverless/list-templates.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.4.0/src/commands/serverless/list-templates.js)_
+
+## `twilio serverless:logs`
+
+Print logs from your Twilio Serverless project
+
+```
+USAGE
+  $ twilio serverless:logs
+
+OPTIONS
+  -c, --config=config                [default: .twilio-functions] Location of the config file. Absolute path or relative
+                                     to current working directory (cwd)
+
+  -l, --logLevel=logLevel            [default: info] Level of logging messages.
+
+  -o, --output-format=output-format  Output the log in a different format
+
+  -p, --profile=profile              Shorthand identifier for your profile.
+
+  -u, --account-sid=account-sid      A specific account SID to be used for deployment. Uses fields in .env otherwise
+
+  --auth-token=auth-token            Use a specific auth token for deployment. Uses fields from .env otherwise
+
+  --cwd=cwd                          Sets the directory of your existing Serverless project. Defaults to current
+                                     directory
+
+  --env=env                          Path to .env file for environment variables that should be installed
+
+  --environment=environment          [default: dev] The environment to retrieve the logs for
+
+  --function-sid=function-sid        Specific Function SID to retrieve logs for
+
+  --service-sid=service-sid          Specific Serverless Service SID to retrieve logs for
+
+  --tail                             Continuously stream the logs
+```
+
+_See code: [src/commands/serverless/logs.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.4.0/src/commands/serverless/logs.js)_
 
 ## `twilio serverless:new [NAMESPACE]`
 
@@ -197,7 +236,7 @@ OPTIONS
   --template=template
 ```
 
-_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.3.1/src/commands/serverless/new.js)_
+_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.4.0/src/commands/serverless/new.js)_
 
 ## `twilio serverless:promote`
 
@@ -244,7 +283,7 @@ ALIASES
   $ twilio serverless:activate
 ```
 
-_See code: [src/commands/serverless/promote.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.3.1/src/commands/serverless/promote.js)_
+_See code: [src/commands/serverless/promote.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.4.0/src/commands/serverless/promote.js)_
 
 ## `twilio serverless:start [DIR]`
 
@@ -291,7 +330,7 @@ ALIASES
   $ twilio serverless:run
 ```
 
-_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.3.1/src/commands/serverless/start.js)_
+_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.4.0/src/commands/serverless/start.js)_
 <!-- commandsstop -->
 
 # Contributing
