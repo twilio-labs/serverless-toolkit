@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/twilio-labs/twilio-run/compare/v2.3.0...v2.4.0) (2020-04-01)
+
+
+### Features
+
+* **templates:** support nested templates to create nested routes ([#123](https://github.com/twilio-labs/twilio-run/issues/123)) ([773d073](https://github.com/twilio-labs/twilio-run/commit/773d073deb5827de5cb33b5480669dd82aa766a4)), closes [#122](https://github.com/twilio-labs/twilio-run/issues/122)
+
 ## [2.3.0](https://github.com/twilio-labs/twilio-run/compare/v2.2.1...v2.3.0) (2020-03-18)
 
 
