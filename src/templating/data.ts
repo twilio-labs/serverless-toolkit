@@ -1,3 +1,4 @@
+import path from 'path';
 import { stripIndent } from 'common-tags';
 import got from 'got';
 import { OutgoingHttpHeaders } from 'http';
@@ -31,6 +32,7 @@ export async function fetchListOfTemplates(): Promise<Template[]> {
 
 export type TemplateFileInfo = {
   name: string;
+  directory: string;
   type: string;
   content: string;
 };
@@ -57,27 +59,67 @@ type GitHubError = {
   documentation_url?: string;
 };
 
+function getFromUrl(url: string) {
+  const headers = buildHeader();
+  return got(url, {
+    json: true,
+    headers,
+  });
+}
+
+async function getNestedRepoContents(
+  url: string,
+  dirName: string,
+  directory: string
+): Promise<TemplateFileInfo[]> {
+  const response = await getFromUrl(url);
+  const repoContents = response.body as RawContentsPayload;
+  return (
+    await Promise.all(
+      repoContents.map(async file => {
+        if (file.type === 'dir') {
+          return await getNestedRepoContents(
+            file.url,
+            path.join(dirName, file.name),
+            directory
+          );
+        } else {
+          return {
+            name: file.name,
+            directory: dirName,
+            type: directory,
+            content: file.download_url,
+          };
+        }
+      })
+    )
+  ).flat();
+}
+
 async function getFiles(
   templateId: string,
   directory: string
 ): Promise<TemplateFileInfo[]> {
-  const headers = buildHeader();
-  const response = await got(
-    CONTENT_BASE_URL +
-      `/${templateId}/${directory}?ref=${TEMPLATE_BASE_BRANCH}`,
-    {
-      json: true,
-      headers,
-    }
+  const response = await getFromUrl(
+    CONTENT_BASE_URL + `/${templateId}/${directory}?ref=${TEMPLATE_BASE_BRANCH}`
   );
   const repoContents = response.body as RawContentsPayload;
-  return repoContents.map(file => {
-    return {
-      name: file.name,
-      type: directory,
-      content: file.download_url,
-    };
-  });
+  return (
+    await Promise.all(
+      repoContents.map(async file => {
+        if (file.type === 'dir') {
+          return await getNestedRepoContents(file.url, file.name, directory);
+        } else {
+          return {
+            name: file.name,
+            type: directory,
+            content: file.download_url,
+            directory: '',
+          };
+        }
+      })
+    )
+  ).flat();
 }
 
 export async function getTemplateFiles(
@@ -114,6 +156,7 @@ export async function getTemplateFiles(
           name: file.name,
           type: file.name,
           content: file.download_url,
+          directory: '',
         };
       });
     const files = otherFiles.concat(

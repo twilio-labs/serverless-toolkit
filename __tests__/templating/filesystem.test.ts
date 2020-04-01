@@ -85,12 +85,19 @@ test('installation with basic functions', async () => {
         name: 'hello.js',
         type: 'functions',
         content: 'https://example.com/hello.js',
+        directory: '',
       },
-      { name: '.env', type: '.env', content: 'https://example.com/.env' },
+      {
+        name: '.env',
+        type: '.env',
+        content: 'https://example.com/.env',
+        directory: '',
+      },
       {
         name: 'README.md',
         type: 'README.md',
         content: 'https://example.com/README.md',
+        directory: '',
       },
     ],
     './testing/',
@@ -135,13 +142,20 @@ test('installation with functions and assets', async () => {
         name: 'hello.js',
         type: 'functions',
         content: 'https://example.com/hello.js',
+        directory: '',
       },
       {
         name: 'hello.wav',
         type: 'assets',
         content: 'https://example.com/hello.wav',
+        directory: '',
       },
-      { name: '.env', type: '.env', content: 'https://example.com/.env' },
+      {
+        name: '.env',
+        type: '.env',
+        content: 'https://example.com/.env',
+        directory: '',
+      },
     ],
     './testing/',
     'example',
@@ -185,18 +199,26 @@ test('installation with functions and assets and blank namespace', async () => {
         name: 'hello.js',
         type: 'functions',
         content: 'https://example.com/hello.js',
+        directory: '',
       },
       {
         name: 'hello.wav',
         type: 'assets',
         content: 'https://example.com/hello.wav',
+        directory: '',
       },
       {
         name: 'README.md',
         type: 'README.md',
         content: 'https://example.com/README.md',
+        directory: '',
       },
-      { name: '.env', type: '.env', content: 'https://example.com/.env' },
+      {
+        name: '.env',
+        type: '.env',
+        content: 'https://example.com/.env',
+        directory: '',
+      },
     ],
     './testing/',
     '',
@@ -269,8 +291,14 @@ test('installation with an empty dependency file', async () => {
         name: 'package.json',
         type: 'package.json',
         content: 'https://example.com/package.json',
+        directory: '',
       },
-      { name: '.env', type: '.env', content: 'https://example.com/.env' },
+      {
+        name: '.env',
+        type: '.env',
+        content: 'https://example.com/.env',
+        directory: '',
+      },
     ],
     './testing/',
     'example',
@@ -314,8 +342,14 @@ test('installation with a dependency file', async () => {
         name: 'package.json',
         type: 'package.json',
         content: 'https://example.com/package.json',
+        directory: '',
       },
-      { name: '.env', type: '.env', content: 'https://example.com/.env' },
+      {
+        name: '.env',
+        type: '.env',
+        content: 'https://example.com/.env',
+        directory: '',
+      },
     ],
     './testing/',
     'example',
@@ -359,7 +393,14 @@ test('installation with an existing dot-env file', async () => {
   );
 
   await writeFiles(
-    [{ name: '.env', type: '.env', content: 'https://example.com/.env' }],
+    [
+      {
+        name: '.env',
+        type: '.env',
+        content: 'https://example.com/.env',
+        directory: '',
+      },
+    ],
     './testing/',
     'example',
     'hello'
@@ -398,8 +439,14 @@ test('installation with overlapping function files throws errors before writing'
           name: 'hello.js',
           type: 'functions',
           content: 'https://example.com/hello.js',
+          directory: '',
         },
-        { name: '.env', type: '.env', content: 'https://example.com/.env' },
+        {
+          name: '.env',
+          type: '.env',
+          content: 'https://example.com/.env',
+          directory: '',
+        },
       ],
       './',
       'example',
@@ -431,13 +478,20 @@ test('installation with overlapping asset files throws errors before writing', a
           name: 'hello.js',
           type: 'functions',
           content: 'https://example.com/hello.js',
+          directory: '',
         },
         {
           name: 'hello.wav',
           type: 'assets',
           content: 'https://example.com/hello.wav',
+          directory: '',
         },
-        { name: '.env', type: '.env', content: 'https://example.com/.env' },
+        {
+          name: '.env',
+          type: '.env',
+          content: 'https://example.com/.env',
+          directory: '',
+        },
       ],
       './',
       'example',
@@ -449,4 +503,74 @@ test('installation with overlapping asset files throws errors before writing', a
 
   expect(downloadFile).toHaveBeenCalledTimes(0);
   expect(writeFile).toHaveBeenCalledTimes(0);
+});
+
+test('installation with functions and assets in nested directories', async () => {
+  // For this test, getFirstMatchingDirectory never errors.
+  mocked(
+    fsHelpers.getFirstMatchingDirectory
+  ).mockImplementation((basePath: string, directories: Array<string>): string =>
+    path.join(basePath, directories[0])
+  );
+
+  await writeFiles(
+    [
+      {
+        name: 'hello.js',
+        type: 'functions',
+        content: 'https://example.com/hello.js',
+        directory: 'admin',
+      },
+      {
+        name: 'woohoo.jpg',
+        type: 'assets',
+        content: 'https://example.com/woohoo.jpg',
+        directory: 'success',
+      },
+      {
+        name: '.env',
+        type: '.env',
+        content: 'https://example.com/.env',
+        directory: '',
+      },
+      {
+        name: 'README.md',
+        type: 'README.md',
+        content: 'https://example.com/README.md',
+        directory: '',
+      },
+    ],
+    './testing/',
+    'example',
+    'hello'
+  );
+
+  expect(downloadFile).toHaveBeenCalledTimes(4);
+  expect(downloadFile).toHaveBeenCalledWith(
+    'https://example.com/.env',
+    'testing/.env'
+  );
+  expect(downloadFile).toHaveBeenCalledWith(
+    'https://example.com/hello.js',
+    'testing/functions/example/admin/hello.js'
+  );
+  expect(downloadFile).toHaveBeenCalledWith(
+    'https://example.com/README.md',
+    'testing/readmes/example/hello.md'
+  );
+  expect(downloadFile).toHaveBeenCalledWith(
+    'https://example.com/woohoo.jpg',
+    'testing/assets/example/success/woohoo.jpg'
+  );
+
+  expect(mkdir).toHaveBeenCalledTimes(3);
+  expect(mkdir).toHaveBeenCalledWith('testing/functions/example', {
+    recursive: true,
+  });
+  expect(mkdir).toHaveBeenCalledWith('testing/readmes/example', {
+    recursive: true,
+  });
+  expect(mkdir).toHaveBeenCalledWith('testing/assets/example', {
+    recursive: true,
+  });
 });

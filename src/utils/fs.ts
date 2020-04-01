@@ -25,7 +25,8 @@ export function downloadFile(
   targetPath: string
 ): Promise<void> {
   return new Promise((resolve, reject) => {
-    return open(targetPath, 'wx')
+    return mkdir(path.dirname(targetPath), { recursive: true })
+      .then(() => open(targetPath, 'wx'))
       .then(fd => {
         const writeStream = fs.createWriteStream('', { fd });
         got
@@ -43,22 +44,24 @@ export async function getDirContent(
   ext: string
 ): Promise<FileInfo[]> {
   const rawFiles = await readdir(dir);
-  return (await Promise.all(
-    rawFiles.map<Promise<FileInfo | undefined>>(async (file: string) => {
-      const filePath = path.join(dir, file);
-      const entry = await stat(filePath);
-      if (!entry.isFile()) {
-        return undefined;
-      }
+  return (
+    await Promise.all(
+      rawFiles.map<Promise<FileInfo | undefined>>(async (file: string) => {
+        const filePath = path.join(dir, file);
+        const entry = await stat(filePath);
+        if (!entry.isFile()) {
+          return undefined;
+        }
 
-      if (ext && path.extname(file) !== ext) {
-        return undefined;
-      }
+        if (ext && path.extname(file) !== ext) {
+          return undefined;
+        }
 
-      return {
-        name: file,
-        path: filePath,
-      };
-    })
-  )).filter(Boolean) as FileInfo[];
+        return {
+          name: file,
+          path: filePath,
+        };
+      })
+    )
+  ).filter(Boolean) as FileInfo[];
 }

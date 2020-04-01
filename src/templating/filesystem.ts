@@ -116,7 +116,7 @@ export async function writeFiles(
 
   for (let file of files) {
     if (file.type === 'functions') {
-      let filepath = path.join(functionsTargetDir, file.name);
+      let filepath = path.join(functionsTargetDir, file.directory, file.name);
 
       if (await fileExists(filepath)) {
         throw new Error(
@@ -124,7 +124,7 @@ export async function writeFiles(
         );
       }
     } else if (file.type === 'assets') {
-      let filepath = path.join(assetsTargetDir, file.name);
+      let filepath = path.join(assetsTargetDir, file.directory, file.name);
 
       if (await fileExists(filepath)) {
         throw new Error(
@@ -138,18 +138,21 @@ export async function writeFiles(
     .map(file => {
       if (file.type === 'functions') {
         return {
-          title: `Creating function: ${file.name}`,
+          title: `Creating function: ${path.join(file.directory, file.name)}`,
           task: () =>
             downloadFile(
               file.content,
-              path.join(functionsTargetDir, file.name)
+              path.join(functionsTargetDir, file.directory, file.name)
             ),
         };
       } else if (file.type === 'assets') {
         return {
           title: `Creating asset: ${file.name}`,
           task: () =>
-            downloadFile(file.content, path.join(assetsTargetDir, file.name)),
+            downloadFile(
+              file.content,
+              path.join(assetsTargetDir, file.directory, file.name)
+            ),
         };
       } else if (file.type === '.env') {
         return {
