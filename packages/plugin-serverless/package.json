@@ -11,7 +11,7 @@
     "create-twilio-function": "^2.1.0",
     "lodash.camelcase": "^4.3.0",
     "lodash.kebabcase": "^4.1.1",
-    "twilio-run": "^2.4.0"
+    "twilio-run": "^2.4.1"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.2",
