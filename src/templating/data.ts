@@ -1,6 +1,7 @@
 import path from 'path';
 import { stripIndent } from 'common-tags';
 import got from 'got';
+import flatten from 'lodash.flatten';
 import { OutgoingHttpHeaders } from 'http';
 import { getDebugFunction } from '../utils/logger';
 const debug = getDebugFunction('twilio-run:new:template-data');
@@ -74,7 +75,7 @@ async function getNestedRepoContents(
 ): Promise<TemplateFileInfo[]> {
   const response = await getFromUrl(url);
   const repoContents = response.body as RawContentsPayload;
-  return (
+  return flatten(
     await Promise.all(
       repoContents.map(async file => {
         if (file.type === 'dir') {
@@ -93,10 +94,10 @@ async function getNestedRepoContents(
         }
       })
     )
-  ).flat();
+  );
 }
 
-async function getFiles(
+export async function getFiles(
   templateId: string,
   directory: string
 ): Promise<TemplateFileInfo[]> {
@@ -104,7 +105,7 @@ async function getFiles(
     CONTENT_BASE_URL + `/${templateId}/${directory}?ref=${TEMPLATE_BASE_BRANCH}`
   );
   const repoContents = response.body as RawContentsPayload;
-  return (
+  return flatten(
     await Promise.all(
       repoContents.map(async file => {
         if (file.type === 'dir') {
@@ -119,7 +120,7 @@ async function getFiles(
         }
       })
     )
-  ).flat();
+  );
 }
 
 export async function getTemplateFiles(
