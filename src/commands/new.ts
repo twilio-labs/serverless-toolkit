@@ -6,12 +6,16 @@ import { Arguments, Argv } from 'yargs';
 import checkProjectStructure from '../checks/project-structure';
 import { downloadTemplate, fetchListOfTemplates } from '../templating/actions';
 import { setLogLevelByName } from '../utils/logger';
-import { baseCliOptions, BaseFlags, ExternalCliOptions } from './shared';
+import {
+  baseCliOptions,
+  ExternalCliOptions,
+  SharedFlagsWithCredentials,
+} from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
 
 export type NewCliFlags = Arguments<
-  BaseFlags & {
+  SharedFlagsWithCredentials & {
     namespace?: string;
     template?: string;
   }
@@ -20,6 +24,8 @@ export type NewCliFlags = Arguments<
 export type NewConfig = Merge<
   NewCliFlags,
   {
+    cwd?: string;
+    env?: string;
     namespace?: string;
     template?: string;
   }

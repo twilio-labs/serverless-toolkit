@@ -4,7 +4,7 @@ import { Arguments } from 'yargs';
 import { cliInfo } from '../commands/deploy';
 import {
   ExternalCliOptions,
-  SharedFlagsWithCrdentials,
+  SharedFlagsWithCredentials,
 } from '../commands/shared';
 import { deprecateFunctionsEnv } from '../commands/utils';
 import { getFunctionServiceSid } from '../serverless-api/utils';
@@ -18,7 +18,7 @@ import {
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 
 export type DeployCliFlags = Arguments<
-  SharedFlagsWithCrdentials & {
+  SharedFlagsWithCredentials & {
     serviceSid?: string;
     functionsEnv?: string;
     environment: string;
