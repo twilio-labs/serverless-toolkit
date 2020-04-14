@@ -1,4 +1,5 @@
 import { Argv } from 'yargs';
+import inquirer from 'inquirer';
 import checkNodejsVersion from '../checks/nodejs-version';
 import checkProjectStructure from '../checks/project-structure';
 import { getConfigFromCli, StartCliFlags } from '../config/start';
@@ -11,6 +12,10 @@ import { CliInfo } from './types';
 import { getFullCommand } from './utils';
 
 const debug = getDebugFunction('twilio-run:start');
+
+type ServerError = Error & {
+  code: string;
+};
 
 export async function handler(
   argv: StartCliFlags,
@@ -41,11 +46,44 @@ export async function handler(
 
   const app = await createServer(config.port, config);
   debug('Start server on port %d', config.port);
-  return new Promise(resolve => {
-    app.listen(config.port, async () => {
+  return new Promise((resolve, reject) => {
+    const serverStartedSuccessfully = async () => {
       printRouteInfo(config);
       resolve();
-    });
+    };
+    const handleServerError = async (error: ServerError) => {
+      if (error.code === 'EADDRINUSE') {
+        const answers = await inquirer.prompt([
+          {
+            type: 'input',
+            default: config.port + 1,
+            name: 'newPortNumber',
+            message: `Port ${config.port} is already in use. Choose a new port number:`,
+            validate: input => {
+              const newPortNumber = parseInt(input, 10);
+              if (
+                !Number.isNaN(newPortNumber) &&
+                newPortNumber <= 65535 &&
+                newPortNumber > 0
+              ) {
+                return true;
+              }
+              return 'Please enter a port number between 0 and 65535.';
+            },
+          },
+        ]);
+        const server = app.listen(
+          answers.newPortNumber,
+          serverStartedSuccessfully
+        );
+        server.on('error', handleServerError);
+      } else {
+        reject(error);
+      }
+    };
+
+    const server = app.listen(config.port, serverStartedSuccessfully);
+    server.on('error', handleServerError);
   });
 }
 
