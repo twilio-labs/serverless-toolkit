@@ -5,29 +5,32 @@
 <a href="https://travis-ci.com/twilio-labs/twilio-run"><img alt="Travis (.com)" src="https://img.shields.io/travis/com/twilio-labs/twilio-run.svg?style=flat-square"></a>
 <hr>
 
-- [About](#about)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Commands](#commands)
-  - [`twilio-run start [dir]`](#twilio-run-start-dir)
-    - [Examples](#examples)
-  - [`twilio-run deploy`](#twilio-run-deploy)
-    - [Examples](#examples-1)
-  - [`twilio-run list-templates`](#twilio-run-list-templates)
-    - [Examples](#examples-2)
-  - [`twilio-run new [namespace]`](#twilio-run-new-namespace)
-    - [Examples](#examples-3)
-  - [`twilio-run list [types]`](#twilio-run-list-types)
-    - [Examples](#examples-4)
-  - [`twilio-run activate`](#twilio-run-activate)
-    - [Examples](#examples-5)
-- [API](#api)
-  - [`runDevServer(port: number, baseDir: string): Promise<Express.Application>`](#rundevserverport-number-basedir-string-promiseexpressapplication)
-  - [`handleToExpressRoute(handler: TwilioHandlerFunction): Express.RequestHandler`](#handletoexpressroutehandler-twiliohandlerfunction-expressrequesthandler)
-- [Contributing](#contributing)
-  - [Code of Conduct](#code-of-conduct)
-- [Contributors](#contributors)
-- [License](#license)
+* [About](#about)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Commands](#commands)
+  * [`twilio-run start [dir]`](#twilio-run-start-dir)
+    * [Examples](#examples)
+  * [`twilio-run deploy`](#twilio-run-deploy)
+    * [Examples](#examples-1)
+  * [`twilio-run list-templates`](#twilio-run-list-templates)
+    * [Examples](#examples-2)
+  * [`twilio-run new [namespace]`](#twilio-run-new-namespace)
+    * [Examples](#examples-3)
+  * [`twilio-run list [types]`](#twilio-run-list-types)
+    * [Examples](#examples-4)
+  * [`twilio-run activate`](#twilio-run-activate)
+    * [Examples](#examples-5)
+  * [`twilio-run logs`](#twilio-run-logs)
+    * [Examples](#examples-6)
+* [API](#api)
+  * [`runDevServer(port: number, baseDir: string): Promise<Express.Application>`](#rundevserverport-number-basedir-string-promiseexpressapplication)
+  * [`handleToExpressRoute(handler: TwilioHandlerFunction): Express.RequestHandler`](#handletoexpressroutehandler-twiliohandlerfunction-expressrequesthandler)
+* [Error Handling in Dev Server](#error-handling-in-dev-server)
+* [Contributing](#contributing)
+  * [Code of Conduct](#code-of-conduct)
+* [Contributors](#contributors)
+* [License](#license)
 
 ## About
 
@@ -168,6 +171,21 @@ twilio-run activate --environment=prod --source-environment=dev
 twilio-run activate --environment=demo --create-environment --build-sid=ZB1234xxxxxxxxxx
 ```
 
+### `twilio-run logs`
+
+Print logs from your Twilio Serverless project
+
+#### Examples
+
+```bash
+# Gets the latest logs for the current project in the dev environment
+twilio-run logs
+# Continuously streams the latest logs for the current project in the dev environment
+twilio-run logs --tail
+# Gets the latest logs for the function sid in the production environment
+twilio-run logs --function-sid ZFXXX --environment production
+```
+
 ## API
 
 The module also exposes two functions that you can use outside of the CLI tool to spin up local development.
@@ -265,7 +283,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
 | [<img src="https://avatars3.githubusercontent.com/u/1505101?v=4" width="100px;" alt="Dominik Kundel"/><br /><sub><b>Dominik Kundel</b></sub>](https://dkundel.com)<br />[💻](https://github.com/dkundel/twilio-run/commits?author=dkundel "Code") | [<img src="https://avatars1.githubusercontent.com/u/41997517?v=4" width="100px;" alt="dbbidclips"/><br /><sub><b>dbbidclips</b></sub>](https://github.com/dbbidclips)<br />[💻](https://github.com/dkundel/twilio-run/commits?author=dbbidclips "Code") [🐛](https://github.com/dkundel/twilio-run/issues?q=author%3Adbbidclips "Bug reports") | [<img src="https://avatars0.githubusercontent.com/u/1033099?v=4" width="100px;" alt="Shelby Hagman"/><br /><sub><b>Shelby Hagman</b></sub>](https://shagman.codes)<br />[🐛](https://github.com/dkundel/twilio-run/issues?q=author%3AShelbyZ "Bug reports") [💻](https://github.com/dkundel/twilio-run/commits?author=ShelbyZ "Code") | [<img src="https://avatars3.githubusercontent.com/u/3806031?v=4" width="100px;" alt="JavaScript Joe"/><br /><sub><b>JavaScript Joe</b></sub>](https://joeprevite.com/)<br />[🐛](https://github.com/dkundel/twilio-run/issues?q=author%3Ajsjoeio "Bug reports") | [<img src="https://avatars3.githubusercontent.com/u/962099?v=4" width="100px;" alt="Stefan Judis"/><br /><sub><b>Stefan Judis</b></sub>](https://www.stefanjudis.com/)<br />[🐛](https://github.com/dkundel/twilio-run/issues?q=author%3Astefanjudis "Bug reports") [💻](https://github.com/dkundel/twilio-run/commits?author=stefanjudis "Code") | [<img src="https://avatars3.githubusercontent.com/u/31462?v=4" width="100px;" alt="Phil Nash"/><br /><sub><b>Phil Nash</b></sub>](https://philna.sh)<br />[🐛](https://github.com/dkundel/twilio-run/issues?q=author%3Aphilnash "Bug reports") [💻](https://github.com/dkundel/twilio-run/commits?author=philnash "Code") [👀](#review-philnash "Reviewed Pull Requests") |
-| :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!

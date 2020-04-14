@@ -127,7 +127,7 @@ function optionBuilder(yargs: Argv<any>): Argv<LogsCliFlags> {
       'Tails and prints the logs of the current project'
     )
     .example(
-      '$0 logs --functionSid=ZFXXX',
+      '$0 logs --function-sid=ZFXXX',
       'Only prints the logs from the named function'
     );
 
