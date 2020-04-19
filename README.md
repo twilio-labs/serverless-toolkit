@@ -31,7 +31,7 @@
 
 ## About
 
-This project is part of the [Serverless Toolkit](https://github.com/twilio-labs/serverless-toolkit). For a more extended documentation, check out the [Twilio Docs](https://www.twilio.com/labs/serverless-toolkit).
+This project is part of the [Serverless Toolkit](https://github.com/twilio-labs/serverless-toolkit). For a more extended documentation, check out the [Twilio Docs](https://www.twilio.com/docs/labs/serverless-toolkit).
 
 ## Installation
 
