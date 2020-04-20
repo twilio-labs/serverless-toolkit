@@ -17,6 +17,11 @@ type ServerError = Error & {
   code: string;
 };
 
+function randomPort() {
+  // Returns a random port number higher than 1024 and lower than 65536.
+  return Math.floor(Math.random() * (65535 - 1025) + 1025);
+}
+
 export async function handler(
   argv: StartCliFlags,
   externalCliOptions?: ExternalCliOptions
@@ -56,7 +61,7 @@ export async function handler(
         const answers = await inquirer.prompt([
           {
             type: 'input',
-            default: config.port + 1,
+            default: randomPort(),
             name: 'newPortNumber',
             message: `Port ${config.port} is already in use. Choose a new port number:`,
             validate: input => {
