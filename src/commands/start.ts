@@ -10,6 +10,7 @@ import { getDebugFunction, setLogLevelByName } from '../utils/logger';
 import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
+import { logger } from '../utils/logger';
 
 const debug = getDebugFunction('twilio-run:start');
 
@@ -52,36 +53,44 @@ export async function handler(
   const app = await createServer(config.port, config);
   debug('Start server on port %d', config.port);
   return new Promise((resolve, reject) => {
+    let attempts = 1;
+    const MAX_ATTEMPTS = 3;
     const serverStartedSuccessfully = async () => {
       printRouteInfo(config);
       resolve();
     };
     const handleServerError = async (error: ServerError) => {
       if (error.code === 'EADDRINUSE') {
-        const answers = await inquirer.prompt([
-          {
-            type: 'input',
-            default: randomPort(),
-            name: 'newPortNumber',
-            message: `Port ${config.port} is already in use. Choose a new port number:`,
-            validate: input => {
-              const newPortNumber = parseInt(input, 10);
-              if (
-                !Number.isNaN(newPortNumber) &&
-                newPortNumber <= 65535 &&
-                newPortNumber > 0
-              ) {
-                return true;
-              }
-              return 'Please enter a port number between 0 and 65535.';
+        if (attempts > MAX_ATTEMPTS) {
+          logger.info('Too many retries. Please check your available ports.');
+          process.exit(1);
+        } else {
+          const answers = await inquirer.prompt([
+            {
+              type: 'input',
+              default: randomPort(),
+              name: 'newPortNumber',
+              message: `Port ${config.port} is already in use. Choose a new port number:`,
+              validate: input => {
+                const newPortNumber = parseInt(input, 10);
+                if (
+                  !Number.isNaN(newPortNumber) &&
+                  newPortNumber <= 65535 &&
+                  newPortNumber > 0
+                ) {
+                  return true;
+                }
+                return 'Please enter a port number between 0 and 65535.';
+              },
             },
-          },
-        ]);
-        const server = app.listen(
-          answers.newPortNumber,
-          serverStartedSuccessfully
-        );
-        server.on('error', handleServerError);
+          ]);
+          attempts += 1;
+          const server = app.listen(
+            answers.newPortNumber,
+            serverStartedSuccessfully
+          );
+          server.on('error', handleServerError);
+        }
       } else {
         reject(error);
       }
