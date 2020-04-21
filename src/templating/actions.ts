@@ -9,22 +9,19 @@ export async function downloadTemplate(
   namespace: string,
   targetDirectory: string
 ): Promise<void> {
-  try {
-    const files = await getTemplateFiles(templateName);
-    await writeFiles(files, targetDirectory, namespace, templateName);
-    logger.info(
-      chalk`{green SUCCESS} Downloaded new template into the "${namespace}" subdirectories.`
-    );
-    logger.info(
-      `Check ${path.join(
-        'readmes',
-        namespace,
-        `${templateName}.md`
-      )} for template instructions.`
-    );
-  } catch (err) {
-    logger.error(err.message, err.name);
-  }
+  const files = await getTemplateFiles(templateName);
+
+  await writeFiles(files, targetDirectory, namespace, templateName);
+  logger.info(
+    chalk`{green SUCCESS} Downloaded new template into the "${namespace}" subdirectories.`
+  );
+  logger.info(
+    `Check ${path.join(
+      'readmes',
+      namespace,
+      `${templateName}.md`
+    )} for template instructions.`
+  );
 }
 
 export { fetchListOfTemplates } from './data';
