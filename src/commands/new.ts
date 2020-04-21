@@ -5,7 +5,7 @@ import { Merge } from 'type-fest';
 import { Arguments, Argv } from 'yargs';
 import checkProjectStructure from '../checks/project-structure';
 import { downloadTemplate, fetchListOfTemplates } from '../templating/actions';
-import { setLogLevelByName } from '../utils/logger';
+import { setLogLevelByName, logger } from '../utils/logger';
 import { baseCliOptions, BaseFlags, ExternalCliOptions } from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
@@ -112,7 +112,11 @@ export async function handler(
 
   const sanitizedNamespace = flags.namespace.replace(/\.js$/, '');
 
-  downloadTemplate(flags.template, sanitizedNamespace, targetDirectory);
+  try {
+    await downloadTemplate(flags.template, sanitizedNamespace, targetDirectory);
+  } catch (error) {
+    logger.error(error.message, error.name);
+  }
 }
 
 export const cliInfo: CliInfo = {
