@@ -23,6 +23,18 @@ function randomPort() {
   return Math.floor(Math.random() * (65535 - 1025) + 1025);
 }
 
+function validatePortNumber(input: string) {
+  const newPortNumber = parseInt(input, 10);
+  if (
+    !Number.isNaN(newPortNumber) &&
+    newPortNumber <= 65535 &&
+    newPortNumber > 1024
+  ) {
+    return true;
+  }
+  return 'Please enter a port number between 1025 and 65535.';
+}
+
 export async function handler(
   argv: StartCliFlags,
   externalCliOptions?: ExternalCliOptions
@@ -71,17 +83,7 @@ export async function handler(
               default: randomPort(),
               name: 'newPortNumber',
               message: `Port ${config.port} is already in use. Choose a new port number:`,
-              validate: input => {
-                const newPortNumber = parseInt(input, 10);
-                if (
-                  !Number.isNaN(newPortNumber) &&
-                  newPortNumber <= 65535 &&
-                  newPortNumber > 0
-                ) {
-                  return true;
-                }
-                return 'Please enter a port number between 0 and 65535.';
-              },
+              validate: validatePortNumber,
             },
           ]);
           attempts += 1;
