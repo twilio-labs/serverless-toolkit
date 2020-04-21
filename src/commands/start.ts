@@ -1,4 +1,5 @@
 import { Argv } from 'yargs';
+import inquirer from 'inquirer';
 import checkNodejsVersion from '../checks/nodejs-version';
 import checkProjectStructure from '../checks/project-structure';
 import { getConfigFromCli, StartCliFlags } from '../config/start';
@@ -9,8 +10,30 @@ import { getDebugFunction, setLogLevelByName } from '../utils/logger';
 import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
+import { logger } from '../utils/logger';
 
 const debug = getDebugFunction('twilio-run:start');
+
+type ServerError = Error & {
+  code: string;
+};
+
+function randomPort() {
+  // Returns a random port number higher than 1024 and lower than 65536.
+  return Math.floor(Math.random() * (65535 - 1025) + 1025);
+}
+
+function validatePortNumber(input: string) {
+  const newPortNumber = parseInt(input, 10);
+  if (
+    !Number.isNaN(newPortNumber) &&
+    newPortNumber <= 65535 &&
+    newPortNumber > 1024
+  ) {
+    return true;
+  }
+  return 'Please enter a port number between 1025 and 65535.';
+}
 
 export async function handler(
   argv: StartCliFlags,
@@ -41,11 +64,42 @@ export async function handler(
 
   const app = await createServer(config.port, config);
   debug('Start server on port %d', config.port);
-  return new Promise(resolve => {
-    app.listen(config.port, async () => {
+  return new Promise((resolve, reject) => {
+    let attempts = 1;
+    const MAX_ATTEMPTS = 3;
+    const serverStartedSuccessfully = async () => {
       printRouteInfo(config);
       resolve();
-    });
+    };
+    const handleServerError = async (error: ServerError) => {
+      if (error.code === 'EADDRINUSE') {
+        if (attempts > MAX_ATTEMPTS) {
+          logger.info('Too many retries. Please check your available ports.');
+          process.exit(1);
+        } else {
+          const answers = await inquirer.prompt([
+            {
+              type: 'input',
+              default: randomPort(),
+              name: 'newPortNumber',
+              message: `Port ${config.port} is already in use. Choose a new port number:`,
+              validate: validatePortNumber,
+            },
+          ]);
+          attempts += 1;
+          const server = app.listen(
+            answers.newPortNumber,
+            serverStartedSuccessfully
+          );
+          server.on('error', handleServerError);
+        }
+      } else {
+        reject(error);
+      }
+    };
+
+    const server = app.listen(config.port, serverStartedSuccessfully);
+    server.on('error', handleServerError);
   });
 }
 
