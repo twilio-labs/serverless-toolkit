@@ -126,10 +126,6 @@ async function createFunctionVersion(
   serviceSid: string,
   client: GotClient
 ): Promise<VersionResource> {
-  if (fn.access === 'private') {
-    throw new Error(`Function ${fn.name} cannnot be "private".
-Please change it to have 'protected' access or deploy it as an asset.`);
-  }
   try {
     const contentType =
       getContentType(fn.content, fn.filePath || 'application/json') ||
