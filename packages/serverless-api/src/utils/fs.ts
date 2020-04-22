@@ -38,6 +38,50 @@ export async function fileExists(filePath: string) {
   }
 }
 
+export type ValidPathResult =
+  | {
+      valid: true;
+    }
+  | { valid: false; message: string };
+
+/**
+ * Verifies a given path against the restrictions put up by the Twilio Runtime.
+ *
+ * @param path a potential absolute path for a Function or Asset
+ */
+export function checkForValidPath(path: string): ValidPathResult {
+  if (!path.startsWith('/')) {
+    return {
+      valid: false,
+      message: `Expected path to start with "/". Got: "${path}"`,
+    };
+  }
+
+  if (path.includes('#')) {
+    return {
+      valid: false,
+      message: `Path cannot contain a #. Got: "${path}"`,
+    };
+  }
+
+  const invalidCharacters = /[;,\?:\@\+&\$\(\)' "]/g;
+  if (invalidCharacters.test(path)) {
+    return {
+      valid: false,
+      message: `Path cannot contain any of the following characters: ;,?:@+&$()' ". Got: "${path}"`,
+    };
+  }
+
+  if (path.length >= 256) {
+    return {
+      valid: false,
+      message: `Path length must be shorter than 256 characters. Got: ${path.length} characters.`,
+    };
+  }
+
+  return { valid: true };
+}
+
 /**
  * Determines the access and Serverless path for a filesystem resource.
  * If it receives an ignore extension it will drop it from the final serverless path
@@ -69,6 +113,11 @@ export function getPathAndAccessFromFileInfo(
   }
   resourcePath = resourcePath.replace(/\s/g, '-');
   resourcePath = toUnix(resourcePath);
+
+  const validatedPath = checkForValidPath(resourcePath);
+  if (!validatedPath.valid) {
+    throw new Error(validatedPath.message);
+  }
 
   return {
     path: resourcePath,
