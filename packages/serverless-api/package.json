@@ -69,7 +69,7 @@
     "@types/node": "^13.13.4",
     "debug": "^4.1.1",
     "fast-redact": "^1.5.0",
-    "file-type": "^10.10.0",
+    "file-type": "^14.2.0",
     "form-data": "^2.5.0",
     "got": "^11.0.1",
     "mime-types": "^2.1.22",
