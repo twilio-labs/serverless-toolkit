@@ -9,6 +9,7 @@ import {
   VariableResource,
 } from '../types';
 import { getPaginatedResource } from './utils/pagination';
+import { ClientApiError } from '../utils/error';
 
 const log = debug('twilio-serverless-api:variables');
 
@@ -31,10 +32,9 @@ async function registerVariableInEnvironment(
 ): Promise<VariableResource> {
   try {
     const resp = await client.post(
-      `/Services/${serviceSid}/Environments/${environmentSid}/Variables`,
+      `Services/${serviceSid}/Environments/${environmentSid}/Variables`,
       {
-        form: true,
-        body: {
+        form: {
           Key: key,
           Value: value,
         },
@@ -42,7 +42,7 @@ async function registerVariableInEnvironment(
     );
     return (resp.body as unknown) as VariableResource;
   } catch (err) {
-    log('%O', err);
+    log('%O', new ClientApiError(err));
     throw err;
   }
 }
@@ -68,10 +68,9 @@ async function updateVariableInEnvironment(
 ): Promise<VariableResource> {
   try {
     const resp = await client.post(
-      `/Services/${serviceSid}/Environments/${environmentSid}/Variables/${variableSid}`,
+      `Services/${serviceSid}/Environments/${environmentSid}/Variables/${variableSid}`,
       {
-        form: true,
-        body: {
+        form: {
           Key: key,
           Value: value,
         },
@@ -79,7 +78,7 @@ async function updateVariableInEnvironment(
     );
     return (resp.body as unknown) as VariableResource;
   } catch (err) {
-    log('%O', err);
+    log('%O', new ClientApiError(err));
     throw err;
   }
 }
@@ -101,10 +100,10 @@ export async function listVariablesForEnvironment(
   try {
     return getPaginatedResource<VariableList, VariableResource>(
       client,
-      `/Services/${serviceSid}/Environments/${environmentSid}/Variables`
+      `Services/${serviceSid}/Environments/${environmentSid}/Variables`
     );
   } catch (err) {
-    log('%O', err);
+    log('%O', new ClientApiError(err));
     throw err;
   }
 }
@@ -118,7 +117,7 @@ export async function listVariablesForEnvironment(
 function convertToVariableArray(env: EnvironmentVariables): Variable[] {
   const output: Variable[] = [];
 
-  Object.keys(env).forEach(key => {
+  Object.keys(env).forEach((key) => {
     const value = env[key];
     if (typeof value === 'string' || typeof value === 'number') {
       output.push({ key, value: `${value}` });
@@ -151,9 +150,9 @@ export async function setEnvironmentVariables(
   );
   const variables = convertToVariableArray(envVariables);
 
-  const variableResources = variables.map(variable => {
+  const variableResources = variables.map((variable) => {
     const existingResource = existingVariables.find(
-      res => res.key === variable.key
+      (res) => res.key === variable.key
     );
     if (!existingResource) {
       return registerVariableInEnvironment(

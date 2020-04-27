@@ -13,6 +13,7 @@ import {
 } from '../types';
 import { getContentType } from '../utils/content-type';
 import { getPaginatedResource } from './utils/pagination';
+import { ClientApiError } from '../utils/error';
 
 const log = debug('twilio-serverless-api:functions');
 
@@ -30,15 +31,14 @@ export async function createFunctionResource(
   client: GotClient
 ): Promise<FunctionApiResource> {
   try {
-    const resp = await client.post(`/Services/${serviceSid}/Functions`, {
-      form: true,
-      body: {
+    const resp = await client.post(`Services/${serviceSid}/Functions`, {
+      form: {
         FriendlyName: name,
       },
     });
     return (resp.body as unknown) as FunctionApiResource;
   } catch (err) {
-    log('%O', err);
+    log('%O', new ClientApiError(err));
     throw new Error(`Failed to create "${name}" function`);
   }
 }
@@ -58,10 +58,10 @@ export async function listFunctionResources(
   try {
     return getPaginatedResource<FunctionList, FunctionApiResource>(
       client,
-      `/Services/${serviceSid}/Functions`
+      `Services/${serviceSid}/Functions`
     );
   } catch (err) {
-    log('%O', err);
+    log('%O', new ClientApiError(err));
     throw err;
   }
 }
@@ -84,8 +84,10 @@ export async function getOrCreateFunctionResources(
   const existingFunctions = await listFunctionResources(serviceSid, client);
   const functionsToCreate: ServerlessResourceConfig[] = [];
 
-  functions.forEach(fn => {
-    const existingFn = existingFunctions.find(f => fn.name === f.friendly_name);
+  functions.forEach((fn) => {
+    const existingFn = existingFunctions.find(
+      (f) => fn.name === f.friendly_name
+    );
     if (!existingFn) {
       functionsToCreate.push({ ...fn });
     } else {
@@ -97,7 +99,7 @@ export async function getOrCreateFunctionResources(
   });
 
   const createdFunctions = await Promise.all(
-    functionsToCreate.map(async fn => {
+    functionsToCreate.map(async (fn) => {
       const newFunction = await createFunctionResource(
         fn.name,
         serviceSid,
@@ -143,18 +145,17 @@ async function createFunctionVersion(
     form.append('Content', fn.content, contentOpts);
 
     const resp = await client.post(
-      `/Services/${serviceSid}/Functions/${fn.sid}/Versions`,
+      `Services/${serviceSid}/Functions/${fn.sid}/Versions`,
       {
-        baseUrl: 'https://serverless-upload.twilio.com/v1',
+        responseType: 'text',
+        prefixUrl: 'https://serverless-upload.twilio.com/v1',
         body: form,
-        //@ts-ignore
-        json: false,
       }
     );
 
     return JSON.parse(resp.body) as VersionResource;
   } catch (err) {
-    log('%O', err);
+    log('%O', new ClientApiError(err));
     throw new Error(`Failed to upload Function ${fn.name}`);
   }
 }

@@ -1,6 +1,7 @@
 import debug from 'debug';
-import got from 'got';
+import { OptionsOfJSONResponseBody } from 'got';
 import { BaseList, GotClient } from '../../types';
+import { ClientApiError } from '../../utils/error';
 
 const log = debug('twilio-serverless-api:utils:pagination');
 
@@ -10,7 +11,7 @@ export async function getPaginatedResource<
 >(
   client: GotClient,
   url: string,
-  opts: got.GotJSONOptions = { json: true }
+  opts: OptionsOfJSONResponseBody = { responseType: 'json' }
 ): Promise<TEntry[]> {
   let result: TEntry[] = [];
 
@@ -21,13 +22,16 @@ export async function getPaginatedResource<
   let nextPageUrl: string | null = url;
   do {
     try {
+      if (nextPageUrl.startsWith('http')) {
+        opts.prefixUrl = undefined;
+      }
       const resp = await client.get(nextPageUrl, opts);
       const body = resp.body as TList;
       nextPageUrl = body.meta.next_page_url;
       const entries = body[body.meta.key] as TEntry[];
       result = [...result, ...entries];
     } catch (err) {
-      log('%O', err);
+      log('%O', new ClientApiError(err));
 
       // if the first request failed, throw error
       if (nextPageUrl === url) {

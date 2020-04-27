@@ -2,7 +2,7 @@
 
 import debug from 'debug';
 import events from 'events';
-import got from 'got';
+import got from './got';
 import { getOrCreateAssetResources, uploadAsset } from './api/assets';
 import {
   activateBuild,
@@ -49,15 +49,16 @@ import { DeployStatus } from './types/consts';
 import { getListOfFunctionsAndAssets, SearchConfig } from './utils/fs';
 import { LogsStream } from './streams/logs';
 import { listOnePageLogResources } from './api/logs';
+import { ClientApiError, convertApiErrorsAndThrow } from './utils/error';
 
 const log = debug('twilio-serverless-api:client');
 
 export function createGotClient(config: ClientConfig): GotClient {
-  // @ts-ignore
   const client = got.extend({
-    baseUrl: 'https://serverless.twilio.com/v1',
-    json: true,
-    auth: `${config.accountSid}:${config.authToken}`,
+    prefixUrl: 'https://serverless.twilio.com/v1',
+    responseType: 'json',
+    username: config.accountSid,
+    password: config.authToken,
     headers: {
       'User-Agent': 'twilio-serverless-api',
     },
@@ -107,171 +108,182 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
    * @returns Promise<ListResult> Object containing the different lists.
    */
   async list(listConfig: ListConfig): Promise<ListResult> {
-    let {
-      types,
-      serviceSid,
-      serviceName: serviceName,
-      environment: environmentSid,
-    } = listConfig;
+    try {
+      let {
+        types,
+        serviceSid,
+        serviceName: serviceName,
+        environment: environmentSid,
+      } = listConfig;
 
-    if (
-      types === 'services' ||
-      (types.length === 1 && types[0] === 'services')
-    ) {
-      const services = await listServices(this.client);
-      return { services };
-    }
+      if (
+        types === 'services' ||
+        (types.length === 1 && types[0] === 'services')
+      ) {
+        const services = await listServices(this.client);
+        return { services };
+      }
 
-    if (
-      typeof serviceSid === 'undefined' &&
-      typeof serviceName !== 'undefined'
-    ) {
-      serviceSid = await findServiceSid(serviceName, this.client);
-    }
+      if (
+        typeof serviceSid === 'undefined' &&
+        typeof serviceName !== 'undefined'
+      ) {
+        serviceSid = await findServiceSid(serviceName, this.client);
+      }
 
-    if (typeof serviceSid === 'undefined') {
-      throw new Error('Missing service SID argument');
-    }
+      if (typeof serviceSid === 'undefined') {
+        throw new Error('Missing service SID argument');
+      }
 
-    const result: ListResult = {};
+      const result: ListResult = {};
 
-    let currentBuildSidForEnv: string | undefined;
-    let currentBuild: BuildResource | undefined;
-    for (const type of types) {
-      try {
-        if (type === 'environments') {
-          result.environments = await listEnvironments(serviceSid, this.client);
-        }
-
-        if (type === 'builds') {
-          result.builds = await listBuilds(serviceSid, this.client);
-        }
-
-        if (typeof environmentSid === 'string') {
-          if (!isEnvironmentSid(environmentSid)) {
-            const environment = await getEnvironmentFromSuffix(
-              environmentSid,
+      let currentBuildSidForEnv: string | undefined;
+      let currentBuild: BuildResource | undefined;
+      for (const type of types) {
+        try {
+          if (type === 'environments') {
+            result.environments = await listEnvironments(
               serviceSid,
               this.client
             );
-            environmentSid = environment.sid;
-            currentBuildSidForEnv = environment.build_sid;
-          } else if (!currentBuildSidForEnv) {
-            const environment = await getEnvironment(
-              environmentSid,
-              serviceSid,
-              this.client
-            );
-            currentBuildSidForEnv = environment.build_sid;
           }
 
-          if (type === 'functions' || type === 'assets') {
-            if (!currentBuild) {
-              currentBuild = await getBuild(
-                currentBuildSidForEnv,
+          if (type === 'builds') {
+            result.builds = await listBuilds(serviceSid, this.client);
+          }
+
+          if (typeof environmentSid === 'string') {
+            if (!isEnvironmentSid(environmentSid)) {
+              const environment = await getEnvironmentFromSuffix(
+                environmentSid,
                 serviceSid,
                 this.client
               );
-            }
-
-            if (type === 'functions') {
-              result.functions = {
-                environmentSid,
-                entries: currentBuild.function_versions,
-              };
-            } else if (type === 'assets') {
-              result.assets = {
-                environmentSid,
-                entries: currentBuild.asset_versions,
-              };
-            }
-          }
-
-          if (type === 'variables') {
-            result.variables = {
-              entries: await listVariablesForEnvironment(
+              environmentSid = environment.sid;
+              currentBuildSidForEnv = environment.build_sid;
+            } else if (!currentBuildSidForEnv) {
+              const environment = await getEnvironment(
                 environmentSid,
                 serviceSid,
                 this.client
-              ),
-              environmentSid,
-            };
-          }
-        }
-      } catch (err) {
-        log(err);
-      }
-    }
+              );
+              currentBuildSidForEnv = environment.build_sid;
+            }
 
-    return result;
+            if (type === 'functions' || type === 'assets') {
+              if (!currentBuild) {
+                currentBuild = await getBuild(
+                  currentBuildSidForEnv,
+                  serviceSid,
+                  this.client
+                );
+              }
+
+              if (type === 'functions') {
+                result.functions = {
+                  environmentSid,
+                  entries: currentBuild.function_versions,
+                };
+              } else if (type === 'assets') {
+                result.assets = {
+                  environmentSid,
+                  entries: currentBuild.asset_versions,
+                };
+              }
+            }
+
+            if (type === 'variables') {
+              result.variables = {
+                entries: await listVariablesForEnvironment(
+                  environmentSid,
+                  serviceSid,
+                  this.client
+                ),
+                environmentSid,
+              };
+            }
+          }
+        } catch (err) {
+          log(new ClientApiError(err));
+        }
+      }
+
+      return result;
+    } catch (err) {
+      convertApiErrorsAndThrow(err);
+    }
   }
 
   async getLogsStream(logsConfig: LogsConfig): Promise<LogsStream> {
-    let { serviceSid, environment, filterByFunction } = logsConfig;
-    if (!isEnvironmentSid(environment)) {
-      const environmentResource = await getEnvironmentFromSuffix(
+    try {
+      let { serviceSid, environment, filterByFunction } = logsConfig;
+      if (!isEnvironmentSid(environment)) {
+        const environmentResource = await getEnvironmentFromSuffix(
+          environment,
+          serviceSid,
+          this.client
+        );
+        environment = environmentResource.sid;
+      }
+
+      if (filterByFunction && !isFunctionSid(filterByFunction)) {
+        const availableFunctions = await listFunctionResources(
+          serviceSid,
+          this.client
+        );
+        const foundFunction = availableFunctions.find(
+          (fn) => fn.friendly_name === filterByFunction
+        );
+        if (!foundFunction) {
+          throw new Error('Invalid Function Name or SID');
+        }
+        filterByFunction = foundFunction.sid;
+      }
+      const logsStream = new LogsStream(
         environment,
         serviceSid,
-        this.client
+        this.client,
+        logsConfig
       );
-      environment = environmentResource.sid;
-    }
 
-    if (filterByFunction && !isFunctionSid(filterByFunction)) {
-      const availableFunctions = await listFunctionResources(
-        serviceSid,
-        this.client
-      );
-      const foundFunction = availableFunctions.find(
-        fn => fn.friendly_name === filterByFunction
-      );
-      if (!foundFunction) {
-        throw new Error('Invalid Function Name or SID');
-      }
-      filterByFunction = foundFunction.sid;
+      return logsStream;
+    } catch (err) {
+      convertApiErrorsAndThrow(err);
     }
-    const logsStream = new LogsStream(
-      environment,
-      serviceSid,
-      this.client,
-      logsConfig
-    );
-
-    return logsStream;
   }
 
   async getLogs(logsConfig: LogsConfig): Promise<LogApiResource[]> {
-    let { serviceSid, environment, filterByFunction } = logsConfig;
-    if (!isEnvironmentSid(environment)) {
-      const environmentResource = await getEnvironmentFromSuffix(
-        environment,
-        serviceSid,
-        this.client
-      );
-      environment = environmentResource.sid;
-    }
-
-    if (filterByFunction && !isFunctionSid(filterByFunction)) {
-      const availableFunctions = await listFunctionResources(
-        serviceSid,
-        this.client
-      );
-      const foundFunction = availableFunctions.find(
-        fn => fn.friendly_name === filterByFunction
-      );
-      if (!foundFunction) {
-        throw new Error('Invalid Function Name or SID');
-      }
-      filterByFunction = foundFunction.sid;
-    }
-
     try {
+      let { serviceSid, environment, filterByFunction } = logsConfig;
+      if (!isEnvironmentSid(environment)) {
+        const environmentResource = await getEnvironmentFromSuffix(
+          environment,
+          serviceSid,
+          this.client
+        );
+        environment = environmentResource.sid;
+      }
+
+      if (filterByFunction && !isFunctionSid(filterByFunction)) {
+        const availableFunctions = await listFunctionResources(
+          serviceSid,
+          this.client
+        );
+        const foundFunction = availableFunctions.find(
+          (fn) => fn.friendly_name === filterByFunction
+        );
+        if (!foundFunction) {
+          throw new Error('Invalid Function Name or SID');
+        }
+        filterByFunction = foundFunction.sid;
+      }
+
       return listOnePageLogResources(environment, serviceSid, this.client, {
         pageSize: 50,
         functionSid: filterByFunction,
       });
-    } catch (e) {
-      throw e;
+    } catch (err) {
+      convertApiErrorsAndThrow(err);
     }
   }
 
@@ -284,78 +296,82 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
    * @returns Promise<ActivateResult> Object containing meta information around deployment
    */
   async activateBuild(activateConfig: ActivateConfig): Promise<ActivateResult> {
-    let {
-      buildSid,
-      targetEnvironment,
-      serviceSid,
-      sourceEnvironment,
-    } = activateConfig;
+    try {
+      let {
+        buildSid,
+        targetEnvironment,
+        serviceSid,
+        sourceEnvironment,
+      } = activateConfig;
 
-    if (!buildSid && !sourceEnvironment) {
-      const error = new Error(
-        'You need to specify either a build SID or source environment to activate'
-      );
-      error.name = 'activate-missing-source';
-      throw error;
-    }
-
-    if (!isEnvironmentSid(targetEnvironment)) {
-      try {
-        const environment = await getEnvironmentFromSuffix(
-          targetEnvironment,
-          serviceSid,
-          this.client
+      if (!buildSid && !sourceEnvironment) {
+        const error = new Error(
+          'You need to specify either a build SID or source environment to activate'
         );
-        targetEnvironment = environment.sid;
-      } catch (err) {
-        if (activateConfig.force || activateConfig.createEnvironment) {
-          const environment = await createEnvironmentFromSuffix(
+        error.name = 'activate-missing-source';
+        throw error;
+      }
+
+      if (!isEnvironmentSid(targetEnvironment)) {
+        try {
+          const environment = await getEnvironmentFromSuffix(
             targetEnvironment,
             serviceSid,
             this.client
           );
           targetEnvironment = environment.sid;
-        } else {
-          throw err;
+        } catch (err) {
+          if (activateConfig.force || activateConfig.createEnvironment) {
+            const environment = await createEnvironmentFromSuffix(
+              targetEnvironment,
+              serviceSid,
+              this.client
+            );
+            targetEnvironment = environment.sid;
+          } else {
+            throw err;
+          }
         }
       }
-    }
 
-    if (!buildSid && sourceEnvironment) {
-      let currentEnv;
-      if (!isEnvironmentSid(sourceEnvironment)) {
-        currentEnv = await getEnvironmentFromSuffix(
-          sourceEnvironment,
-          serviceSid,
-          this.client
-        );
-      } else {
-        currentEnv = await getEnvironment(
-          sourceEnvironment,
-          serviceSid,
-          this.client
-        );
+      if (!buildSid && sourceEnvironment) {
+        let currentEnv;
+        if (!isEnvironmentSid(sourceEnvironment)) {
+          currentEnv = await getEnvironmentFromSuffix(
+            sourceEnvironment,
+            serviceSid,
+            this.client
+          );
+        } else {
+          currentEnv = await getEnvironment(
+            sourceEnvironment,
+            serviceSid,
+            this.client
+          );
+        }
+        buildSid = currentEnv.build_sid;
       }
-      buildSid = currentEnv.build_sid;
+
+      if (!buildSid) {
+        throw new Error('Could not determine build SID');
+      }
+
+      const { domain_name } = await getEnvironment(
+        targetEnvironment,
+        serviceSid,
+        this.client
+      );
+      await activateBuild(buildSid, targetEnvironment, serviceSid, this.client);
+
+      return {
+        serviceSid,
+        buildSid,
+        environmentSid: targetEnvironment,
+        domain: domain_name,
+      };
+    } catch (err) {
+      convertApiErrorsAndThrow(err);
     }
-
-    if (!buildSid) {
-      throw new Error('Could not determine build SID');
-    }
-
-    const { domain_name } = await getEnvironment(
-      targetEnvironment,
-      serviceSid,
-      this.client
-    );
-    await activateBuild(buildSid, targetEnvironment, serviceSid, this.client);
-
-    return {
-      serviceSid,
-      buildSid,
-      environmentSid: targetEnvironment,
-      domain: domain_name,
-    };
   }
 
   /**
@@ -382,149 +398,153 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
   async deployProject(
     deployConfig: DeployProjectConfig
   ): Promise<DeployResult> {
-    const config = {
-      ...this.config,
-      ...deployConfig,
-    };
+    try {
+      const config = {
+        ...this.config,
+        ...deployConfig,
+      };
 
-    const { functions, assets } = config;
+      const { functions, assets } = config;
 
-    let serviceSid = config.serviceSid;
-    if (!serviceSid) {
-      this.emit('status-update', {
-        status: DeployStatus.CREATING_SERVICE,
-        message: 'Creating Service',
-      });
-      try {
-        serviceSid = await createService(config.serviceName, this.client);
-      } catch (err) {
-        const alternativeServiceSid = await findServiceSid(
-          config.serviceName,
-          this.client
-        );
-        if (!alternativeServiceSid) {
-          throw err;
-        }
-        if (config.overrideExistingService || config.force) {
-          serviceSid = alternativeServiceSid;
-        } else {
-          const error = new Error(
-            `Service with name "${config.serviceName}" already exists with SID "${alternativeServiceSid}".`
+      let serviceSid = config.serviceSid;
+      if (!serviceSid) {
+        this.emit('status-update', {
+          status: DeployStatus.CREATING_SERVICE,
+          message: 'Creating Service',
+        });
+        try {
+          serviceSid = await createService(config.serviceName, this.client);
+        } catch (err) {
+          const alternativeServiceSid = await findServiceSid(
+            config.serviceName,
+            this.client
           );
-          error.name = 'conflicting-servicename';
-          Object.defineProperty(error, 'serviceSid', {
-            value: alternativeServiceSid,
-          });
-          Object.defineProperty(error, 'serviceName', {
-            value: config.serviceName,
-          });
-          throw error;
+          if (!alternativeServiceSid) {
+            throw err;
+          }
+          if (config.overrideExistingService || config.force) {
+            serviceSid = alternativeServiceSid;
+          } else {
+            const error = new Error(
+              `Service with name "${config.serviceName}" already exists with SID "${alternativeServiceSid}".`
+            );
+            error.name = 'conflicting-servicename';
+            Object.defineProperty(error, 'serviceSid', {
+              value: alternativeServiceSid,
+            });
+            Object.defineProperty(error, 'serviceName', {
+              value: config.serviceName,
+            });
+            throw error;
+          }
         }
       }
+
+      this.emit('status-update', {
+        status: DeployStatus.CONFIGURING_ENVIRONMENT,
+        message: `Configuring ${
+          config.functionsEnv.length === 0 ? 'bare' : `"${config.functionsEnv}"`
+        } environment`,
+      });
+      const environment = await createEnvironmentIfNotExists(
+        config.functionsEnv,
+        serviceSid,
+        this.client
+      );
+      const { sid: environmentSid, domain_name: domain } = environment;
+
+      //
+      // Functions
+      //
+
+      this.emit('status-update', {
+        status: DeployStatus.CREATING_FUNCTIONS,
+        message: `Creating ${functions.length} Functions`,
+      });
+      const functionResources = await getOrCreateFunctionResources(
+        functions,
+        serviceSid,
+        this.client
+      );
+
+      this.emit('status-update', {
+        status: DeployStatus.UPLOADING_FUNCTIONS,
+        message: `Uploading ${functions.length} Functions`,
+      });
+      const functionVersions = await Promise.all(
+        functionResources.map((fn) => {
+          return uploadFunction(fn, serviceSid as string, this.client);
+        })
+      );
+
+      //
+      // Assets
+      //
+
+      this.emit('status-update', {
+        status: DeployStatus.CREATING_ASSETS,
+        message: `Creating ${assets.length} Assets`,
+      });
+      const assetResources = await getOrCreateAssetResources(
+        assets,
+        serviceSid,
+        this.client
+      );
+
+      this.emit('status-update', {
+        status: DeployStatus.UPLOADING_ASSETS,
+        message: `Uploading ${assets.length} Assets`,
+      });
+      const assetVersions = await Promise.all(
+        assetResources.map((asset) => {
+          return uploadAsset(asset, serviceSid as string, this.client);
+        })
+      );
+
+      this.emit('status-update', {
+        status: DeployStatus.BUILDING,
+        message: 'Waiting for deployment.',
+      });
+      const dependencies = getDependencies(config.pkgJson);
+      const build = await triggerBuild(
+        { functionVersions, dependencies, assetVersions },
+        serviceSid,
+        this.client
+      );
+      await waitForSuccessfulBuild(build.sid, serviceSid, this.client, this);
+
+      this.emit('status-update', {
+        status: DeployStatus.SETTING_VARIABLES,
+        message: 'Setting environment variables',
+      });
+      await setEnvironmentVariables(
+        config.env,
+        environmentSid,
+        serviceSid,
+        this.client
+      );
+
+      this.emit('status-update', {
+        status: DeployStatus.ACTIVATING_DEPLOYMENT,
+        message: 'Activating deployment',
+      });
+      await activateBuild(build.sid, environmentSid, serviceSid, this.client);
+
+      this.emit('status', {
+        status: DeployStatus.DONE,
+        message: 'Project successfully deployed',
+      });
+      return {
+        serviceSid,
+        environmentSid,
+        buildSid: build.sid,
+        domain,
+        functionResources,
+        assetResources,
+      };
+    } catch (err) {
+      convertApiErrorsAndThrow(err);
     }
-
-    this.emit('status-update', {
-      status: DeployStatus.CONFIGURING_ENVIRONMENT,
-      message: `Configuring ${
-        config.functionsEnv.length === 0 ? 'bare' : `"${config.functionsEnv}"`
-      } environment`,
-    });
-    const environment = await createEnvironmentIfNotExists(
-      config.functionsEnv,
-      serviceSid,
-      this.client
-    );
-    const { sid: environmentSid, domain_name: domain } = environment;
-
-    //
-    // Functions
-    //
-
-    this.emit('status-update', {
-      status: DeployStatus.CREATING_FUNCTIONS,
-      message: `Creating ${functions.length} Functions`,
-    });
-    const functionResources = await getOrCreateFunctionResources(
-      functions,
-      serviceSid,
-      this.client
-    );
-
-    this.emit('status-update', {
-      status: DeployStatus.UPLOADING_FUNCTIONS,
-      message: `Uploading ${functions.length} Functions`,
-    });
-    const functionVersions = await Promise.all(
-      functionResources.map(fn => {
-        return uploadFunction(fn, serviceSid as string, this.client);
-      })
-    );
-
-    //
-    // Assets
-    //
-
-    this.emit('status-update', {
-      status: DeployStatus.CREATING_ASSETS,
-      message: `Creating ${assets.length} Assets`,
-    });
-    const assetResources = await getOrCreateAssetResources(
-      assets,
-      serviceSid,
-      this.client
-    );
-
-    this.emit('status-update', {
-      status: DeployStatus.UPLOADING_ASSETS,
-      message: `Uploading ${assets.length} Assets`,
-    });
-    const assetVersions = await Promise.all(
-      assetResources.map(asset => {
-        return uploadAsset(asset, serviceSid as string, this.client);
-      })
-    );
-
-    this.emit('status-update', {
-      status: DeployStatus.BUILDING,
-      message: 'Waiting for deployment.',
-    });
-    const dependencies = getDependencies(config.pkgJson);
-    const build = await triggerBuild(
-      { functionVersions, dependencies, assetVersions },
-      serviceSid,
-      this.client
-    );
-    await waitForSuccessfulBuild(build.sid, serviceSid, this.client, this);
-
-    this.emit('status-update', {
-      status: DeployStatus.SETTING_VARIABLES,
-      message: 'Setting environment variables',
-    });
-    await setEnvironmentVariables(
-      config.env,
-      environmentSid,
-      serviceSid,
-      this.client
-    );
-
-    this.emit('status-update', {
-      status: DeployStatus.ACTIVATING_DEPLOYMENT,
-      message: 'Activating deployment',
-    });
-    await activateBuild(build.sid, environmentSid, serviceSid, this.client);
-
-    this.emit('status', {
-      status: DeployStatus.DONE,
-      message: 'Project successfully deployed',
-    });
-    return {
-      serviceSid,
-      environmentSid,
-      buildSid: build.sid,
-      domain,
-      functionResources,
-      assetResources,
-    };
   }
 
   /**
@@ -541,45 +561,49 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
   async deployLocalProject(
     deployConfig: DeployLocalProjectConfig
   ): Promise<DeployResult> {
-    this.emit('status-update', {
-      status: DeployStatus.READING_FILESYSTEM,
-      message: 'Gathering Functions and Assets to deploy',
-    });
+    try {
+      this.emit('status-update', {
+        status: DeployStatus.READING_FILESYSTEM,
+        message: 'Gathering Functions and Assets to deploy',
+      });
 
-    log('Deploy config %P', deployConfig);
+      log('Deploy config %P', deployConfig);
 
-    const searchConfig: SearchConfig = {};
-    if (deployConfig.functionsFolderName) {
-      searchConfig.functionsFolderNames = [deployConfig.functionsFolderName];
+      const searchConfig: SearchConfig = {};
+      if (deployConfig.functionsFolderName) {
+        searchConfig.functionsFolderNames = [deployConfig.functionsFolderName];
+      }
+
+      if (deployConfig.assetsFolderName) {
+        searchConfig.assetsFolderNames = [deployConfig.assetsFolderName];
+      }
+
+      let { functions, assets } = await getListOfFunctionsAndAssets(
+        deployConfig.cwd,
+        searchConfig
+      );
+
+      if (deployConfig.noFunctions) {
+        log('Disabling functions upload by emptying functions array');
+        functions = [];
+      }
+
+      if (deployConfig.noAssets) {
+        log('Disabling assets upload by emptying assets array');
+        assets = [];
+      }
+
+      const config = {
+        ...this.config,
+        ...deployConfig,
+        functions,
+        assets,
+      };
+
+      return this.deployProject(config);
+    } catch (err) {
+      convertApiErrorsAndThrow(err);
     }
-
-    if (deployConfig.assetsFolderName) {
-      searchConfig.assetsFolderNames = [deployConfig.assetsFolderName];
-    }
-
-    let { functions, assets } = await getListOfFunctionsAndAssets(
-      deployConfig.cwd,
-      searchConfig
-    );
-
-    if (deployConfig.noFunctions) {
-      log('Disabling functions upload by emptying functions array');
-      functions = [];
-    }
-
-    if (deployConfig.noAssets) {
-      log('Disabling assets upload by emptying assets array');
-      assets = [];
-    }
-
-    const config = {
-      ...this.config,
-      ...deployConfig,
-      functions,
-      assets,
-    };
-
-    return this.deployProject(config);
   }
 }
 
