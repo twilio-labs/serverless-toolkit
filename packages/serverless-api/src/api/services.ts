@@ -3,6 +3,7 @@
 import debug from 'debug';
 import { GotClient, ServiceList, ServiceResource, Sid } from '../types';
 import { getPaginatedResource } from './utils/pagination';
+import { ClientApiError } from '../utils/error';
 
 const log = debug('twilio-serverless-api:services');
 
@@ -19,9 +20,8 @@ export async function createService(
   client: GotClient
 ): Promise<string> {
   try {
-    const resp = await client.post('/Services', {
-      form: true,
-      body: {
+    const resp = await client.post('Services', {
+      form: {
         UniqueName: serviceName,
         FriendlyName: serviceName,
         IncludeCrendentials: true,
@@ -31,7 +31,7 @@ export async function createService(
 
     return service.sid;
   } catch (err) {
-    log('%O', err);
+    log('%O', new ClientApiError(err));
     throw err;
   }
 }
@@ -46,10 +46,7 @@ export async function createService(
 export async function listServices(
   client: GotClient
 ): Promise<ServiceResource[]> {
-  return getPaginatedResource<ServiceList, ServiceResource>(
-    client,
-    '/Services'
-  );
+  return getPaginatedResource<ServiceList, ServiceResource>(client, 'Services');
 }
 
 /**
@@ -72,7 +69,7 @@ export async function findServiceSid(
       }
     }
   } catch (err) {
-    log('%O', err);
+    log('%O', new ClientApiError(err));
     throw err;
   }
   return undefined;
@@ -83,10 +80,10 @@ export async function getService(
   client: GotClient
 ): Promise<ServiceResource> {
   try {
-    const resp = await client.get(`/Services/${sid}`);
+    const resp = await client.get(`Services/${sid}`);
     return (resp.body as unknown) as ServiceResource;
   } catch (err) {
-    log('%O', err);
+    log('%O', new ClientApiError(err));
     throw err;
   }
 }

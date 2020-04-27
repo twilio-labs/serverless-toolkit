@@ -1,7 +1,6 @@
 /** @module @twilio-labs/serverless-api/dist/api */
 
 import debug from 'debug';
-import querystring from 'querystring';
 import { JsonObject } from 'type-fest';
 import {
   BuildConfig,
@@ -11,6 +10,7 @@ import {
   GotClient,
 } from '../types';
 import { DeployStatus } from '../types/consts';
+import { ClientApiError } from '../utils/error';
 import { sleep } from '../utils/sleep';
 import { getPaginatedResource } from './utils/pagination';
 
@@ -32,7 +32,7 @@ export async function getBuild(
   serviceSid: string,
   client: GotClient
 ): Promise<BuildResource> {
-  const resp = await client.get(`/Services/${serviceSid}/Builds/${buildSid}`);
+  const resp = await client.get(`Services/${serviceSid}/Builds/${buildSid}`);
   return (resp.body as unknown) as BuildResource;
 }
 
@@ -53,7 +53,7 @@ async function getBuildStatus(
     const resp = await getBuild(buildSid, serviceSid, client);
     return resp.status;
   } catch (err) {
-    log('%O', err);
+    log('%O', new ClientApiError(err));
     throw err;
   }
 }
@@ -72,7 +72,7 @@ export async function listBuilds(
 ): Promise<BuildResource[]> {
   return getPaginatedResource<BuildList, BuildResource>(
     client,
-    `/Services/${serviceSid}/Builds`
+    `Services/${serviceSid}/Builds`
   );
 }
 
@@ -107,17 +107,16 @@ export async function triggerBuild(
       body.AssetVersions = assetVersions;
     }
 
-    const resp = await client.post(`/Services/${serviceSid}/Builds`, {
-      // @ts-ignore
-      json: false,
+    const resp = await client.post(`Services/${serviceSid}/Builds`, {
+      responseType: 'json',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: querystring.stringify(body),
+      form: body,
     });
-    return JSON.parse(resp.body) as BuildResource;
+    return resp.body as BuildResource;
   } catch (err) {
-    log('%O', err);
+    log('%O', new ClientApiError(err));
     throw err;
   }
 }
@@ -196,17 +195,16 @@ export async function activateBuild(
 ): Promise<any> {
   try {
     const resp = await client.post(
-      `/Services/${serviceSid}/Environments/${environmentSid}/Deployments`,
+      `Services/${serviceSid}/Environments/${environmentSid}/Deployments`,
       {
-        form: true,
-        body: {
+        form: {
           BuildSid: buildSid,
         },
       }
     );
     return resp.body;
   } catch (err) {
-    log('%O', err);
+    log('%O', new ClientApiError(err));
     throw err;
   }
 }

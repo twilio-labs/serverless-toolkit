@@ -15,6 +15,7 @@ import {
 } from '../types';
 import { getContentType } from '../utils/content-type';
 import { getPaginatedResource } from './utils/pagination';
+import { ClientApiError } from '../utils/error';
 
 const log = debug('twilio-serverless-api:assets');
 
@@ -32,15 +33,14 @@ async function createAssetResource(
   client: GotClient
 ): Promise<AssetApiResource> {
   try {
-    const resp = await client.post(`/Services/${serviceSid}/Assets`, {
-      form: true,
-      body: {
+    const resp = await client.post(`Services/${serviceSid}/Assets`, {
+      form: {
         FriendlyName: name,
       },
     });
     return (resp.body as unknown) as AssetApiResource;
   } catch (err) {
-    log('%O', err);
+    log('%O', new ClientApiError(err));
     throw new Error(`Failed to create "${name}" asset`);
   }
 }
@@ -59,10 +59,10 @@ export async function listAssetResources(
   try {
     return getPaginatedResource<AssetList, AssetApiResource>(
       client,
-      `/Services/${serviceSid}/Assets`
+      `Services/${serviceSid}/Assets`
     );
   } catch (err) {
-    log('%O', err);
+    log('%O', new ClientApiError(err));
     throw err;
   }
 }
@@ -84,9 +84,9 @@ export async function getOrCreateAssetResources(
   const existingAssets = await listAssetResources(serviceSid, client);
   const assetsToCreate: ServerlessResourceConfig[] = [];
 
-  assets.forEach(asset => {
+  assets.forEach((asset) => {
     const existingAsset = existingAssets.find(
-      x => asset.name === x.friendly_name
+      (x) => asset.name === x.friendly_name
     );
     if (!existingAsset) {
       assetsToCreate.push(asset);
@@ -99,7 +99,7 @@ export async function getOrCreateAssetResources(
   });
 
   const createdAssets = await Promise.all(
-    assetsToCreate.map(async asset => {
+    assetsToCreate.map(async (asset) => {
       const newAsset = await createAssetResource(
         asset.name,
         serviceSid,
@@ -146,18 +146,17 @@ async function createAssetVersion(
     form.append('Content', asset.content, contentOpts);
 
     const resp = await client.post(
-      `/Services/${serviceSid}/Assets/${asset.sid}/Versions`,
+      `Services/${serviceSid}/Assets/${asset.sid}/Versions`,
       {
-        baseUrl: 'https://serverless-upload.twilio.com/v1',
+        responseType: 'text',
+        prefixUrl: 'https://serverless-upload.twilio.com/v1',
         body: form,
-        //@ts-ignore
-        json: false,
       }
     );
 
     return JSON.parse(resp.body) as VersionResource;
   } catch (err) {
-    log('%O', err);
+    log('%O', new ClientApiError(err));
     throw new Error('Failed to upload Asset');
   }
 }

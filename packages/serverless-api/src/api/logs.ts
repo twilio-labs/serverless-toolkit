@@ -3,6 +3,7 @@
 import debug from 'debug';
 import { GotClient, LogApiResource, LogList, Sid, LogFilters } from '../types';
 import { getPaginatedResource } from './utils/pagination';
+import { ClientApiError } from '../utils/error';
 
 const log = debug('twilio-serverless-api:logs');
 
@@ -22,10 +23,10 @@ export async function listLogResources(
   try {
     return getPaginatedResource<LogList, LogApiResource>(
       client,
-      `/Services/${serviceSid}/Environments/${environmentSid}/Logs`
+      `Services/${serviceSid}/Environments/${environmentSid}/Logs`
     );
   } catch (err) {
-    log('%O', err);
+    log('%O', new ClientApiError(err));
     throw err;
   }
 }
@@ -47,7 +48,7 @@ export async function listOnePageLogResources(
   const pageSize = filters.pageSize || 50;
   const { functionSid, startDate, endDate, pageToken } = filters;
   try {
-    let url = `/Services/${serviceSid}/Environments/${environmentSid}/Logs?PageSize=${pageSize}`;
+    let url = `Services/${serviceSid}/Environments/${environmentSid}/Logs?PageSize=${pageSize}`;
     if (typeof functionSid !== 'undefined') {
       url += `&FunctionSid=${functionSid}`;
     }
@@ -68,7 +69,7 @@ export async function listOnePageLogResources(
     const content = (resp.body as unknown) as LogList;
     return content.logs as LogApiResource[];
   } catch (err) {
-    log('%O', err);
+    log('%O', new ClientApiError(err));
     throw err;
   }
 }
@@ -90,11 +91,11 @@ export async function getLog(
 ) {
   try {
     const resp = await client.get(
-      `/Services/${serviceSid}/Environments/${environmentSid}/Logs/${logSid}`
+      `Services/${serviceSid}/Environments/${environmentSid}/Logs/${logSid}`
     );
     return (resp.body as unknown) as LogApiResource;
   } catch (err) {
-    log('%O', err);
+    log('%O', new ClientApiError(err));
     throw err;
   }
 }

@@ -3,6 +3,7 @@
 import debug from 'debug';
 import { EnvironmentList, EnvironmentResource, GotClient, Sid } from '../types';
 import { getPaginatedResource } from './utils/pagination';
+import { ClientApiError } from '../utils/error';
 
 const log = debug('twilio-serverless-api:environments');
 
@@ -42,7 +43,7 @@ export async function getEnvironment(
   client: GotClient
 ): Promise<EnvironmentResource> {
   const resp = await client.get(
-    `/Services/${serviceSid}/Environments/${environmentSid}`
+    `Services/${serviceSid}/Environments/${environmentSid}`
   );
   return (resp.body as unknown) as EnvironmentResource;
 }
@@ -62,9 +63,8 @@ export async function createEnvironmentFromSuffix(
   client: GotClient
 ): Promise<EnvironmentResource> {
   const uniqueName = getUniqueNameFromSuffix(domainSuffix);
-  const resp = await client.post(`/Services/${serviceSid}/Environments`, {
-    form: true,
-    body: {
+  const resp = await client.post(`Services/${serviceSid}/Environments`, {
+    form: {
       UniqueName: uniqueName,
       DomainSuffix: domainSuffix || undefined,
       // this property currently doesn't exist but for the future lets set it
@@ -85,7 +85,7 @@ export async function createEnvironmentFromSuffix(
 export async function listEnvironments(serviceSid: string, client: GotClient) {
   return getPaginatedResource<EnvironmentList, EnvironmentResource>(
     client,
-    `/Services/${serviceSid}/Environments`
+    `Services/${serviceSid}/Environments`
   );
 }
 
@@ -105,7 +105,7 @@ export async function getEnvironmentFromSuffix(
 ): Promise<EnvironmentResource> {
   const environments = await listEnvironments(serviceSid, client);
   let foundEnvironments = environments.filter(
-    e =>
+    (e) =>
       e.domain_suffix === domainSuffix ||
       (domainSuffix.length === 0 && e.domain_suffix === null)
   );
@@ -115,7 +115,7 @@ export async function getEnvironmentFromSuffix(
     // this is an edge case where at one point you could create environments with the same domain suffix
     // we'll pick the one that suits our naming convention
     env = foundEnvironments.find(
-      e =>
+      (e) =>
         e.domain_suffix === domainSuffix &&
         e.unique_name === getUniqueNameFromSuffix(domainSuffix)
     );
@@ -144,11 +144,11 @@ export async function createEnvironmentIfNotExists(
   client: GotClient
 ) {
   return getEnvironmentFromSuffix(domainSuffix, serviceSid, client).catch(
-    err => {
+    (err) => {
       try {
         return createEnvironmentFromSuffix(domainSuffix, serviceSid, client);
       } catch (err) {
-        log('%O', err);
+        log('%O', new ClientApiError(err));
         throw err;
       }
     }

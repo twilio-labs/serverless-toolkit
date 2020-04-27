@@ -1,8 +1,8 @@
 /** @module @twilio-labs/serverless-api */
 
-import got = require('got');
+import { Got } from 'got';
 
-export type GotClient = typeof got;
+export type GotClient = Got;
 
 export type EnvironmentVariables = {
   [key: string]: string | undefined;
