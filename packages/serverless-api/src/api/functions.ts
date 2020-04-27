@@ -130,7 +130,7 @@ async function createFunctionVersion(
 ): Promise<VersionResource> {
   try {
     const contentType =
-      getContentType(fn.content, fn.filePath || 'application/json') ||
+      (await getContentType(fn.content, fn.filePath || 'application/json')) ||
       'application/javascript';
     log('Uploading asset via form data with content-type "%s"', contentType);
 

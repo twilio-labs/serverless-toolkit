@@ -129,7 +129,7 @@ async function createAssetVersion(
   client: GotClient
 ): Promise<VersionResource> {
   try {
-    const contentType = getContentType(
+    const contentType = await getContentType(
       asset.content,
       asset.filePath || asset.name
     );
