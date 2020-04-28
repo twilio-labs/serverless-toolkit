@@ -1,7 +1,7 @@
 /** @module @twilio-labs/serverless-api/dist/api */
 
 import debug from 'debug';
-import { JsonObject } from 'type-fest';
+import querystring, { ParsedUrlQueryInput } from 'querystring';
 import {
   BuildConfig,
   BuildList,
@@ -92,7 +92,7 @@ export async function triggerBuild(
 ): Promise<BuildResource> {
   const { functionVersions, dependencies, assetVersions } = config;
   try {
-    const body: JsonObject = {};
+    const body: ParsedUrlQueryInput = {};
 
     if (Array.isArray(dependencies) && dependencies.length > 0) {
       const dependencyString = `"${JSON.stringify(dependencies)}"`;
@@ -112,7 +112,7 @@ export async function triggerBuild(
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      form: body,
+      body: querystring.stringify(body),
     });
     return resp.body as BuildResource;
   } catch (err) {
