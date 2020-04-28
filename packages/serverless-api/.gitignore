@@ -85,3 +85,4 @@ typings/
 dist/
 
 docs/
+npm-shrinkwrap.json

@@ -10,7 +10,6 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "build:noemit": "tsc --noEmit",
-    "postbuild": "npm shrinkwrap",
     "docs": "typedoc --options typedoc.json",
     "clean": "rimraf ./dist",
     "prepack": "run-s clean build",
@@ -37,7 +36,6 @@
     "!dist/**/__tests__/*",
     "README.md",
     "scripts/",
-    "npm-shrinkwrap.json",
     "LICENSE"
   ],
   "devDependencies": {
