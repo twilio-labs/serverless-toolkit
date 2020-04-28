@@ -1,13 +1,18 @@
 import {
-  TwilioServerlessApiClient,
   LogApiResource,
+  TwilioServerlessApiClient,
 } from '@twilio-labs/serverless-api';
-import { LogsCliFlags, LogsConfig, getConfigFromFlags } from '../config/logs';
 import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
 import checkForValidServiceSid from '../checks/check-service-sid';
-import { printLogs, printLog } from '../printers/logs';
-import { getDebugFunction, logger, setLogLevelByName } from '../utils/logger';
+import { getConfigFromFlags, LogsCliFlags, LogsConfig } from '../config/logs';
+import { printLog, printLogs } from '../printers/logs';
+import {
+  getDebugFunction,
+  logApiError,
+  logger,
+  setLogLevelByName,
+} from '../utils/logger';
 import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
@@ -20,7 +25,11 @@ function logError(msg: string) {
 
 function handleError(err: Error) {
   debug('%O', err);
-  logError(err.message);
+  if (err.name === 'TwilioApiError') {
+    logApiError(logger, err);
+  } else {
+    logError(err.message);
+  }
   process.exit(1);
 }
 
