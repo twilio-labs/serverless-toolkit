@@ -107,40 +107,14 @@ describe('createTwilioFunction', () => {
       expect(console.log).toHaveBeenCalledWith('success message');
     });
 
-    it('scaffolds a Twilio Function with a template', async () => {
-      /* eslint-disable camelcase */
-      const gitHubAPI = nock('https://api.github.com');
-      gitHubAPI.get('/repos/twilio-labs/function-templates/contents/blank?ref=master').reply(200, [
-        { name: 'functions' },
-        {
-          name: '.env',
-          download_url: 'https://raw.githubusercontent.com/twilio-labs/function-templates/master/blank/.env',
-        },
-      ]);
-      gitHubAPI.get('/repos/twilio-labs/function-templates/contents/blank/functions?ref=master').reply(200, [
-        {
-          name: 'blank.js',
-          download_url:
-            'https://raw.githubusercontent.com/twilio-labs/function-templates/master/blank/functions/blank.js',
-        },
-      ]);
-      /* eslint-enable camelcase */
-      const gitHubRaw = nock('https://raw.githubusercontent.com');
-      gitHubRaw.get('/twilio-labs/function-templates/master/blank/functions/blank.js').reply(
-        200,
-        `exports.handler = function(context, event, callback) {
-  callback(null, {});
-};`,
-      );
-      gitHubRaw.get('/github/gitignore/master/Node.gitignore').reply(200, 'node_modules/');
-      gitHubRaw.get('/twilio-labs/function-templates/master/blank/.env').reply(200, '');
-
+    it('scaffolds an empty Twilio Function', async () => {
       const name = 'test-function';
       await createTwilioFunction({
         name,
         path: scratchDir,
-        template: 'blank',
+        empty: true,
       });
+
       const dir = await stat(path.join(scratchDir, name));
       expect(dir.isDirectory());
       const env = await stat(path.join(scratchDir, name, '.env'));
@@ -160,43 +134,109 @@ describe('createTwilioFunction', () => {
       const assets = await stat(path.join(scratchDir, name, 'assets'));
       expect(assets.isDirectory());
 
-      const exampleFiles = await readdir(path.join(scratchDir, name, 'functions'));
-      expect(exampleFiles).toEqual(expect.not.arrayContaining(['hello-world.js']));
+      const functionsDir = await readdir(path.join(scratchDir, name, 'functions'));
+      expect(functionsDir.length).toEqual(0);
 
-      const templateFunction = await stat(path.join(scratchDir, name, 'functions', 'blank.js'));
-      expect(templateFunction.isFile());
-
-      const exampleAssets = await readdir(path.join(scratchDir, name, 'assets'));
-      expect(exampleAssets).toEqual(expect.not.arrayContaining(['index.html']));
+      const assetsDir = await readdir(path.join(scratchDir, name, 'assets'));
+      expect(assetsDir.length).toEqual(0);
 
       expect(installDependencies).toHaveBeenCalledWith(path.join(scratchDir, name));
 
       expect(console.log).toHaveBeenCalledWith('success message');
     });
 
-    it('handles a missing template gracefully', async () => {
-      const templateName = 'missing';
-      const name = 'test-function';
-      const gitHubAPI = nock('https://api.github.com');
-      gitHubAPI.get(`/repos/twilio-labs/function-templates/contents/${templateName}`).reply(404);
+    describe('templates', () => {
+      it('scaffolds a Twilio Function with a template', async () => {
+        /* eslint-disable camelcase */
+        const gitHubAPI = nock('https://api.github.com');
+        gitHubAPI.get('/repos/twilio-labs/function-templates/contents/blank?ref=master').reply(200, [
+          { name: 'functions' },
+          {
+            name: '.env',
+            download_url: 'https://raw.githubusercontent.com/twilio-labs/function-templates/master/blank/.env',
+          },
+        ]);
+        gitHubAPI.get('/repos/twilio-labs/function-templates/contents/blank/functions?ref=master').reply(200, [
+          {
+            name: 'blank.js',
+            download_url:
+              'https://raw.githubusercontent.com/twilio-labs/function-templates/master/blank/functions/blank.js',
+          },
+        ]);
+        /* eslint-enable camelcase */
+        const gitHubRaw = nock('https://raw.githubusercontent.com');
+        gitHubRaw.get('/twilio-labs/function-templates/master/blank/functions/blank.js').reply(
+          200,
+          `exports.handler = function(context, event, callback) {
+  callback(null, {});
+};`,
+        );
+        gitHubRaw.get('/github/gitignore/master/Node.gitignore').reply(200, 'node_modules/');
+        gitHubRaw.get('/twilio-labs/function-templates/master/blank/.env').reply(200, '');
 
-      const fail = jest.spyOn(spinner, 'fail');
+        const name = 'test-function';
+        await createTwilioFunction({
+          name,
+          path: scratchDir,
+          template: 'blank',
+        });
+        const dir = await stat(path.join(scratchDir, name));
+        expect(dir.isDirectory());
+        const env = await stat(path.join(scratchDir, name, '.env'));
+        expect(env.isFile());
+        const nvmrc = await stat(path.join(scratchDir, name, '.nvmrc'));
+        expect(nvmrc.isFile());
 
-      await createTwilioFunction({
-        name,
-        path: scratchDir,
-        template: templateName,
+        const packageJSON = await stat(path.join(scratchDir, name, 'package.json'));
+        expect(packageJSON.isFile());
+
+        const gitignore = await stat(path.join(scratchDir, name, '.gitignore'));
+        expect(gitignore.isFile());
+
+        const functions = await stat(path.join(scratchDir, name, 'functions'));
+        expect(functions.isDirectory());
+
+        const assets = await stat(path.join(scratchDir, name, 'assets'));
+        expect(assets.isDirectory());
+
+        const exampleFiles = await readdir(path.join(scratchDir, name, 'functions'));
+        expect(exampleFiles).toEqual(expect.not.arrayContaining(['hello-world.js']));
+
+        const templateFunction = await stat(path.join(scratchDir, name, 'functions', 'blank.js'));
+        expect(templateFunction.isFile());
+
+        const exampleAssets = await readdir(path.join(scratchDir, name, 'assets'));
+        expect(exampleAssets).toEqual(expect.not.arrayContaining(['index.html']));
+
+        expect(installDependencies).toHaveBeenCalledWith(path.join(scratchDir, name));
+
+        expect(console.log).toHaveBeenCalledWith('success message');
       });
 
-      expect.assertions(3);
+      it('handles a missing template gracefully', async () => {
+        const templateName = 'missing';
+        const name = 'test-function';
+        const gitHubAPI = nock('https://api.github.com');
+        gitHubAPI.get(`/repos/twilio-labs/function-templates/contents/${templateName}`).reply(404);
 
-      expect(fail).toHaveBeenCalledTimes(1);
-      expect(fail).toHaveBeenCalledWith(`The template "${templateName}" doesn't exist`);
-      try {
-        await stat(path.join(scratchDir, name));
-      } catch (e) {
-        expect(e.toString()).toMatch('no such file or directory');
-      }
+        const fail = jest.spyOn(spinner, 'fail');
+
+        await createTwilioFunction({
+          name,
+          path: scratchDir,
+          template: templateName,
+        });
+
+        expect.assertions(3);
+
+        expect(fail).toHaveBeenCalledTimes(1);
+        expect(fail).toHaveBeenCalledWith(`The template "${templateName}" doesn't exist`);
+        try {
+          await stat(path.join(scratchDir, name));
+        } catch (e) {
+          expect(e.toString()).toMatch('no such file or directory');
+        }
+      });
     });
 
     it("doesn't scaffold if the target folder name already exists", async () => {
@@ -245,6 +285,31 @@ describe('createTwilioFunction', () => {
       expect(fail).toHaveBeenCalledTimes(1);
       expect(fail).toHaveBeenCalledWith(
         `You do not have permission to create files or directories in the path '${scratchDir}'.`,
+      );
+      expect(console.log).not.toHaveBeenCalled();
+
+      try {
+        await stat(path.join(scratchDir, name, 'package.json'));
+      } catch (e) {
+        expect(e.toString()).toMatch('no such file or directory');
+      }
+    });
+
+    it("doesn't scaffold if empty is true and a template is defined", async () => {
+      const fail = jest.spyOn(spinner, 'fail');
+      const name = 'test-function';
+      await createTwilioFunction({
+        name,
+        path: scratchDir,
+        empty: true,
+        template: 'blank',
+      });
+
+      expect.assertions(4);
+
+      expect(fail).toHaveBeenCalledTimes(1);
+      expect(fail).toHaveBeenCalledWith(
+        'You cannot scaffold an empty Functions project with a template. Please choose empty or a template.',
       );
       expect(console.log).not.toHaveBeenCalled();
 

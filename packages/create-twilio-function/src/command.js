@@ -29,6 +29,11 @@ const cliInfo = {
       describe: 'Initialize your new project with a template from github.com/twilio-labs/function-templates',
       type: 'string',
     },
+    empty: {
+      describe: 'Initialize your new project with empty functions and assets directories',
+      type: 'boolean',
+      default: false,
+    },
   },
 };
 

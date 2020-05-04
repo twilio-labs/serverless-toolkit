@@ -61,6 +61,16 @@ async function createTwilioFunction(config) {
     return;
   }
 
+  // Check to see if the request is valid for a template or an empty project
+  if (config.empty && config.template) {
+    await cleanUpAndExit(
+      projectDir,
+      spinner,
+      'You cannot scaffold an empty Functions project with a template. Please choose empty or a template.',
+    );
+    return;
+  }
+
   // Get account sid and auth token
   let accountDetails = await importCredentials(config);
   if (Object.keys(accountDetails).length === 0) {
@@ -88,6 +98,9 @@ async function createTwilioFunction(config) {
       await cleanUpAndExit(projectDir, spinner, `The template "${config.template}" doesn't exist`);
       return;
     }
+  } else if (config.empty) {
+    await createDirectory(projectDir, 'functions');
+    await createDirectory(projectDir, 'assets');
   } else {
     await createExampleFromTemplates(projectDir);
   }
