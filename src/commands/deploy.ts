@@ -2,7 +2,6 @@ import {
   DeployLocalProjectConfig,
   TwilioServerlessApiClient,
 } from '@twilio-labs/serverless-api';
-import { ClientApiError } from '@twilio-labs/serverless-api/dist/utils/error';
 import { stripIndent } from 'common-tags';
 import { Ora } from 'ora';
 import path from 'path';
@@ -59,8 +58,7 @@ function handleError(
     `;
     logger.error(messageBody, err.message);
   } else if (err.name === 'TwilioApiError') {
-    const apiError = err as ClientApiError;
-    logApiError(logger, apiError);
+    logApiError(logger, err);
   } else {
     logger.error(err.message);
   }
