@@ -4,7 +4,12 @@ import { checkConfigForCredentials } from '../checks/check-credentials';
 import checkForValidServiceSid from '../checks/check-service-sid';
 import { getConfigFromFlags, ListCliFlags, ListConfig } from '../config/list';
 import { printListResult } from '../printers/list';
-import { getDebugFunction, logger, setLogLevelByName } from '../utils/logger';
+import {
+  getDebugFunction,
+  logApiError,
+  logger,
+  setLogLevelByName,
+} from '../utils/logger';
 import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
@@ -17,7 +22,11 @@ function logError(msg: string) {
 
 function handleError(err: Error) {
   debug('%O', err);
-  logError(err.message);
+  if (err.name === 'TwilioApiError') {
+    logApiError(logger, err);
+  } else {
+    logError(err.message);
+  }
   process.exit(1);
 }
 

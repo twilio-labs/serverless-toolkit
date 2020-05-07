@@ -10,14 +10,11 @@ import { checkConfigForCredentials } from '../checks/check-credentials';
 import checkProjectStructure from '../checks/project-structure';
 import { DeployCliFlags, getConfigFromFlags } from '../config/deploy';
 import { printConfigInfo, printDeployedResources } from '../printers/deploy';
-import {
-  ApiErrorResponse,
-  HttpError,
-  saveLatestDeploymentData,
-} from '../serverless-api/utils';
+import { HttpError, saveLatestDeploymentData } from '../serverless-api/utils';
 import {
   getDebugFunction,
   getOraSpinner,
+  logApiError,
   logger,
   setLogLevelByName,
 } from '../utils/logger';
@@ -60,17 +57,8 @@ function handleError(
         > ${constructCommandName(fullCommand, 'deploy', ['--force'])} 
     `;
     logger.error(messageBody, err.message);
-  } else if (err.name === 'HTTPError') {
-    const responseBody = JSON.parse(
-      (err as HttpError).body
-    ) as ApiErrorResponse;
-    const messageBody = stripIndent`
-      ${responseBody.message}
-
-      More info: ${responseBody.more_info}
-    `;
-
-    logger.error(messageBody);
+  } else if (err.name === 'TwilioApiError') {
+    logApiError(logger, err);
   } else {
     logger.error(err.message);
   }

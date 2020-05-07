@@ -1,6 +1,8 @@
+import { ClientApiError } from '@twilio-labs/serverless-api/dist/utils/error';
 import debug from 'debug';
 import ora from 'ora';
 import { Writable } from 'stream';
+import terminalLink from 'terminal-link';
 import { errorMessage, warningMessage } from '../printers/utils';
 
 // an empty stream that immediately drops everything. Like /dev/null
@@ -98,6 +100,20 @@ export function getDebugFunction(namespace: string) {
 
 export function setLogLevelByName(name: LoggingLevelNames) {
   logger.config = { level: LoggingLevel[name] };
+}
+
+export function logApiError(logger: ILogger, err: ClientApiError) {
+  let messageBody = err.message;
+  const moreInfoLink = err.details?.more_info;
+  if (typeof moreInfoLink === 'string') {
+    const linkText = terminalLink(moreInfoLink, moreInfoLink, {
+      fallback: () => moreInfoLink,
+    });
+    messageBody += `\n\nMore info: ${linkText}`;
+  }
+  const title = `Failed API Request ${err.code}`;
+
+  logger.error(messageBody, title);
 }
 
 export function getOraSpinner(options?: string | ora.Options): ora.Ora {

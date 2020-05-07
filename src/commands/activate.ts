@@ -10,6 +10,7 @@ import { printActivateConfig, printActivateResult } from '../printers/activate';
 import {
   getDebugFunction,
   getOraSpinner,
+  logApiError,
   logger,
   setLogLevelByName,
 } from '../utils/logger';
@@ -25,7 +26,12 @@ function logError(msg: string) {
 function handleError(err: Error, spinner: Ora) {
   debug('%O', err);
   if (spinner) {
-    spinner.fail(err.message);
+    if (err.name === 'TwilioApiError') {
+      spinner.fail('Failed promoting build.');
+      logApiError(logger, err);
+    } else {
+      spinner.fail(err.message);
+    }
   }
   process.exit(1);
 }
