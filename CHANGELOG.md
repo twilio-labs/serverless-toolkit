@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/twilio-labs/twilio-run/compare/v2.4.0...v2.5.0) (2020-05-07)
+
+
+### Features
+
+* **logger:** expose errors better & upgrade serverless ([#132](https://github.com/twilio-labs/twilio-run/issues/132)) ([525f70c](https://github.com/twilio-labs/twilio-run/commit/525f70cd65ea87ff0da89575c0db57ba5848212e))
+* **start:** handle EADDRINUSE by asking for another port number ([#127](https://github.com/twilio-labs/twilio-run/issues/127)) ([f8e49b5](https://github.com/twilio-labs/twilio-run/commit/f8e49b5e126a1e34eae58e9b377b4e33ad42cd5c)), closes [#97](https://github.com/twilio-labs/twilio-run/issues/97)
+
+
+### Bug Fixes
+
+* **templates:** adds tests for getFiles and replaces Array.flat ([cd52b9a](https://github.com/twilio-labs/twilio-run/commit/cd52b9a4620069b1de2c888316cb2de119a5fb4a))
+* **templating:** catch errors in command, not before ([#130](https://github.com/twilio-labs/twilio-run/issues/130)) ([966a089](https://github.com/twilio-labs/twilio-run/commit/966a08900b04085609c90200cf1b67708425190e))
+
 ## [2.4.0](https://github.com/twilio-labs/twilio-run/compare/v2.3.0...v2.4.0) (2020-04-01)
 
 
