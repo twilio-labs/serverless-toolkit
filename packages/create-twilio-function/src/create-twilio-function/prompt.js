@@ -47,7 +47,7 @@ function promptForProjectName(err) {
       type: 'input',
       name: 'name',
       message: `Project names ${err.join(', ')}. Please choose a new project name.`,
-      validate: name => {
+      validate: (name) => {
         const { valid, errors } = validateProjectName(name);
         if (valid) {
           return valid;

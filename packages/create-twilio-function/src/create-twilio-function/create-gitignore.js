@@ -8,7 +8,7 @@ const open = promisify(fs.open);
 
 function createGitignore(dirPath) {
   const fullPath = path.join(dirPath, '.gitignore');
-  return open(fullPath, 'wx').then(fd => {
+  return open(fullPath, 'wx').then((fd) => {
     const stream = fs.createWriteStream(null, { fd });
     return writeGitignore({
       type: 'Node',
