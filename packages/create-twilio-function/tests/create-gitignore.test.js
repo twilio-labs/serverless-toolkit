@@ -24,9 +24,7 @@ afterAll(() => {
 
 beforeEach(async () => {
   await mkdir(scratchDir);
-  nock('https://raw.githubusercontent.com')
-    .get('/github/gitignore/master/Node.gitignore')
-    .reply(200, '*.log\n.env');
+  nock('https://raw.githubusercontent.com').get('/github/gitignore/master/Node.gitignore').reply(200, '*.log\n.env');
 });
 
 afterEach(async () => {

@@ -19,7 +19,7 @@ describe('validateProjectName', () => {
 
   it('should disallow names with special characters or underscores', () => {
     const names = ['project!', 'project@', '#hello', '__hey'];
-    names.forEach(name => {
+    names.forEach((name) => {
       const { valid, errors } = validateProjectName(name);
       expect(valid).toBe(false);
       expect(errors[0]).toEqual('must only include letters, numbers and hyphens');

@@ -41,10 +41,10 @@ function createPackageJSON(pathName, name) {
 }
 
 function copyRecursively(src, dest) {
-  return readdir(src).then(children => {
+  return readdir(src).then((children) => {
     return Promise.all(
-      children.map(child =>
-        stat(path.join(src, child)).then(stats => {
+      children.map((child) =>
+        stat(path.join(src, child)).then((stats) => {
           if (stats.isDirectory()) {
             return mkdir(path.join(dest, child)).then(() =>
               copyRecursively(path.join(src, child), path.join(dest, child)),
