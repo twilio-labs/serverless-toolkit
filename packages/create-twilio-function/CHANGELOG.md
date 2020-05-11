@@ -1,6 +1,13 @@
 # Changelog for `create-twilio-function`
 
-## Ongoing [☰](https://github.com/twilio-labs/create-twilio-function/compare/v2.1.0...master)
+## Ongoing [☰](https://github.com/twilio-labs/create-twilio-function/compare/v2.2.0...master)
+
+## 2.2.0 (May 11, 2020) [☰](https://github.com/twilio-labs/create-twilio-function/compare/v2.1.0...v2.2.0)
+
+- minor updates
+  - Loosen the Node version to 10
+  - Updates twilio-run to 2.5.0
+  - Adds `--empty` option to create empty template
 
 ## 2.1.0 (January 14, 2020) [☰](https://github.com/twilio-labs/create-twilio-function/compare/v2.0.0...v2.1.0)
 
