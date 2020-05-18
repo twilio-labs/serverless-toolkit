@@ -73,7 +73,7 @@
     "pkg-install": "^1.0.0",
     "terminal-link": "^1.3.0",
     "title": "^3.4.1",
-    "twilio": "^3.33.0",
+    "twilio": "^3.43.1",
     "type-fest": "^0.6.0",
     "window-size": "^1.1.1",
     "wrap-ansi": "^5.1.0",
@@ -103,7 +103,7 @@
     "commitizen": "^3.1.1",
     "cz-conventional-changelog": "^2.1.0",
     "husky": "^3.0.0",
-    "jest": "^24.8.0",
+    "jest": "^26.0.1",
     "jest-express": "^1.10.1",
     "lint-staged": "^8.2.1",
     "listr-silent-renderer": "^1.1.1",
@@ -113,8 +113,8 @@
     "rimraf": "^2.6.3",
     "standard-version": "^6.0.1",
     "supertest": "^3.1.0",
-    "ts-jest": "^24.0.2",
-    "typescript": "^3.7.4"
+    "ts-jest": "^26.0.0",
+    "typescript": "^3.9.2"
   },
   "files": [
     "bin/",
