@@ -5,18 +5,18 @@ jest.mock('pkg-install');
 jest.mock('../../src/utils/fs');
 jest.mock('../../src/utils/logger');
 
-import path from 'path';
-import { install } from 'pkg-install';
 import { fsHelpers } from '@twilio-labs/serverless-api';
 import got from 'got';
+import path, { join } from 'path';
+import { install } from 'pkg-install';
 import { mocked } from 'ts-jest/utils';
 import { writeFiles } from '../../src/templating/filesystem';
 import {
   downloadFile,
   fileExists,
+  mkdir,
   readFile,
   writeFile,
-  mkdir,
 } from '../../src/utils/fs';
 
 beforeEach(() => {
@@ -108,22 +108,22 @@ test('installation with basic functions', async () => {
   expect(downloadFile).toHaveBeenCalledTimes(3);
   expect(downloadFile).toHaveBeenCalledWith(
     'https://example.com/.env',
-    'testing/.env'
+    join('testing', '.env')
   );
   expect(downloadFile).toHaveBeenCalledWith(
     'https://example.com/hello.js',
-    'testing/functions/example/hello.js'
+    join('testing', 'functions', 'example', 'hello.js')
   );
   expect(downloadFile).toHaveBeenCalledWith(
     'https://example.com/README.md',
-    'testing/readmes/example/hello.md'
+    join('testing', 'readmes', 'example', 'hello.md')
   );
 
   expect(mkdir).toHaveBeenCalledTimes(2);
-  expect(mkdir).toHaveBeenCalledWith('testing/functions/example', {
+  expect(mkdir).toHaveBeenCalledWith(join('testing', 'functions', 'example'), {
     recursive: true,
   });
-  expect(mkdir).toHaveBeenCalledWith('testing/readmes/example', {
+  expect(mkdir).toHaveBeenCalledWith(join('testing', 'readmes', 'example'), {
     recursive: true,
   });
 });
@@ -165,22 +165,22 @@ test('installation with functions and assets', async () => {
   expect(downloadFile).toHaveBeenCalledTimes(3);
   expect(downloadFile).toHaveBeenCalledWith(
     'https://example.com/.env',
-    'testing/.env'
+    join('testing', '.env')
   );
   expect(downloadFile).toHaveBeenCalledWith(
     'https://example.com/hello.js',
-    'testing/functions/example/hello.js'
+    join('testing', 'functions', 'example', 'hello.js')
   );
   expect(downloadFile).toHaveBeenCalledWith(
     'https://example.com/hello.wav',
-    'testing/assets/example/hello.wav'
+    join('testing', 'assets', 'example', 'hello.wav')
   );
 
   expect(mkdir).toHaveBeenCalledTimes(2);
-  expect(mkdir).toHaveBeenCalledWith('testing/functions/example', {
+  expect(mkdir).toHaveBeenCalledWith(join('testing', 'functions', 'example'), {
     recursive: true,
   });
-  expect(mkdir).toHaveBeenCalledWith('testing/assets/example', {
+  expect(mkdir).toHaveBeenCalledWith(join('testing', 'assets', 'example'), {
     recursive: true,
   });
 });
@@ -228,23 +228,23 @@ test('installation with functions and assets and blank namespace', async () => {
   expect(downloadFile).toHaveBeenCalledTimes(4);
   expect(downloadFile).toHaveBeenCalledWith(
     'https://example.com/.env',
-    'testing/.env'
+    join('testing', '.env')
   );
   expect(downloadFile).toHaveBeenCalledWith(
     'https://example.com/hello.js',
-    'testing/functions/hello.js'
+    join('testing', 'functions', 'hello.js')
   );
   expect(downloadFile).toHaveBeenCalledWith(
     'https://example.com/hello.wav',
-    'testing/assets/hello.wav'
+    join('testing', 'assets', 'hello.wav')
   );
   expect(downloadFile).toHaveBeenCalledWith(
     'https://example.com/README.md',
-    'testing/readmes/hello.md'
+    join('testing', 'readmes', 'hello.md')
   );
 
   expect(mkdir).toHaveBeenCalledTimes(1);
-  expect(mkdir).toHaveBeenCalledWith('testing/readmes', {
+  expect(mkdir).toHaveBeenCalledWith(join('testing', 'readmes'), {
     recursive: true,
   });
 });
@@ -275,6 +275,7 @@ test('installation with an empty dependency file', async () => {
   // buffer but depending on inputs `got` can actually return an object.
   // @ts-ignore
   mocked(got).mockImplementation(() =>
+    //@ts-ignore
     Promise.resolve({ body: { dependencies: {} } })
   );
 
@@ -308,7 +309,7 @@ test('installation with an empty dependency file', async () => {
   expect(downloadFile).toHaveBeenCalledTimes(1);
   expect(downloadFile).toHaveBeenCalledWith(
     'https://example.com/.env',
-    'testing/.env'
+    join('testing', '.env')
   );
 
   expect(got).toHaveBeenCalledTimes(1);
@@ -324,6 +325,7 @@ test('installation with a dependency file', async () => {
   // buffer but depending on inputs `got` can actually return an object.
   // @ts-ignore
   mocked(got).mockImplementation(() =>
+    // @ts-ignore
     Promise.resolve({
       body: { dependencies: { foo: '^1.0.0', got: '^6.9.0' } },
     })
@@ -359,7 +361,7 @@ test('installation with a dependency file', async () => {
   expect(downloadFile).toHaveBeenCalledTimes(1);
   expect(downloadFile).toHaveBeenCalledWith(
     'https://example.com/.env',
-    'testing/.env'
+    join('testing', '.env')
   );
 
   expect(got).toHaveBeenCalledTimes(1);
@@ -382,6 +384,7 @@ test('installation with an existing dot-env file', async () => {
   // buffer but depending on inputs `got` can actually return an object.
   // @ts-ignore
   mocked(got).mockImplementation(() =>
+    // @ts-ignore
     Promise.resolve({ body: 'HELLO=WORLD\n' })
   );
 
@@ -410,7 +413,7 @@ test('installation with an existing dot-env file', async () => {
 
   expect(writeFile).toHaveBeenCalledTimes(1);
   expect(writeFile).toHaveBeenCalledWith(
-    'testing/.env',
+    join('testing', '.env'),
     '# Comment\n' +
     'FOO=BAR\n' +
     '\n\n' +
@@ -429,7 +432,7 @@ test('installation with overlapping function files throws errors before writing'
   );
 
   mocked(fileExists).mockImplementation(p =>
-    Promise.resolve(p == 'functions/example/hello.js')
+    Promise.resolve(p == join('functions', 'example', 'hello.js'))
   );
 
   await expect(
@@ -468,7 +471,7 @@ test('installation with overlapping asset files throws errors before writing', a
   );
 
   mocked(fileExists).mockImplementation(p =>
-    Promise.resolve(p == 'assets/example/hello.wav')
+    Promise.resolve(p == join('assets', 'example', 'hello.wav'))
   );
 
   await expect(
@@ -493,7 +496,7 @@ test('installation with overlapping asset files throws errors before writing', a
           directory: '',
         },
       ],
-      './',
+      join('.', path.sep),
       'example',
       'hello'
     )
@@ -540,7 +543,7 @@ test('installation with functions and assets in nested directories', async () =>
         directory: '',
       },
     ],
-    './testing/',
+    join('.', 'testing'),
     'example',
     'hello'
   );
@@ -548,29 +551,29 @@ test('installation with functions and assets in nested directories', async () =>
   expect(downloadFile).toHaveBeenCalledTimes(4);
   expect(downloadFile).toHaveBeenCalledWith(
     'https://example.com/.env',
-    'testing/.env'
+    join('testing', '.env')
   );
   expect(downloadFile).toHaveBeenCalledWith(
     'https://example.com/hello.js',
-    'testing/functions/example/admin/hello.js'
+    join('testing', 'functions', 'example', 'admin', 'hello.js')
   );
   expect(downloadFile).toHaveBeenCalledWith(
     'https://example.com/README.md',
-    'testing/readmes/example/hello.md'
+    join('testing', 'readmes', 'example', 'hello.md')
   );
   expect(downloadFile).toHaveBeenCalledWith(
     'https://example.com/woohoo.jpg',
-    'testing/assets/example/success/woohoo.jpg'
+    join('testing', 'assets', 'example', 'success', 'woohoo.jpg')
   );
 
   expect(mkdir).toHaveBeenCalledTimes(3);
-  expect(mkdir).toHaveBeenCalledWith('testing/functions/example', {
+  expect(mkdir).toHaveBeenCalledWith(join('testing', 'functions', 'example'), {
     recursive: true,
   });
-  expect(mkdir).toHaveBeenCalledWith('testing/readmes/example', {
+  expect(mkdir).toHaveBeenCalledWith(join('testing', 'readmes', 'example'), {
     recursive: true,
   });
-  expect(mkdir).toHaveBeenCalledWith('testing/assets/example', {
+  expect(mkdir).toHaveBeenCalledWith(join('testing', 'assets', 'example'), {
     recursive: true,
   });
 });
