@@ -1,8 +1,11 @@
 /** @module @twilio-labs/serverless-api */
 
 import { Got } from 'got';
+import { ClientConfig } from './client';
 
-export type GotClient = Got;
+export type GotClient = Got & {
+  twilioClientConfig: ClientConfig;
+};
 
 export type EnvironmentVariables = {
   [key: string]: string | undefined;

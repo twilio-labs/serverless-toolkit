@@ -2,7 +2,6 @@
 
 import debug from 'debug';
 import events from 'events';
-import got from './got';
 import { getOrCreateAssetResources, uploadAsset } from './api/assets';
 import {
   activateBuild,
@@ -22,15 +21,19 @@ import {
 } from './api/environments';
 import {
   getOrCreateFunctionResources,
-  uploadFunction,
   isFunctionSid,
   listFunctionResources,
+  uploadFunction,
 } from './api/functions';
+import { listOnePageLogResources } from './api/logs';
 import { createService, findServiceSid, listServices } from './api/services';
+import { getApiUrl } from './api/utils/api-client';
 import {
   listVariablesForEnvironment,
   setEnvironmentVariables,
 } from './api/variables';
+import got from './got';
+import { LogsStream } from './streams/logs';
 import {
   ActivateConfig,
   ActivateResult,
@@ -46,23 +49,22 @@ import {
   LogsConfig,
 } from './types';
 import { DeployStatus } from './types/consts';
-import { getListOfFunctionsAndAssets, SearchConfig } from './utils/fs';
-import { LogsStream } from './streams/logs';
-import { listOnePageLogResources } from './api/logs';
 import { ClientApiError, convertApiErrorsAndThrow } from './utils/error';
+import { getListOfFunctionsAndAssets, SearchConfig } from './utils/fs';
 
 const log = debug('twilio-serverless-api:client');
 
 export function createGotClient(config: ClientConfig): GotClient {
   const client = got.extend({
-    prefixUrl: 'https://serverless.twilio.com/v1',
+    prefixUrl: getApiUrl(config),
     responseType: 'json',
     username: config.accountSid,
     password: config.authToken,
     headers: {
       'User-Agent': 'twilio-serverless-api',
     },
-  });
+  }) as GotClient;
+  client.twilioClientConfig = config;
   return client;
 }
 
