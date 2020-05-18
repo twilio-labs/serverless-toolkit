@@ -4,7 +4,7 @@ import { Arguments } from 'yargs';
 import { cliInfo } from '../commands/deploy';
 import {
   ExternalCliOptions,
-  SharedFlagsWithCrdentials,
+  SharedFlagsWithCredentials,
 } from '../commands/shared';
 import { deprecateFunctionsEnv } from '../commands/utils';
 import { getFunctionServiceSid } from '../serverless-api/utils';
@@ -18,7 +18,7 @@ import {
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 
 export type DeployCliFlags = Arguments<
-  SharedFlagsWithCrdentials & {
+  SharedFlagsWithCredentials & {
     serviceSid?: string;
     functionsEnv?: string;
     environment: string;
@@ -105,6 +105,9 @@ export async function getConfigFromFlags(
     );
   }
 
+  const region = flags.region;
+  const edge = flags.edge;
+
   return {
     cwd,
     envPath,
@@ -121,5 +124,7 @@ export async function getConfigFromFlags(
     assetsFolderName: flags.assetsFolder,
     noAssets: !flags.assets,
     noFunctions: !flags.functions,
+    region,
+    edge,
   };
 }

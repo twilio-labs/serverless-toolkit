@@ -10,10 +10,12 @@ export type SharedFlags = BaseFlags & {
   cwd?: string;
 };
 
-export type SharedFlagsWithCrdentials = SharedFlags & {
+export type SharedFlagsWithCredentials = SharedFlags & {
   accountSid?: string;
   authToken?: string;
   env?: string;
+  region?: string;
+  edge?: string;
 };
 
 export type ExternalCliOptions = {
@@ -33,6 +35,30 @@ export const baseCliOptions: { [key: string]: Options } = {
     alias: 'l',
     describe: 'Level of logging messages.',
     choices: Object.keys(LoggingLevel),
+  },
+};
+
+export const sharedApiRelatedCliOptions: { [key: string]: Options } = {
+  region: {
+    type: 'string',
+    hidden: true,
+    describe: 'Twilio API Region',
+  },
+  edge: {
+    type: 'string',
+    hidden: true,
+    describe: 'Twilio API Region',
+  },
+  'account-sid': {
+    type: 'string',
+    alias: 'u',
+    describe:
+      'A specific account SID to be used for deployment. Uses fields in .env otherwise',
+  },
+  'auth-token': {
+    type: 'string',
+    describe:
+      'Use a specific auth token for deployment. Uses fields from .env otherwise',
   },
 };
 

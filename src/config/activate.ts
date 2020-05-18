@@ -5,7 +5,7 @@ import checkForValidServiceSid from '../checks/check-service-sid';
 import { cliInfo } from '../commands/activate';
 import {
   ExternalCliOptions,
-  SharedFlagsWithCrdentials,
+  SharedFlagsWithCredentials,
 } from '../commands/shared';
 import { getFullCommand } from '../commands/utils';
 import { readSpecializedConfig } from './global';
@@ -19,7 +19,7 @@ type ActivateConfig = ApiActivateConfig & {
 };
 
 export type ActivateCliFlags = Arguments<
-  SharedFlagsWithCrdentials & {
+  SharedFlagsWithCredentials & {
     cwd?: string;
     serviceSid?: string;
     buildSid?: string;
@@ -64,6 +64,8 @@ export async function getConfigFromFlags(
 
   const command = getFullCommand(flags);
   const serviceSid = checkForValidServiceSid(command, flags.serviceSid);
+  const region = flags.region;
+  const edge = flags.edge;
 
   return {
     cwd,
@@ -75,5 +77,7 @@ export async function getConfigFromFlags(
     buildSid: flags.buildSid,
     targetEnvironment: flags.environment,
     sourceEnvironment: flags.sourceEnvironment,
+    region,
+    edge,
   };
 }

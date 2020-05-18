@@ -1,6 +1,6 @@
 import {
   ExternalCliOptions,
-  SharedFlagsWithCrdentials,
+  SharedFlagsWithCredentials,
 } from '../../commands/shared';
 import { getDebugFunction } from '../../utils/logger';
 import { readLocalEnvFile } from './env';
@@ -24,7 +24,7 @@ export type Credentials = {
  * @param externalCliOptions Any external information for example passed by the Twilio CLI
  */
 export async function getCredentialsFromFlags<
-  T extends SharedFlagsWithCrdentials
+  T extends SharedFlagsWithCredentials
 >(flags: T, externalCliOptions?: ExternalCliOptions): Promise<Credentials> {
   // default Twilio CLI credentials (4) or empty string (5)
   let accountSid =

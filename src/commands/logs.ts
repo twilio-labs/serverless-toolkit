@@ -13,7 +13,11 @@ import {
   logger,
   setLogLevelByName,
 } from '../utils/logger';
-import { ExternalCliOptions, sharedCliOptions } from './shared';
+import {
+  ExternalCliOptions,
+  sharedApiRelatedCliOptions,
+  sharedCliOptions,
+} from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
 
@@ -78,6 +82,7 @@ export async function handler(
 export const cliInfo: CliInfo = {
   options: {
     ...sharedCliOptions,
+    ...sharedApiRelatedCliOptions,
     'service-sid': {
       type: 'string',
       describe: 'Specific Serverless Service SID to retrieve logs for',
@@ -101,17 +106,6 @@ export const cliInfo: CliInfo = {
       default: '',
       describe: 'Output the log in a different format',
       choices: ['', 'json'],
-    },
-    'account-sid': {
-      type: 'string',
-      alias: 'u',
-      describe:
-        'A specific account SID to be used for deployment. Uses fields in .env otherwise',
-    },
-    'auth-token': {
-      type: 'string',
-      describe:
-        'Use a specific auth token for deployment. Uses fields from .env otherwise',
     },
     env: {
       type: 'string',
