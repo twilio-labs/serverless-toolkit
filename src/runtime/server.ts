@@ -48,9 +48,9 @@ export async function createServer(
   config: StartCliConfig
 ): Promise<Express> {
   config = {
-    url: `http://localhost:${port}`,
-    baseDir: process.cwd(),
     ...config,
+    url: config.url || `http://localhost:${port}`,
+    baseDir: config.baseDir || process.cwd(),
   };
 
   debug('Starting server with config: %p', config);
