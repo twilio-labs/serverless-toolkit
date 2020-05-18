@@ -61,10 +61,9 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "@types/form-data": "^2.5.0",
     "@types/mime-types": "^2.1.0",
-    "@types/recursive-readdir": "^2.2.0",
     "@types/node": "^13.13.4",
+    "@types/recursive-readdir": "^2.2.0",
     "debug": "^4.1.1",
     "fast-redact": "^1.5.0",
     "file-type": "^14.2.0",
