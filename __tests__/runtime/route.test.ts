@@ -27,6 +27,10 @@ const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
 const mockResponse = (new MockResponse() as unknown) as ExpressResponse;
 mockResponse.type = jest.fn(() => mockResponse);
 
+function asExpressRequest(req: { query?: {}; body?: {} }): ExpressRequest {
+  return (req as unknown) as ExpressRequest;
+}
+
 describe('handleError function', () => {
   test('returns string error', () => {
     const mockRequest = (new MockRequest() as unknown) as ExpressRequest;
@@ -101,57 +105,67 @@ describe('handleError function', () => {
 
 describe('constructEvent function', () => {
   test('merges query and body', () => {
-    const event = constructEvent({
-      body: {
-        Body: 'Hello',
-      },
-      query: {
-        index: 5,
-      },
-    } as ExpressRequest);
+    const event = constructEvent(
+      asExpressRequest({
+        body: {
+          Body: 'Hello',
+        },
+        query: {
+          index: 5,
+        },
+      })
+    );
     expect(event).toEqual({ Body: 'Hello', index: 5 });
   });
 
   test('overrides query with body', () => {
-    const event = constructEvent({
-      body: {
-        Body: 'Bye',
-      },
-      query: {
-        Body: 'Hello',
-        From: '+123456789',
-      },
-    } as ExpressRequest);
+    const event = constructEvent(
+      asExpressRequest({
+        body: {
+          Body: 'Bye',
+        },
+        query: {
+          Body: 'Hello',
+          From: '+123456789',
+        },
+      })
+    );
     expect(event).toEqual({ Body: 'Bye', From: '+123456789' });
   });
 
   test('handles empty body', () => {
-    const event = constructEvent({
-      body: {},
-      query: {
-        Body: 'Hello',
-        From: '+123456789',
-      },
-    } as ExpressRequest);
+    const event = constructEvent(
+      asExpressRequest({
+        body: {},
+        query: {
+          Body: 'Hello',
+          From: '+123456789',
+        },
+      })
+    );
     expect(event).toEqual({ Body: 'Hello', From: '+123456789' });
   });
 
   test('handles empty query', () => {
-    const event = constructEvent({
-      body: {
-        Body: 'Hello',
-        From: '+123456789',
-      },
-      query: {},
-    } as ExpressRequest);
+    const event = constructEvent(
+      asExpressRequest({
+        body: {
+          Body: 'Hello',
+          From: '+123456789',
+        },
+        query: {},
+      })
+    );
     expect(event).toEqual({ Body: 'Hello', From: '+123456789' });
   });
 
   test('handles both empty', () => {
-    const event = constructEvent({
-      body: {},
-      query: {},
-    } as ExpressRequest);
+    const event = constructEvent(
+      asExpressRequest({
+        body: {},
+        query: {},
+      })
+    );
     expect(event).toEqual({});
   });
 });
