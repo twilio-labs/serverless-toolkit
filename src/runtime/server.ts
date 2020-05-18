@@ -1,5 +1,6 @@
 import { ServerlessFunctionSignature } from '@twilio-labs/serverless-runtime-types/types';
 import bodyParser from 'body-parser';
+import chokidar from 'chokidar';
 import express, {
   Express,
   NextFunction,
@@ -7,12 +8,11 @@ import express, {
   Response as ExpressResponse,
 } from 'express';
 import userAgentMiddleware from 'express-useragent';
-import nocache from 'nocache';
-import { printRouteInfo } from '../printers/start';
-import chokidar from 'chokidar';
 import debounce from 'lodash.debounce';
+import nocache from 'nocache';
 import path from 'path';
 import { StartCliConfig } from '../config/start';
+import { printRouteInfo } from '../printers/start';
 import { wrapErrorInHtml } from '../utils/error-html';
 import { getDebugFunction } from '../utils/logger';
 import { createLogger } from './internal/request-logger';
@@ -47,9 +47,9 @@ export async function createServer(
   config: StartCliConfig
 ): Promise<Express> {
   config = {
-    url: `http://localhost:${port}`,
-    baseDir: process.cwd(),
     ...config,
+    url: config.url || `http://localhost:${port}`,
+    baseDir: config.baseDir || process.cwd(),
   };
 
   debug('Starting server with config: %p', config);
@@ -95,7 +95,7 @@ export async function createServer(
         path.join(config.baseDir, '/(assets|static)/**/*'),
       ],
       {
-        ignoreInitial: true
+        ignoreInitial: true,
       }
     );
 
