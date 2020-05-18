@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/twilio-labs/serverless-api/compare/v1.1.0...v2.1.0) (2020-05-18)
+
+
+### Features
+
+* add region support ([#39](https://github.com/twilio-labs/serverless-api/issues/39)) ([afe4149](https://github.com/twilio-labs/serverless-api/commit/afe414915932074f64148d94a778d6be8ea22b16))
+* unify error interface & upgrade got ([#29](https://github.com/twilio-labs/serverless-api/issues/29)) ([a94e86e](https://github.com/twilio-labs/serverless-api/commit/a94e86ec3f0aabaea9a5bb8d4572ef83c397b504))
+
+
+### Bug Fixes
+
+* **builds:** support  more than one fn/asset ([0461068](https://github.com/twilio-labs/serverless-api/commit/046106827592b33e66a693b5774402255625a749))
+* **content-type:** change content type detection to take hint ([#34](https://github.com/twilio-labs/serverless-api/issues/34)) ([3d96bc0](https://github.com/twilio-labs/serverless-api/commit/3d96bc0520a5aa00d5ee18e2fcc865b4a71a2cd7))
+* **functions:** support private functions ([#30](https://github.com/twilio-labs/serverless-api/issues/30)) ([b58eac0](https://github.com/twilio-labs/serverless-api/commit/b58eac0259419a447f8cb9054428f2fe469165f0))
+* **paths:** add path verification ([#31](https://github.com/twilio-labs/serverless-api/issues/31)) ([ea1a660](https://github.com/twilio-labs/serverless-api/commit/ea1a6603f1e20a8245ed79a4890fe1110cbce41e))
+
+
+### Build System
+
+* **npm:** remove shrinkwrap ([#36](https://github.com/twilio-labs/serverless-api/issues/36)) ([2c6fc78](https://github.com/twilio-labs/serverless-api/commit/2c6fc78895f34d20012ad3a82e09d0d3de98064e))
+
 ### [2.0.1](https://github.com/twilio-labs/serverless-api/compare/v1.1.0...v2.0.1) (2020-04-28)
 
 
