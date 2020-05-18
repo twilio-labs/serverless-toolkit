@@ -1,4 +1,5 @@
 import { ServerlessResourceConfig } from '@twilio-labs/serverless-api';
+import { SearchConfig } from '@twilio-labs/serverless-api/dist/utils';
 import boxen from 'boxen';
 import chalk from 'chalk';
 import logSymbols from 'log-symbols';
@@ -146,7 +147,19 @@ function printPrettyRouteInfo(
 }
 
 export async function printRouteInfo(config: StartCliConfig): Promise<void> {
-  const { functions, assets } = await getFunctionsAndAssets(config.baseDir);
+  const searchConfig: SearchConfig = {
+    functionsFolderNames: config.functionsFolderName
+      ? [config.functionsFolderName]
+      : undefined,
+    assetsFolderNames: config.assetsFolderName
+      ? [config.assetsFolderName]
+      : undefined,
+  };
+
+  const { functions, assets } = await getFunctionsAndAssets(
+    config.baseDir,
+    searchConfig
+  );
 
   let output;
   if (shouldPrettyPrint) {

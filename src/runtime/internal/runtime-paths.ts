@@ -2,6 +2,7 @@ import {
   fsHelpers,
   ServerlessResourceConfigWithFilePath,
 } from '@twilio-labs/serverless-api';
+import { SearchConfig } from '@twilio-labs/serverless-api/dist/utils';
 
 export type RouteInfo = {
   functions: ServerlessResourceConfigWithFilePath[];
@@ -9,10 +10,12 @@ export type RouteInfo = {
 };
 
 export async function getFunctionsAndAssets(
-  baseDir: string
+  baseDir: string,
+  config?: SearchConfig
 ): Promise<RouteInfo> {
   let { functions, assets } = await fsHelpers.getListOfFunctionsAndAssets(
-    baseDir
+    baseDir,
+    config
   );
   return { functions, assets };
 }
