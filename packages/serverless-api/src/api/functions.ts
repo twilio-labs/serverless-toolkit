@@ -12,8 +12,9 @@ import {
   VersionResource,
 } from '../types';
 import { getContentType } from '../utils/content-type';
-import { getPaginatedResource } from './utils/pagination';
 import { ClientApiError } from '../utils/error';
+import { getApiUrl } from './utils/api-client';
+import { getPaginatedResource } from './utils/pagination';
 
 const log = debug('twilio-serverless-api:functions');
 
@@ -148,7 +149,7 @@ async function createFunctionVersion(
       `Services/${serviceSid}/Functions/${fn.sid}/Versions`,
       {
         responseType: 'text',
-        prefixUrl: 'https://serverless-upload.twilio.com/v1',
+        prefixUrl: getApiUrl(client.twilioClientConfig, 'serverless-upload'),
         body: form,
       }
     );

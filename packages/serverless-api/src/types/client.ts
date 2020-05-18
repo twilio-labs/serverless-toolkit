@@ -12,4 +12,12 @@ export type ClientConfig = {
    * Twilio Auth Token or API Secret
    */
   authToken: string;
+  /**
+   * Twilio Region
+   */
+  region?: string;
+  /**
+   * Twilio Edge
+   */
+  edge?: string;
 };
