@@ -66,7 +66,7 @@ Some functions you might want to check out is:
 
 "Activates" a build by taking a specified build SID or a "source environment" and activating the same build in the specified environment.
 
-[More in the Docs](https://serverless-api.twilio-labs.com/classes/_twilio_labs_serverless_api.twilioserverlessapiclient.html#activatebuild)
+[More in the Docs](https://serverless-api.twilio-labs.com/classes/_client_.twilioserverlessapiclient.html#activatebuild)
 
 ### `client.deployLocalProject(deployConfig: DeployLocalProjectConfig): Promise<DeployResult>`
 
@@ -76,7 +76,7 @@ Functions have to be placed in a functions or src directory to be found. Assets 
 
 Nested folder structures will result in nested routes.
 
-[More in the Docs](https://serverless-api.twilio-labs.com/classes/_twilio_labs_serverless_api.twilioserverlessapiclient.html#deploylocalproject)
+[More in the Docs](https://serverless-api.twilio-labs.com/classes/_client_.twilioserverlessapiclient.html#deploylocalproject)
 
 ### `client.deployProject(deployConfig: DeployProjectConfig): Promise<DeployResult>`
 
@@ -111,19 +111,19 @@ const result = await client.deployProject({
 });
 ```
 
-[More in the Docs](https://serverless-api.twilio-labs.com/classes/_twilio_labs_serverless_api.twilioserverlessapiclient.html#deployproject)
+[More in the Docs](https://serverless-api.twilio-labs.com/classes/_client_.twilioserverlessapiclient.html#deployproject)
 
 ### `client.getClient(): GotClient`
 
 Returns the internally used GotClient instance used to make API requests
 
-[More in the Docs](https://serverless-api.twilio-labs.com/classes/_twilio_labs_serverless_api.twilioserverlessapiclient.html#getclient)
+[More in the Docs](https://serverless-api.twilio-labs.com/classes/_client_.twilioserverlessapiclient.html#getclient)
 
 ### `client.list(listConfig: ListConfig): Promise<ListResult>`
 
 Returns an object containing lists of services, environments, variables functions or assets, depending on which have beeen requested in listConfig
 
-[More in the Docs](https://serverless-api.twilio-labs.com/classes/_twilio_labs_serverless_api.twilioserverlessapiclient.html#list)
+[More in the Docs](https://serverless-api.twilio-labs.com/classes/_client_.twilioserverlessapiclient.html#list)
 
 ### `api` and `fsHelpers`
 
