@@ -1,7 +1,8 @@
 /** @module @twilio-labs/serverless-api/dist/api */
 
 import debug from 'debug';
-import { GotClient, LogApiResource, LogList, Sid, LogFilters } from '../types';
+import { LogApiResource, LogList, Sid, LogFilters } from '../types';
+import { TwilioServerlessApiClient } from '../client';
 import { getPaginatedResource } from './utils/pagination';
 import { ClientApiError } from '../utils/error';
 
@@ -12,13 +13,13 @@ const log = debug('twilio-serverless-api:logs');
  *
  * @param {Sid} environmentSid environment in which to get logs
  * @param {Sid} serviceSid service to look for logs
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<LogApiResource[]>}
  */
 export async function listLogResources(
   environmentSid: Sid,
   serviceSid: Sid,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ) {
   try {
     return getPaginatedResource<LogList, LogApiResource>(
@@ -36,13 +37,13 @@ export async function listLogResources(
  *
  * @param {Sid} environmentSid environment in which to get logs
  * @param {Sid} serviceSid service to look for logs
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<LogApiResource[]>}
  */
 export async function listOnePageLogResources(
   environmentSid: Sid,
   serviceSid: Sid,
-  client: GotClient,
+  client: TwilioServerlessApiClient,
   filters: LogFilters
 ): Promise<LogApiResource[]> {
   const pageSize = filters.pageSize || 50;
@@ -65,7 +66,7 @@ export async function listOnePageLogResources(
     if (typeof pageToken !== 'undefined') {
       url += `&PageToken=${pageToken}`;
     }
-    const resp = await client.get(url);
+    const resp = await client.request('get', url);
     const content = (resp.body as unknown) as LogList;
     return content.logs as LogApiResource[];
   } catch (err) {
@@ -80,17 +81,18 @@ export async function listOnePageLogResources(
  * @param {Sid} logSid SID of log to retrieve
  * @param {Sid} environmentSid environment in which to get logs
  * @param {Sid} serviceSid service to look for logs
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<LogApiResource>}
  */
 export async function getLog(
   logSid: Sid,
   environmentSid: Sid,
   serviceSid: Sid,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ) {
   try {
-    const resp = await client.get(
+    const resp = await client.request(
+      'get',
       `Services/${serviceSid}/Environments/${environmentSid}/Logs/${logSid}`
     );
     return (resp.body as unknown) as LogApiResource;

@@ -2,13 +2,8 @@
 
 import debug from 'debug';
 import querystring, { ParsedUrlQueryInput } from 'querystring';
-import {
-  BuildConfig,
-  BuildList,
-  BuildResource,
-  BuildStatus,
-  GotClient,
-} from '../types';
+import { BuildConfig, BuildList, BuildResource, BuildStatus } from '../types';
+import { TwilioServerlessApiClient } from '../client';
 import { DeployStatus } from '../types/consts';
 import { ClientApiError } from '../utils/error';
 import { sleep } from '../utils/sleep';
@@ -24,15 +19,18 @@ const log = debug('twilio-serverless-api:builds');
  * @export
  * @param {string} buildSid SID of build to retrieve
  * @param {string} serviceSid service to retrieve build from
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<BuildResource>}
  */
 export async function getBuild(
   buildSid: string,
   serviceSid: string,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ): Promise<BuildResource> {
-  const resp = await client.get(`Services/${serviceSid}/Builds/${buildSid}`);
+  const resp = await client.request(
+    'get',
+    `Services/${serviceSid}/Builds/${buildSid}`
+  );
   return (resp.body as unknown) as BuildResource;
 }
 
@@ -41,13 +39,13 @@ export async function getBuild(
  *
  * @param {string} buildSid the SID of the build
  * @param {string} serviceSid the SID of the service the build belongs to
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<BuildStatus>}
  */
 async function getBuildStatus(
   buildSid: string,
   serviceSid: string,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ): Promise<BuildStatus> {
   try {
     const resp = await getBuild(buildSid, serviceSid, client);
@@ -63,12 +61,12 @@ async function getBuildStatus(
  *
  * @export
  * @param {string} serviceSid the SID of the service
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<BuildResource[]>}
  */
 export async function listBuilds(
   serviceSid: string,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ): Promise<BuildResource[]> {
   return getPaginatedResource<BuildList, BuildResource>(
     client,
@@ -82,13 +80,13 @@ export async function listBuilds(
  * @export
  * @param {BuildConfig} config build-related information (functions, assets, dependencies)
  * @param {string} serviceSid the service to create the build for
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<BuildResource>}
  */
 export async function triggerBuild(
   config: BuildConfig,
   serviceSid: string,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ): Promise<BuildResource> {
   const { functionVersions, dependencies, assetVersions } = config;
   try {
@@ -107,7 +105,7 @@ export async function triggerBuild(
       body.AssetVersions = assetVersions;
     }
 
-    const resp = await client.post(`Services/${serviceSid}/Builds`, {
+    const resp = await client.request('post', `Services/${serviceSid}/Builds`, {
       responseType: 'json',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -127,7 +125,7 @@ export async function triggerBuild(
  * @export
  * @param {string} buildSid the build to wait for
  * @param {string} serviceSid the service of the build
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @param {events.EventEmitter} eventEmitter optional event emitter to communicate current build status
  * @param {number} timeout optional timeout. default: 5 minutes
  * @returns {Promise<void>}
@@ -135,7 +133,7 @@ export async function triggerBuild(
 export function waitForSuccessfulBuild(
   buildSid: string,
   serviceSid: string,
-  client: GotClient,
+  client: TwilioServerlessApiClient,
   eventEmitter: events.EventEmitter,
   timeout: number = 5 * 60 * 1000
 ): Promise<void> {
@@ -145,12 +143,10 @@ export function waitForSuccessfulBuild(
 
     while (!isBuilt) {
       if (Date.now() - startTime > timeout) {
-        if (eventEmitter) {
-          eventEmitter.emit('status-update', {
-            status: DeployStatus.TIMED_OUT,
-            message: 'Deployment took too long',
-          });
-        }
+        eventEmitter.emit('status-update', {
+          status: DeployStatus.TIMED_OUT,
+          message: 'Deployment took too long',
+        });
         reject(new Error('Timeout'));
       }
       const status = await getBuildStatus(buildSid, serviceSid, client);
@@ -165,12 +161,10 @@ export function waitForSuccessfulBuild(
         return;
       }
 
-      if (eventEmitter) {
-        eventEmitter.emit('status-update', {
-          status: DeployStatus.BUILDING,
-          message: `Waiting for deployment. Current status: ${status}`,
-        });
-      }
+      eventEmitter.emit('status-update', {
+        status: DeployStatus.BUILDING,
+        message: `Waiting for deployment. Current status: ${status}`,
+      });
       await sleep(1000);
     }
     resolve();
@@ -184,17 +178,18 @@ export function waitForSuccessfulBuild(
  * @param {string} buildSid the build to be activated
  * @param {string} environmentSid the target environment for the build to be deployed to
  * @param {string} serviceSid the service of the project
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<any>}
  */
 export async function activateBuild(
   buildSid: string,
   environmentSid: string,
   serviceSid: string,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ): Promise<any> {
   try {
-    const resp = await client.post(
+    const resp = await client.request(
+      'post',
       `Services/${serviceSid}/Environments/${environmentSid}/Deployments`,
       {
         form: {

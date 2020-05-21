@@ -20,4 +20,12 @@ export type ClientConfig = {
    * Twilio Edge
    */
   edge?: string;
+  /**
+   * Limit concurrency
+   */
+  concurrency?: number;
+  /**
+   * Number of retry attempts the client will make on a failure
+   */
+  retryLimit?: number;
 };
