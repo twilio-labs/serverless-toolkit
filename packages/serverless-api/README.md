@@ -32,7 +32,7 @@ npm install @twilio-labs/serverless-api
 If you want to deploy a local project you can do this using:
 
 ```js
-const TwilioServerlessApiClient = require('@twilio-labs/serverless-api');
+const { TwilioServerlessApiClient } = require('@twilio-labs/serverless-api');
 
 const client = new TwilioServerlessApiClient({
   accountSid: '...',
