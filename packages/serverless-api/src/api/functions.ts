@@ -6,11 +6,12 @@ import {
   FunctionApiResource,
   FunctionList,
   FunctionResource,
-  GotClient,
   ServerlessResourceConfig,
   Sid,
   VersionResource,
+  ClientConfig,
 } from '../types';
+import { TwilioServerlessApiClient } from '../client';
 import { getContentType } from '../utils/content-type';
 import { ClientApiError } from '../utils/error';
 import { getApiUrl } from './utils/api-client';
@@ -23,20 +24,24 @@ const log = debug('twilio-serverless-api:functions');
  *
  * @param {string} name the friendly name of the function to create
  * @param {string} serviceSid the service the function should belong to
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<FunctionApiResource>}
  */
 export async function createFunctionResource(
   name: string,
   serviceSid: string,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ): Promise<FunctionApiResource> {
   try {
-    const resp = await client.post(`Services/${serviceSid}/Functions`, {
-      form: {
-        FriendlyName: name,
-      },
-    });
+    const resp = await client.request(
+      'post',
+      `Services/${serviceSid}/Functions`,
+      {
+        form: {
+          FriendlyName: name,
+        },
+      }
+    );
     return (resp.body as unknown) as FunctionApiResource;
   } catch (err) {
     log('%O', new ClientApiError(err));
@@ -49,12 +54,12 @@ export async function createFunctionResource(
  *
  * @export
  * @param {string} serviceSid the service to look up
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns
  */
 export async function listFunctionResources(
   serviceSid: string,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ) {
   try {
     return getPaginatedResource<FunctionList, FunctionApiResource>(
@@ -73,13 +78,13 @@ export async function listFunctionResources(
  * @export
  * @param {FileInfo[]} functions list of functions to get or create
  * @param {string} serviceSid service the functions belong to
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<FunctionResource[]>}
  */
 export async function getOrCreateFunctionResources(
   functions: ServerlessResourceConfig[],
   serviceSid: string,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ): Promise<FunctionResource[]> {
   const output: FunctionResource[] = [];
   const existingFunctions = await listFunctionResources(serviceSid, client);
@@ -121,13 +126,14 @@ export async function getOrCreateFunctionResources(
  *
  * @param {FunctionResource} fn the function the version should be created for
  * @param {string} serviceSid the service related to the function
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<VersionResource>}
  */
 async function createFunctionVersion(
   fn: FunctionResource,
   serviceSid: string,
-  client: GotClient
+  client: TwilioServerlessApiClient,
+  clientConfig: ClientConfig
 ): Promise<VersionResource> {
   try {
     const contentType =
@@ -145,11 +151,12 @@ async function createFunctionVersion(
     form.append('Visibility', fn.access);
     form.append('Content', fn.content, contentOpts);
 
-    const resp = await client.post(
+    const resp = await client.request(
+      'post',
       `Services/${serviceSid}/Functions/${fn.sid}/Versions`,
       {
         responseType: 'text',
-        prefixUrl: getApiUrl(client.twilioClientConfig, 'serverless-upload'),
+        prefixUrl: getApiUrl(clientConfig, 'serverless-upload'),
         body: form,
       }
     );
@@ -167,15 +174,21 @@ async function createFunctionVersion(
  * @export
  * @param {FunctionResource} fn function to be uploaded
  * @param {string} serviceSid service that the function is connected to
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<Sid>}
  */
 export async function uploadFunction(
   fn: FunctionResource,
   serviceSid: string,
-  client: GotClient
+  client: TwilioServerlessApiClient,
+  clientConfig: ClientConfig
 ): Promise<Sid> {
-  const version = await createFunctionVersion(fn, serviceSid, client);
+  const version = await createFunctionVersion(
+    fn,
+    serviceSid,
+    client,
+    clientConfig
+  );
   return version.sid;
 }
 

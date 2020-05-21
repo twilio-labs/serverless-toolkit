@@ -1,8 +1,8 @@
-import { createGotClient } from '../../../client';
+import { createGotClient, TwilioServerlessApiClient } from '../../../client';
 import { ServiceList, ServiceResource } from '../../../types';
 import { getPaginatedResource } from '../pagination';
 
-const client = createGotClient({
+const client = new TwilioServerlessApiClient({
   accountSid: '',
   authToken: '',
 });
@@ -46,11 +46,11 @@ const baseResult: ServiceList = {
 
 describe('pagination', () => {
   beforeEach(() => {
-    client.get = jest.fn();
+    client.request = jest.fn();
   });
 
   test('should return the results', async () => {
-    client.get = jest
+    client.request = jest
       .fn()
       .mockReturnValue(Promise.resolve({ body: baseResult }));
 
@@ -59,7 +59,7 @@ describe('pagination', () => {
       '/Services'
     );
 
-    expect(client.get).toHaveBeenCalledTimes(1);
+    expect(client.request).toHaveBeenCalledTimes(1);
     expect(results.length).toBe(3);
     expect(results[0].sid).toBe('ZS1');
     expect(results[1].sid).toBe('ZS2');
@@ -71,7 +71,7 @@ describe('pagination', () => {
     responseBody.meta.next_page_url = 'https://next-page-url';
     let pagesAvailable = 5;
     let idx = 0;
-    client.get = jest.fn().mockImplementation(() => {
+    client.request = jest.fn().mockImplementation(() => {
       const resp = { body: { ...baseResult } };
       if (pagesAvailable > 1) {
         resp.body.meta.next_page_url = 'https://next-page-url';
@@ -91,7 +91,7 @@ describe('pagination', () => {
       '/Services'
     );
 
-    expect(client.get).toHaveBeenCalledTimes(5);
+    expect(client.request).toHaveBeenCalledTimes(5);
     expect(results.length).toBe(5);
     expect(results[0].sid).toBe('ZS0');
     expect(results[1].sid).toBe('ZS1');
@@ -102,7 +102,7 @@ describe('pagination', () => {
 
   test('should forward error on first try', async () => {
     const err = new Error('Test Error');
-    client.get = jest.fn().mockImplementation(() => {
+    client.request = jest.fn().mockImplementation(() => {
       throw err;
     });
 
@@ -119,7 +119,7 @@ describe('pagination', () => {
   test('should ignore error on consec. requests', async () => {
     const err = new Error('Test Error');
     let shouldThrow = false;
-    client.get = jest.fn().mockImplementation(() => {
+    client.request = jest.fn().mockImplementation(() => {
       if (shouldThrow) {
         throw err;
       } else {
@@ -135,7 +135,7 @@ describe('pagination', () => {
       '/Services'
     );
 
-    expect(client.get).toHaveBeenCalledTimes(2);
+    expect(client.request).toHaveBeenCalledTimes(2);
     expect(results.length).toBe(3);
     expect(results[0].sid).toBe('ZS1');
     expect(results[1].sid).toBe('ZS2');

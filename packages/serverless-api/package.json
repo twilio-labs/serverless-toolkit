@@ -70,6 +70,7 @@
     "form-data": "^2.5.0",
     "got": "^11.0.1",
     "mime-types": "^2.1.22",
+    "p-limit": "^2.3.0",
     "recursive-readdir": "^2.2.2",
     "type-fest": "^0.3.0",
     "upath": "^1.1.2"

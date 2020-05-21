@@ -4,6 +4,7 @@ import debug from 'debug';
 import { EnvironmentList, EnvironmentResource, GotClient, Sid } from '../types';
 import { getPaginatedResource } from './utils/pagination';
 import { ClientApiError } from '../utils/error';
+import { TwilioServerlessApiClient } from '../client';
 
 const log = debug('twilio-serverless-api:environments');
 
@@ -34,15 +35,16 @@ export function isEnvironmentSid(str: string) {
  * @export
  * @param {Sid} environmentSid the environment to retrieve
  * @param {Sid} serviceSid the service the environment belongs to
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<EnvironmentResource>}
  */
 export async function getEnvironment(
   environmentSid: Sid,
   serviceSid: Sid,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ): Promise<EnvironmentResource> {
-  const resp = await client.get(
+  const resp = await client.request(
+    'get',
     `Services/${serviceSid}/Environments/${environmentSid}`
   );
   return (resp.body as unknown) as EnvironmentResource;
@@ -54,23 +56,27 @@ export async function getEnvironment(
  * @export
  * @param {string} domainSuffix the domain suffix for the environment
  * @param {string} serviceSid the service to create the environment for
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<EnvironmentResource>}
  */
 export async function createEnvironmentFromSuffix(
   domainSuffix: string,
   serviceSid: string,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ): Promise<EnvironmentResource> {
   const uniqueName = getUniqueNameFromSuffix(domainSuffix);
-  const resp = await client.post(`Services/${serviceSid}/Environments`, {
-    form: {
-      UniqueName: uniqueName,
-      DomainSuffix: domainSuffix || undefined,
-      // this property currently doesn't exist but for the future lets set it
-      FriendlyName: `${uniqueName} Environment (Created by CLI)`,
-    },
-  });
+  const resp = await client.request(
+    'post',
+    `Services/${serviceSid}/Environments`,
+    {
+      form: {
+        UniqueName: uniqueName,
+        DomainSuffix: domainSuffix || undefined,
+        // this property currently doesn't exist but for the future lets set it
+        FriendlyName: `${uniqueName} Environment (Created by CLI)`,
+      },
+    }
+  );
   return (resp.body as unknown) as EnvironmentResource;
 }
 
@@ -79,10 +85,13 @@ export async function createEnvironmentFromSuffix(
  *
  * @export
  * @param {string} serviceSid the service that the environments belong to
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns
  */
-export async function listEnvironments(serviceSid: string, client: GotClient) {
+export async function listEnvironments(
+  serviceSid: string,
+  client: TwilioServerlessApiClient
+) {
   return getPaginatedResource<EnvironmentList, EnvironmentResource>(
     client,
     `Services/${serviceSid}/Environments`
@@ -95,13 +104,13 @@ export async function listEnvironments(serviceSid: string, client: GotClient) {
  * @export
  * @param {string} domainSuffix the suffix to look for
  * @param {string} serviceSid the service the environment belongs to
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<EnvironmentResource>}
  */
 export async function getEnvironmentFromSuffix(
   domainSuffix: string,
   serviceSid: string,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ): Promise<EnvironmentResource> {
   const environments = await listEnvironments(serviceSid, client);
   let foundEnvironments = environments.filter(
@@ -135,13 +144,13 @@ export async function getEnvironmentFromSuffix(
  * @export
  * @param {string} domainSuffix the domain suffix of the environment
  * @param {string} serviceSid the service the environment belongs to
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns
  */
 export async function createEnvironmentIfNotExists(
   domainSuffix: string,
   serviceSid: string,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ) {
   return getEnvironmentFromSuffix(domainSuffix, serviceSid, client).catch(
     (err) => {

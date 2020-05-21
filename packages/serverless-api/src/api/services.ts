@@ -1,7 +1,8 @@
 /** @module @twilio-labs/serverless-api/dist/api */
 
 import debug from 'debug';
-import { GotClient, ServiceList, ServiceResource, Sid } from '../types';
+import { ServiceList, ServiceResource, Sid } from '../types';
+import { TwilioServerlessApiClient } from '../client';
 import { getPaginatedResource } from './utils/pagination';
 import { ClientApiError } from '../utils/error';
 
@@ -12,15 +13,15 @@ const log = debug('twilio-serverless-api:services');
  *
  * @export
  * @param {string} serviceName the unique name for the service
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<string>}
  */
 export async function createService(
   serviceName: string,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ): Promise<string> {
   try {
-    const resp = await client.post('Services', {
+    const resp = await client.request('post', 'Services', {
       form: {
         UniqueName: serviceName,
         FriendlyName: serviceName,
@@ -40,11 +41,11 @@ export async function createService(
  * Lists all services attached to an account
  *
  * @export
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<ServiceResource[]>}
  */
 export async function listServices(
-  client: GotClient
+  client: TwilioServerlessApiClient
 ): Promise<ServiceResource[]> {
   return getPaginatedResource<ServiceList, ServiceResource>(client, 'Services');
 }
@@ -54,12 +55,12 @@ export async function listServices(
  *
  * @export
  * @param {string} uniqueName the unique name of the service
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {(Promise<string | undefined>)}
  */
 export async function findServiceSid(
   uniqueName: string,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ): Promise<string | undefined> {
   try {
     const services = await listServices(client);
@@ -77,10 +78,10 @@ export async function findServiceSid(
 
 export async function getService(
   sid: Sid,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ): Promise<ServiceResource> {
   try {
-    const resp = await client.get(`Services/${sid}`);
+    const resp = await client.request('get', `Services/${sid}`);
     return (resp.body as unknown) as ServiceResource;
   } catch (err) {
     log('%O', new ClientApiError(err));

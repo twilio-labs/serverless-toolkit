@@ -3,9 +3,7 @@
 import { Got } from 'got';
 import { ClientConfig } from './client';
 
-export type GotClient = Got & {
-  twilioClientConfig: ClientConfig;
-};
+export type GotClient = Got;
 
 export type EnvironmentVariables = {
   [key: string]: string | undefined;

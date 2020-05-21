@@ -6,19 +6,20 @@ Part of the <a href="https://github.com/twilio-labs/serverless-toolkit">Serverle
 <img alt="npm (scoped)" src="https://img.shields.io/npm/v/@twilio-labs/serverless-api.svg?style=flat-square"> <img alt="npm" src="https://img.shields.io/npm/dt/@twilio-labs/serverless-api.svg?style=flat-square"> <img alt="GitHub" src="https://img.shields.io/github/license/twilio-labs/serverless-api.svg?style=flat-square"> <a href="#contributors"><img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square" /></a> <a href="https://github.com/twilio-labs/.github/blob/master/CODE_OF_CONDUCT.md"><img alt="Code of Conduct" src="https://img.shields.io/badge/%F0%9F%92%96-Code%20of%20Conduct-blueviolet.svg?style=flat-square"></a> <a href="http://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" /></a> </<a>
 <hr>
 
-- [Installation](#installation)
-- [Example](#example)
-- [API](#api)
-  - [`client.activateBuild(activateConfig: ActivateConfig): Promise<ActivateResult>`](#clientactivatebuildactivateconfig-activateconfig-promiseactivateresult)
-  - [`client.deployLocalProject(deployConfig: DeployLocalProjectConfig): Promise<DeployResult>`](#clientdeploylocalprojectdeployconfig-deploylocalprojectconfig-promisedeployresult)
-  - [`client.deployProject(deployConfig: DeployProjectConfig): Promise<DeployResult>`](#clientdeployprojectdeployconfig-deployprojectconfig-promisedeployresult)
-  - [`client.getClient(): GotClient`](#clientgetclient-gotclient)
-  - [`client.list(listConfig: ListConfig): Promise<ListResult>`](#clientlistlistconfig-listconfig-promiselistresult)
-  - [`api` and `fsHelpers`](#api-and-fshelpers)
-- [Contributing](#contributing)
-  - [Code of Conduct](#code-of-conduct)
-  - [Contributors](#contributors)
-- [License](#license)
+* [Installation](#installation)
+* [Example](#example)
+* [HTTP Client Configuration](#http-client-configuration)
+* [API](#api)
+  * [`client.activateBuild(activateConfig: ActivateConfig): Promise<ActivateResult>`](#clientactivatebuildactivateconfig-activateconfig-promiseactivateresult)
+  * [`client.deployLocalProject(deployConfig: DeployLocalProjectConfig): Promise<DeployResult>`](#clientdeploylocalprojectdeployconfig-deploylocalprojectconfig-promisedeployresult)
+  * [`client.deployProject(deployConfig: DeployProjectConfig): Promise<DeployResult>`](#clientdeployprojectdeployconfig-deployprojectconfig-promisedeployresult)
+  * [`client.getClient(): GotClient`](#clientgetclient-gotclient)
+  * [`client.list(listConfig: ListConfig): Promise<ListResult>`](#clientlistlistconfig-listconfig-promiselistresult)
+  * [`api` and `fsHelpers`](#api-and-fshelpers)
+* [Contributing](#contributing)
+  * [Code of Conduct](#code-of-conduct)
+  * [Contributors](#contributors)
+* [License](#license)
 
 ## Installation
 
@@ -54,6 +55,28 @@ const result = await client.deployLocalProject({
   assetsFolderName: 'static',
   functionsFolderName: 'src',
 });
+```
+
+## HTTP Client Configuration
+
+When deploying lots of Functions and Assets it is possible to run up against the enforced concurrency limits of the Twilio API. You can limit the concurrency and set how many times the library retries API requests either in the constructor for `TwilioServerlessApiClient` or using environment variables (useful when this is part of a CLI tool like `twilio-run`).
+
+The default concurrency is 50 and the default number of retries is 10. You can change this in the config, the following would set concurrency to 1, only 1 live request at a time, and retries to 0, so if it fails it won't retry.
+
+```js
+const client = new TwilioServerlessApiClient({
+  accountSid: '...',
+  authToken: '...',
+  concurrency: 1,
+  retryLimit: 0
+};);
+```
+
+You can also set these values with the following environment variables:
+
+```bash
+export TWILIO_SERVERLESS_API_CONCURRENCY=1
+export TWILIO_SERVERLESS_API_RETRY_LIMIT=0
 ```
 
 ## API

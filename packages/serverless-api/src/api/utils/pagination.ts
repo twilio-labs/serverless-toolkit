@@ -1,6 +1,7 @@
 import debug from 'debug';
 import { OptionsOfJSONResponseBody } from 'got';
-import { BaseList, GotClient } from '../../types';
+import { TwilioServerlessApiClient } from '../../client';
+import { BaseList } from '../../types';
 import { ClientApiError } from '../../utils/error';
 
 const log = debug('twilio-serverless-api:utils:pagination');
@@ -9,7 +10,7 @@ export async function getPaginatedResource<
   TList extends BaseList<string>,
   TEntry
 >(
-  client: GotClient,
+  client: TwilioServerlessApiClient,
   url: string,
   opts: OptionsOfJSONResponseBody = { responseType: 'json' }
 ): Promise<TEntry[]> {
@@ -25,7 +26,7 @@ export async function getPaginatedResource<
       if (nextPageUrl.startsWith('http')) {
         opts.prefixUrl = undefined;
       }
-      const resp = await client.get(nextPageUrl, opts);
+      const resp = await client.request('get', nextPageUrl, opts);
       const body = resp.body as TList;
       nextPageUrl = body.meta.next_page_url;
       const entries = body[body.meta.key] as TEntry[];

@@ -3,11 +3,11 @@
 import debug from 'debug';
 import {
   EnvironmentVariables,
-  GotClient,
   Variable,
   VariableList,
   VariableResource,
 } from '../types';
+import { TwilioServerlessApiClient } from '../client';
 import { getPaginatedResource } from './utils/pagination';
 import { ClientApiError } from '../utils/error';
 
@@ -20,7 +20,7 @@ const log = debug('twilio-serverless-api:variables');
  * @param {string} value the value of the variable
  * @param {string} environmentSid the environment the variable should be created for
  * @param {string} serviceSid the service that the environment belongs to
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<VariableResource>}
  */
 async function registerVariableInEnvironment(
@@ -28,10 +28,11 @@ async function registerVariableInEnvironment(
   value: string,
   environmentSid: string,
   serviceSid: string,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ): Promise<VariableResource> {
   try {
-    const resp = await client.post(
+    const resp = await client.request(
+      'post',
       `Services/${serviceSid}/Environments/${environmentSid}/Variables`,
       {
         form: {
@@ -55,7 +56,7 @@ async function registerVariableInEnvironment(
  * @param {string} variableSid the SID of the existing variable
  * @param {string} environmentSid the environment the variable belongs to
  * @param {string} serviceSid the service the environment belongs to
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<VariableResource>}
  */
 async function updateVariableInEnvironment(
@@ -64,10 +65,11 @@ async function updateVariableInEnvironment(
   variableSid: string,
   environmentSid: string,
   serviceSid: string,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ): Promise<VariableResource> {
   try {
-    const resp = await client.post(
+    const resp = await client.request(
+      'post',
       `Services/${serviceSid}/Environments/${environmentSid}/Variables/${variableSid}`,
       {
         form: {
@@ -89,13 +91,13 @@ async function updateVariableInEnvironment(
  * @export
  * @param {string} environmentSid the environment to get the variables for
  * @param {string} serviceSid the service the environment belongs to
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<VariableResource[]>}
  */
 export async function listVariablesForEnvironment(
   environmentSid: string,
   serviceSid: string,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ): Promise<VariableResource[]> {
   try {
     return getPaginatedResource<VariableList, VariableResource>(
@@ -134,14 +136,14 @@ function convertToVariableArray(env: EnvironmentVariables): Variable[] {
  * @param {EnvironmentVariables} envVariables the object of variables
  * @param {string} environmentSid the environment the varibales should be set for
  * @param {string} serviceSid the service the environment belongs to
- * @param {GotClient} client API client
+ * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<void>}
  */
 export async function setEnvironmentVariables(
   envVariables: EnvironmentVariables,
   environmentSid: string,
   serviceSid: string,
-  client: GotClient
+  client: TwilioServerlessApiClient
 ): Promise<void> {
   const existingVariables = await listVariablesForEnvironment(
     environmentSid,

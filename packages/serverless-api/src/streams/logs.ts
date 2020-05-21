@@ -1,6 +1,7 @@
 import { Readable } from 'stream';
 import { listOnePageLogResources } from '../api/logs';
-import { LogApiResource, Sid, GotClient } from '../types';
+import { Sid } from '../types';
+import { TwilioServerlessApiClient } from '../client';
 import { LogsConfig } from '../types/logs';
 
 export class LogsStream extends Readable {
@@ -11,7 +12,7 @@ export class LogsStream extends Readable {
   constructor(
     private environmentSid: Sid,
     private serviceSid: Sid,
-    private client: GotClient,
+    private client: TwilioServerlessApiClient,
     private config: LogsConfig
   ) {
     super({ objectMode: true });
@@ -42,9 +43,9 @@ export class LogsStream extends Readable {
         }
       );
       logs
-        .filter(log => !this._viewedSids.has(log.sid))
+        .filter((log) => !this._viewedSids.has(log.sid))
         .reverse()
-        .forEach(log => {
+        .forEach((log) => {
           this.push(log);
         });
       // Replace the set each time rather than adding to the set.
@@ -52,7 +53,7 @@ export class LogsStream extends Readable {
       // will either overlap or not. This is instead of keeping an ever growing
       // set of viewSids which would cause memory issues for long running log
       // tails.
-      this._viewedSids = new Set(logs.map(log => log.sid));
+      this._viewedSids = new Set(logs.map((log) => log.sid));
       if (!this.config.tail) {
         this.push(null);
       }

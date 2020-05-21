@@ -14,7 +14,6 @@ describe('createGotClient', () => {
     expect((options as any).password).toBe(
       DEFAULT_TEST_CLIENT_CONFIG.authToken
     );
-    expect(client.twilioClientConfig).toEqual(config);
   });
 
   test('works with region configuration', () => {
@@ -32,7 +31,6 @@ describe('createGotClient', () => {
     expect((options as any).password).toBe(
       DEFAULT_TEST_CLIENT_CONFIG.authToken
     );
-    expect(client.twilioClientConfig).toEqual(config);
   });
 
   test('works with region & edge configuration', () => {
@@ -53,6 +51,5 @@ describe('createGotClient', () => {
     expect((options as any).password).toBe(
       DEFAULT_TEST_CLIENT_CONFIG.authToken
     );
-    expect(client.twilioClientConfig).toEqual(config);
   });
 });
