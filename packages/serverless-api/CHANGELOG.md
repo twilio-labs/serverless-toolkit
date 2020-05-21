@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/twilio-labs/serverless-api/compare/v2.1.0...v3.0.0) (2020-05-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* the function signature of the individual functions changed. If you only use the methods on the client, nothing should have changed.
+
+### Features
+
+* introduce rate limiting ([#42](https://github.com/twilio-labs/serverless-api/issues/42)) ([6dc1bc4](https://github.com/twilio-labs/serverless-api/commit/6dc1bc43e7516d816a976ea190e7fc4b35a12f3f)), closes [#37](https://github.com/twilio-labs/serverless-api/issues/37)
+
 ## [2.1.0](https://github.com/twilio-labs/serverless-api/compare/v1.1.0...v2.1.0) (2020-05-18)
 
 
