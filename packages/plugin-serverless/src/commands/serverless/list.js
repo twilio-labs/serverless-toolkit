@@ -1,11 +1,11 @@
-const { TwilioClientCommand } = require('@twilio/cli-core').baseCommands;
+const { TwilioClientCommand } = require("@twilio/cli-core").baseCommands;
 
-const { handler, cliInfo, describe } = require('twilio-run/dist/commands/list');
+const { handler, cliInfo, describe } = require("twilio-run/dist/commands/list");
 const {
   convertYargsOptionsToOclifFlags,
   normalizeFlags,
   createExternalCliOptions,
-} = require('../../utils');
+} = require("../../utils");
 
 class FunctionsList extends TwilioClientCommand {
   async run() {
@@ -16,6 +16,10 @@ class FunctionsList extends TwilioClientCommand {
 
     const externalOptions = createExternalCliOptions(flags, this.twilioClient);
 
+    const { edge, region } = getRegionAndEdge(flags, this);
+    flags.region = region;
+    flags.edge = edge;
+
     const opts = Object.assign({}, flags, args);
     return handler(opts, externalOptions);
   }
@@ -25,11 +29,11 @@ FunctionsList.description = describe;
 
 FunctionsList.args = [
   {
-    name: 'types',
+    name: "types",
     required: false,
     default: cliInfo.argsDefaults.types,
     description:
-      'Comma separated list of things to list (services,environments,functions,assets,variables)',
+      "Comma separated list of things to list (services,environments,functions,assets,variables)",
   },
 ];
 

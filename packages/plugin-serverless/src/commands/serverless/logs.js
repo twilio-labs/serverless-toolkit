@@ -1,12 +1,12 @@
-const { TwilioClientCommand } = require('@twilio/cli-core').baseCommands;
+const { TwilioClientCommand } = require("@twilio/cli-core").baseCommands;
 
-const { handler, cliInfo, describe } = require('twilio-run/dist/commands/logs');
+const { handler, cliInfo, describe } = require("twilio-run/dist/commands/logs");
 
 const {
   convertYargsOptionsToOclifFlags,
   normalizeFlags,
   createExternalCliOptions,
-} = require('../../utils');
+} = require("../../utils");
 
 class LogsList extends TwilioClientCommand {
   async run() {
@@ -16,6 +16,10 @@ class LogsList extends TwilioClientCommand {
     flags = normalizeFlags(flags);
 
     const externalOptions = createExternalCliOptions(flags, this.twilioClient);
+
+    const { edge, region } = getRegionAndEdge(flags, this);
+    flags.region = region;
+    flags.edge = edge;
 
     const opts = Object.assign({}, flags, args);
     return handler(opts, externalOptions);
