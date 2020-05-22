@@ -1,5 +1,7 @@
+import { SearchConfig } from '@twilio-labs/serverless-api/dist/utils';
 import { ServerlessFunctionSignature } from '@twilio-labs/serverless-runtime-types/types';
 import bodyParser from 'body-parser';
+import chokidar from 'chokidar';
 import express, {
   Express,
   NextFunction,
@@ -7,12 +9,11 @@ import express, {
   Response as ExpressResponse,
 } from 'express';
 import userAgentMiddleware from 'express-useragent';
-import nocache from 'nocache';
-import { printRouteInfo } from '../printers/start';
-import chokidar from 'chokidar';
 import debounce from 'lodash.debounce';
+import nocache from 'nocache';
 import path from 'path';
 import { StartCliConfig } from '../config/start';
+import { printRouteInfo } from '../printers/start';
 import { wrapErrorInHtml } from '../utils/error-html';
 import { getDebugFunction } from '../utils/logger';
 import { createLogger } from './internal/request-logger';
@@ -85,7 +86,18 @@ export async function createServer(
     });
   }
 
-  let routes = await getFunctionsAndAssets(config.baseDir);
+  const searchConfig: SearchConfig = {};
+
+  if (config.functionsFolderName) {
+    searchConfig.functionsFolderNames = [config.functionsFolderName];
+    console.log(searchConfig);
+  }
+
+  if (config.assetsFolderName) {
+    searchConfig.assetsFolderNames = [config.assetsFolderName];
+  }
+
+  let routes = await getFunctionsAndAssets(config.baseDir, searchConfig);
   let routeMap = setRoutes(routes);
 
   if (config.live) {
@@ -95,12 +107,12 @@ export async function createServer(
         path.join(config.baseDir, '/(assets|static)/**/*'),
       ],
       {
-        ignoreInitial: true
+        ignoreInitial: true,
       }
     );
 
     const reloadRoutes = async () => {
-      routes = await getFunctionsAndAssets(config.baseDir);
+      routes = await getFunctionsAndAssets(config.baseDir, searchConfig);
       routeMap = setRoutes(routes);
 
       await printRouteInfo(config);

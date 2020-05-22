@@ -34,6 +34,8 @@ export type StartCliConfig = {
   logs: boolean;
   legacyMode: boolean;
   appName: string;
+  assetsFolderName?: string;
+  functionsFolderName?: string;
 };
 
 export type StartCliFlags = Arguments<
@@ -50,6 +52,8 @@ export type StartCliFlags = Arguments<
     inspect?: string;
     inspectBrk?: string;
     legacyMode: boolean;
+    assetsFolder?: string;
+    functionsFolder?: string;
   }
 >;
 
@@ -168,6 +172,8 @@ export async function getConfigFromCli(
   config.logs = cli.logs;
   config.legacyMode = cli.legacyMode;
   config.appName = 'twilio-run';
+  config.assetsFolderName = cli.assetsFolder;
+  config.functionsFolderName = cli.functionsFolder;
 
   return config;
 }

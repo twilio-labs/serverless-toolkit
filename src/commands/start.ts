@@ -1,16 +1,15 @@
-import { Argv } from 'yargs';
 import inquirer from 'inquirer';
+import { Argv } from 'yargs';
 import checkNodejsVersion from '../checks/nodejs-version';
 import checkProjectStructure from '../checks/project-structure';
 import { getConfigFromCli, StartCliFlags } from '../config/start';
 import { printRouteInfo } from '../printers/start';
 import { createServer } from '../runtime/server';
 import { startInspector } from '../runtime/utils/inspector';
-import { getDebugFunction, setLogLevelByName } from '../utils/logger';
+import { getDebugFunction, logger, setLogLevelByName } from '../utils/logger';
 import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
-import { logger } from '../utils/logger';
 
 const debug = getDebugFunction('twilio-run:start');
 
@@ -46,7 +45,15 @@ export async function handler(
   const config = await getConfigFromCli(argv, cliInfo, externalCliOptions);
 
   const command = getFullCommand(argv);
-  await checkProjectStructure(config.baseDir, command);
+  const directories = {
+    assetsDirectories: config.assetsFolderName
+      ? [config.assetsFolderName]
+      : undefined,
+    functionsDirectories: config.functionsFolderName
+      ? [config.functionsFolderName]
+      : undefined,
+  };
+  await checkProjectStructure(config.baseDir, command, false, directories);
 
   debug('Determined configuration: %p', config);
   process.title = config.appName;
@@ -162,6 +169,14 @@ export const cliInfo: CliInfo = {
       type: 'boolean',
       describe:
         'Enables legacy mode, it will prefix your asset paths with /assets',
+    },
+    'assets-folder': {
+      type: 'string',
+      describe: 'Specific folder name to be used for static assets',
+    },
+    'functions-folder': {
+      type: 'string',
+      describe: 'Specific folder name to be used for static functions',
     },
   },
 };
