@@ -18,7 +18,11 @@ import {
   logger,
   setLogLevelByName,
 } from '../utils/logger';
-import { ExternalCliOptions, sharedCliOptions } from './shared';
+import {
+  ExternalCliOptions,
+  sharedApiRelatedCliOptions,
+  sharedCliOptions,
+} from './shared';
 import { CliInfo } from './types';
 import { constructCommandName, getFullCommand } from './utils';
 
@@ -125,6 +129,7 @@ export async function handler(
 export const cliInfo: CliInfo = {
   options: {
     ...sharedCliOptions,
+    ...sharedApiRelatedCliOptions,
     cwd: {
       type: 'string',
       describe: 'Sets the directory from which to deploy',
@@ -162,17 +167,6 @@ export const cliInfo: CliInfo = {
       hidden: true,
       describe:
         'DEPRECATED: Overrides the name of the project. Default: the name field in your package.json',
-    },
-    'account-sid': {
-      type: 'string',
-      alias: 'u',
-      describe:
-        'A specific account SID to be used for deployment. Uses fields in .env otherwise',
-    },
-    'auth-token': {
-      type: 'string',
-      describe:
-        'Use a specific auth token for deployment. Uses fields from .env otherwise',
     },
     env: {
       type: 'string',

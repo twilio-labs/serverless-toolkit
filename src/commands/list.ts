@@ -10,7 +10,11 @@ import {
   logger,
   setLogLevelByName,
 } from '../utils/logger';
-import { ExternalCliOptions, sharedCliOptions } from './shared';
+import {
+  ExternalCliOptions,
+  sharedApiRelatedCliOptions,
+  sharedCliOptions,
+} from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
 
@@ -74,6 +78,7 @@ export const cliInfo: CliInfo = {
   },
   options: {
     ...sharedCliOptions,
+    ...sharedApiRelatedCliOptions,
     'service-name': {
       type: 'string',
       alias: 'n',
@@ -107,17 +112,6 @@ export const cliInfo: CliInfo = {
       type: 'string',
       describe: 'The environment to list variables for',
       default: 'dev',
-    },
-    'account-sid': {
-      type: 'string',
-      alias: 'u',
-      describe:
-        'A specific account SID to be used for deployment. Uses fields in .env otherwise',
-    },
-    'auth-token': {
-      type: 'string',
-      describe:
-        'Use a specific auth token for deployment. Uses fields from .env otherwise',
     },
     'service-sid': {
       type: 'string',

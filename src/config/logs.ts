@@ -1,27 +1,31 @@
-import { LogsConfig as ApiLogsConfig } from '@twilio-labs/serverless-api';
+import {
+  ClientConfig,
+  LogsConfig as ApiLogsConfig,
+} from '@twilio-labs/serverless-api';
 import path from 'path';
 import { Arguments } from 'yargs';
 import checkForValidServiceSid from '../checks/check-service-sid';
 import { cliInfo } from '../commands/logs';
 import {
   ExternalCliOptions,
-  SharedFlagsWithCrdentials,
+  SharedFlagsWithCredentials,
 } from '../commands/shared';
 import { getFullCommand } from '../commands/utils';
 import { readSpecializedConfig } from './global';
 import { getCredentialsFromFlags } from './utils';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 
-export type LogsConfig = ApiLogsConfig & {
-  cwd: string;
-  accountSid: string;
-  authToken: string;
-  properties?: string[];
-  outputFormat?: string;
-};
+export type LogsConfig = ClientConfig &
+  ApiLogsConfig & {
+    cwd: string;
+    accountSid: string;
+    authToken: string;
+    properties?: string[];
+    outputFormat?: string;
+  };
 
 export type LogsCliFlags = Arguments<
-  SharedFlagsWithCrdentials & {
+  SharedFlagsWithCredentials & {
     cwd?: string;
     environment?: string;
     serviceSid?: string;
@@ -61,6 +65,8 @@ export async function getConfigFromFlags(
   const command = getFullCommand(flags);
   const serviceSid = checkForValidServiceSid(command, flags.serviceSid);
   const outputFormat = flags.outputFormat || externalCliOptions?.outputFormat;
+  const region = flags.region;
+  const edge = flags.edge;
 
   return {
     cwd,
@@ -71,5 +77,7 @@ export async function getConfigFromFlags(
     outputFormat,
     filterByFunction: flags.functionSid,
     tail: flags.tail,
+    region,
+    edge,
   };
 }

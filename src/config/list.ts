@@ -7,7 +7,7 @@ import { Arguments } from 'yargs';
 import { cliInfo } from '../commands/list';
 import {
   ExternalCliOptions,
-  SharedFlagsWithCrdentials,
+  SharedFlagsWithCredentials,
 } from '../commands/shared';
 import { getFunctionServiceSid } from '../serverless-api/utils';
 import { readSpecializedConfig } from './global';
@@ -21,7 +21,7 @@ export type ListConfig = ApiListConfig & {
 };
 
 export type ListCliFlags = Arguments<
-  SharedFlagsWithCrdentials & {
+  SharedFlagsWithCredentials & {
     types: string;
     projectName?: string;
     serviceName?: string;
@@ -67,6 +67,8 @@ export async function getConfigFromFlags(
   let serviceName = await getServiceNameFromFlags(flags);
 
   const types = flags.types.split(',').map(trim) as ListOptions[];
+  const region = flags.region;
+  const edge = flags.edge;
 
   return {
     cwd,
@@ -80,5 +82,7 @@ export async function getConfigFromFlags(
       : undefined,
     extendedOutput: flags.extendedOutput,
     types,
+    region,
+    edge,
   };
 }
