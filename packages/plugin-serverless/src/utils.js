@@ -1,6 +1,6 @@
-const path = require('path');
-const camelCase = require('lodash.camelcase');
-const { flags } = require('@oclif/command');
+const path = require("path");
+const camelCase = require("lodash.camelcase");
+const { flags } = require("@oclif/command");
 
 function convertYargsOptionsToOclifFlags(options) {
   const flagsResult = Object.keys(options).reduce((result, name) => {
@@ -11,10 +11,10 @@ function convertYargsOptionsToOclifFlags(options) {
       hidden: opt.hidden,
     };
 
-    if (typeof opt.default !== 'undefined') {
+    if (typeof opt.default !== "undefined") {
       flag.default = opt.default;
 
-      if (opt.type === 'boolean') {
+      if (opt.type === "boolean") {
         if (flag.default === true) {
           flag.allowNo = true;
         }
@@ -37,7 +37,7 @@ function convertYargsOptionsToOclifFlags(options) {
 
 function normalizeFlags(flags) {
   const result = Object.keys(flags).reduce((current, name) => {
-    if (name.includes('-')) {
+    if (name.includes("-")) {
       const normalizedName = camelCase(name);
       current[normalizedName] = flags[name];
     }
@@ -62,8 +62,17 @@ function createExternalCliOptions(flags, twilioClient) {
   };
 }
 
+function getRegionAndEdge(flags, clientCommand) {
+  const edge =
+    flags.edge || process.env.TWILIO_EDGE || clientCommand.userConfig.edge;
+  const region = flags.region || clientCommand.currentProfile.region;
+
+  return { edge, region };
+}
+
 module.exports = {
   convertYargsOptionsToOclifFlags,
   normalizeFlags,
   createExternalCliOptions,
+  getRegionAndEdge,
 };
