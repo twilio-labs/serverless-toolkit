@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/twilio-labs/twilio-run/compare/v2.5.0...v2.6.0) (2020-05-22)
+
+
+### Features
+
+* **flags:** expose region/edge flags ([#137](https://github.com/twilio-labs/twilio-run/issues/137)) ([4b50a67](https://github.com/twilio-labs/twilio-run/commit/4b50a671b8ccba5e69228b2b446501cf1e59dfb4))
+* **start:** expose functions-folder and assets-folder options ([#139](https://github.com/twilio-labs/twilio-run/issues/139)) ([76b0b6a](https://github.com/twilio-labs/twilio-run/commit/76b0b6acf840d1bc775ddfc0c952517468d2ff41))
+
+
+### Bug Fixes
+
+* **server:** fix typescript build issue ([231f405](https://github.com/twilio-labs/twilio-run/commit/231f405dbb59e04e2fd30f2d31b188a642b59147))
+* **tests:** fix ts typing error ([7df47fc](https://github.com/twilio-labs/twilio-run/commit/7df47fc09788029e0a923f26fc2cd5290b9966f4))
+
+
+### Build System
+
+* **test:** enable incremental builds ([f48733d](https://github.com/twilio-labs/twilio-run/commit/f48733d85a06ffb5e9cbf526d8ce2cad1e3308d6))
+* **ts:** remove incremental builds ([d421a56](https://github.com/twilio-labs/twilio-run/commit/d421a564831b3d4aaf51c81007b043b4e8d5ee4d))
+
+
+### Tests
+
+* **filesystem:** fix tests for windows ([642cdfe](https://github.com/twilio-labs/twilio-run/commit/642cdfe2878629ff901f0bc1606693cabb403615))
+* **mocks:** fix route tests by fixing mock ([d696e87](https://github.com/twilio-labs/twilio-run/commit/d696e873bbcb6bd0b5cae586b8b2e68e5a3e34b0))
+
 ## [2.5.0](https://github.com/twilio-labs/twilio-run/compare/v2.4.0...v2.5.0) (2020-05-07)
 
 
