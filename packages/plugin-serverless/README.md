@@ -102,7 +102,7 @@ OPTIONS
                                        domain suffix). Overrides the value passed via the environment flag.
 ```
 
-_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.6.0/src/commands/serverless/deploy.js)_
+_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.0/src/commands/serverless/deploy.js)_
 
 ## `twilio serverless:init NAME`
 
@@ -119,6 +119,7 @@ OPTIONS
   -a, --account-sid=account-sid  The Account SID for your Twilio account
   -p, --profile=profile          Shorthand identifier for your profile.
   -t, --auth-token=auth-token    Your Twilio account Auth Token
+  --empty                        Initialize your new project with empty functions and assets directories
 
   --import-credentials           Import credentials from the environment variables TWILIO_ACCOUNT_SID and
                                  TWILIO_AUTH_TOKEN
@@ -129,7 +130,7 @@ OPTIONS
                                  github.com/twilio-labs/function-templates
 ```
 
-_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.6.0/src/commands/serverless/init.js)_
+_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.0/src/commands/serverless/init.js)_
 
 ## `twilio serverless:list [TYPES]`
 
@@ -166,7 +167,7 @@ OPTIONS
   --service-sid=service-sid        Specific Serverless Service SID to run list for
 ```
 
-_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.6.0/src/commands/serverless/list.js)_
+_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.0/src/commands/serverless/list.js)_
 
 ## `twilio serverless:list-templates`
 
@@ -180,7 +181,7 @@ OPTIONS
   -l, --logLevel=logLevel  [default: info] Level of logging messages.
 ```
 
-_See code: [src/commands/serverless/list-templates.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.6.0/src/commands/serverless/list-templates.js)_
+_See code: [src/commands/serverless/list-templates.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.0/src/commands/serverless/list-templates.js)_
 
 ## `twilio serverless:logs`
 
@@ -218,7 +219,7 @@ OPTIONS
   --tail                             Continuously stream the logs
 ```
 
-_See code: [src/commands/serverless/logs.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.6.0/src/commands/serverless/logs.js)_
+_See code: [src/commands/serverless/logs.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.0/src/commands/serverless/logs.js)_
 
 ## `twilio serverless:new [NAMESPACE]`
 
@@ -236,7 +237,7 @@ OPTIONS
   --template=template
 ```
 
-_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.6.0/src/commands/serverless/new.js)_
+_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.0/src/commands/serverless/new.js)_
 
 ## `twilio serverless:promote`
 
@@ -283,7 +284,7 @@ ALIASES
   $ twilio serverless:activate
 ```
 
-_See code: [src/commands/serverless/promote.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.6.0/src/commands/serverless/promote.js)_
+_See code: [src/commands/serverless/promote.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.0/src/commands/serverless/promote.js)_
 
 ## `twilio serverless:start [DIR]`
 
@@ -297,40 +298,44 @@ ARGUMENTS
   DIR  Root directory to serve local Functions/Assets from
 
 OPTIONS
-  -c, --config=config        [default: .twilio-functions] Location of the config file. Absolute path or relative to
-                             current working directory (cwd)
+  -c, --config=config                  [default: .twilio-functions] Location of the config file. Absolute path or
+                                       relative to current working directory (cwd)
 
-  -e, --env=env              Loads .env file, overrides local env variables
+  -e, --env=env                        Loads .env file, overrides local env variables
 
-  -f, --load-local-env       Includes the local environment variables
+  -f, --load-local-env                 Includes the local environment variables
 
-  -l, --logLevel=logLevel    [default: info] Level of logging messages.
+  -l, --logLevel=logLevel              [default: info] Level of logging messages.
 
-  -p, --port=port            (required) [default: 3000] Override default port of 3000
+  -p, --port=port                      (required) [default: 3000] Override default port of 3000
 
-  --cwd=cwd                  Alternative way to define the directory to start the server in. Overrides the [dir]
-                             argument passed.
+  --assets-folder=assets-folder        Specific folder name to be used for static assets
 
-  --detailed-logs            Toggles detailed request logging by showing request body and query params
+  --cwd=cwd                            Alternative way to define the directory to start the server in. Overrides the
+                                       [dir] argument passed.
 
-  --inspect=inspect          Enables Node.js debugging protocol
+  --detailed-logs                      Toggles detailed request logging by showing request body and query params
 
-  --inspect-brk=inspect-brk  Enables Node.js debugging protocol, stops executioin until debugger is attached
+  --functions-folder=functions-folder  Specific folder name to be used for static functions
 
-  --legacy-mode              Enables legacy mode, it will prefix your asset paths with /assets
+  --inspect=inspect                    Enables Node.js debugging protocol
 
-  --[no-]live                Always serve from the current functions (no caching)
+  --inspect-brk=inspect-brk            Enables Node.js debugging protocol, stops executioin until debugger is attached
 
-  --[no-]logs                Toggles request logging
+  --legacy-mode                        Enables legacy mode, it will prefix your asset paths with /assets
 
-  --ngrok=ngrok              Uses ngrok to create and outfacing url
+  --[no-]live                          Always serve from the current functions (no caching)
+
+  --[no-]logs                          Toggles request logging
+
+  --ngrok=ngrok                        Uses ngrok to create and outfacing url
 
 ALIASES
   $ twilio serverless:dev
   $ twilio serverless:run
 ```
 
-_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.6.0/src/commands/serverless/start.js)_
+_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.0/src/commands/serverless/start.js)_
 <!-- commandsstop -->
 
 # Contributing
