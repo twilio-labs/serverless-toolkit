@@ -12,6 +12,7 @@ Read more about this tool in the post [start a new Twilio Functions project the 
   * [`npx`](#npx)
   * [Global installation](#global-installation)
 * [Function Templates](#function-templates)
+* [TypeScript](#typescript)
 * [Command line arguments](#command-line-arguments)
 * [Contributing](#contributing)
 * [LICENSE](#license)
@@ -83,6 +84,16 @@ npm init twilio-function function-name --template blank
 
 This works with any of the other ways of calling `create-twilio-function`. Check out the [ever expanding list of function templates here](https://github.com/twilio-labs/function-templates).
 
+## TypeScript
+
+If you want to [build your Twilio Functions project in TypeScript](https://www.twilio.com/docs/labs/serverless-toolkit/guides/typescript) you can. `create-twilio-function` supports generating a new project that is set up to use TypeScript too. To generate a TypeScript project, use the `--typescript` flag, like this:
+
+```bash
+npm init twilio-function function-name --typescript
+```
+
+Note: there are no Function templates written in TypeScript, so do not use the `--template` flag alongside the `--typescript` flag. The basic TypeScript project does come with some example files, but you can generate an empty project combining the `--typescript` and `--empty` flags.
+
 ## Command line arguments
 
 ```
@@ -109,6 +120,8 @@ Options:
                         github.com/twilio-labs/function-templates       [string]
   --empty               Initialize your new project with empty functions and
                         assets directories            [boolean] [default: false]
+  --typescript          Initialize your Serverless project with TypeScript
+                                                      [boolean] [default: false]
   -h, --help            Show help                                      [boolean]
   -v, --version         Show version number                            [boolean]
   --path                                                        [default: (cwd)]
