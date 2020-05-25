@@ -1,6 +1,11 @@
 # Changelog for `create-twilio-function`
 
-## Ongoing [☰](https://github.com/twilio-labs/create-twilio-function/compare/v2.2.0...master)
+## Ongoing [☰](https://github.com/twilio-labs/create-twilio-function/compare/v2.3.0...master)
+
+## 2.2.0 (May 25, 2020) [☰](https://github.com/twilio-labs/create-twilio-function/compare/v2.2.0...v2.3.0)
+
+- minor updates
+  - Adds `--typescript` flag that generates a TypeScript project that can be built and deployed to Twilio Functions
 
 ## 2.2.0 (May 11, 2020) [☰](https://github.com/twilio-labs/create-twilio-function/compare/v2.1.0...v2.2.0)
 
