@@ -159,7 +159,9 @@ async function createAssetVersion(
     return JSON.parse(resp.body) as VersionResource;
   } catch (err) {
     log('%O', new ClientApiError(err));
-    throw new Error('Failed to upload Asset');
+    throw new Error(
+      `Failed to upload Asset ${asset && (asset.name || asset.filePath)}`
+    );
   }
 }
 
