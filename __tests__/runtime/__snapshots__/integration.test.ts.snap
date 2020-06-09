@@ -1,6 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Function integration tests basic-twiml.js should match snapshot 1`] = `
+exports[`with an express app Assets integration tests hello.js should match snapshot 1`] = `
+Object {
+  "body": Object {},
+  "headers": Object {
+    "accept-ranges": "bytes",
+    "cache-control": "public, max-age=0",
+    "connection": "close",
+    "content-type": "application/javascript; charset=UTF-8",
+    "last-modified": "Tue, 09 Jun 2020 01:11:06 GMT",
+    "x-powered-by": "Express",
+  },
+  "statusCode": 200,
+  "text": "alert('Hello world!');
+",
+  "type": "application/javascript",
+}
+`;
+
+exports[`with an express app Function integration tests basic-twiml.js should match snapshot 1`] = `
 Object {
   "body": Object {},
   "headers": Object {

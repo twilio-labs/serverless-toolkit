@@ -10,6 +10,7 @@ import { createServer } from '../../src/runtime/server';
 const TEST_DIR = resolve(__dirname, '../../fixtures');
 
 const TEST_FUNCTIONS_DIR = resolve(TEST_DIR, 'functions');
+const TEST_ASSETS_DIR = resolve(TEST_DIR, 'assets');
 const TEST_ENV = {};
 
 const availableFunctions = readdirSync(TEST_FUNCTIONS_DIR).map(
@@ -19,6 +20,11 @@ const availableFunctions = readdirSync(TEST_FUNCTIONS_DIR).map(
     return { name, url, path };
   }
 );
+const availableAssets = readdirSync(TEST_ASSETS_DIR).map((name: string) => {
+  const path = resolve(TEST_ASSETS_DIR, name);
+  const url = `/${name}`;
+  return { name, url, path };
+});
 
 type InternalResponse = request.Response & {
   statusCode: number;
@@ -48,7 +54,7 @@ function responseToSnapshotJson(response: InternalResponse) {
   };
 }
 
-describe('Function integration tests', () => {
+describe('with an express app', () => {
   let app: Express;
 
   beforeAll(async () => {
@@ -59,15 +65,67 @@ describe('Function integration tests', () => {
     } as StartCliConfig);
   });
 
-  for (const testFnCode of availableFunctions) {
-    test(`${testFnCode.name} should match snapshot`, async () => {
-      const response = await request(app).get(testFnCode.url);
-      if (response.status === 500) {
-        expect(response.text).toMatch(/Error/);
-      } else {
+  describe('Function integration tests', () => {
+    for (const testFnCode of availableFunctions) {
+      test(`${testFnCode.name} should match snapshot`, async () => {
+        const response = await request(app).get(testFnCode.url);
+        if (response.status === 500) {
+          expect(response.text).toMatch(/Error/);
+        } else {
+          const result = responseToSnapshotJson(response as InternalResponse);
+          expect(result).toMatchSnapshot();
+        }
+      });
+    }
+  });
+
+  describe('Assets integration tests', () => {
+    for (const testAsset of availableAssets) {
+      test(`${testAsset.name} should match snapshot`, async () => {
+        const response = await request(app).get(testAsset.url);
         const result = responseToSnapshotJson(response as InternalResponse);
         expect(result).toMatchSnapshot();
-      }
-    });
-  }
+      });
+
+      test(`OPTIONS request to ${testAsset.name} should return CORS headers`, async () => {
+        const response = (await request(app).options(
+          testAsset.url
+        )) as InternalResponse;
+        expect(response.headers['access-control-allow-origin']).toEqual('*');
+        expect(response.headers['access-control-allow-headers']).toEqual(
+          'Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since'
+        );
+        expect(response.headers['access-control-allow-methods']).toEqual(
+          'GET, POST, OPTIONS'
+        );
+        expect(response.headers['access-control-expose-headers']).toEqual(
+          'ETag'
+        );
+        expect(response.headers['access-control-max-age']).toEqual('86400');
+        expect(response.headers['access-control-allow-credentials']).toEqual(
+          'true'
+        );
+      });
+
+      test(`GET request to ${testAsset.name} should not return CORS headers`, async () => {
+        const response = (await request(app).get(
+          testAsset.url
+        )) as InternalResponse;
+        expect(response.headers['access-control-allow-origin']).toBeUndefined();
+        expect(
+          response.headers['access-control-allow-headers']
+        ).toBeUndefined();
+        expect(
+          response.headers['access-control-allow-methods']
+        ).toBeUndefined();
+        expect(
+          response.headers['access-control-expose-headers']
+        ).toBeUndefined();
+        expect(response.headers['access-control-max-age']).toBeUndefined();
+        expect(
+          response.headers['access-control-allow-credentials']
+        ).toBeUndefined();
+      });
+    }
+  });
 });
