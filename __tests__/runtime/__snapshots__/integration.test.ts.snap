@@ -8,7 +8,6 @@ Object {
     "cache-control": "public, max-age=0",
     "connection": "close",
     "content-type": "application/javascript; charset=UTF-8",
-    "last-modified": "Tue, 09 Jun 2020 01:11:06 GMT",
     "x-powered-by": "Express",
   },
   "statusCode": 200,

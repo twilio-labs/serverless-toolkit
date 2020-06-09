@@ -36,6 +36,7 @@ type InternalResponse = request.Response & {
 function responseToSnapshotJson(response: InternalResponse) {
   let { statusCode, type, body, text, headers } = response;
   delete headers['date'];
+  delete headers['last-modified'];
 
   if (text && text.startsWith('Error')) {
     // stack traces are different in every environment
