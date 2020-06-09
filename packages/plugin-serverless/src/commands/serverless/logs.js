@@ -6,6 +6,7 @@ const {
   convertYargsOptionsToOclifFlags,
   normalizeFlags,
   createExternalCliOptions,
+  getRegionAndEdge,
 } = require("../../utils");
 
 class LogsList extends TwilioClientCommand {
