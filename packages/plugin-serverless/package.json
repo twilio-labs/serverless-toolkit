@@ -8,7 +8,7 @@
     "@oclif/command": "^1.5.19",
     "@oclif/config": "^1.13.3",
     "@twilio/cli-core": "^4.3.3",
-    "create-twilio-function": "^2.1.0",
+    "create-twilio-function": "^2.3.0",
     "lodash.camelcase": "^4.3.0",
     "lodash.kebabcase": "^4.1.1",
     "twilio-run": "^2.6.0"
