@@ -9,7 +9,7 @@ import {
 } from '../commands/shared';
 import { getFullCommand } from '../commands/utils';
 import { readSpecializedConfig } from './global';
-import { getCredentialsFromFlags } from './utils';
+import { getCredentialsFromFlags, readLocalEnvFile, prepareEnvForDeploy } from './utils';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 
 type ActivateConfig = ApiActivateConfig & {
@@ -61,6 +61,8 @@ export async function getConfigFromFlags(
     flags,
     externalCliOptions
   );
+  const { localEnv } = await readLocalEnvFile(flags);
+  const env = prepareEnvForDeploy(localEnv);
 
   const command = getFullCommand(flags);
   const serviceSid = checkForValidServiceSid(command, flags.serviceSid);
@@ -79,5 +81,6 @@ export async function getConfigFromFlags(
     sourceEnvironment: flags.sourceEnvironment,
     region,
     edge,
+    env
   };
 }
