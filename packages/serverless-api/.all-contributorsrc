@@ -20,6 +20,51 @@
         "doc",
         "ideas"
       ]
+    },
+    {
+      "login": "stefanjudis",
+      "name": "Stefan Judis",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/962099?v=4",
+      "profile": "https://www.stefanjudis.com/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "vernig",
+      "name": "G Verni",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/54728384?v=4",
+      "profile": "https://github.com/vernig",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "butuzov",
+      "name": "Oleg Butuzov",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/651824?v=4",
+      "profile": "http://linkedin.com/in/butuzov",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "dabockster",
+      "name": "Steven Bock",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/2431938?v=4",
+      "profile": "http://stevenbock.me",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "philnash",
+      "name": "Phil Nash",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/31462?v=4",
+      "profile": "https://philna.sh",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
