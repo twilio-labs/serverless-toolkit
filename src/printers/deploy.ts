@@ -83,7 +83,7 @@ function prettyPrintConfigInfo(config: DeployLocalProjectConfig) {
   }
 
   logger.info('\nDeploying functions & assets to the Twilio Runtime');
-  writeOutput(
+  logger.info(
     chalk`
 {bold.cyan Account}\t\t${config.accountSid}
 {bold.cyan Token}\t\t${redactPartOfString(config.authToken)}
