@@ -88,7 +88,7 @@ describe('with an express app', () => {
         expect(result).toMatchSnapshot();
       });
 
-      test(`OPTIONS request to ${testAsset.name} should return CORS headers`, async () => {
+      test(`OPTIONS request to ${testAsset.name} should return CORS headers and no body`, async () => {
         const response = (await request(app).options(
           testAsset.url
         )) as InternalResponse;
@@ -106,6 +106,7 @@ describe('with an express app', () => {
         expect(response.headers['access-control-allow-credentials']).toEqual(
           'true'
         );
+        expect(response.text).toEqual('');
       });
 
       test(`GET request to ${testAsset.name} should not return CORS headers`, async () => {
