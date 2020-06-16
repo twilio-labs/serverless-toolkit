@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/twilio-labs/serverless-api/compare/v3.0.0...v3.1.0) (2020-06-16)
+
+
+### Features
+
+* add tests for asset error ([#47](https://github.com/twilio-labs/serverless-api/issues/47)) ([581e4ce](https://github.com/twilio-labs/serverless-api/commit/581e4ce7bde33c06e394819f749dc09fee1fdd19))
+
+
+### Bug Fixes
+
+* **activate:** activating with environment variables ([#49](https://github.com/twilio-labs/serverless-api/issues/49)) ([62c2af6](https://github.com/twilio-labs/serverless-api/commit/62c2af664e56197034f263a309fd73b50d7f38a9))
+* add file name on failing asset upload error ([#47](https://github.com/twilio-labs/serverless-api/issues/47)) ([13fedb2](https://github.com/twilio-labs/serverless-api/commit/13fedb2544acda4d38928fde035eb15783432485))
+
 ## [3.0.0](https://github.com/twilio-labs/serverless-api/compare/v2.1.0...v3.0.0) (2020-05-21)
 
 
