@@ -10,13 +10,14 @@ import { stripIndent } from 'common-tags';
 import terminalLink from 'terminal-link';
 import { MergeExclusive } from 'type-fest';
 import { logger } from '../utils/logger';
-import { writeOutput } from '../utils/output';
+import { writeOutput, writeJSONOutput } from '../utils/output';
 import {
   getTwilioConsoleDeploymentUrl,
   printObjectWithoutHeaders,
   redactPartOfString,
   shouldPrettyPrint,
 } from './utils';
+import { OutputFormat } from '../commands/shared';
 
 function sortByAccess<
   T extends MergeExclusive<AssetResource, FunctionResource>
@@ -171,7 +172,13 @@ function prettyPrintDeployedResources(
   }
 }
 
-export function printConfigInfo(config: DeployLocalProjectConfig) {
+export function printConfigInfo(
+  config: DeployLocalProjectConfig,
+  outputFormat: OutputFormat
+) {
+  if (outputFormat === 'json') {
+    return;
+  }
   if (shouldPrettyPrint) {
     prettyPrintConfigInfo(config);
   } else {
@@ -181,8 +188,13 @@ export function printConfigInfo(config: DeployLocalProjectConfig) {
 
 export function printDeployedResources(
   config: DeployLocalProjectConfig,
-  result: DeployResult
+  result: DeployResult,
+  outputFormat: OutputFormat
 ) {
+  if (outputFormat === 'json') {
+    writeJSONOutput(result);
+    return;
+  }
   if (shouldPrettyPrint) {
     prettyPrintDeployedResources(config, result);
   } else {
