@@ -14,6 +14,7 @@ import {
   getServiceNameFromFlags,
   readLocalEnvFile,
   readPackageJsonContent,
+  filterEnvVariablesForDeploy
 } from './utils';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 
@@ -69,6 +70,7 @@ export async function getConfigFromFlags(
     externalCliOptions
   );
   const { localEnv, envPath } = await readLocalEnvFile(flags);
+  const env = filterEnvVariablesForDeploy(localEnv);
 
   const serviceSid =
     flags.serviceSid ||
@@ -82,20 +84,6 @@ export async function getConfigFromFlags(
     ));
 
   const pkgJson = await readPackageJsonContent(flags);
-
-  const env = {
-    ...localEnv,
-  };
-
-  for (let key of Object.keys(env)) {
-    const val = env[key];
-    if (typeof val === 'string' && val.length === 0) {
-      delete env[key];
-    }
-  }
-
-  delete env.ACCOUNT_SID;
-  delete env.AUTH_TOKEN;
 
   let serviceName: string | undefined = await getServiceNameFromFlags(flags);
 

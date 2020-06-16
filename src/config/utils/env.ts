@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import path from 'path';
 import { EnvironmentVariablesWithAuth } from '../../types/generic';
+import { EnvironmentVariables } from '@twilio-labs/serverless-api';
 import { fileExists, readFile } from '../../utils/fs';
 
 export async function readLocalEnvFile(flags: {
@@ -24,4 +25,22 @@ export async function readLocalEnvFile(flags: {
     return { localEnv, envPath };
   }
   return { envPath: '', localEnv: {} };
+}
+
+export function filterEnvVariablesForDeploy(localEnv: EnvironmentVariablesWithAuth): EnvironmentVariables {
+  const env = {
+    ...localEnv,
+  };
+
+  for (let key of Object.keys(env)) {
+    const val = env[key];
+    if (typeof val === 'string' && val.length === 0) {
+      delete env[key];
+    }
+  }
+
+  delete env.ACCOUNT_SID;
+  delete env.AUTH_TOKEN;
+
+  return env;
 }
