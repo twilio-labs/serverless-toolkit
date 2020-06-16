@@ -2,6 +2,7 @@
 
 import { ClientConfig } from './client';
 import { Sid } from './serverless-api';
+import { EnvironmentVariables } from './generic';
 
 export type ActivateConfig = ClientConfig & {
   force?: boolean;
@@ -10,6 +11,7 @@ export type ActivateConfig = ClientConfig & {
   buildSid?: Sid;
   targetEnvironment: string | Sid;
   sourceEnvironment?: string | Sid;
+  env: EnvironmentVariables;
 };
 
 export type ActivateResult = {

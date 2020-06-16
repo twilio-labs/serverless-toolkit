@@ -318,6 +318,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
         targetEnvironment,
         serviceSid,
         sourceEnvironment,
+        env,
       } = activateConfig;
 
       if (!buildSid && !sourceEnvironment) {
@@ -371,6 +372,12 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
       if (!buildSid) {
         throw new Error('Could not determine build SID');
       }
+
+      this.emit('status-update', {
+        status: DeployStatus.SETTING_VARIABLES,
+        message: 'Setting environment variables',
+      });
+      await setEnvironmentVariables(env, targetEnvironment, serviceSid, this);
 
       const { domain_name } = await getEnvironment(
         targetEnvironment,
