@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.7.0](https://github.com/twilio-labs/twilio-run/compare/v2.6.0...v2.7.0) (2020-06-16)
+
+
+### Features
+
+* **runtime:** add CORS headers to OPTIONS requests to assets ([#141](https://github.com/twilio-labs/twilio-run/issues/141)) ([46fffa0](https://github.com/twilio-labs/twilio-run/commit/46fffa06df53efc679a2048cab20f750a5f83ec3))
+
+
+### Bug Fixes
+
+* **activate:** prepare and pass env vars to serverless-api activateBuild ([#142](https://github.com/twilio-labs/twilio-run/issues/142)) ([808fe47](https://github.com/twilio-labs/twilio-run/commit/808fe476518363adf10ddc1d936bd454cba18afa)), closes [#109](https://github.com/twilio-labs/twilio-run/issues/109)
+
 ## [2.6.0](https://github.com/twilio-labs/twilio-run/compare/v2.5.0...v2.6.0) (2020-05-22)
 
 
