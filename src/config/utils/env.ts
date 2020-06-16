@@ -27,7 +27,7 @@ export async function readLocalEnvFile(flags: {
   return { envPath: '', localEnv: {} };
 }
 
-export function prepareEnvForDeploy(localEnv: EnvironmentVariablesWithAuth): EnvironmentVariables {
+export function filterEnvVariablesForDeploy(localEnv: EnvironmentVariablesWithAuth): EnvironmentVariables {
   const env = {
     ...localEnv,
   };

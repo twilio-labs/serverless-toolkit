@@ -14,7 +14,7 @@ import {
   getServiceNameFromFlags,
   readLocalEnvFile,
   readPackageJsonContent,
-  prepareEnvForDeploy
+  filterEnvVariablesForDeploy
 } from './utils';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 
@@ -70,7 +70,7 @@ export async function getConfigFromFlags(
     externalCliOptions
   );
   const { localEnv, envPath } = await readLocalEnvFile(flags);
-  const env = prepareEnvForDeploy(localEnv);
+  const env = filterEnvVariablesForDeploy(localEnv);
 
   const serviceSid =
     flags.serviceSid ||
