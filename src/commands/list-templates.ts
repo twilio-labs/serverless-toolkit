@@ -1,13 +1,13 @@
-import chalk from 'chalk';
 import { Arguments } from 'yargs';
 import { fetchListOfTemplates } from '../templating/actions';
 import { getOraSpinner, setLogLevelByName } from '../utils/logger';
-import { writeOutput } from '../utils/output';
 import { baseCliOptions, BaseFlags } from './shared';
 import { CliInfo } from './types';
+import { printTemplates } from '../printers/list-templates';
 
 export async function handler(flags: Arguments<BaseFlags>): Promise<void> {
   setLogLevelByName(flags.logLevel);
+  const outputFormat = flags.output;
   const spinner = getOraSpinner('Fetching available templates').start();
 
   let templates;
@@ -21,11 +21,7 @@ export async function handler(flags: Arguments<BaseFlags>): Promise<void> {
 
   spinner.stop();
 
-  templates.forEach(template => {
-    writeOutput(
-      chalk`‣ ${template.name} ({cyan ${template.id}})\n  {dim ${template.description}}`
-    );
-  });
+  printTemplates(templates, outputFormat);
 }
 
 export const cliInfo: CliInfo = { options: { ...baseCliOptions } };
