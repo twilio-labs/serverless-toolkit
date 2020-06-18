@@ -39,7 +39,7 @@ export async function handler(
   externalCliOptions?: ExternalCliOptions
 ): Promise<void> {
   setLogLevelByName(flags.logLevel);
-
+  const outputFormat = flags.output;
   let config: ListConfig;
   try {
     config = await getConfigFromFlags(flags, externalCliOptions);
@@ -66,7 +66,7 @@ export async function handler(
   try {
     const client = new TwilioServerlessApiClient(config);
     const result = await client.list({ ...config });
-    printListResult(result, config);
+    printListResult(result, config, outputFormat);
   } catch (err) {
     handleError(err);
   }
