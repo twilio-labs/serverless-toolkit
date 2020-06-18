@@ -5,7 +5,7 @@ export type OutputFormat = 'json' | 'pretty' | undefined;
 
 export type BaseFlags = {
   logLevel: LoggingLevelNames;
-  output: OutputFormat;
+  outputFormat: OutputFormat;
 };
 
 export type SharedFlags = BaseFlags & {
@@ -39,7 +39,7 @@ export const baseCliOptions: { [key: string]: Options } = {
     describe: 'Level of logging messages.',
     choices: Object.keys(LoggingLevel),
   },
-  output: {
+  'output-format': {
     type: 'string',
     default: 'pretty',
     alias: 'o',

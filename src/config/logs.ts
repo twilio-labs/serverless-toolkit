@@ -21,7 +21,6 @@ export type LogsConfig = ClientConfig &
     accountSid: string;
     authToken: string;
     properties?: string[];
-    outputFormat?: string;
   };
 
 export type LogsCliFlags = Arguments<
@@ -31,7 +30,6 @@ export type LogsCliFlags = Arguments<
     serviceSid?: string;
     functionSid?: string;
     tail: boolean;
-    outputFormat?: string;
   }
 >;
 
@@ -64,7 +62,6 @@ export async function getConfigFromFlags(
 
   const command = getFullCommand(flags);
   const serviceSid = checkForValidServiceSid(command, flags.serviceSid);
-  const outputFormat = flags.outputFormat || externalCliOptions?.outputFormat;
   const region = flags.region;
   const edge = flags.edge;
 
@@ -74,7 +71,6 @@ export async function getConfigFromFlags(
     authToken,
     environment,
     serviceSid,
-    outputFormat,
     filterByFunction: flags.functionSid,
     tail: flags.tail,
     region,

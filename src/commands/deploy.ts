@@ -74,7 +74,6 @@ export async function handler(
   externalCliOptions?: ExternalCliOptions
 ): Promise<void> {
   setLogLevelByName(flags.logLevel);
-  const outputFormat = flags.output;
   const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
   flags.cwd = cwd;
   const command = getFullCommand(flags);
@@ -100,7 +99,7 @@ export async function handler(
 
   checkConfigForCredentials(config);
 
-  printConfigInfo(config, outputFormat);
+  printConfigInfo(config, flags.outputFormat);
 
   const spinner = getOraSpinner('Deploying Function').start();
   try {
@@ -111,7 +110,7 @@ export async function handler(
     const result = await client.deployLocalProject(config);
     spinner.text = 'Serverless project successfully deployed\n';
     spinner.succeed();
-    printDeployedResources(config, result, outputFormat);
+    printDeployedResources(config, result, flags.outputFormat);
     const { serviceSid, buildSid } = result;
     await saveLatestDeploymentData(
       config.cwd,

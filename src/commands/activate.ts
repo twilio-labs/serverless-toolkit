@@ -44,7 +44,6 @@ export async function handler(
   flags: ActivateCliFlags,
   externalCliOptions?: ExternalCliOptions
 ): Promise<void> {
-  const outputFormat = flags.output;
   setLogLevelByName(flags.logLevel);
   let config: ActivateConfig;
   try {
@@ -64,7 +63,7 @@ export async function handler(
 
   checkConfigForCredentials(config);
 
-  printActivateConfig(config, outputFormat);
+  printActivateConfig(config, flags.outputFormat);
 
   const details = config.buildSid
     ? `(${config.buildSid})`
@@ -79,7 +78,7 @@ export async function handler(
       `Activated new build ${details} on ${config.targetEnvironment ||
         'production'}`
     );
-    printActivateResult(result, outputFormat);
+    printActivateResult(result, flags.outputFormat);
   } catch (err) {
     handleError(err, spinner);
   }

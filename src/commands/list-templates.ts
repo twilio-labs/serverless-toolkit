@@ -7,7 +7,6 @@ import { printTemplates } from '../printers/list-templates';
 
 export async function handler(flags: Arguments<BaseFlags>): Promise<void> {
   setLogLevelByName(flags.logLevel);
-  const outputFormat = flags.output;
   const spinner = getOraSpinner('Fetching available templates').start();
 
   let templates;
@@ -21,7 +20,7 @@ export async function handler(flags: Arguments<BaseFlags>): Promise<void> {
 
   spinner.stop();
 
-  printTemplates(templates, outputFormat);
+  printTemplates(templates, flags.outputFormat);
 }
 
 export const cliInfo: CliInfo = { options: { ...baseCliOptions } };
