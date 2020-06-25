@@ -1,7 +1,7 @@
 /** @module @twilio-labs/serverless-api/dist/api */
 
 import debug from 'debug';
-import { EnvironmentList, EnvironmentResource, GotClient, Sid } from '../types';
+import { EnvironmentList, EnvironmentResource, Sid } from '../types';
 import { getPaginatedResource } from './utils/pagination';
 import { ClientApiError } from '../utils/error';
 import { TwilioServerlessApiClient } from '../client';
@@ -65,17 +65,18 @@ export async function createEnvironmentFromSuffix(
   client: TwilioServerlessApiClient
 ): Promise<EnvironmentResource> {
   const uniqueName = getUniqueNameFromSuffix(domainSuffix);
+  const form: { [key: string]: string } = {
+    UniqueName: uniqueName,
+    // this property currently doesn't exist but for the future lets set it
+    FriendlyName: `${uniqueName} Environment (Created by CLI)`,
+  };
+  if (domainSuffix !== '') {
+    form.DomainSuffix = domainSuffix;
+  }
   const resp = await client.request(
     'post',
     `Services/${serviceSid}/Environments`,
-    {
-      form: {
-        UniqueName: uniqueName,
-        DomainSuffix: domainSuffix || undefined,
-        // this property currently doesn't exist but for the future lets set it
-        FriendlyName: `${uniqueName} Environment (Created by CLI)`,
-      },
-    }
+    { form }
   );
   return (resp.body as unknown) as EnvironmentResource;
 }
