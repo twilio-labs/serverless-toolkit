@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.1.1](https://github.com/twilio-labs/serverless-api/compare/v3.1.0...v3.1.1) (2020-06-25)
+
+
+### Bug Fixes
+
+* **deploy:** stop creating environments with domain suffix 'undefined' ([#50](https://github.com/twilio-labs/serverless-api/issues/50)) ([f5dde4c](https://github.com/twilio-labs/serverless-api/commit/f5dde4c55997d6214f8b930a2dc09a0f09c01e66))
+
 ## [3.1.0](https://github.com/twilio-labs/serverless-api/compare/v3.0.0...v3.1.0) (2020-06-16)
 
 
