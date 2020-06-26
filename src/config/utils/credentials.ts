@@ -2,8 +2,8 @@ import {
   ExternalCliOptions,
   SharedFlagsWithCredentials,
 } from '../../commands/shared';
+import { EnvironmentVariablesWithAuth } from '../../types/generic';
 import { getDebugFunction } from '../../utils/logger';
-import { readLocalEnvFile } from './env';
 
 const debug = getDebugFunction('twilio-run:config:credentials');
 
@@ -21,11 +21,16 @@ export type Credentials = {
  * 5. value passed in through externalCliOptions
  * 6. empty string
  * @param flags Flags passed into command
+ * @param envVariables Environment variables from (.env or system environment)
  * @param externalCliOptions Any external information for example passed by the Twilio CLI
  */
 export async function getCredentialsFromFlags<
   T extends SharedFlagsWithCredentials
->(flags: T, externalCliOptions?: ExternalCliOptions): Promise<Credentials> {
+>(
+  flags: T,
+  envVariables: EnvironmentVariablesWithAuth,
+  externalCliOptions?: ExternalCliOptions
+): Promise<Credentials> {
   // default Twilio CLI credentials (4) or empty string (5)
   let accountSid =
     (externalCliOptions &&
@@ -38,17 +43,14 @@ export async function getCredentialsFromFlags<
       externalCliOptions.password) ||
     '';
 
-  if (flags.cwd) {
-    // env file content (3)
-    const { localEnv } = await readLocalEnvFile(flags);
-    if (localEnv.ACCOUNT_SID) {
-      debug('Override value with .env ACCOUNT_SID value');
-      accountSid = localEnv.ACCOUNT_SID;
-    }
-    if (localEnv.AUTH_TOKEN) {
-      debug('Override value with .env AUTH_TOKEN value');
-      authToken = localEnv.AUTH_TOKEN;
-    }
+  // env file content (3)
+  if (envVariables.ACCOUNT_SID) {
+    debug('Override value with .env ACCOUNT_SID value');
+    accountSid = envVariables.ACCOUNT_SID;
+  }
+  if (envVariables.AUTH_TOKEN) {
+    debug('Override value with .env AUTH_TOKEN value');
+    authToken = envVariables.AUTH_TOKEN;
   }
 
   // specific profile specified. override both credentials (2)

@@ -12,7 +12,7 @@ import {
 } from '../commands/shared';
 import { getFullCommand } from '../commands/utils';
 import { readSpecializedConfig } from './global';
-import { getCredentialsFromFlags } from './utils';
+import { getCredentialsFromFlags, readLocalEnvFile } from './utils';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 
 export type LogsConfig = ClientConfig &
@@ -57,8 +57,10 @@ export async function getConfigFromFlags(
   cwd = flags.cwd || cwd;
   environment = flags.environment || environment;
 
+  const { localEnv: envFileVars, envPath } = await readLocalEnvFile(flags);
   const { accountSid, authToken } = await getCredentialsFromFlags(
     flags,
+    envFileVars,
     externalCliOptions
   );
 

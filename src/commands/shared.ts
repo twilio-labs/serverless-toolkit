@@ -16,6 +16,7 @@ export type SharedFlagsWithCredentials = SharedFlags & {
   env?: string;
   region?: string;
   edge?: string;
+  loadSystemEnv: boolean;
 };
 
 export type ExternalCliOptions = {
@@ -59,6 +60,12 @@ export const sharedApiRelatedCliOptions: { [key: string]: Options } = {
     type: 'string',
     describe:
       'Use a specific auth token for deployment. Uses fields from .env otherwise',
+  },
+  'load-system-env': {
+    default: false,
+    type: 'boolean',
+    describe:
+      'Uses system environment variables as fallback for variables specified in your .env file. Needs to be used with --env explicitly specified.',
   },
 };
 
