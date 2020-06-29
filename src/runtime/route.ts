@@ -17,6 +17,10 @@ import { getDebugFunction } from '../utils/logger';
 import { cleanUpStackTrace } from '../utils/stack-trace/clean-up';
 import { Response } from './internal/response';
 import * as Runtime from './internal/runtime';
+import { fork } from 'child_process';
+import { deserializeError } from 'serialize-error';
+import { Reply } from './internal/functionRunner';
+import { join } from 'path';
 
 const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
 
@@ -133,6 +137,63 @@ export function handleSuccess(
 
   debug('Sending JSON response');
   res.send(responseObject);
+}
+
+export function functionPathToRoute(
+  functionPath: string,
+  config: StartCliConfig
+) {
+  return function twilioFunctionHandler(
+    req: ExpressRequest,
+    res: ExpressResponse,
+    next: NextFunction
+  ) {
+    const event = constructEvent(req);
+    debug('Event for %s: %o', req.path, event);
+    const context = constructContext(config, req.path);
+    debug('Context for %s: %p', req.path, context);
+    let run_timings: {
+      start: [number, number];
+      end: [number, number];
+    } = {
+      start: [0, 0],
+      end: [0, 0],
+    };
+
+    const forked = fork(join(__dirname, 'internal', 'functionRunner'));
+
+    forked.on(
+      'message',
+      ({
+        err,
+        reply,
+      }: {
+        err: Error | number | string | undefined;
+        reply: Reply;
+      }) => {
+        run_timings.end = process.hrtime();
+        debug('Function execution %s finished', req.path);
+        debug(
+          `(Estimated) Total Execution Time: ${(run_timings.end[0] * 1e9 +
+            run_timings.end[1] -
+            (run_timings.start[0] * 1e9 + run_timings.start[1])) /
+            1e6}ms`
+        );
+        if (err) {
+          const error = deserializeError(err);
+          handleError(error, req, res, functionPath);
+        }
+        if (reply) {
+          res.status(reply.statusCode);
+          res.set(reply.headers);
+          res.send(reply.body);
+        }
+        forked.kill();
+      }
+    );
+
+    forked.send({ functionPath, context, event, config });
+  };
 }
 
 export function functionToRoute(

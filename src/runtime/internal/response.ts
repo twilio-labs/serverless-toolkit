@@ -54,4 +54,12 @@ export class Response implements TwilioResponse {
     res.set(this.headers);
     res.send(this.body);
   }
+
+  serialize() {
+    return {
+      statusCode: this.statusCode,
+      body: this.body.toString(),
+      headers: this.headers,
+    };
+  }
 }
