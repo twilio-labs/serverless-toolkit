@@ -6,8 +6,8 @@ const { TwilioServerlessApiClient } = require('../dist');
 const serviceSid = process.argv[2];
 async function run() {
   const config = {
-    accountSid: process.env.TWILIO_ACCOUNT_SID,
-    authToken: process.env.TWILIO_AUTH_TOKEN,
+    username: process.env.TWILIO_ACCOUNT_SID,
+    password: process.env.TWILIO_AUTH_TOKEN,
   };
 
   const client = new TwilioServerlessApiClient(config);

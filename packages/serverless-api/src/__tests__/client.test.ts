@@ -1,5 +1,8 @@
 import { createGotClient } from '../client';
-import { DEFAULT_TEST_CLIENT_CONFIG } from '../__fixtures__/base-fixtures';
+import {
+  DEFAULT_TEST_CLIENT_CONFIG,
+  DEFAULT_TEST_CLIENT_CONFIG_USERNAME_PASSWORD,
+} from '../__fixtures__/base-fixtures';
 
 describe('createGotClient', () => {
   test('works with default configuration', () => {
@@ -13,6 +16,20 @@ describe('createGotClient', () => {
     );
     expect((options as any).password).toBe(
       DEFAULT_TEST_CLIENT_CONFIG.authToken
+    );
+  });
+
+  test('works with username and password', () => {
+    const config = DEFAULT_TEST_CLIENT_CONFIG_USERNAME_PASSWORD;
+    const client = createGotClient(config);
+    const options = client.defaults.options;
+    expect(options.prefixUrl).toBe('https://serverless.twilio.com/v1/');
+    expect(options.responseType).toBe('json');
+    expect((options as any).username).toBe(
+      DEFAULT_TEST_CLIENT_CONFIG_USERNAME_PASSWORD.username
+    );
+    expect((options as any).password).toBe(
+      DEFAULT_TEST_CLIENT_CONFIG_USERNAME_PASSWORD.password
     );
   });
 
