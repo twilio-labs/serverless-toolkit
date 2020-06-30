@@ -1,17 +1,6 @@
 /** @module @twilio-labs/serverless-api */
 
-/**
- * Config to set up a API request client
- */
-export type ClientConfig = {
-  /**
-   * Twilio AccountSID or API Key
-   */
-  accountSid: string;
-  /**
-   * Twilio Auth Token or API Secret
-   */
-  authToken: string;
+type BaseClientConfig = {
   /**
    * Twilio Region
    */
@@ -29,3 +18,30 @@ export type ClientConfig = {
    */
   retryLimit?: number;
 };
+
+export type AccountSidConfig = BaseClientConfig & {
+  /**
+   * Twilio AccountSID or API Key
+   */
+  accountSid: string;
+  /**
+   * Twilio Auth Token or API Secret
+   */
+  authToken: string;
+};
+
+export type UsernameConfig = BaseClientConfig & {
+  /**
+   * Twilio AccountSID or API Key
+   */
+  username: string;
+  /**
+   * Twilio Auth Token or API Secret
+   */
+  password: string;
+};
+
+/**
+ * Config to set up a API request client
+ */
+export type ClientConfig = AccountSidConfig | UsernameConfig;

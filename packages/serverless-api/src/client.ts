@@ -60,15 +60,26 @@ import {
   Response,
 } from 'got/dist/source';
 import pLimit, { Limit } from 'p-limit';
+import { deprecate } from 'util';
 
 const log = debug('twilio-serverless-api:client');
 
 export function createGotClient(config: ClientConfig): GotClient {
+  let username, password;
+  if ('accountSid' in config) {
+    username = config.accountSid;
+    password = config.authToken;
+    deprecate(() => {},
+    '`accountSid` and `authToken` client config is deprecated, please use `username` and `password` instead.')();
+  } else {
+    username = config.username;
+    password = config.password;
+  }
   const client = got.extend({
     prefixUrl: getApiUrl(config),
     responseType: 'json',
-    username: config.accountSid,
-    password: config.authToken,
+    username: username,
+    password: password,
     headers: {
       'User-Agent': 'twilio-serverless-api',
     },

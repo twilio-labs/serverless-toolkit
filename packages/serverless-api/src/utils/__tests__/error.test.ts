@@ -2,12 +2,11 @@ import nock from 'nock';
 import util from 'util';
 import { createGotClient } from '../../client';
 import { ClientApiError } from '../error';
-import { ClientConfig } from '../../types';
 import { DEFAULT_TEST_CLIENT_CONFIG } from '../../__fixtures__/base-fixtures';
 
 describe('ClientApiError', () => {
   let apiNock = nock('https://serverless.twilio.com');
-  let config: ClientConfig = DEFAULT_TEST_CLIENT_CONFIG;
+  let config = DEFAULT_TEST_CLIENT_CONFIG;
   let apiClient = createGotClient(config);
 
   beforeEach(() => {
