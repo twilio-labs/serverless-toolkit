@@ -72,6 +72,15 @@ export interface VersionResource extends UpdateableResourceBase {
   };
 }
 
+export type FunctionContent = {
+  sid: Sid;
+  account_sid: Sid;
+  service_sid: Sid;
+  function_sid: Sid;
+  content: string;
+  url: string;
+};
+
 export type BuildStatus = 'building' | 'completed' | 'failed';
 
 export interface VersionOnBuild extends UpdateableResourceBase {

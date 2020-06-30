@@ -10,6 +10,8 @@ import {
   Sid,
   VersionResource,
   ClientConfig,
+  FunctionContent,
+  FunctionVersion,
 } from '../types';
 import { TwilioServerlessApiClient } from '../client';
 import { getContentType } from '../utils/content-type';
@@ -201,4 +203,31 @@ export async function uploadFunction(
  */
 export function isFunctionSid(str: string) {
   return str.startsWith('ZH') && str.length === 34;
+}
+
+export async function listFunctionVersions(
+  serviceSid: Sid,
+  functionSid: Sid,
+  client: TwilioServerlessApiClient
+): Promise<FunctionVersion[]> {
+  const resp = await client.request(
+    'get',
+    `Services/${serviceSid}/Functions/${functionSid}/Versions`
+  );
+
+  return (resp.body as unknown) as FunctionVersion[];
+}
+
+export async function downloadFunctionVersion(
+  serviceSid: Sid,
+  functionSid: Sid,
+  functionVersionSid: Sid,
+  client: TwilioServerlessApiClient
+): Promise<FunctionContent> {
+  const resp = await client.request(
+    'get',
+    `Services/${serviceSid}/Functions/${functionSid}/Versions/${functionVersionSid}/Content`
+  );
+
+  return (resp.body as unknown) as FunctionContent;
 }
