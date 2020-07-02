@@ -1,13 +1,12 @@
-import { getDebugFunction } from '../../utils/logger';
 import { isTwiml } from '../route';
 import { Response } from './response';
 import { serializeError } from 'serialize-error';
 import { ServerlessCallback } from '@twilio-labs/serverless-runtime-types/types';
-import { constructGlobalScope } from '../route';
-import { checkForValidAccountSid } from '../../checks/check-account-sid';
-import twilio from 'twilio';
+import { constructGlobalScope, constructContext } from '../route';
 
-const debug = getDebugFunction('twilio-run:route');
+const sendDebugMessage = (debugMessage: string, ...debugArgs: any) => {
+  process.send && process.send({ debugMessage, debugArgs });
+};
 
 export type Reply = {
   body?: string | number | boolean | object;
@@ -15,68 +14,70 @@ export type Reply = {
   statusCode: number;
 };
 
-const callback: ServerlessCallback = (err, responseObject) => {
+const handleError = (err: Error | string | object) => {
   if (err) {
-    if (process.send) {
-      process.send({ err: serializeError(err) });
-    }
-    return;
+    process.send && process.send({ err: serializeError(err) });
   }
+};
+
+const handleSuccess = (responseObject?: string | number | boolean | object) => {
   let reply: Reply = { statusCode: 200 };
   if (typeof responseObject === 'string') {
-    debug('Sending basic string response');
+    sendDebugMessage('Sending basic string response');
     reply.headers = { 'Content-Type': 'text/plain' };
     reply.body = responseObject;
-    if (process.send) {
-      process.send({ reply });
-    }
-    return;
-  }
-
-  if (
+  } else if (
     responseObject &&
     typeof responseObject === 'object' &&
     isTwiml(responseObject)
   ) {
-    debug('Sending TwiML response as XML string');
+    sendDebugMessage('Sending TwiML response as XML string');
     reply.headers = { 'Content-Type': 'text/xml' };
     reply.body = responseObject.toString();
-    if (process.send) {
-      process.send({ reply });
-    }
-    return;
-  }
-
-  if (responseObject && responseObject instanceof Response) {
-    debug('Sending custom response');
+  } else if (responseObject && responseObject instanceof Response) {
+    sendDebugMessage('Sending custom response');
     reply = responseObject.serialize();
-    if (process.send) {
-      process.send({ reply });
-    }
-    return;
+  } else {
+    sendDebugMessage('Sending JSON response');
+    reply.body = responseObject;
+    reply.headers = { 'Content-Type': 'application/json' };
   }
 
-  debug('Sending JSON response');
-  reply.body = responseObject;
-  reply.headers = { 'Content-Type': 'application/json' };
   if (process.send) {
     process.send({ reply });
   }
-  return;
 };
 
-process.on('message', ({ functionPath, context, event, config }) => {
+process.on('message', ({ functionPath, event, config, path }) => {
   const { handler } = require(functionPath);
   try {
     constructGlobalScope(config);
-    context.getTwilioClient = function(): twilio.Twilio {
-      checkForValidAccountSid(context.ACCOUNT_SID, {
-        shouldPrintMessage: true,
-        shouldThrowError: true,
-        functionName: 'context.getTwilioClient()',
-      });
-      return twilio(context.ACCOUNT_SID, context.AUTH_TOKEN);
+    const context = constructContext(config, path);
+    sendDebugMessage('Context for %s: %p', path, context);
+    sendDebugMessage('Event for %s: %o', path, event);
+    let run_timings: { start: [number, number]; end: [number, number] } = {
+      start: [0, 0],
+      end: [0, 0],
     };
+
+    const callback: ServerlessCallback = (err, responseObject) => {
+      run_timings.end = process.hrtime();
+      sendDebugMessage('Function execution %s finished', path);
+      sendDebugMessage(
+        `(Estimated) Total Execution Time: ${(run_timings.end[0] * 1e9 +
+          run_timings.end[1] -
+          (run_timings.start[0] * 1e9 + run_timings.start[1])) /
+          1e6}ms`
+      );
+      if (err) {
+        handleError(err);
+      } else {
+        handleSuccess(responseObject);
+      }
+    };
+
+    sendDebugMessage('Calling function for %s', path);
+    run_timings.start = process.hrtime();
     handler(context, event, callback);
   } catch (err) {
     if (process.send) {

@@ -149,36 +149,24 @@ export function functionPathToRoute(
     next: NextFunction
   ) {
     const event = constructEvent(req);
-    debug('Event for %s: %o', req.path, event);
-    const context = constructContext(config, req.path);
-    debug('Context for %s: %p', req.path, context);
-    let run_timings: {
-      start: [number, number];
-      end: [number, number];
-    } = {
-      start: [0, 0],
-      end: [0, 0],
-    };
-
     const forked = fork(join(__dirname, 'internal', 'functionRunner'));
-
     forked.on(
       'message',
       ({
         err,
         reply,
+        debugMessage,
+        debugArgs = [],
       }: {
-        err: Error | number | string | undefined;
-        reply: Reply;
+        err?: Error | number | string;
+        reply?: Reply;
+        debugMessage?: string;
+        debugArgs?: any[];
       }) => {
-        run_timings.end = process.hrtime();
-        debug('Function execution %s finished', req.path);
-        debug(
-          `(Estimated) Total Execution Time: ${(run_timings.end[0] * 1e9 +
-            run_timings.end[1] -
-            (run_timings.start[0] * 1e9 + run_timings.start[1])) /
-            1e6}ms`
-        );
+        if (debugMessage) {
+          debug(debugMessage, ...debugArgs);
+          return;
+        }
         if (err) {
           const error = deserializeError(err);
           handleError(error, req, res, functionPath);
@@ -192,7 +180,7 @@ export function functionPathToRoute(
       }
     );
 
-    forked.send({ functionPath, context, event, config });
+    forked.send({ functionPath, event, config, path: req.path });
   };
 }
 

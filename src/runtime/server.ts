@@ -168,8 +168,15 @@ export async function createServer(
                 `Could not find a "handler" function in file ${functionPath}`
               );
           }
-          functionPathToRoute(functionPath, config)(req, res, next);
-          // functionToRoute(twilioFunction, config, functionPath)(req, res, next);
+          if (config.forkProcess) {
+            functionPathToRoute(functionPath, config)(req, res, next);
+          } else {
+            functionToRoute(twilioFunction, config, functionPath)(
+              req,
+              res,
+              next
+            );
+          }
         } catch (err) {
           debug('Failed to retrieve function. %O', err);
           if (err.code === 'ENOENT') {
