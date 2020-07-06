@@ -5,32 +5,36 @@
 <a href="https://travis-ci.com/twilio-labs/twilio-run"><img alt="Travis (.com)" src="https://img.shields.io/travis/com/twilio-labs/twilio-run.svg?style=flat-square"></a>
 <hr>
 
-* [About](#about)
-* [Installation](#installation)
-* [Usage](#usage)
-* [Commands](#commands)
-  * [`twilio-run start [dir]`](#twilio-run-start-dir)
-    * [Examples](#examples)
-  * [`twilio-run deploy`](#twilio-run-deploy)
-    * [Examples](#examples-1)
-  * [`twilio-run list-templates`](#twilio-run-list-templates)
-    * [Examples](#examples-2)
-  * [`twilio-run new [namespace]`](#twilio-run-new-namespace)
-    * [Examples](#examples-3)
-  * [`twilio-run list [types]`](#twilio-run-list-types)
-    * [Examples](#examples-4)
-  * [`twilio-run activate`](#twilio-run-activate)
-    * [Examples](#examples-5)
-  * [`twilio-run logs`](#twilio-run-logs)
-    * [Examples](#examples-6)
-* [API](#api)
-  * [`runDevServer(port: number, baseDir: string): Promise<Express.Application>`](#rundevserverport-number-basedir-string-promiseexpressapplication)
-  * [`handleToExpressRoute(handler: TwilioHandlerFunction): Express.RequestHandler`](#handletoexpressroutehandler-twiliohandlerfunction-expressrequesthandler)
-* [Error Handling in Dev Server](#error-handling-in-dev-server)
-* [Contributing](#contributing)
-  * [Code of Conduct](#code-of-conduct)
-* [Contributors](#contributors)
-* [License](#license)
+- [About](#about)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Create a new project](#create-a-new-project)
+  - [Project conventions](#project-conventions)
+  - [Function templates](#function-templates)
+  - [Deploy a project](#deploy-a-project)
+- [Commands](#commands)
+  - [`twilio-run start [dir]`](#twilio-run-start-dir)
+    - [Examples](#examples)
+  - [`twilio-run deploy`](#twilio-run-deploy)
+    - [Examples](#examples-1)
+  - [`twilio-run list-templates`](#twilio-run-list-templates)
+    - [Examples](#examples-2)
+  - [`twilio-run new [namespace]`](#twilio-run-new-namespace)
+    - [Examples](#examples-3)
+  - [`twilio-run list [types]`](#twilio-run-list-types)
+    - [Examples](#examples-4)
+  - [`twilio-run activate`](#twilio-run-activate)
+    - [Examples](#examples-5)
+  - [`twilio-run logs`](#twilio-run-logs)
+    - [Examples](#examples-6)
+- [API](#api)
+  - [`runDevServer(port: number, baseDir: string): Promise<Express.Application>`](#rundevserverport-number-basedir-string-promiseexpressapplication)
+  - [`handleToExpressRoute(handler: TwilioHandlerFunction): Express.RequestHandler`](#handletoexpressroutehandler-twiliohandlerfunction-expressrequesthandler)
+- [Error Handling in Dev Server](#error-handling-in-dev-server)
+- [Contributing](#contributing)
+  - [Code of Conduct](#code-of-conduct)
+- [Contributors](#contributors)
+- [License](#license)
 
 ## About
 
@@ -54,18 +58,68 @@ npx twilio-run
 
 ## Usage
 
+Check out the [commands](#commands) for in depth usage, but here are some things you will want to know:
+
+### Create a new project
+
+To create a new project with the Twilio Serverless Toolkit you can use [`create-twilio-function`](https://github.com/twilio-labs/create-twilio-function/) which will scaffold a new project that is ready to be used with `twilio-run`.
+
 ```bash
 # Create a valid project, for example:
-npx create-twilio-function my-project
+npm init twilio-function my-project
 
 # Navigate into project
 cd my-project
+```
 
-# Start local development server
-twilio-run start
+You can then use `twilio-run` to run a local development server to serve your functions and assets.
 
-# Deploy to Twilio
-twilio-run deploy
+```bash
+npx twilio-run start
+```
+
+### Project conventions
+
+By default JavaScript Functions should be placed in the `functions` directory and assets, which can be JavaScript, images, CSS, or any static asset, should be placed in the `assets` directory. You can choose other directories by providing a `--functions-folder` or `--assets-folder` option to `twilio-run` commands.
+
+Twilio Functions and Assets can be public, protected or private. The differences are:
+
+* **Public**: Any one with the URL can visit the Function or Asset
+* **Protected**: Twilio signs webhook requests, making a Twilio Function protected means that the Function will validate the webhook signature and reject any incoming requests that don't match
+* **Private**: The Function or Asset doesn't a URL, it can only be required within another Function or Asset
+
+Within `twilio-run` you can make your Functions or Assets public, protected or private by adding to the function filename. Functions and Assets are public by default. To make a Function or Asset protected or private, add `.protected` or `.private` to the filename before the extension. For example: `functions/secret.protected.js` or `assets/hidden.private.jpg`.
+
+### Function templates
+
+There are a number of pre-written Function templates that you can add to your project. The [templates are available on GitHub](https://github.com/twilio-labs/function-templates) and you can also propose your own via pull request.
+
+To list the available templates you can run:
+
+```bash
+npx twilio-run list-templates
+```
+
+To add a new function into your project from a template you can run:
+
+```bash
+npx twilio-run new namespace
+```
+
+The command will walk you through choosing the template.
+
+### Deploy a project
+
+To deploy a project to the Twilio infrastructure you can run the command:
+
+```bash
+npx twilio-run deploy
+```
+
+This will deploy your project to the "dev" environment by default. You can then promote the project from "dev" to other environments with the command:
+
+```bash
+npx twilio-run promote --from=dev --to=stage
 ```
 
 ## Commands
