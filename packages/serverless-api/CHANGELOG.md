@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/twilio-labs/serverless-api/compare/v3.0.0...v4.0.0) (2020-07-06)
+
+
+### Features
+
+* add tests for asset error ([#47](https://github.com/twilio-labs/serverless-api/issues/47)) ([581e4ce](https://github.com/twilio-labs/serverless-api/commit/581e4ce7bde33c06e394819f749dc09fee1fdd19))
+* **client:** adds username and password support ([#51](https://github.com/twilio-labs/serverless-api/issues/51)) ([80ffe00](https://github.com/twilio-labs/serverless-api/commit/80ffe008a2db0b2d2aa294328a35e0d3c359a19a)), closes [#41](https://github.com/twilio-labs/serverless-api/issues/41)
+* **functions:** list function versions & download content ([#52](https://github.com/twilio-labs/serverless-api/issues/52)) ([045a90a](https://github.com/twilio-labs/serverless-api/commit/045a90a536e850f84388cc5dcc06e6f2c0c7b9b5))
+
+
+### Bug Fixes
+
+* add file name on failing asset upload error ([#47](https://github.com/twilio-labs/serverless-api/issues/47)) ([13fedb2](https://github.com/twilio-labs/serverless-api/commit/13fedb2544acda4d38928fde035eb15783432485))
+* **activate:** activating with environment variables ([#49](https://github.com/twilio-labs/serverless-api/issues/49)) ([62c2af6](https://github.com/twilio-labs/serverless-api/commit/62c2af664e56197034f263a309fd73b50d7f38a9))
+* **deploy:** stop creating environments with domain suffix 'undefined' ([#50](https://github.com/twilio-labs/serverless-api/issues/50)) ([f5dde4c](https://github.com/twilio-labs/serverless-api/commit/f5dde4c55997d6214f8b930a2dc09a0f09c01e66))
+
 ### [3.1.1](https://github.com/twilio-labs/serverless-api/compare/v3.1.0...v3.1.1) (2020-06-25)
 
 
