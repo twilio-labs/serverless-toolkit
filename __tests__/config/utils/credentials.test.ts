@@ -1,18 +1,15 @@
-jest.mock('../../../src/config/utils/env');
-
 import { getCredentialsFromFlags } from '../../../src/config/utils/credentials';
 
 const baseFlags = {
   config: '.twilio-function',
   cwd: process.cwd(),
   logLevel: 'info' as 'info',
+  loadSystemEnv: false,
 };
 
 describe('getCredentialsFromFlags', () => {
   test('should return empty if nothing is passed', async () => {
-    require('../../../src/config/utils/env').__setVariables({}, '');
-
-    const credentials = await getCredentialsFromFlags(baseFlags, undefined);
+    const credentials = await getCredentialsFromFlags(baseFlags, {}, undefined);
     expect(credentials).toEqual({
       accountSid: '',
       authToken: '',
@@ -20,10 +17,9 @@ describe('getCredentialsFromFlags', () => {
   });
 
   test('should return flag values if passed', async () => {
-    require('../../../src/config/utils/env').__setVariables({}, '');
-
     const credentials = await getCredentialsFromFlags(
       { ...baseFlags, accountSid: 'ACxxxxx', authToken: 'some-token' },
+      {},
       undefined
     );
     expect(credentials).toEqual({
@@ -33,16 +29,12 @@ describe('getCredentialsFromFlags', () => {
   });
 
   test('should read from env file', async () => {
-    require('../../../src/config/utils/env').__setVariables(
+    const credentials = await getCredentialsFromFlags(
+      { ...baseFlags },
       {
         ACCOUNT_SID: 'ACyyyyyyyyy',
         AUTH_TOKEN: 'example-token',
       },
-      ''
-    );
-
-    const credentials = await getCredentialsFromFlags(
-      { ...baseFlags },
       undefined
     );
     expect(credentials).toEqual({
@@ -52,10 +44,9 @@ describe('getCredentialsFromFlags', () => {
   });
 
   test('should take external default options if nothing is passed', async () => {
-    require('../../../src/config/utils/env').__setVariables({}, '');
-
     const credentials = await getCredentialsFromFlags(
       { ...baseFlags },
+      {},
       { username: 'ACzzzzzzz', password: 'api-secret', profile: undefined }
     );
     expect(credentials).toEqual({
@@ -65,16 +56,12 @@ describe('getCredentialsFromFlags', () => {
   });
 
   test('env variables should override external default options', async () => {
-    require('../../../src/config/utils/env').__setVariables(
+    const credentials = await getCredentialsFromFlags(
+      { ...baseFlags },
       {
         ACCOUNT_SID: 'ACyyyyyyyyy',
         AUTH_TOKEN: 'example-token',
       },
-      ''
-    );
-
-    const credentials = await getCredentialsFromFlags(
-      { ...baseFlags },
       { username: 'ACzzzzzzz', password: 'api-secret', profile: undefined }
     );
     expect(credentials).toEqual({
@@ -84,16 +71,12 @@ describe('getCredentialsFromFlags', () => {
   });
 
   test('external options with profile should override env variables', async () => {
-    require('../../../src/config/utils/env').__setVariables(
+    const credentials = await getCredentialsFromFlags(
+      { ...baseFlags },
       {
         ACCOUNT_SID: 'ACyyyyyyyyy',
         AUTH_TOKEN: 'example-token',
       },
-      ''
-    );
-
-    const credentials = await getCredentialsFromFlags(
-      { ...baseFlags },
       { username: 'ACzzzzzzz', password: 'api-secret', profile: 'demo' }
     );
     expect(credentials).toEqual({
@@ -105,17 +88,14 @@ describe('getCredentialsFromFlags', () => {
   test('external options with project should override env variables', async () => {
     // project flag is deprecated and removed in v3 @twilio/cli-core but
     // included here just to make sure
-    require('../../../src/config/utils/env').__setVariables(
-      {
-        ACCOUNT_SID: 'ACyyyyyyyyy',
-        AUTH_TOKEN: 'example-token',
-      },
-      ''
-    );
 
     const credentials = await getCredentialsFromFlags(
       {
         ...baseFlags,
+      },
+      {
+        ACCOUNT_SID: 'ACyyyyyyyyy',
+        AUTH_TOKEN: 'example-token',
       },
       {
         username: 'ACzzzzzzz',
@@ -130,16 +110,12 @@ describe('getCredentialsFromFlags', () => {
   });
 
   test('should prefer external CLI if profile is passed', async () => {
-    require('../../../src/config/utils/env').__setVariables(
+    const credentials = await getCredentialsFromFlags(
+      { ...baseFlags },
       {
         ACCOUNT_SID: 'ACyyyyyyyyy',
         AUTH_TOKEN: 'example-token',
       },
-      ''
-    );
-
-    const credentials = await getCredentialsFromFlags(
-      { ...baseFlags },
       { username: 'ACzzzzzzz', password: 'api-secret', profile: 'demo' }
     );
     expect(credentials).toEqual({
@@ -151,16 +127,12 @@ describe('getCredentialsFromFlags', () => {
   test('should prefer external CLI if project is passed', async () => {
     // project flag is deprecated and removed in v3 @twilio/cli-core but
     // included here just to make sure
-    require('../../../src/config/utils/env').__setVariables(
+    const credentials = await getCredentialsFromFlags(
+      { ...baseFlags },
       {
         ACCOUNT_SID: 'ACyyyyyyyyy',
         AUTH_TOKEN: 'example-token',
       },
-      ''
-    );
-
-    const credentials = await getCredentialsFromFlags(
-      { ...baseFlags },
       { username: 'ACzzzzzzz', password: 'api-secret', project: 'demo' }
     );
     expect(credentials).toEqual({
@@ -170,16 +142,12 @@ describe('getCredentialsFromFlags', () => {
   });
 
   test('should prefer flag over everything', async () => {
-    require('../../../src/config/utils/env').__setVariables(
+    const credentials = await getCredentialsFromFlags(
+      { ...baseFlags, accountSid: 'ACxxxxx', authToken: 'some-token' },
       {
         ACCOUNT_SID: 'ACyyyyyyyyy',
         AUTH_TOKEN: 'example-token',
       },
-      ''
-    );
-
-    const credentials = await getCredentialsFromFlags(
-      { ...baseFlags, accountSid: 'ACxxxxx', authToken: 'some-token' },
       {
         username: 'ACzzzzzzz',
         password: 'api-secret',

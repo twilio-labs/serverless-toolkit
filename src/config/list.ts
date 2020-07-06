@@ -11,7 +11,11 @@ import {
 } from '../commands/shared';
 import { getFunctionServiceSid } from '../serverless-api/utils';
 import { readSpecializedConfig } from './global';
-import { getCredentialsFromFlags, getServiceNameFromFlags } from './utils';
+import {
+  getCredentialsFromFlags,
+  getServiceNameFromFlags,
+  readLocalEnvFile,
+} from './utils';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 
 export type ListConfig = ApiListConfig & {
@@ -55,8 +59,10 @@ export async function getConfigFromFlags(
   flags = mergeFlagsAndConfig(configFlags, flags, cliInfo);
   cwd = flags.cwd || cwd;
 
+  const { localEnv: envFileVars, envPath } = await readLocalEnvFile(flags);
   const { accountSid, authToken } = await getCredentialsFromFlags(
     flags,
+    envFileVars,
     externalCliOptions
   );
 

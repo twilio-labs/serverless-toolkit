@@ -10,11 +10,11 @@ import { deprecateFunctionsEnv } from '../commands/utils';
 import { getFunctionServiceSid } from '../serverless-api/utils';
 import { readSpecializedConfig } from './global';
 import {
+  filterEnvVariablesForDeploy,
   getCredentialsFromFlags,
   getServiceNameFromFlags,
   readLocalEnvFile,
   readPackageJsonContent,
-  filterEnvVariablesForDeploy
 } from './utils';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 
@@ -65,12 +65,14 @@ export async function getConfigFromFlags(
     flags.environment = '';
   }
 
+  const { localEnv: envFileVars, envPath } = await readLocalEnvFile(flags);
   const { accountSid, authToken } = await getCredentialsFromFlags(
     flags,
+    envFileVars,
     externalCliOptions
   );
-  const { localEnv, envPath } = await readLocalEnvFile(flags);
-  const env = filterEnvVariablesForDeploy(localEnv);
+
+  const env = filterEnvVariablesForDeploy(envFileVars);
 
   const serviceSid =
     flags.serviceSid ||
