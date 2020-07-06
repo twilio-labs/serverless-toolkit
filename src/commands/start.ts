@@ -178,6 +178,12 @@ export const cliInfo: CliInfo = {
       type: 'string',
       describe: 'Specific folder name to be used for static functions',
     },
+    'experimental-fork-process': {
+      type: 'boolean',
+      describe:
+        'Enable forking function processes to emulate production environment',
+      default: false,
+    },
   },
 };
 

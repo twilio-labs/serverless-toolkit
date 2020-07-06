@@ -17,6 +17,10 @@ import { getDebugFunction } from '../utils/logger';
 import { cleanUpStackTrace } from '../utils/stack-trace/clean-up';
 import { Response } from './internal/response';
 import * as Runtime from './internal/runtime';
+import { fork } from 'child_process';
+import { deserializeError } from 'serialize-error';
+import { Reply } from './internal/functionRunner';
+import { join } from 'path';
 
 const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
 
@@ -133,6 +137,51 @@ export function handleSuccess(
 
   debug('Sending JSON response');
   res.send(responseObject);
+}
+
+export function functionPathToRoute(
+  functionPath: string,
+  config: StartCliConfig
+) {
+  return function twilioFunctionHandler(
+    req: ExpressRequest,
+    res: ExpressResponse,
+    next: NextFunction
+  ) {
+    const event = constructEvent(req);
+    const forked = fork(join(__dirname, 'internal', 'functionRunner'));
+    forked.on(
+      'message',
+      ({
+        err,
+        reply,
+        debugMessage,
+        debugArgs = [],
+      }: {
+        err?: Error | number | string;
+        reply?: Reply;
+        debugMessage?: string;
+        debugArgs?: any[];
+      }) => {
+        if (debugMessage) {
+          debug(debugMessage, ...debugArgs);
+          return;
+        }
+        if (err) {
+          const error = deserializeError(err);
+          handleError(error, req, res, functionPath);
+        }
+        if (reply) {
+          res.status(reply.statusCode);
+          res.set(reply.headers);
+          res.send(reply.body);
+        }
+        forked.kill();
+      }
+    );
+
+    forked.send({ functionPath, event, config, path: req.path });
+  };
 }
 
 export function functionToRoute(

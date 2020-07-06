@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`with an express app Assets integration tests hello.js should match snapshot 1`] = `
+exports[`with an express app with inline function handling Assets integration tests hello.js should match snapshot 1`] = `
 Object {
   "body": Object {},
   "headers": Object {
@@ -17,7 +17,7 @@ Object {
 }
 `;
 
-exports[`with an express app Function integration tests basic-twiml.js should match snapshot 1`] = `
+exports[`with an express app with inline function handling Function integration tests basic-twiml.js should match snapshot 1`] = `
 Object {
   "body": Object {},
   "headers": Object {

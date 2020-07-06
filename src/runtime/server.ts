@@ -19,7 +19,11 @@ import { getDebugFunction } from '../utils/logger';
 import { createLogger } from './internal/request-logger';
 import { setRoutes } from './internal/route-cache';
 import { getFunctionsAndAssets } from './internal/runtime-paths';
-import { constructGlobalScope, functionToRoute } from './route';
+import {
+  constructGlobalScope,
+  functionToRoute,
+  functionPathToRoute,
+} from './route';
 
 const debug = getDebugFunction('twilio-run:server');
 const DEFAULT_PORT = process.env.PORT || 3000;
@@ -164,7 +168,15 @@ export async function createServer(
                 `Could not find a "handler" function in file ${functionPath}`
               );
           }
-          functionToRoute(twilioFunction, config, functionPath)(req, res, next);
+          if (config.forkProcess) {
+            functionPathToRoute(functionPath, config)(req, res, next);
+          } else {
+            functionToRoute(twilioFunction, config, functionPath)(
+              req,
+              res,
+              next
+            );
+          }
         } catch (err) {
           debug('Failed to retrieve function. %O', err);
           if (err.code === 'ENOENT') {
