@@ -114,7 +114,9 @@ describe('with an express app', () => {
           const response = (await request(app).get(
             testAsset.url
           )) as InternalResponse;
-          expect(response.headers['access-control-allow-origin']).toBeUndefined();
+          expect(
+            response.headers['access-control-allow-origin']
+          ).toBeUndefined();
           expect(
             response.headers['access-control-allow-headers']
           ).toBeUndefined();
@@ -132,13 +134,13 @@ describe('with an express app', () => {
       }
     });
   });
-  describe('with forked process function handling', () => {
+  xdescribe('with forked process function handling', () => {
     beforeAll(async () => {
       app = await createServer(9000, {
         baseDir: TEST_DIR,
         env: TEST_ENV,
         logs: false,
-        forkProcess: true
+        forkProcess: true,
       } as StartCliConfig);
     });
 
