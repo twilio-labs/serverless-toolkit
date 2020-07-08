@@ -37,6 +37,10 @@ function requireCacheCleaner(
 ) {
   debug('Deleting require cache');
   Object.keys(require.cache).forEach(key => {
+    // Entries in the cache that end with .node are compiled binaries, deleting
+    // those has unspecified results, so we keep them.
+    // Entries in the cache that include "twilio-run" are part of this module
+    // or its dependencies, so don't need to be cleared.
     if (!(key.endsWith('.node') || key.includes('twilio-run'))) {
       delete require.cache[key];
     }
