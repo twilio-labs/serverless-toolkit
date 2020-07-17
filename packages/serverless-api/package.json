@@ -73,7 +73,7 @@
     "mime-types": "^2.1.22",
     "p-limit": "^2.3.0",
     "recursive-readdir": "^2.2.2",
-    "type-fest": "^0.3.0",
+    "type-fest": "^0.15.1",
     "upath": "^1.1.2"
   },
   "husky": {
