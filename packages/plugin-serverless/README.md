@@ -15,9 +15,9 @@ debug and deploy to Twilio Serverless. It's a part of the [Serverless Toolkit](h
 * [License](#license)
 <!-- tocstop -->
 
-# Requirements
+## Requirements
 
-## Install the Twilio CLI
+### Install the Twilio CLI
 
 Via `npm` or `yarn`:
 
@@ -32,7 +32,7 @@ Via `homebrew`:
 $ brew tap twilio/brew && brew install twilio
 ```
 
-# Usage
+## Usage
 
 ```sh-session
 $ twilio plugins:install @twilio-labs/plugin-serverless
@@ -42,7 +42,18 @@ USAGE
 ...
 ```
 
-# Commands
+### Concurrency
+
+When deploying lots of Functions and Assets it is possible to run up against the enforced concurrency limits of the Twilio API. You can limit the concurrency and set how many times the library retries API requests using environment variables.
+
+The default concurrency is 50 and the default number of retries is 10. You can change this by setting environment variables. The following would set concurrency to 1, only 1 live request at a time, and retries to 0, so if it fails it won't retry.
+
+```sh-session
+export TWILIO_SERVERLESS_API_CONCURRENCY=1
+export TWILIO_SERVERLESS_API_RETRY_LIMIT=0
+```
+
+## Commands
 
 <!-- commands -->
 * [`twilio serverless:deploy`](#twilio-serverlessdeploy)
@@ -54,7 +65,7 @@ USAGE
 * [`twilio serverless:promote`](#twilio-serverlesspromote)
 * [`twilio serverless:start [DIR]`](#twilio-serverlessstart-dir)
 
-## `twilio serverless:deploy`
+### `twilio serverless:deploy`
 
 Deploys existing functions and assets to Twilio
 
@@ -104,7 +115,7 @@ OPTIONS
 
 _See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.1/src/commands/serverless/deploy.js)_
 
-## `twilio serverless:init NAME`
+### `twilio serverless:init NAME`
 
 Creates a new Twilio Function project
 
@@ -134,7 +145,7 @@ OPTIONS
 
 _See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.1/src/commands/serverless/init.js)_
 
-## `twilio serverless:list [TYPES]`
+### `twilio serverless:list [TYPES]`
 
 List existing services, environments, variables, deployments for your Twilio Serverless Account
 
@@ -171,7 +182,7 @@ OPTIONS
 
 _See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.1/src/commands/serverless/list.js)_
 
-## `twilio serverless:list-templates`
+### `twilio serverless:list-templates`
 
 Lists the available Twilio Function templates
 
@@ -185,7 +196,7 @@ OPTIONS
 
 _See code: [src/commands/serverless/list-templates.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.1/src/commands/serverless/list-templates.js)_
 
-## `twilio serverless:logs`
+### `twilio serverless:logs`
 
 Print logs from your Twilio Serverless project
 
@@ -223,7 +234,7 @@ OPTIONS
 
 _See code: [src/commands/serverless/logs.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.1/src/commands/serverless/logs.js)_
 
-## `twilio serverless:new [NAMESPACE]`
+### `twilio serverless:new [NAMESPACE]`
 
 Creates a new Twilio Function based on an existing template
 
@@ -241,7 +252,7 @@ OPTIONS
 
 _See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.1/src/commands/serverless/new.js)_
 
-## `twilio serverless:promote`
+### `twilio serverless:promote`
 
 Promotes an existing deployment to a new environment
 
@@ -288,7 +299,7 @@ ALIASES
 
 _See code: [src/commands/serverless/promote.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.1/src/commands/serverless/promote.js)_
 
-## `twilio serverless:start [DIR]`
+### `twilio serverless:start [DIR]`
 
 Starts local Twilio Functions development server
 
@@ -340,15 +351,15 @@ ALIASES
 _See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.1/src/commands/serverless/start.js)_
 <!-- commandsstop -->
 
-# Contributing
+## Contributing
 
 This project welcomes contributions from the community. Please see the [`CONTRIBUTING.md`](CONTRIBUTING.md) file for more details.
 
-## Code of Conduct
+### Code of Conduct
 
 Please be aware that this project has a [Code of Conduct](https://github.com/twilio-labs/.github/blob/master/CODE_OF_CONDUCT.md). The tldr; is to just be excellent to each other ❤️
 
-## Contributors
+### Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
@@ -366,6 +377,6 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
-# License
+## License
 
 MIT
