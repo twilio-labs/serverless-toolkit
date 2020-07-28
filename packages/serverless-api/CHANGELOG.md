@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.1](https://github.com/twilio-labs/serverless-api/compare/v4.0.0...v4.0.1) (2020-07-28)
+
+
+### Bug Fixes
+
+* upgrade type-fest from 0.15.1 to 0.16.0 ([bfbcdc9](https://github.com/twilio-labs/serverless-api/commit/bfbcdc9b281ea94477f8f2c88c0a9fc7a36a9214))
+
 ## [4.0.0](https://github.com/twilio-labs/serverless-api/compare/v3.0.0...v4.0.0) (2020-07-06)
 
 
