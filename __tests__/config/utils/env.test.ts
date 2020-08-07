@@ -40,12 +40,12 @@ describe('readLocalEnvFile', () => {
   let backupSystemEnv = {};
 
   const baseFlags = {
-    cwd: '/tmp/project',
+    cwd: normalize('/tmp/project'),
     env: undefined,
     loadSystemEnv: false,
   };
 
-  beforeEach(() => {
+  beforeAll(() => {
     mockFs({
       '/tmp/project': {
         '.env': stripIndent`
@@ -63,29 +63,37 @@ describe('readLocalEnvFile', () => {
       },
       '/tmp/project-two': {
         '.env': stripIndent`
-        ACCOUNT_SID=ACyyyyyyy
-        AUTH_TOKEN=123456789a
-        TWILIO=https://www.twilio.com
+        ACCOUNT_SID=ACyyyyyyyyy
+        AUTH_TOKEN=a987654321
+        MY_PHONE_NUMBER=+99999
+        SECRET_API_KEY=ahoy
       `,
         '.env.prod': stripIndent`
         ACCOUNT_SID=
         AUTH_TOKEN=
-        TWILIO=https://www.twilio.com
+        MY_PHONE_NUMBER=+444444444
+        SECRET_API_KEY=
       `,
       },
     });
+  });
+
+  beforeEach(() => {
     backupSystemEnv = { ...process.env };
   });
 
-  afterEach(() => {
+  afterAll(() => {
     mockFs.restore();
+  });
+
+  afterEach(() => {
     process.env = { ...backupSystemEnv };
   });
 
   it('should throw an error if you use --load-system-env without --env', async () => {
     const errorMessage = stripIndent`
       If you are using --load-system-env you'll also have to supply a --env flag.
-      
+
       The .env file you are pointing at will be used to primarily load environment variables.
       Any empty entries in the .env file will fall back to the system's environment variables.
     `;
@@ -95,8 +103,21 @@ describe('readLocalEnvFile', () => {
     ).rejects.toEqual(new Error(errorMessage));
   });
 
+  it('should throw an error if the specified file does not exist', async () => {
+    expect(
+      readLocalEnvFile({ ...baseFlags, env: '/tmp/invalid-project/.env' })
+    ).rejects.toEqual(
+      new Error(
+        `Failed to find .env file at "${path.resolve(
+          '/tmp/invalid-project/.env'
+        )}"`
+      )
+    );
+  });
+
   it('should load the default env variables', async () => {
-    expect(await readLocalEnvFile(baseFlags)).toEqual({
+    const result = await readLocalEnvFile(baseFlags);
+    expect(result).toEqual({
       localEnv: {
         ACCOUNT_SID: 'ACxxxxxxx',
         AUTH_TOKEN: '123456789f',
@@ -108,7 +129,8 @@ describe('readLocalEnvFile', () => {
   });
 
   it('should load env variables from a different filename', async () => {
-    expect(await readLocalEnvFile({ ...baseFlags, env: '.env.prod' })).toEqual({
+    const result = await readLocalEnvFile({ ...baseFlags, env: '.env.prod' });
+    expect(result).toEqual({
       localEnv: {
         ACCOUNT_SID: '',
         AUTH_TOKEN: '',
@@ -120,30 +142,33 @@ describe('readLocalEnvFile', () => {
   });
 
   it('should load the default env variables with different cwd', async () => {
-    expect(
-      await readLocalEnvFile({ ...baseFlags, cwd: '/tmp/project-two' })
-    ).toEqual({
+    const result = await readLocalEnvFile({
+      ...baseFlags,
+      cwd: normalize('/tmp/project-two'),
+    });
+    expect(result).toEqual({
       localEnv: {
-        ACCOUNT_SID: 'ACyyyyyyy',
-        AUTH_TOKEN: '123456789a',
-        TWILIO: 'https://www.twilio.com',
+        ACCOUNT_SID: 'ACyyyyyyyyy',
+        AUTH_TOKEN: 'a987654321',
+        MY_PHONE_NUMBER: '+99999',
+        SECRET_API_KEY: 'ahoy',
       },
       envPath: normalize('/tmp/project-two/.env'),
     });
   });
 
   it('should load env variables from a different filename & cwd', async () => {
-    expect(
-      await readLocalEnvFile({
-        ...baseFlags,
-        cwd: '/tmp/project-two',
-        env: '.env.prod',
-      })
-    ).toEqual({
+    const result = await readLocalEnvFile({
+      ...baseFlags,
+      cwd: normalize('/tmp/project-two'),
+      env: '.env.prod',
+    });
+    expect(result).toEqual({
       localEnv: {
         ACCOUNT_SID: '',
         AUTH_TOKEN: '',
-        TWILIO: 'https://www.twilio.com',
+        MY_PHONE_NUMBER: '+444444444',
+        SECRET_API_KEY: '',
       },
       envPath: normalize('/tmp/project-two/.env.prod'),
     });
@@ -156,13 +181,12 @@ describe('readLocalEnvFile', () => {
       SECRET_API_KEY: 'psst',
     };
 
-    expect(
-      await readLocalEnvFile({
-        ...baseFlags,
-        env: '.env.prod',
-        loadSystemEnv: true,
-      })
-    ).toEqual({
+    const result = await readLocalEnvFile({
+      ...baseFlags,
+      env: '.env.prod',
+      loadSystemEnv: true,
+    });
+    expect(result).toEqual({
       localEnv: {
         ACCOUNT_SID: 'ACzzzzzzz',
         AUTH_TOKEN: '',
