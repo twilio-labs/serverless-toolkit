@@ -31,7 +31,12 @@ export async function readLocalEnvFile(flags: {
       contentEnvFile = '';
     }
 
-    const localEnv = dotenv.parse(contentEnvFile);
+    let localEnv;
+    try {
+      localEnv = dotenv.parse(contentEnvFile);
+    } catch (err) {
+      throw new Error('Failed to parse .env file');
+    }
 
     if (flags.loadSystemEnv && typeof flags.env !== 'undefined') {
       for (const key of Object.keys(localEnv)) {
