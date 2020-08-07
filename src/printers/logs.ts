@@ -1,4 +1,4 @@
-import { LogList, LogApiResource } from '@twilio-labs/serverless-api';
+import { LogApiResource } from '@twilio-labs/serverless-api';
 import { LogsConfig } from '../config/logs';
 import { writeOutput } from '../utils/output';
 

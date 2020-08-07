@@ -1,6 +1,5 @@
 import {
   AssetResource,
-  DeployLocalProjectConfig,
   DeployResult,
   FunctionResource,
 } from '@twilio-labs/serverless-api';
@@ -9,6 +8,7 @@ import columnify from 'columnify';
 import { stripIndent } from 'common-tags';
 import terminalLink from 'terminal-link';
 import { MergeExclusive } from 'type-fest';
+import { DeployLocalProjectConfig } from '../config/deploy';
 import { logger } from '../utils/logger';
 import { writeOutput } from '../utils/output';
 import {
@@ -85,8 +85,8 @@ function prettyPrintConfigInfo(config: DeployLocalProjectConfig) {
   logger.info('\nDeploying functions & assets to the Twilio Runtime');
   writeOutput(
     chalk`
-{bold.cyan Account}\t\t${config.accountSid}
-{bold.cyan Token}\t\t${redactPartOfString(config.authToken)}
+{bold.cyan Account}\t\t${config.username}
+{bold.cyan Token}\t\t${redactPartOfString(config.password)}
 {bold.cyan Service Name}\t${config.serviceName}
 {bold.cyan Environment}\t${config.functionsEnv}
 {bold.cyan Root Directory}\t${config.cwd}
@@ -102,7 +102,7 @@ function plainPrintConfigInfo(config: DeployLocalProjectConfig) {
     dependencyString = Object.keys(config.pkgJson.dependencies).join(',');
   }
   const printObj = {
-    account: config.accountSid,
+    account: config.username,
     serviceName: config.serviceName,
     environment: config.functionsEnv,
     rootDirectory: config.cwd,

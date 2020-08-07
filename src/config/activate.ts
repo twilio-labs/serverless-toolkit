@@ -16,10 +16,10 @@ import {
 } from './utils';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 
-type ActivateConfig = ApiActivateConfig & {
+export type ActivateConfig = ApiActivateConfig & {
   cwd: string;
-  accountSid?: string;
-  authToken?: string;
+  username: string;
+  password: string;
 };
 
 export type ActivateCliFlags = Arguments<
@@ -76,8 +76,8 @@ export async function getConfigFromFlags(
 
   return {
     cwd,
-    accountSid,
-    authToken,
+    username: accountSid,
+    password: authToken,
     serviceSid,
     force: flags.force,
     createEnvironment: flags.createEnvironment,

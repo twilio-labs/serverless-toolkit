@@ -19,6 +19,8 @@ import {
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 
 export type ListConfig = ApiListConfig & {
+  username: string;
+  password: string;
   cwd: string;
   properties?: string[];
   extendedOutput: boolean;
@@ -78,8 +80,8 @@ export async function getConfigFromFlags(
 
   return {
     cwd,
-    accountSid,
-    authToken,
+    username: accountSid,
+    password: authToken,
     serviceSid,
     serviceName,
     environment: flags.environment,

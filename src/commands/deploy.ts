@@ -1,14 +1,15 @@
-import {
-  DeployLocalProjectConfig,
-  TwilioServerlessApiClient,
-} from '@twilio-labs/serverless-api';
+import { TwilioServerlessApiClient } from '@twilio-labs/serverless-api';
 import { stripIndent } from 'common-tags';
 import { Ora } from 'ora';
 import path from 'path';
 import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
 import checkProjectStructure from '../checks/project-structure';
-import { DeployCliFlags, getConfigFromFlags } from '../config/deploy';
+import {
+  DeployCliFlags,
+  DeployLocalProjectConfig,
+  getConfigFromFlags,
+} from '../config/deploy';
 import { printConfigInfo, printDeployedResources } from '../printers/deploy';
 import { HttpError, saveLatestDeploymentData } from '../serverless-api/utils';
 import {
@@ -117,8 +118,8 @@ export async function handler(
       config.cwd,
       serviceSid,
       buildSid,
-      config.accountSid.startsWith('AC')
-        ? config.accountSid
+      config.username.startsWith('AC')
+        ? config.username
         : externalCliOptions && externalCliOptions.accountSid
     );
   } catch (err) {
