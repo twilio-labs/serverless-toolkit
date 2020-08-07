@@ -296,8 +296,8 @@ function printListResultTerminal(result: ListResult, config: ListConfig): void {
     .join(`\n\n${chalk.dim(LONG_LINE)}\n\n`);
 
   let metaInfo = stripIndent(chalk`
-    {cyan.bold Account}      ${config.accountSid}
-    {cyan.bold Token}        ${redactPartOfString(config.authToken)}
+    {cyan.bold Account}      ${config.username}
+    {cyan.bold Token}        ${redactPartOfString(config.password)}
   `);
 
   if (config.serviceSid || config.serviceName) {

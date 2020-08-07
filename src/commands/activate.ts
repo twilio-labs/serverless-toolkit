@@ -1,11 +1,12 @@
-import {
-  ActivateConfig,
-  TwilioServerlessApiClient,
-} from '@twilio-labs/serverless-api';
+import { TwilioServerlessApiClient } from '@twilio-labs/serverless-api';
 import { Ora } from 'ora';
 import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
-import { ActivateCliFlags, getConfigFromFlags } from '../config/activate';
+import {
+  ActivateCliFlags,
+  ActivateConfig,
+  getConfigFromFlags,
+} from '../config/activate';
 import { printActivateConfig, printActivateResult } from '../printers/activate';
 import {
   getDebugFunction,

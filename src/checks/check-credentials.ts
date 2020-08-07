@@ -2,15 +2,15 @@ import { stripIndent } from 'common-tags';
 import { logger } from '../utils/logger';
 
 type ConfigWithCredentials = {
-  accountSid?: string;
-  authToken?: string;
+  username?: string;
+  password?: string;
 };
 
 export function checkConfigForCredentials(
   config: ConfigWithCredentials,
   shouldExit = true
 ) {
-  if (config.accountSid && config.authToken) {
+  if (config.username && config.password) {
     return;
   }
 

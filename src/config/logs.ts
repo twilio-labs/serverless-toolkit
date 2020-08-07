@@ -17,9 +17,9 @@ import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 
 export type LogsConfig = ClientConfig &
   ApiLogsConfig & {
+    username: string;
+    password: string;
     cwd: string;
-    accountSid: string;
-    authToken: string;
     properties?: string[];
     outputFormat?: string;
   };
@@ -72,8 +72,8 @@ export async function getConfigFromFlags(
 
   return {
     cwd,
-    accountSid,
-    authToken,
+    username: accountSid,
+    password: authToken,
     environment,
     serviceSid,
     outputFormat,

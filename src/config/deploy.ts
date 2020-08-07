@@ -1,4 +1,4 @@
-import { DeployLocalProjectConfig } from '@twilio-labs/serverless-api';
+import { DeployLocalProjectConfig as ApiDeployLocalProjectConfig } from '@twilio-labs/serverless-api';
 import path from 'path';
 import { Arguments } from 'yargs';
 import { cliInfo } from '../commands/deploy';
@@ -17,6 +17,11 @@ import {
   readPackageJsonContent,
 } from './utils';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
+
+export type DeployLocalProjectConfig = ApiDeployLocalProjectConfig & {
+  username: string;
+  password: string;
+};
 
 export type DeployCliFlags = Arguments<
   SharedFlagsWithCredentials & {
@@ -101,8 +106,8 @@ export async function getConfigFromFlags(
   return {
     cwd,
     envPath,
-    accountSid,
-    authToken,
+    username: accountSid,
+    password: authToken,
     env,
     serviceSid,
     pkgJson,
