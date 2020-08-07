@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.8.0](https://github.com/twilio-labs/twilio-run/compare/v2.8.0-beta.0...v2.8.0) (2020-08-07)
+
+
+### Bug Fixes
+
+* **env:** catch dotenv parsing error ([c8e327b](https://github.com/twilio-labs/twilio-run/commit/c8e327b9b6bed6573726e19e18e7ee8091b98cb5))
+* upgrade type-fest from 0.6.0 to 0.15.1 ([d682b2d](https://github.com/twilio-labs/twilio-run/commit/d682b2dbd00d725578251f1efef66109fcd208f5))
+
 ## [2.8.0-beta.1](https://github.com/twilio-labs/twilio-run/compare/v2.7.0...v2.8.0-beta.1) (2020-07-08)
 
 
