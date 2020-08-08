@@ -1,0 +1,16 @@
+{
+  "npmClient": "npm",
+  "command": {
+    "publish": {
+      "message": "chore(release): publish %s"
+    },
+    "bootstrap": {
+      "npmClientArgs": ["--no-package-lock"]
+    },
+    "version": {
+      "allowBranch": ["master", "feature/*"]
+    }
+  },
+  "packages": ["packages/*"],
+  "version": "independent"
+}
