@@ -8,11 +8,7 @@ This plugin adds functionality to the [Twilio CLI](https://github.com/twilio/twi
 debug and deploy to Twilio Serverless. It's a part of the [Serverless Toolkit](https://github.com/twilio-labs/serverless-toolkit) and wraps [twilio-run](https://github.com/twilio-labs/twilio-run) and [create-twilio-function](https://github.com/philnash/create-twilio-function).
 
 <!-- toc -->
-* [Requirements](#requirements)
-* [Usage](#usage)
-* [Commands](#commands)
-* [Contributing](#contributing)
-* [License](#license)
+
 <!-- tocstop -->
 
 ## Requirements
@@ -65,7 +61,7 @@ export TWILIO_SERVERLESS_API_RETRY_LIMIT=0
 * [`twilio serverless:promote`](#twilio-serverlesspromote)
 * [`twilio serverless:start [DIR]`](#twilio-serverlessstart-dir)
 
-### `twilio serverless:deploy`
+## `twilio serverless:deploy`
 
 Deploys existing functions and assets to Twilio
 
@@ -106,6 +102,9 @@ OPTIONS
 
   --functions-folder=functions-folder  Specific folder name to be used for static functions
 
+  --load-system-env                    Uses system environment variables as fallback for variables specified in your
+                                       .env file. Needs to be used with --env explicitly specified.
+
   --override-existing-project          Deploys Serverless project to existing service if a naming conflict has been
                                        found.
 
@@ -113,9 +112,9 @@ OPTIONS
                                        domain suffix). Overrides the value passed via the environment flag.
 ```
 
-_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.1/src/commands/serverless/deploy.js)_
+_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.8.0/src/commands/serverless/deploy.js)_
 
-### `twilio serverless:init NAME`
+## `twilio serverless:init NAME`
 
 Creates a new Twilio Function project
 
@@ -143,9 +142,9 @@ OPTIONS
   --typescript                   Initialize your Serverless project with TypeScript
 ```
 
-_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.1/src/commands/serverless/init.js)_
+_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.8.0/src/commands/serverless/init.js)_
 
-### `twilio serverless:list [TYPES]`
+## `twilio serverless:list [TYPES]`
 
 List existing services, environments, variables, deployments for your Twilio Serverless Account
 
@@ -177,12 +176,15 @@ OPTIONS
 
   --extended-output                Show an extended set of properties on the output
 
+  --load-system-env                Uses system environment variables as fallback for variables specified in your .env
+                                   file. Needs to be used with --env explicitly specified.
+
   --service-sid=service-sid        Specific Serverless Service SID to run list for
 ```
 
-_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.1/src/commands/serverless/list.js)_
+_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.8.0/src/commands/serverless/list.js)_
 
-### `twilio serverless:list-templates`
+## `twilio serverless:list-templates`
 
 Lists the available Twilio Function templates
 
@@ -194,9 +196,9 @@ OPTIONS
   -l, --logLevel=logLevel  [default: info] Level of logging messages.
 ```
 
-_See code: [src/commands/serverless/list-templates.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.1/src/commands/serverless/list-templates.js)_
+_See code: [src/commands/serverless/list-templates.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.8.0/src/commands/serverless/list-templates.js)_
 
-### `twilio serverless:logs`
+## `twilio serverless:logs`
 
 Print logs from your Twilio Serverless project
 
@@ -227,14 +229,17 @@ OPTIONS
 
   --function-sid=function-sid        Specific Function SID to retrieve logs for
 
+  --load-system-env                  Uses system environment variables as fallback for variables specified in your .env
+                                     file. Needs to be used with --env explicitly specified.
+
   --service-sid=service-sid          Specific Serverless Service SID to retrieve logs for
 
   --tail                             Continuously stream the logs
 ```
 
-_See code: [src/commands/serverless/logs.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.1/src/commands/serverless/logs.js)_
+_See code: [src/commands/serverless/logs.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.8.0/src/commands/serverless/logs.js)_
 
-### `twilio serverless:new [NAMESPACE]`
+## `twilio serverless:new [NAMESPACE]`
 
 Creates a new Twilio Function based on an existing template
 
@@ -250,9 +255,9 @@ OPTIONS
   --template=template
 ```
 
-_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.1/src/commands/serverless/new.js)_
+_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.8.0/src/commands/serverless/new.js)_
 
-### `twilio serverless:promote`
+## `twilio serverless:promote`
 
 Promotes an existing deployment to a new environment
 
@@ -288,6 +293,9 @@ OPTIONS
 
   --force                                      Will run deployment in force mode. Can be dangerous.
 
+  --load-system-env                            Uses system environment variables as fallback for variables specified in
+                                               your .env file. Needs to be used with --env explicitly specified.
+
   --production                                 Promote build to the production environment (no domain suffix). Overrides
                                                environment flag
 
@@ -297,9 +305,9 @@ ALIASES
   $ twilio serverless:activate
 ```
 
-_See code: [src/commands/serverless/promote.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.1/src/commands/serverless/promote.js)_
+_See code: [src/commands/serverless/promote.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.8.0/src/commands/serverless/promote.js)_
 
-### `twilio serverless:start [DIR]`
+## `twilio serverless:start [DIR]`
 
 Starts local Twilio Functions development server
 
@@ -329,6 +337,8 @@ OPTIONS
 
   --detailed-logs                      Toggles detailed request logging by showing request body and query params
 
+  --experimental-fork-process          Enable forking function processes to emulate production environment
+
   --functions-folder=functions-folder  Specific folder name to be used for static functions
 
   --inspect=inspect                    Enables Node.js debugging protocol
@@ -348,7 +358,7 @@ ALIASES
   $ twilio serverless:run
 ```
 
-_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.7.1/src/commands/serverless/start.js)_
+_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/plugin-serverless/blob/v1.8.0/src/commands/serverless/start.js)_
 <!-- commandsstop -->
 
 ## Contributing
