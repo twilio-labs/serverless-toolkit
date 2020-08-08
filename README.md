@@ -12,7 +12,7 @@ Throughout the [docs](https://www.twilio.com/docs/labs/serverless-toolkit), you 
 
 ## Let's work together
 
-Everything in this toolkit is released under [Twilio Labs](https://www.twilio.com/docs/labs) and fully open-source. If you find any problems with this, [please file an issue](https://github.com/twilio-labs/serverless-toolkit/issues) or even create a pull request to work together with us on the toolkit. We would love to hear your ideas and feedback!
+Everything in this toolkit is released under [Twilio Labs](https://www.twilio.com/docs/labs) and fully open-source. If you find any problems with this, [please file an issue](https://github.com/twilio-labs/twilio-run/issues) or even create a pull request to work together with us on the toolkit. We would love to hear your ideas and feedback!
 
 ## Project Structure & Contributing
 
