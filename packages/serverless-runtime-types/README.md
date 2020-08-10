@@ -1,3 +1,6 @@
+> # Important
+> This project is in the process of being moved into a monorepo. In the meantime, for any issues please open an issue at [github.com/twilio-labs/twilio-run/issues](https://github.com/twilio-labs/twilio-run/issues)
+
 <h1 align="center">@twilio-labs/serverless-runtime-types</h1>
 <p align="center">TypeScript definitions to define globals for the Twilio Serverless runtime</p>
 <p align="center">
