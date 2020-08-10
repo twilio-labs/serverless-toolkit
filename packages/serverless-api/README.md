@@ -1,3 +1,6 @@
+> # Important:
+> This repository is being moved into a monorepo. In the meantime, for any issues please open an issue at [github.com/twilio-labs/twilio-run/issues](https://github.com/twilio-labs/twilio-run/issues).
+
 <h1 align="center">@twilio-labs/serverless-api</h1>
 <p align="center">A module to interact with the <a href="https://www.twilio.com/functions">Twilio Serverless</a> API. For example to deploy projects. 
 Part of the <a href="https://github.com/twilio-labs/serverless-toolkit">Serverless Toolkit</a>.
