@@ -54,12 +54,12 @@ export const sharedApiRelatedCliOptions: { [key: string]: Options } = {
     type: 'string',
     alias: 'u',
     describe:
-      'A specific account SID to be used for deployment. Uses fields in .env otherwise',
+      'A specific account SID to be used for deployment. Uses ACCOUNT_SID field in .env otherwise',
   },
   'auth-token': {
     type: 'string',
     describe:
-      'Use a specific auth token for deployment. Uses fields from .env otherwise',
+      'Use a specific auth token for deployment. Uses AUTH_TOKEN field from .env otherwise',
   },
   'load-system-env': {
     default: false,
