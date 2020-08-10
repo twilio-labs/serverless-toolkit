@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "bootstrap": "lerna bootstrap --no-ci",
+    "postbootstrap": "lerna run build",
     "release": "lerna version --conventional-commits",
     "cm": "git-cz",
     "jest": "jest",
