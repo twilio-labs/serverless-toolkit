@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const { promisify } = require('util');
 
 const inquirer = require('inquirer');
@@ -37,7 +38,7 @@ jest.mock('../src/create-twilio-function/install-dependencies.js', () => {
 });
 console.log = jest.fn();
 
-const scratchDir = path.join(__dirname, '..', 'scratch');
+const scratchDir = path.join(os.tmpdir(), 'scratch');
 
 beforeAll(async () => {
   await rimraf(scratchDir);
