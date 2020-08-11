@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const { promisify } = require('util');
 
 const rimraf = promisify(require('rimraf'));
@@ -20,7 +21,7 @@ const {
   createEmptyFileStructure,
 } = require('../src/create-twilio-function/create-files');
 
-const scratchDir = path.join(__dirname, '..', 'scratch');
+const scratchDir = path.join(os.tmpdir(), 'scratch');
 
 beforeAll(async () => {
   await rimraf(scratchDir);
