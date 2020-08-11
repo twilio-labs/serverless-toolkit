@@ -11,11 +11,20 @@ const stat = promisify(fs.stat);
 
 const createGitignore = require('../src/create-twilio-function/create-gitignore');
 
-const scratchDir = path.join(os.tmpdir(), 'scratch');
+function setupDir() {
+  const dirPath = fs.mkdtempSync(
+    path.join(os.tmpdir(), 'test-twilio-run-gitignore-')
+  );
+  return {
+    tmpDir: dirPath,
+    cleanUp() {
+      rimraf.sync(dirPath);
+    },
+  };
+}
 
 describe('create-gitignore', () => {
   beforeAll(() => {
-    rimraf.sync(scratchDir);
     nock.disableNetConnect();
   });
 
@@ -24,37 +33,47 @@ describe('create-gitignore', () => {
   });
 
   beforeEach(() => {
-    fs.mkdirSync(scratchDir);
     nock('https://raw.githubusercontent.com')
       .get('/github/gitignore/master/Node.gitignore')
       .reply(200, '*.log\n.env');
   });
 
   afterEach(() => {
-    rimraf.sync(scratchDir);
     nock.cleanAll();
   });
 
   describe('createGitignore', () => {
     test('it creates a new .gitignore file', async () => {
-      await createGitignore(scratchDir);
-      const file = await stat(path.join(scratchDir, '.gitignore'));
+      const { tmpDir: scratchDir, cleanUp } = setupDir();
+      const name = 'test-ignore-1';
+      const basePath = path.join(scratchDir, name);
+      fs.mkdirSync(basePath, { recursive: true });
+
+      await createGitignore(basePath);
+      const file = await stat(path.join(basePath, '.gitignore'));
       expect(file.isFile());
-      const contents = await readFile(path.join(scratchDir, '.gitignore'), {
+      const contents = await readFile(path.join(basePath, '.gitignore'), {
         encoding: 'utf-8',
       });
       expect(contents).toMatch('*.log');
       expect(contents).toMatch('.env');
+      cleanUp();
     });
 
     test('it rejects if there is already a .gitignore file', async () => {
-      fs.closeSync(fs.openSync(path.join(scratchDir, '.gitignore'), 'w'));
+      const { tmpDir: scratchDir, cleanUp } = setupDir();
+      const name = 'test-ignore-2';
+      const basePath = path.join(scratchDir, name);
+      fs.mkdirSync(basePath, { recursive: true });
+
+      fs.closeSync(fs.openSync(path.join(basePath, '.gitignore'), 'w'));
       expect.assertions(1);
       try {
-        await createGitignore(scratchDir);
+        await createGitignore(basePath);
       } catch (e) {
         expect(e.toString()).toMatch('file already exists');
       }
+      cleanUp();
     });
   });
 });
