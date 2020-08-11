@@ -2,22 +2,22 @@
 // https://jestjs.io/docs/en/configuration.html
 
 module.exports = {
-  preset: "ts-jest",
+  preset: 'ts-jest',
 
   // Automatically clear mock calls and instances between every test
   clearMocks: true,
 
   // The directory where Jest should output its coverage files
-  coverageDirectory: "coverage",
+  coverageDirectory: 'coverage',
 
   // A set of global variables that need to be available in all test environments
   globals: {
-    "ts-jest": {
-      tsConfig: "tsconfig.test.json"
-    }
+    'ts-jest': {
+      tsConfig: 'tsconfig.test.json',
+    },
   },
   // The test environment that will be used for testing
-  testEnvironment: "node"
+  testEnvironment: 'node',
 
   // All imported modules in your tests should be mocked automatically
   // automock: false,
@@ -172,7 +172,7 @@ module.exports = {
   // unmockedModulePathPatterns: undefined,
 
   // Indicates whether each individual test should be reported during the run
-  // verbose: null,
+  verbose: true,
 
   // An array of regexp patterns that are matched against all source file paths before re-running tests in watch mode
   // watchPathIgnorePatterns: [],
