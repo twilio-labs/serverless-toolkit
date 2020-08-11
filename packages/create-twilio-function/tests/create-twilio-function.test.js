@@ -1,5 +1,4 @@
 jest.mock('window-size', () => ({ get: () => ({ width: 80 }) }));
-jest.mock('inquirer');
 jest.mock('ora');
 jest.mock('boxen', () => {
   return () => 'success message';
@@ -7,13 +6,28 @@ jest.mock('boxen', () => {
 jest.mock('../src/create-twilio-function/install-dependencies.js', () => {
   return { installDependencies: jest.fn() };
 });
+jest.mock('../src/create-twilio-function/import-credentials.js', () => {
+  return jest.fn().mockReturnValue(Promise.resolve(false));
+});
+jest.mock('../src/create-twilio-function/prompt.js', () => {
+  return {
+    promptForAccountDetails: jest.fn().mockReturnValue(
+      Promise.resolve({
+        accountSid: 'test-sid',
+        authToken: 'test-auth-token',
+      })
+    ),
+    promptForProjectName: jest
+      .fn()
+      .mockReturnValue(Promise.resolve({ name: 'test-function-11' })),
+  };
+});
 
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const { promisify } = require('util');
 
-const inquirer = require('inquirer');
 const ora = require('ora');
 const nock = require('nock');
 const rimraf = require('rimraf');
@@ -37,13 +51,22 @@ ora.mockImplementation(() => {
   return spinner;
 });
 
-const scratchDir = path.join(os.tmpdir(), 'scratch');
+function setupDir() {
+  const dirPath = fs.mkdtempSync(
+    path.join(os.tmpdir(), 'test-twilio-run-ctf-')
+  );
+  return {
+    tmpDir: dirPath,
+    cleanUp() {
+      rimraf.sync(dirPath);
+    },
+  };
+}
 
 let backupConsole;
 beforeAll(() => {
   backupConsole = console.log;
   console.log = jest.fn();
-  rimraf.sync(scratchDir);
   nock.disableNetConnect();
 });
 
@@ -53,24 +76,12 @@ afterAll(() => {
 });
 
 describe('createTwilioFunction', () => {
-  beforeEach(() => {
-    fs.mkdirSync(scratchDir);
-  });
-
   afterEach(() => {
-    rimraf.sync(scratchDir);
     nock.cleanAll();
   });
 
   describe('with an acceptable project name', () => {
     beforeEach(() => {
-      inquirer.prompt = jest.fn(() =>
-        Promise.resolve({
-          accountSid: 'test-sid',
-          authToken: 'test-auth-token',
-        })
-      );
-
       nock('https://raw.githubusercontent.com')
         .get('/github/gitignore/master/Node.gitignore')
         .reply(200, '*.log\n.env');
@@ -78,7 +89,8 @@ describe('createTwilioFunction', () => {
 
     describe('javascript', () => {
       it('scaffolds a Twilio Function', async () => {
-        const name = 'test-function';
+        const { tmpDir: scratchDir, cleanUp } = setupDir();
+        const name = 'test-function-1';
         await createTwilioFunction({
           name,
           path: scratchDir,
@@ -120,10 +132,12 @@ describe('createTwilioFunction', () => {
         );
 
         expect(console.log).toHaveBeenCalledWith('success message');
+        cleanUp();
       });
 
       it('scaffolds an empty Twilio Function', async () => {
-        const name = 'test-function';
+        const { tmpDir: scratchDir, cleanUp } = setupDir();
+        const name = 'test-function-2';
         await createTwilioFunction({
           name,
           path: scratchDir,
@@ -164,6 +178,7 @@ describe('createTwilioFunction', () => {
         );
 
         expect(console.log).toHaveBeenCalledWith('success message');
+        cleanUp();
       });
 
       describe('templates', () => {
@@ -212,7 +227,8 @@ describe('createTwilioFunction', () => {
             .get('/twilio-labs/function-templates/master/blank/.env')
             .reply(200, '');
 
-          const name = 'test-function';
+          const name = 'test-function-3';
+          const { tmpDir: scratchDir, cleanUp } = setupDir();
           await createTwilioFunction({
             name,
             path: scratchDir,
@@ -267,11 +283,13 @@ describe('createTwilioFunction', () => {
           );
 
           expect(console.log).toHaveBeenCalledWith('success message');
+          cleanUp();
         });
 
         it('handles a missing template gracefully', async () => {
+          const { tmpDir: scratchDir, cleanUp } = setupDir();
           const templateName = 'missing';
-          const name = 'test-function';
+          const name = 'test-function-4';
           const gitHubAPI = nock('https://api.github.com');
           gitHubAPI
             .get(
@@ -298,13 +316,15 @@ describe('createTwilioFunction', () => {
           } catch (e) {
             expect(e.toString()).toMatch('no such file or directory');
           }
+          cleanUp();
         });
       });
     });
 
     describe('typescript', () => {
       it('scaffolds a Twilio Function', async () => {
-        const name = 'test-function';
+        const { tmpDir: scratchDir, cleanUp } = setupDir();
+        const name = 'test-function-5';
         await createTwilioFunction({
           name,
           path: scratchDir,
@@ -356,10 +376,12 @@ describe('createTwilioFunction', () => {
         );
 
         expect(console.log).toHaveBeenCalledWith('success message');
+        cleanUp();
       });
 
       it('scaffolds an empty Twilio Function', async () => {
-        const name = 'test-function';
+        const { tmpDir: scratchDir, cleanUp } = setupDir();
+        const name = 'test-function-6';
         await createTwilioFunction({
           name,
           path: scratchDir,
@@ -412,12 +434,14 @@ describe('createTwilioFunction', () => {
         );
 
         expect(console.log).toHaveBeenCalledWith('success message');
+        cleanUp();
       });
 
       describe('templates', () => {
         it("doesn't scaffold", async () => {
+          const { tmpDir: scratchDir, cleanUp } = setupDir();
           const fail = jest.spyOn(spinner, 'fail');
-          const name = 'test-function';
+          const name = 'test-function-7';
           await createTwilioFunction({
             name,
             path: scratchDir,
@@ -438,13 +462,15 @@ describe('createTwilioFunction', () => {
           } catch (e) {
             expect(e.toString()).toMatch('no such file or directory');
           }
+          cleanUp();
         });
       });
     });
 
     it("doesn't scaffold if the target folder name already exists", async () => {
-      const name = 'test-function';
-      fs.mkdirSync(path.join(scratchDir, name));
+      const { tmpDir: scratchDir, cleanUp } = setupDir();
+      const name = 'test-function-8';
+      fs.mkdirSync(path.join(scratchDir, name), { recursive: true });
       const fail = jest.spyOn(spinner, 'fail');
 
       await createTwilioFunction({
@@ -465,15 +491,18 @@ describe('createTwilioFunction', () => {
       } catch (e) {
         expect(e.toString()).toMatch('no such file or directory');
       }
+
+      cleanUp();
     });
 
     it("fails gracefully if it doesn't have permission to create directories", async () => {
+      const { tmpDir: scratchDir, cleanUp } = setupDir();
       // chmod with 0o555 does not work on Windows.
       if (process.platform === 'win32') {
         return;
       }
 
-      const name = 'test-function';
+      const name = 'test-function-9';
       const chmod = promisify(fs.chmod);
       await chmod(scratchDir, 0o555);
       const fail = jest.spyOn(spinner, 'fail');
@@ -496,11 +525,13 @@ describe('createTwilioFunction', () => {
       } catch (e) {
         expect(e.toString()).toMatch('no such file or directory');
       }
+      cleanUp();
     });
 
     it("doesn't scaffold if empty is true and a template is defined", async () => {
+      const { tmpDir: scratchDir, cleanUp } = setupDir();
       const fail = jest.spyOn(spinner, 'fail');
-      const name = 'test-function';
+      const name = 'test-function-10';
       await createTwilioFunction({
         name,
         path: scratchDir,
@@ -521,29 +552,21 @@ describe('createTwilioFunction', () => {
       } catch (e) {
         expect(e.toString()).toMatch('no such file or directory');
       }
+      cleanUp();
     });
   });
 
   describe('with an unacceptable project name', () => {
     beforeEach(() => {
-      inquirer.prompt = jest.fn();
-      inquirer.prompt
-        .mockReturnValueOnce(Promise.resolve({ name: 'test-function' }))
-        .mockReturnValueOnce(
-          Promise.resolve({
-            accountSid: 'test-sid',
-            authToken: 'test-auth-token',
-          })
-        );
-
       nock('https://raw.githubusercontent.com')
         .get('/github/gitignore/master/Node.gitignore')
         .reply(200, '*.log\n.env');
     });
 
     it('scaffolds a Twilio Function and prompts for a new name', async () => {
+      const { tmpDir: scratchDir, cleanUp } = setupDir();
       const badName = 'GreatTest!!!';
-      const name = 'test-function';
+      const name = 'test-function-11';
       await createTwilioFunction({
         name: badName,
         path: scratchDir,
@@ -585,6 +608,7 @@ describe('createTwilioFunction', () => {
       );
 
       expect(console.log).toHaveBeenCalledWith('success message');
+      cleanUp();
     });
   });
 });
