@@ -20,7 +20,7 @@ const {
   createEmptyFileStructure,
 } = require('../src/create-twilio-function/create-files');
 
-const scratchDir = path.join(process.cwd(), 'scratch');
+const scratchDir = path.join(__dirname, '..', 'scratch');
 
 beforeAll(async () => {
   await rimraf(scratchDir);
@@ -57,22 +57,32 @@ describe('createPackageJSON', () => {
     await createPackageJSON(scratchDir, 'project-name');
     const file = await stat(path.join(scratchDir, 'package.json'));
     expect(file.isFile());
-    const packageJSON = JSON.parse(await readFile(path.join(scratchDir, 'package.json'), 'utf-8'));
+    const packageJSON = JSON.parse(
+      await readFile(path.join(scratchDir, 'package.json'), 'utf-8')
+    );
     expect(packageJSON.name).toEqual('project-name');
     expect(packageJSON.engines.node).toEqual(versions.node);
-    expect(packageJSON.devDependencies['twilio-run']).toEqual(versions.twilioRun);
+    expect(packageJSON.devDependencies['twilio-run']).toEqual(
+      versions.twilioRun
+    );
   });
 
   test('it creates a package.json file with typescript dependencies', async () => {
     await createPackageJSON(scratchDir, 'project-name', 'typescript');
     const file = await stat(path.join(scratchDir, 'package.json'));
     expect(file.isFile());
-    const packageJSON = JSON.parse(await readFile(path.join(scratchDir, 'package.json'), 'utf-8'));
+    const packageJSON = JSON.parse(
+      await readFile(path.join(scratchDir, 'package.json'), 'utf-8')
+    );
     expect(packageJSON.name).toEqual('project-name');
     expect(packageJSON.engines.node).toEqual(versions.node);
-    expect(packageJSON.devDependencies['twilio-run']).toEqual(versions.twilioRun);
+    expect(packageJSON.devDependencies['twilio-run']).toEqual(
+      versions.twilioRun
+    );
     expect(packageJSON.devDependencies.typescript).toEqual(versions.typescript);
-    expect(packageJSON.dependencies['@twilio-labs/serverless-runtime-types']).toEqual(versions.serverlessRuntimeTypes);
+    expect(
+      packageJSON.dependencies['@twilio-labs/serverless-runtime-types']
+    ).toEqual(versions.serverlessRuntimeTypes);
   });
 
   test('it rejects if there is already a package.json', async () => {
@@ -88,7 +98,7 @@ describe('createPackageJSON', () => {
 
 describe('createExampleFromTemplates', () => {
   describe('javascript', () => {
-    const templatesDir = path.join(process.cwd(), 'templates', 'javascript');
+    const templatesDir = path.join(__dirname, '..', 'templates', 'javascript');
     test('it creates functions and assets directories', async () => {
       await createExampleFromTemplates(scratchDir);
 
@@ -101,7 +111,9 @@ describe('createExampleFromTemplates', () => {
       await createExampleFromTemplates(scratchDir);
 
       const functions = await readdir(path.join(scratchDir, 'functions'));
-      const templateFunctions = await readdir(path.join(templatesDir, 'functions'));
+      const templateFunctions = await readdir(
+        path.join(templatesDir, 'functions')
+      );
       expect(functions).toEqual(templateFunctions);
     });
 
@@ -116,7 +128,7 @@ describe('createExampleFromTemplates', () => {
     });
   });
   describe('typescript', () => {
-    const templatesDir = path.join(process.cwd(), 'templates', 'typescript');
+    const templatesDir = path.join(__dirname, '..', 'templates', 'typescript');
     test('it creates functions and assets directories', async () => {
       await createExampleFromTemplates(scratchDir, 'typescript');
 
@@ -153,7 +165,9 @@ describe('createEnvFile', () => {
     });
     const file = await stat(path.join(scratchDir, '.env'));
     expect(file.isFile());
-    const contents = await readFile(path.join(scratchDir, '.env'), { encoding: 'utf-8' });
+    const contents = await readFile(path.join(scratchDir, '.env'), {
+      encoding: 'utf-8',
+    });
     expect(contents).toMatch('ACCOUNT_SID=AC123');
     expect(contents).toMatch('AUTH_TOKEN=qwerty123456');
   });
@@ -177,7 +191,9 @@ describe('createNvmrcFile', () => {
     await createNvmrcFile(scratchDir);
     const file = await stat(path.join(scratchDir, '.nvmrc'));
     expect(file.isFile());
-    const contents = await readFile(path.join(scratchDir, '.nvmrc'), { encoding: 'utf-8' });
+    const contents = await readFile(path.join(scratchDir, '.nvmrc'), {
+      encoding: 'utf-8',
+    });
     expect(contents).toMatch(versions.node);
   });
 
@@ -197,7 +213,9 @@ describe('createTsconfig', () => {
     await createTsconfigFile(scratchDir);
     const file = await stat(path.join(scratchDir, 'tsconfig.json'));
     expect(file.isFile());
-    const contents = await readFile(path.join(scratchDir, 'tsconfig.json'), { encoding: 'utf-8' });
+    const contents = await readFile(path.join(scratchDir, 'tsconfig.json'), {
+      encoding: 'utf-8',
+    });
     expect(contents).toMatch('"compilerOptions"');
   });
 
