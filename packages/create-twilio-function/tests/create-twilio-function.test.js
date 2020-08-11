@@ -1,3 +1,13 @@
+jest.mock('window-size', () => ({ get: () => ({ width: 80 }) }));
+jest.mock('inquirer');
+jest.mock('ora');
+jest.mock('boxen', () => {
+  return () => 'success message';
+});
+jest.mock('../src/create-twilio-function/install-dependencies.js', () => {
+  return { installDependencies: jest.fn() };
+});
+
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -6,9 +16,8 @@ const { promisify } = require('util');
 const inquirer = require('inquirer');
 const ora = require('ora');
 const nock = require('nock');
-const rimraf = promisify(require('rimraf'));
+const rimraf = require('rimraf');
 
-const mkdir = promisify(fs.mkdir);
 const stat = promisify(fs.stat);
 const readdir = promisify(fs.readdir);
 
@@ -17,12 +26,6 @@ const {
 } = require('../src/create-twilio-function/install-dependencies');
 const createTwilioFunction = require('../src/create-twilio-function');
 
-jest.mock('window-size', () => ({ get: () => ({ width: 80 }) }));
-jest.mock('inquirer');
-jest.mock('ora');
-jest.mock('boxen', () => {
-  return () => 'success message';
-});
 const spinner = {
   start: () => spinner,
   succeed: () => spinner,
@@ -33,29 +36,29 @@ const spinner = {
 ora.mockImplementation(() => {
   return spinner;
 });
-jest.mock('../src/create-twilio-function/install-dependencies.js', () => {
-  return { installDependencies: jest.fn() };
-});
-console.log = jest.fn();
 
 const scratchDir = path.join(os.tmpdir(), 'scratch');
 
-beforeAll(async () => {
-  await rimraf(scratchDir);
+let backupConsole;
+beforeAll(() => {
+  backupConsole = console.log;
+  console.log = jest.fn();
+  rimraf.sync(scratchDir);
   nock.disableNetConnect();
 });
 
 afterAll(() => {
+  console.log = backupConsole;
   nock.enableNetConnect();
 });
 
 describe('createTwilioFunction', () => {
-  beforeEach(async () => {
-    await mkdir(scratchDir);
+  beforeEach(() => {
+    fs.mkdirSync(scratchDir);
   });
 
-  afterEach(async () => {
-    await rimraf(scratchDir);
+  afterEach(() => {
+    rimraf.sync(scratchDir);
     nock.cleanAll();
   });
 
@@ -441,7 +444,7 @@ describe('createTwilioFunction', () => {
 
     it("doesn't scaffold if the target folder name already exists", async () => {
       const name = 'test-function';
-      await mkdir(path.join(scratchDir, name));
+      fs.mkdirSync(path.join(scratchDir, name));
       const fail = jest.spyOn(spinner, 'fail');
 
       await createTwilioFunction({
