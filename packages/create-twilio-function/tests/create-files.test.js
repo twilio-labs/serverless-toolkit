@@ -67,12 +67,11 @@ describe('create-files', () => {
       const name = 'test-pkg-1';
       const basePath = path.join(scratchDir, name);
       fs.mkdirSync(basePath, { recursive: true });
-
       await createPackageJSON(basePath, 'project-name');
       const file = await stat(path.join(basePath, 'package.json'));
       expect(file.isFile());
       const packageJSON = JSON.parse(
-        await readFile(path.join(basePath, 'package.json'), 'utf-8')
+        fs.readFileSync(path.join(basePath, 'package.json'), 'utf-8')
       );
       expect(packageJSON.name).toEqual('project-name');
       expect(packageJSON.engines.node).toEqual(versions.node);
@@ -87,12 +86,11 @@ describe('create-files', () => {
       const name = 'test-pkg-2';
       const basePath = path.join(scratchDir, name);
       fs.mkdirSync(basePath, { recursive: true });
-
       await createPackageJSON(basePath, 'project-name', 'typescript');
       const file = await stat(path.join(basePath, 'package.json'));
       expect(file.isFile());
       const packageJSON = JSON.parse(
-        await readFile(path.join(basePath, 'package.json'), 'utf-8')
+        fs.readFileSync(path.join(basePath, 'package.json'), 'utf-8')
       );
       expect(packageJSON.name).toEqual('project-name');
       expect(packageJSON.engines.node).toEqual(versions.node);
@@ -107,7 +105,6 @@ describe('create-files', () => {
       ).toEqual(versions.serverlessRuntimeTypes);
       cleanUp();
     });
-
     test('it rejects if there is already a package.json', async () => {
       const { tmpDir: scratchDir, cleanUp } = setupDir();
       fs.closeSync(fs.openSync(path.join(scratchDir, 'package.json'), 'w'));
@@ -239,7 +236,7 @@ describe('create-files', () => {
       });
       const file = await stat(path.join(basePath, '.env'));
       expect(file.isFile());
-      const contents = await readFile(path.join(basePath, '.env'), {
+      const contents = fs.readFileSync(path.join(basePath, '.env'), {
         encoding: 'utf-8',
       });
       expect(contents).toMatch('ACCOUNT_SID=AC123');
@@ -277,7 +274,7 @@ describe('create-files', () => {
       await createNvmrcFile(basePath);
       const file = await stat(path.join(basePath, '.nvmrc'));
       expect(file.isFile());
-      const contents = await readFile(path.join(basePath, '.nvmrc'), {
+      const contents = fs.readFileSync(path.join(basePath, '.nvmrc'), {
         encoding: 'utf-8',
       });
       expect(contents).toMatch(versions.node);
@@ -311,7 +308,7 @@ describe('create-files', () => {
       await createTsconfigFile(basePath);
       const file = await stat(path.join(basePath, 'tsconfig.json'));
       expect(file.isFile());
-      const contents = await readFile(path.join(basePath, 'tsconfig.json'), {
+      const contents = fs.readFileSync(path.join(basePath, 'tsconfig.json'), {
         encoding: 'utf-8',
       });
       expect(contents).toMatch('"compilerOptions"');
