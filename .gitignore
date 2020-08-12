@@ -1,5 +1,6 @@
 # Package Lock files should not be included for libraries
 package-lock.json
+yarn.lock
 
 # Logs
 logs

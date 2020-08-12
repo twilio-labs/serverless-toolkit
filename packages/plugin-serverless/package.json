@@ -18,13 +18,7 @@
     "@oclif/plugin-help": "^2.2.1",
     "@oclif/test": "^1.2.5",
     "@twilio/cli-test": "^2.0.2",
-    "all-contributors-cli": "^6.7.0",
-    "chai": "^4.2.0",
-    "eslint": "^4.19.1",
-    "eslint-config-oclif": "^1.5.1",
-    "globby": "^8.0.2",
-    "mocha": "^5.2.0",
-    "nyc": "^13.3.0"
+    "globby": "^8.0.2"
   },
   "engines": {
     "node": ">=8.10.0"
@@ -83,9 +77,7 @@
   "repository": "twilio-labs/plugin-serverless",
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
-    "posttest": "eslint --ignore-path .gitignore . && npm audit",
     "prepack": "oclif-dev manifest && oclif-dev readme",
-    "test": "nyc --check-coverage --lines 90 --reporter=html --reporter=text mocha --forbid-only \"test/**/*.test.js\"",
     "version": "oclif-dev readme && git add README.md"
   }
 }
