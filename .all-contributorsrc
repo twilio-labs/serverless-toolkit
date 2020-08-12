@@ -67,6 +67,26 @@
         "code",
         "review"
       ]
+    },
+    {
+      "login": "childish-sambino",
+      "name": "childish-sambino",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/47228322?v=4",
+      "profile": "https://github.com/childish-sambino",
+      "contributions": [
+        "code",
+        "bug"
+      ]
+    },
+    {
+      "login": "thinkingserious",
+      "name": "Elmer Thomas",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/146695?v=4",
+      "profile": "http://www.ThinkingSerious.com",
+      "contributions": [
+        "bug",
+        "doc"
+      ]
     }
   ]
 }
