@@ -7,22 +7,24 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/twilio-labs/twilio-runtime-types.git"
-  },
   "keywords": [
     "twilio",
     "serverless",
     "typescript",
     "types"
   ],
-  "author": "Dominik Kundel <dkundel@twilio.com> (https://dkundel.com)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/twilio-labs/twilio-runtime-types/issues"
+  "author": "Twilio Inc. <open-source@twilio.com> (https://www.twilio.com/labs)",
+  "contributors": [
+    "Dominik Kundel <dkundel@twilio.com> (https://dkundel.com)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/twilio-labs/serverless-toolkit.git"
   },
-  "homepage": "https://github.com/twilio-labs/twilio-runtime-types#readme",
+  "homepage": "https://github.com/twilio-labs/serverless-toolkit",
+  "bugs": {
+    "url": "https://github.com/twilio-labs/serverless-toolkit/issues"
+  },
   "dependencies": {
     "twilio": "^3.33.0"
   },

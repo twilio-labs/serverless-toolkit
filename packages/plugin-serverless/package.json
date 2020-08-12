@@ -2,8 +2,10 @@
   "name": "@twilio-labs/plugin-serverless",
   "description": "Develop and deploy Twilio Serverless Functions",
   "version": "1.8.0",
-  "author": "Dominik Kundel <dkundel@twilio.com>",
-  "bugs": "https://github.com/twilio-labs/plugin-serverless/issues",
+  "author": "Twilio Inc. <open-source@twilio.com> (https://www.twilio.com/labs)",
+  "contributors": [
+    "Dominik Kundel <dkundel@twilio.com>"
+  ],
   "dependencies": {
     "@oclif/command": "^1.5.19",
     "@oclif/config": "^1.13.3",
@@ -30,7 +32,6 @@
     "LICENSE",
     "README.md"
   ],
-  "homepage": "https://github.com/twilio-labs/plugin-serverless",
   "keywords": [
     "oclif-plugin",
     "twilio-cli-plugin",
@@ -74,7 +75,14 @@
   "publishConfig": {
     "access": "public"
   },
-  "repository": "twilio-labs/plugin-serverless",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/twilio-labs/serverless-toolkit.git"
+  },
+  "homepage": "https://github.com/twilio-labs/serverless-toolkit",
+  "bugs": {
+    "url": "https://github.com/twilio-labs/serverless-toolkit/issues"
+  },
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "oclif-dev manifest && oclif-dev readme",
