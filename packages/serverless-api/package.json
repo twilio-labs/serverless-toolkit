@@ -19,13 +19,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/twilio-labs/serverless-api.git"
+    "url": "https://github.com/twilio-labs/serverless-toolkit.git"
+  },
+  "homepage": "https://github.com/twilio-labs/serverless-toolkit",
+  "bugs": {
+    "url": "https://github.com/twilio-labs/serverless-toolkit/issues"
   },
   "keywords": [
     "twilio",
     "serverless"
   ],
-  "author": "Dominik Kundel <hi@dominik.dev> (https://dkundel.com)",
+  "author": "Twilio Inc. <open-source@twilio.com> (https://www.twilio.com/labs)",
+  "contributors": [
+    "Dominik Kundel <dkundel@twilio.com> (https://dkundel.com)"
+  ],
   "license": "MIT",
   "files": [
     "dist/",

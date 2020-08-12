@@ -21,13 +21,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/twilio-labs/twilio-run.git"
+    "url": "https://github.com/twilio-labs/serverless-toolkit.git"
   },
+  "homepage": "https://github.com/twilio-labs/serverless-toolkit",
   "bugs": {
-    "url": "https://github.com/twilio-labs/twilio-run/issues",
-    "email": "dkundel@twilio.com"
+    "url": "https://github.com/twilio-labs/serverless-toolkit/issues"
   },
-  "author": "Dominik Kundel <dkundel@twilio.com>",
+  "author": "Twilio Inc. <open-source@twilio.com> (https://www.twilio.com/labs)",
+  "contributors": ["Dominik Kundel <dkundel@twilio.com> (https://dkundel.com)", "Phil Nash <philnash@twilio.com> (https://philna.sh)"],
   "license": "MIT",
   "dependencies": {
     "@twilio-labs/serverless-api": "^4.0.1",

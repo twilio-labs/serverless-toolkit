@@ -12,14 +12,17 @@
     "twilio-functions",
     "serverless"
   ],
-  "author": "Phil Nash <philnash@twilio.com> (https://philna.sh)",
+  "author": "Twilio Inc. <open-source@twilio.com> (https://www.twilio.com/labs)",
+  "contributors": [
+    "Phil Nash <philnash@twilio.com> (https://philna.sh)"
+  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/twilio-labs/create-twilio-function.git"
+    "url": "https://github.com/twilio-labs/serverless-toolkit.git"
   },
-  "homepage": "https://github.com/twilio-labs/create-twilio-function",
+  "homepage": "https://github.com/twilio-labs/serverless-toolkit",
   "bugs": {
-    "url": "https://github.com/twilio-labs/create-twilio-function/issues"
+    "url": "https://github.com/twilio-labs/serverless-toolkit/issues"
   },
   "license": "MIT",
   "devDependencies": {
