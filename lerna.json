@@ -1,6 +1,10 @@
 {
   "npmClient": "npm",
   "command": {
+    "create": {
+      "homepage": "https://github.com/twilio-labs/serverless-toolkit",
+      "license": "MIT"
+    },
     "publish": {
       "message": "chore(release): publish %s"
     },
@@ -11,6 +15,7 @@
       "allowBranch": ["master", "feature/*"]
     }
   },
+  "ignoreChanges": ["**/__fixtures__/**", "**/__tests__/**"],
   "packages": ["packages/*"],
   "version": "independent"
 }
