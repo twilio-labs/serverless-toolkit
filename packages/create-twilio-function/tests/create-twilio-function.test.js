@@ -1,7 +1,18 @@
+let mockDownloadFileShouldFail = false;
+
 jest.mock('window-size', () => ({ get: () => ({ width: 80 }) }));
 jest.mock('ora');
 jest.mock('boxen', () => {
   return () => 'success message';
+});
+jest.mock('twilio-run/dist/templating/actions', () => {
+  return {
+    downloadTemplate: jest.fn().mockImplementation(() => {
+      return mockDownloadFileShouldFail
+        ? Promise.reject(new Error('Failed to download'))
+        : Promise.resolve();
+    }),
+  };
 });
 jest.mock('../src/create-twilio-function/install-dependencies.js', () => {
   return { installDependencies: jest.fn() };
@@ -35,6 +46,7 @@ const rimraf = require('rimraf');
 const stat = promisify(fs.stat);
 const readdir = promisify(fs.readdir);
 
+const { downloadTemplate } = require('twilio-run/dist/templating/actions');
 const {
   installDependencies,
 } = require('../src/create-twilio-function/install-dependencies');
@@ -79,7 +91,6 @@ describe('createTwilioFunction', () => {
   afterEach(() => {
     nock.cleanAll();
   });
-
   describe('with an acceptable project name', () => {
     beforeEach(() => {
       nock('https://raw.githubusercontent.com')
@@ -183,57 +194,18 @@ describe('createTwilioFunction', () => {
 
       describe('templates', () => {
         it('scaffolds a Twilio Function with a template', async () => {
-          /* eslint-disable camelcase */
-          const gitHubAPI = nock('https://api.github.com');
-          gitHubAPI
-            .get(
-              '/repos/twilio-labs/function-templates/contents/blank?ref=master'
-            )
-            .reply(200, [
-              { name: 'functions' },
-              {
-                name: '.env',
-                download_url:
-                  'https://raw.githubusercontent.com/twilio-labs/function-templates/master/blank/.env',
-              },
-            ]);
-          gitHubAPI
-            .get(
-              '/repos/twilio-labs/function-templates/contents/blank/functions?ref=master'
-            )
-            .reply(200, [
-              {
-                name: 'blank.js',
-                download_url:
-                  'https://raw.githubusercontent.com/twilio-labs/function-templates/master/blank/functions/blank.js',
-              },
-            ]);
-          /* eslint-enable camelcase */
-          const gitHubRaw = nock('https://raw.githubusercontent.com');
-          gitHubRaw
-            .get(
-              '/twilio-labs/function-templates/master/blank/functions/blank.js'
-            )
-            .reply(
-              200,
-              `exports.handler = function(context, event, callback) {
-    callback(null, {});
-  };`
-            );
-          gitHubRaw
-            .get('/github/gitignore/master/Node.gitignore')
-            .reply(200, 'node_modules/');
-          gitHubRaw
-            .get('/twilio-labs/function-templates/master/blank/.env')
-            .reply(200, '');
-
           const name = 'test-function-3';
           const { tmpDir: scratchDir, cleanUp } = setupDir();
-          await createTwilioFunction({
-            name,
-            path: scratchDir,
-            template: 'blank',
-          });
+          try {
+            await createTwilioFunction({
+              name,
+              path: scratchDir,
+              template: 'blank',
+            });
+          } catch (err) {
+            expect(err).toBeUndefined();
+          }
+
           const dir = await stat(path.join(scratchDir, name));
           expect(dir.isDirectory());
           const env = await stat(path.join(scratchDir, name, '.env'));
@@ -251,33 +223,11 @@ describe('createTwilioFunction', () => {
           );
           expect(gitignore.isFile());
 
-          const functions = await stat(
-            path.join(scratchDir, name, 'functions')
+          expect(downloadTemplate).toHaveBeenCalledWith(
+            'blank',
+            '',
+            path.join(scratchDir, name)
           );
-          expect(functions.isDirectory());
-
-          const assets = await stat(path.join(scratchDir, name, 'assets'));
-          expect(assets.isDirectory());
-
-          const exampleFiles = await readdir(
-            path.join(scratchDir, name, 'functions')
-          );
-          expect(exampleFiles).toEqual(
-            expect.not.arrayContaining(['hello-world.js'])
-          );
-
-          const templateFunction = await stat(
-            path.join(scratchDir, name, 'functions', 'blank.js')
-          );
-          expect(templateFunction.isFile());
-
-          const exampleAssets = await readdir(
-            path.join(scratchDir, name, 'assets')
-          );
-          expect(exampleAssets).toEqual(
-            expect.not.arrayContaining(['index.html'])
-          );
-
           expect(installDependencies).toHaveBeenCalledWith(
             path.join(scratchDir, name)
           );
@@ -290,12 +240,8 @@ describe('createTwilioFunction', () => {
           const { tmpDir: scratchDir, cleanUp } = setupDir();
           const templateName = 'missing';
           const name = 'test-function-4';
-          const gitHubAPI = nock('https://api.github.com');
-          gitHubAPI
-            .get(
-              `/repos/twilio-labs/function-templates/contents/${templateName}`
-            )
-            .reply(404);
+
+          mockDownloadFileShouldFail = true;
 
           const fail = jest.spyOn(spinner, 'fail');
 
@@ -317,6 +263,7 @@ describe('createTwilioFunction', () => {
             expect(e.toString()).toMatch('no such file or directory');
           }
           cleanUp();
+          mockDownloadFileShouldFail = false;
         });
       });
     });
