@@ -152,8 +152,8 @@ twilio-run --inspect
 # Exposes the Twilio functions via ngrok to share them
 twilio-run --ngrok
 
-# Exposes the Twilio functions via ngrok using a custom subdomain (requires a paid-for ngrok account)
-twilio-run --ngrok=subdomain
+# Uses a custom project ngrok config and named tunnel to expose the functions via ngrok
+twilio-run --ngrok --ngrok-config=./ngrok.yml --ngrok-name=example
 ```
 
 ### `twilio-run deploy`
