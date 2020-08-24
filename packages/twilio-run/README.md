@@ -151,6 +151,9 @@ twilio-run --inspect
 
 # Exposes the Twilio functions via ngrok to share them
 twilio-run --ngrok
+
+# Exposes the Twilio functions via ngrok using a custom subdomain (requires a paid-for ngrok account)
+twilio-run --ngrok=subdomain
 ```
 
 ### `twilio-run deploy`
@@ -318,7 +321,7 @@ Error: What?
     at next (/Users/dkundel/dev/twilio-run/node_modules/express/lib/router/route.js:131:14)
 ```
 
-In general you'll want to use the cleaned-up stack trace since the internals might change throughout time. 
+In general you'll want to use the cleaned-up stack trace since the internals might change throughout time.
 
 
 
