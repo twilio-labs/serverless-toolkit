@@ -259,7 +259,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
           this
         );
         const foundFunction = availableFunctions.find(
-          (fn) => fn.friendly_name === filterByFunction
+          fn => fn.friendly_name === filterByFunction
         );
         if (!foundFunction) {
           throw new Error('Invalid Function Name or SID');
@@ -297,7 +297,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
           this
         );
         const foundFunction = availableFunctions.find(
-          (fn) => fn.friendly_name === filterByFunction
+          fn => fn.friendly_name === filterByFunction
         );
         if (!foundFunction) {
           throw new Error('Invalid Function Name or SID');
@@ -506,7 +506,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
         message: `Uploading ${functions.length} Functions`,
       });
       const functionVersions = await Promise.all(
-        functionResources.map((fn) => {
+        functionResources.map(fn => {
           return uploadFunction(fn, serviceSid as string, this, this.config);
         })
       );
@@ -530,7 +530,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
         message: `Uploading ${assets.length} Assets`,
       });
       const assetVersions = await Promise.all(
-        assetResources.map((asset) => {
+        assetResources.map(asset => {
           return uploadAsset(asset, serviceSid as string, this, this.config);
         })
       );
@@ -662,6 +662,8 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
   ): Promise<unknown> {
     options.retry = {
       limit: this.config.retryLimit || RETRY_LIMIT,
+      methods: ['GET', 'POST', 'DELETE'],
+      statusCodes: [429],
     };
     return this.limit(() => this.client[method](path, options));
   }
