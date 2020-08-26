@@ -21,6 +21,7 @@ import {
   sharedCliOptions,
 } from './shared';
 import { CliInfo } from './types';
+import { ClientApiError } from '@twilio-labs/serverless-api/dist/utils/error';
 
 const debug = getDebugFunction('twilio-run:activate');
 
@@ -33,7 +34,12 @@ function handleError(err: Error, spinner: Ora) {
   if (spinner) {
     if (err.name === 'TwilioApiError') {
       spinner.fail('Failed promoting build.');
-      logApiError(logger, err);
+      const clientApiError = err as ClientApiError;
+      if (clientApiError.code === 20409) {
+        clientApiError.message +=
+          '\n\nThis is probably because you are trying to promote a build to an environment where it is already live. Try promoting the build to a different environment or choosing a different build to promote to this environment.';
+      }
+      logApiError(logger, clientApiError);
     } else {
       spinner.fail(err.message);
     }

@@ -138,7 +138,8 @@ export const cliInfo: CliInfo = {
     },
     ngrok: {
       type: 'string',
-      describe: 'Uses ngrok to create and outfacing url',
+      describe:
+        'Uses ngrok to create a public url. Pass a string to set the subdomain (requires a paid-for ngrok account).',
     },
     logs: {
       type: 'boolean',
