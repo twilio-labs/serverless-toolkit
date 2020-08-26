@@ -4,7 +4,8 @@
   "scripts": {
     "bootstrap": "lerna bootstrap --no-ci",
     "postbootstrap": "lerna run build",
-    "release": "lerna version --conventional-commits",
+    "release": "lerna version --conventional-commits --no-commit-hooks --no-push",
+    "publish": "lerna publish from-git",
     "cm": "git-cz",
     "jest": "jest",
     "build:noemit": "lerna run build:noemit",
