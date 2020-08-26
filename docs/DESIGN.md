@@ -18,7 +18,7 @@ consideration.
 While all modules together form the Serverless Toolkit, we offer with the
 different modules a way for people to use different parts of the project.
 
-For example the [Serverless Framework Integration](https://github.com/twilio-labs/serverless-framework-integration) makes use of [`@twilio-labs/serverless-api`] but not of any of the CLI functionality.
+For example the [Serverless Framework Integration][`@twilio-labs/serverless-twilio-runtime`] makes use of [`@twilio-labs/serverless-api`] but not of any of the CLI functionality.
 
 Right now the project breaks down into the following modules:
 
