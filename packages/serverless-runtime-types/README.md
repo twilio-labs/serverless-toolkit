@@ -1,6 +1,3 @@
-> # Important
-> This project is in the process of being moved into a monorepo. In the meantime, for any issues please open an issue at [github.com/twilio-labs/twilio-run/issues](https://github.com/twilio-labs/twilio-run/issues)
-
 <h1 align="center">@twilio-labs/serverless-runtime-types</h1>
 <p align="center">TypeScript definitions to define globals for the Twilio Serverless runtime</p>
 <p align="center">
@@ -29,7 +26,7 @@ npm install @twilio-labs/serverless-runtime-types
 
 ### In JavaScript
 
-If you want to use the types in JavaScript to get autocomplete in VS Code and 
+If you want to use the types in JavaScript to get autocomplete in VS Code and
 other editors using the TypeScript language server:
 
 ```js
@@ -40,12 +37,11 @@ other editors using the TypeScript language server:
  * @param {{}} event
  * @param {import('@twilio-labs/serverless-runtime-types').ServerlessCallback} callback
  */
-exports.handler = function (context, event, callback) {
+exports.handler = function(context, event, callback) {
   let twiml = new Twilio.twiml.MessagingResponse();
-  twiml.message('Hello World');
+  twiml.message("Hello World");
   callback(null, twiml);
 };
-
 ```
 
 ### In TypeScript
@@ -67,11 +63,11 @@ to use the definitions.
 #### Option 2: Import the file
 
 ```ts
-import '@twilio-labs/serverless-runtime-types';
+import "@twilio-labs/serverless-runtime-types";
 
 export function handler(context, event, callback) {
   let twiml = new Twilio.twiml.MessagingResponse();
-  twiml.message('Hello World');
+  twiml.message("Hello World");
   callback(null, twiml);
 }
 ```
@@ -81,14 +77,14 @@ export function handler(context, event, callback) {
 You can also import the specific types without setting the global types:
 
 ```ts
-import { RuntimeInstance } from '@twilio-labs/serverless-runtime-types/types';
+import { RuntimeInstance } from "@twilio-labs/serverless-runtime-types/types";
 
 function listSyncDocuments(runtime: RuntimeInstance) {
-  return runtime.getSync().documents.list()
+  return runtime.getSync().documents.list();
 }
 ```
 
-##  Contributing
+## Contributing
 
 This project welcomes contributions from the community. Please see the [`CONTRIBUTING.md`](https://github.com/twilio-labs/.github/blob/master/CONTRIBUTING.md) file for more details.
 

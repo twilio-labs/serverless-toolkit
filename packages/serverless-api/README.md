@@ -1,6 +1,3 @@
-> # Important:
-> This repository is being moved into a monorepo. In the meantime, for any issues please open an issue at [github.com/twilio-labs/twilio-run/issues](https://github.com/twilio-labs/twilio-run/issues).
-
 <h1 align="center">@twilio-labs/serverless-api</h1>
 <p align="center">A module to interact with the <a href="https://www.twilio.com/functions">Twilio Serverless</a> API. For example to deploy projects. 
 Part of the <a href="https://github.com/twilio-labs/serverless-toolkit">Serverless Toolkit</a>.
@@ -9,20 +6,20 @@ Part of the <a href="https://github.com/twilio-labs/serverless-toolkit">Serverle
 <img alt="npm (scoped)" src="https://img.shields.io/npm/v/@twilio-labs/serverless-api.svg?style=flat-square"> <img alt="npm" src="https://img.shields.io/npm/dt/@twilio-labs/serverless-api.svg?style=flat-square"> <img alt="GitHub" src="https://img.shields.io/github/license/twilio-labs/serverless-api.svg?style=flat-square"> <a href="#contributors"><img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square" /></a> <a href="https://github.com/twilio-labs/.github/blob/master/CODE_OF_CONDUCT.md"><img alt="Code of Conduct" src="https://img.shields.io/badge/%F0%9F%92%96-Code%20of%20Conduct-blueviolet.svg?style=flat-square"></a> <a href="http://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" /></a> </<a>
 <hr>
 
-* [Installation](#installation)
-* [Example](#example)
-* [HTTP Client Configuration](#http-client-configuration)
-* [API](#api)
-  * [`client.activateBuild(activateConfig: ActivateConfig): Promise<ActivateResult>`](#clientactivatebuildactivateconfig-activateconfig-promiseactivateresult)
-  * [`client.deployLocalProject(deployConfig: DeployLocalProjectConfig): Promise<DeployResult>`](#clientdeploylocalprojectdeployconfig-deploylocalprojectconfig-promisedeployresult)
-  * [`client.deployProject(deployConfig: DeployProjectConfig): Promise<DeployResult>`](#clientdeployprojectdeployconfig-deployprojectconfig-promisedeployresult)
-  * [`client.getClient(): GotClient`](#clientgetclient-gotclient)
-  * [`client.list(listConfig: ListConfig): Promise<ListResult>`](#clientlistlistconfig-listconfig-promiselistresult)
-  * [`api` and `fsHelpers`](#api-and-fshelpers)
-* [Contributing](#contributing)
-  * [Code of Conduct](#code-of-conduct)
-  * [Contributors](#contributors)
-* [License](#license)
+- [Installation](#installation)
+- [Example](#example)
+- [HTTP Client Configuration](#http-client-configuration)
+- [API](#api)
+  - [`client.activateBuild(activateConfig: ActivateConfig): Promise<ActivateResult>`](#clientactivatebuildactivateconfig-activateconfig-promiseactivateresult)
+  - [`client.deployLocalProject(deployConfig: DeployLocalProjectConfig): Promise<DeployResult>`](#clientdeploylocalprojectdeployconfig-deploylocalprojectconfig-promisedeployresult)
+  - [`client.deployProject(deployConfig: DeployProjectConfig): Promise<DeployResult>`](#clientdeployprojectdeployconfig-deployprojectconfig-promisedeployresult)
+  - [`client.getClient(): GotClient`](#clientgetclient-gotclient)
+  - [`client.list(listConfig: ListConfig): Promise<ListResult>`](#clientlistlistconfig-listconfig-promiselistresult)
+  - [`api` and `fsHelpers`](#api-and-fshelpers)
+- [Contributing](#contributing)
+  - [Code of Conduct](#code-of-conduct)
+  - [Contributors](#contributors)
+- [License](#license)
 
 ## Installation
 
@@ -35,28 +32,28 @@ npm install @twilio-labs/serverless-api
 If you want to deploy a local project you can do this using:
 
 ```js
-const { TwilioServerlessApiClient } = require('@twilio-labs/serverless-api');
+const { TwilioServerlessApiClient } = require("@twilio-labs/serverless-api");
 
 const client = new TwilioServerlessApiClient({
-  accountSid: '...',
-  authToken: '...',
+  accountSid: "...",
+  authToken: "..."
 });
 
-client.on('status-update', evt => {
+client.on("status-update", evt => {
   console.log(evt.message);
 });
 
 const result = await client.deployLocalProject({
-  cwd: '...',
-  envPath: '...',
-  accountSid: '...',
-  authToken: '...',
+  cwd: "...",
+  envPath: "...",
+  accountSid: "...",
+  authToken: "...",
   env: {},
   pkgJson: {},
-  serviceName: 'serverless-example',
-  functionsEnv: 'dev',
-  assetsFolderName: 'static',
-  functionsFolderName: 'src',
+  serviceName: "serverless-example",
+  functionsEnv: "dev",
+  assetsFolderName: "static",
+  functionsFolderName: "src"
 });
 ```
 
@@ -116,23 +113,23 @@ Updates to the deployment will be emitted as events to status-update.
 const result = await client.deployProject({
   env: {},
   pkgJson: {},
-  serviceName: 'serverless-example',
-  functionsEnv: 'dev',
+  serviceName: "serverless-example",
+  functionsEnv: "dev",
   functions: [
     {
-      name: 'hello-world',
-      path: '/hello-world-path',
-      content: await readFile(path.join(__dirname, 'some-dir', 'handler.js')),
-      access: 'public',
-    },
+      name: "hello-world",
+      path: "/hello-world-path",
+      content: await readFile(path.join(__dirname, "some-dir", "handler.js")),
+      access: "public"
+    }
   ],
   assets: [
     {
-      name: 'image',
-      path: '/foo/image.jpg',
-      access: 'public',
-      content: await readFile(path.join(__dirname, 'another-dir', 'image.jpg')),
-    },
+      name: "image",
+      path: "/foo/image.jpg",
+      access: "public",
+      content: await readFile(path.join(__dirname, "another-dir", "image.jpg"))
+    }
   ]
 });
 ```
@@ -158,11 +155,11 @@ There's also a variety of small helper libraries that you can find more details 
 You can consume them in two ways:
 
 ```js
-const { fsHelpers, api, utils } = require('@twilio-labs/serverless-api');
+const { fsHelpers, api, utils } = require("@twilio-labs/serverless-api");
 // or
-const fsHelpers = require('@twilio-labs/serverless-api/dist/utils/fs');
-const api = require('@twilio-labs/serverless-api/dist/api');
-const utils = require('@twilio-labs/serverless-api/dist/utils');
+const fsHelpers = require("@twilio-labs/serverless-api/dist/utils/fs");
+const api = require("@twilio-labs/serverless-api/dist/api");
+const utils = require("@twilio-labs/serverless-api/dist/utils");
 ```
 
 ## Contributing
@@ -193,6 +190,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
