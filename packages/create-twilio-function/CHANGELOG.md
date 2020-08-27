@@ -1,3 +1,19 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# 3.0.0-beta.0 (2020-08-27)
+
+
+### Bug Fixes
+
+* **create-twilio-function:** add early exit for invalid options ([3338e3d](https://github.com/twilio-labs/serverless-toolkit/commit/3338e3daff2b6d7a0931da5064d5088deb92d76d))
+
+
+
+
+
 # Changelog for `create-twilio-function`
 
 ## Ongoing [☰](https://github.com/twilio-labs/create-twilio-function/compare/v2.3.0...master)

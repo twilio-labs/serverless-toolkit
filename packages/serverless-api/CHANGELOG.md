@@ -1,3 +1,69 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# 5.0.0-beta.0 (2020-08-27)
+
+
+* feat!: introduce rate limiting (#42) ([902e749](https://github.com/twilio-labs/serverless-toolkit/commit/902e749084b96fd6d2ee96e89477aa0da7f94dfc)), closes [#42](https://github.com/twilio-labs/serverless-toolkit/issues/42) [#37](https://github.com/twilio-labs/serverless-toolkit/issues/37)
+
+
+### Bug Fixes
+
+* **activate:** activating with environment variables ([#49](https://github.com/twilio-labs/serverless-toolkit/issues/49)) ([9e05152](https://github.com/twilio-labs/serverless-toolkit/commit/9e05152c9fbb57c403fc2d2a99f9358ca825008d))
+* **api:** update form field names to work with serverless-api ([777dbe4](https://github.com/twilio-labs/serverless-toolkit/commit/777dbe4dfe9e38ff9312619f36893e8a3defacea))
+* **api:** use new uploads API ([#9](https://github.com/twilio-labs/serverless-toolkit/issues/9)) ([998f83a](https://github.com/twilio-labs/serverless-toolkit/commit/998f83a6c52fafd08af2484f4c34bd4b7543b5dc))
+* **assets:** enable protected asset upload ([fdb7ee8](https://github.com/twilio-labs/serverless-toolkit/commit/fdb7ee8aa7f994b5c78869e65287a3669c130f0f))
+* **build:** reject promise on failed build ([afa2f8c](https://github.com/twilio-labs/serverless-toolkit/commit/afa2f8c655596181764df93fa90ab9ad2493336f)), closes [#15](https://github.com/twilio-labs/serverless-toolkit/issues/15)
+* **builds:** support more than one fn/asset ([bbdbd82](https://github.com/twilio-labs/serverless-toolkit/commit/bbdbd82696e7d044ea667ac0f97ae041e357b7f6))
+* **client:** fix client service error information ([#10](https://github.com/twilio-labs/serverless-toolkit/issues/10)) ([93950e0](https://github.com/twilio-labs/serverless-toolkit/commit/93950e041efbe24766bfa122e9c0e4b351b1e61a))
+* **content-type:** change content type detection to take hint ([#34](https://github.com/twilio-labs/serverless-toolkit/issues/34)) ([fac52fb](https://github.com/twilio-labs/serverless-toolkit/commit/fac52fb6321bb84806e9ed1d293b673d4e020131))
+* **deploy:** stop creating environments with domain suffix 'undefined' ([#50](https://github.com/twilio-labs/serverless-toolkit/issues/50)) ([ad4817f](https://github.com/twilio-labs/serverless-toolkit/commit/ad4817f753221aa6b7879e0deba23a562f40eb4d))
+* **environments:** fix deploying to production ([#16](https://github.com/twilio-labs/serverless-toolkit/issues/16)) ([fc09142](https://github.com/twilio-labs/serverless-toolkit/commit/fc09142c1b19efd3e628efa74d11c5ee2aca24b6))
+* **functions:** support private functions ([#30](https://github.com/twilio-labs/serverless-toolkit/issues/30)) ([34ecf86](https://github.com/twilio-labs/serverless-toolkit/commit/34ecf869d631e0117b4516e76ffaa85233d1ae53))
+* **logs:** fix typo in debug logs ([eca8f38](https://github.com/twilio-labs/serverless-toolkit/commit/eca8f38e7d0d76d97fd8a06ab2e89e4d4c9014e5))
+* **logs:** redact tokens/passwords/env vars from logs ([59b6d4e](https://github.com/twilio-labs/serverless-toolkit/commit/59b6d4e771cfbd217ca63cbe2ddce9abcbe1756b))
+* add file name on failing asset upload error ([#47](https://github.com/twilio-labs/serverless-toolkit/issues/47)) ([3c9e9ec](https://github.com/twilio-labs/serverless-toolkit/commit/3c9e9ecea8c06daf3ad04292a944d213d1ccc735))
+* **paths:** add path verification ([#31](https://github.com/twilio-labs/serverless-toolkit/issues/31)) ([cd239bd](https://github.com/twilio-labs/serverless-toolkit/commit/cd239bd6178d6256d1314c5fd0861fccfc87e440))
+* **serverless-api:** retries on 429 error for POST request ([4533fcd](https://github.com/twilio-labs/serverless-toolkit/commit/4533fcdd634d492b3b16477ca93d97e7ff9ce9d9))
+* **types:** expose friendly_name on environments ([56df438](https://github.com/twilio-labs/serverless-toolkit/commit/56df438ef2ca94f81185a95c124c59b0c0673548))
+* add pagination to list requests ([#1](https://github.com/twilio-labs/serverless-toolkit/issues/1)) ([#13](https://github.com/twilio-labs/serverless-toolkit/issues/13)) ([bd3d3df](https://github.com/twilio-labs/serverless-toolkit/commit/bd3d3df0b6c5d485addbc7141ac0a75d22036c00))
+* change resource paths for nested Windows directories ([#11](https://github.com/twilio-labs/serverless-toolkit/issues/11)) ([8fcd0b3](https://github.com/twilio-labs/serverless-toolkit/commit/8fcd0b382c1f43ba80db7a538d7fb1e5a5b7a098))
+* detect DEBUG flag on client creation ([29853bb](https://github.com/twilio-labs/serverless-toolkit/commit/29853bb3ebc9eb6d65ecb900c2ceb8fab159c1e3)), closes [twilio-labs/twilio-run#50](https://github.com/twilio-labs/twilio-run/issues/50)
+* upgrade type-fest from 0.15.1 to 0.16.0 ([65b81a9](https://github.com/twilio-labs/serverless-toolkit/commit/65b81a996b231827c4e42985f76c2b1725351c87))
+
+
+### Features
+
+* add region support ([#39](https://github.com/twilio-labs/serverless-toolkit/issues/39)) ([11e674f](https://github.com/twilio-labs/serverless-toolkit/commit/11e674fce011b5a27bc094d2e000e0c60cb95265))
+* add tests for asset error ([#47](https://github.com/twilio-labs/serverless-toolkit/issues/47)) ([63ae1fb](https://github.com/twilio-labs/serverless-toolkit/commit/63ae1fbf5f43e6bda95c0c71b9ee368a4ad7acbd))
+* expose createFunctionResource - fix [#3](https://github.com/twilio-labs/serverless-toolkit/issues/3) ([#4](https://github.com/twilio-labs/serverless-toolkit/issues/4)) ([c28e174](https://github.com/twilio-labs/serverless-toolkit/commit/c28e17474b4203f05e0bfb94df17d7d0329c6092))
+* **logs:** add logs fetching and streaming ([#23](https://github.com/twilio-labs/serverless-toolkit/issues/23)) ([883dbdf](https://github.com/twilio-labs/serverless-toolkit/commit/883dbdfe6a7c9c295149e65ab683d658464ffc6c))
+* replace projectName with serviceName for consistency ([2e35c8b](https://github.com/twilio-labs/serverless-toolkit/commit/2e35c8b9e5df62235458aa5c33dad716e72e135a)), closes [twilio-labs/twilio-run#17](https://github.com/twilio-labs/twilio-run/issues/17)
+* unify error interface & upgrade got ([#29](https://github.com/twilio-labs/serverless-toolkit/issues/29)) ([b27ae79](https://github.com/twilio-labs/serverless-toolkit/commit/b27ae79bf4af763ae80d17b9c7849fe6756abb1e))
+* **client:** adds username and password support ([#51](https://github.com/twilio-labs/serverless-toolkit/issues/51)) ([d3dc471](https://github.com/twilio-labs/serverless-toolkit/commit/d3dc47192753351a68adce7897d6527dff7b54ec)), closes [#41](https://github.com/twilio-labs/serverless-toolkit/issues/41)
+* **client:** expose domain in activate command ([d0294b5](https://github.com/twilio-labs/serverless-toolkit/commit/d0294b5c8018ea76b4cb9b51b61f02db100341ab)), closes [twilio-labs/twilio-run#37](https://github.com/twilio-labs/twilio-run/issues/37)
+* **environments:** make naming of environments predictable ([8f97342](https://github.com/twilio-labs/serverless-toolkit/commit/8f973426b19101dc0472a51caf611e2d61b12fef)), closes [#6](https://github.com/twilio-labs/serverless-toolkit/issues/6)
+* **functions:** list function versions & download content ([#52](https://github.com/twilio-labs/serverless-toolkit/issues/52)) ([e32f770](https://github.com/twilio-labs/serverless-toolkit/commit/e32f770a57ee0b77f667e6ebe079c0aa2f67c60e))
+* **logs:** implements fetch and list of logs ([#12](https://github.com/twilio-labs/serverless-toolkit/issues/12)) ([c36a786](https://github.com/twilio-labs/serverless-toolkit/commit/c36a7868fff87dc596659226a0ff9704bc969eab))
+
+
+### Reverts
+
+* **environments:** revert back to old unique_name annotation ([af2d876](https://github.com/twilio-labs/serverless-toolkit/commit/af2d876dbd7878747560c0ddb6dcbde107b49d85))
+
+
+### BREAKING CHANGES
+
+* the function signature of the individual functions changed. If you only use the methods on the client, nothing should have changed.
+* **api:** Removes uploadToAws as a function
+* projectName is no longer valid and serviceName has to be used instead
+
+
+
+
+
 # Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
