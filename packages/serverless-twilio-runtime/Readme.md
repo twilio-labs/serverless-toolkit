@@ -1,6 +1,3 @@
-> # Important
-> This project is in the process of being moved into a monorepo. In the meantime, for any issues please open an issue at [github.com/twilio-labs/twilio-run/issues](https://github.com/twilio-labs/twilio-run/issues)
-
 # Twilio Runtime Plugin for Serverless Framework
 
 ![Npm Version](https://img.shields.io/npm/v/@twilio-labs/serverless-twilio-runtime.svg?style=flat-square)
@@ -44,7 +41,7 @@ provider:
 
 # Twilio runtime has to be added as a plugin
 plugins:
-  - '@twilio-labs/serverless-twilio-runtime'
+  - "@twilio-labs/serverless-twilio-runtime"
 
 functions:
   # Function name
@@ -102,7 +99,7 @@ provider:
   # -> these dependencies will be available in the
   #    Twilio Node.js runtime
   dependencies:
-    asciiart-logo: '*'
+    asciiart-logo: "*"
 
   # Twilio runtime supports several domains
   # your functions and assets will be available under
@@ -112,11 +109,11 @@ provider:
   # Environment variables passed to your functions
   # available in the Twilio runtime via `context` function parameter
   environmentVars:
-    MY_MESSAGE: 'This is cool stuff'
+    MY_MESSAGE: "This is cool stuff"
 
 # Twilio runtime has to be added as a plugin
 plugins:
-  - '@twilio-labs/serverless-twilio-runtime'
+  - "@twilio-labs/serverless-twilio-runtime"
 
 functions:
   # Function name
