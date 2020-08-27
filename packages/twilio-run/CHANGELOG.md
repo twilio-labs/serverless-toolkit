@@ -1,3 +1,19 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# 3.0.0-beta.0 (2020-08-27)
+
+
+### Bug Fixes
+
+* **twilio-run:promote:** better error message for 409 error ([7a6a49f](https://github.com/twilio-labs/serverless-toolkit/commit/7a6a49f1e9fd477d1f1213fd96b759a7c73f0852)), closes [#171](https://github.com/twilio-labs/serverless-toolkit/issues/171)
+
+
+
+
+
 # Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
