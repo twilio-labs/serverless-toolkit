@@ -35,16 +35,26 @@ function requireUncached(module: string): any {
   return require(module);
 }
 
-function loadTwilioFunction(
-  fnPath: string,
-  config: StartCliConfig
-): ServerlessFunctionSignature {
-  if (config.live) {
-    debug('Uncached loading of %s', fnPath);
-    return requireUncached(fnPath).handler;
-  } else {
-    return require(fnPath).handler;
-  }
+function loadTwilioFunction(fnPath: string): ServerlessFunctionSignature {
+  return require(fnPath).handler;
+}
+
+function requireCacheCleaner(
+  req: ExpressRequest,
+  res: ExpressResponse,
+  next: NextFunction
+) {
+  debug('Deleting require cache');
+  Object.keys(require.cache).forEach(key => {
+    // Entries in the cache that end with .node are compiled binaries, deleting
+    // those has unspecified results, so we keep them.
+    // Entries in the cache that include "twilio-run" are part of this module
+    // or its dependencies, so don't need to be cleared.
+    if (!(key.endsWith('.node') || key.includes('twilio-run'))) {
+      delete require.cache[key];
+    }
+  });
+  next();
 }
 
 export async function createServer(
@@ -77,6 +87,7 @@ export async function createServer(
 
   if (config.live) {
     app.use(nocache());
+    app.use(requireCacheCleaner);
   }
 
   if (config.legacyMode) {
@@ -160,7 +171,7 @@ export async function createServer(
           }
 
           debug('Load & route to function at "%s"', functionPath);
-          const twilioFunction = loadTwilioFunction(functionPath, config);
+          const twilioFunction = loadTwilioFunction(functionPath);
           if (typeof twilioFunction !== 'function') {
             return res
               .status(404)
