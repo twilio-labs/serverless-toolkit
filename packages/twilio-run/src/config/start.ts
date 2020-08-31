@@ -1,9 +1,11 @@
 import { EnvironmentVariables } from '@twilio-labs/serverless-api';
 import dotenv from 'dotenv';
-import { readFileSync } from 'fs';
+import { readFile } from 'fs';
+import { promisify } from 'util';
+const readFilePromise = promisify(readFile);
 import path, { resolve, join } from 'path';
 import { homedir } from 'os';
-import { Arguments, config } from 'yargs';
+import { Arguments } from 'yargs';
 import { ExternalCliOptions, SharedFlags } from '../commands/shared';
 import { CliInfo } from '../commands/types';
 import { EnvironmentVariablesWithAuth } from '../types/generic';
@@ -75,9 +77,9 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
     if (typeof cli.ngrokConfig === 'string') {
       // If we set a config path then try to load that config. If the config
       // fails to load then we'll try to load the default config instead.
-      const configPath = join(process.cwd(), cli.ngrokConfig);
+      const configPath = join(cli.cwd || process.cwd(), cli.ngrokConfig);
       try {
-        ngrokConfig = parse(readFileSync(configPath, 'utf-8'));
+        ngrokConfig = parse(await readFilePromise(configPath, 'utf-8'));
       } catch (err) {
         logger.warn(`Could not find ngrok config file at ${configPath}`);
       }
@@ -87,7 +89,7 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
       // `ngrokConfig` to be an empty object.
       const configPath = join(homedir(), '.ngrok2', 'ngrok.yml');
       try {
-        ngrokConfig = parse(readFileSync(configPath, 'utf-8'));
+        ngrokConfig = parse(await readFilePromise(configPath, 'utf-8'));
       } catch (err) {
         ngrokConfig = {};
       }
@@ -167,7 +169,7 @@ export async function getEnvironment(
   if (await fileExists(fullEnvPath)) {
     try {
       debug(`Read .env file at "%s"`, fullEnvPath);
-      const envContent = readFileSync(fullEnvPath, 'utf8');
+      const envContent = await readFilePromise(fullEnvPath, 'utf8');
       const envValues = dotenv.parse(envContent);
       for (const [key, val] of Object.entries(envValues)) {
         env[key] = val;
