@@ -76,7 +76,7 @@ To ship a specific version instead (like a forced minor bump) you can run:
 
 ```bash
 npm run release -- minor
-git push origin master --follow-tags
+git push origin main --follow-tags
 npm run publish -- --otp=<OTP>
 ```
 
@@ -108,7 +108,7 @@ You can run `lerna clean` to delete all `node_modules` folder. To reinstall them
 
 ## Code of Conduct
 
-Please be aware that this project has a [Code of Conduct](https://github.com/twilio-labs/.github/blob/master/CODE_OF_CONDUCT.md). The tldr; is to just be excellent to each other ❤️
+Please be aware that this project has a [Code of Conduct](https://github.com/twilio-labs/.github/blob/main/CODE_OF_CONDUCT.md). The tldr; is to just be excellent to each other ❤️
 
 ## Licensing
 
