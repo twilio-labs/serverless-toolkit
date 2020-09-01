@@ -1,8 +1,8 @@
-import path from 'path';
 import { stripIndent } from 'common-tags';
 import got from 'got';
-import flatten from 'lodash.flatten';
 import { OutgoingHttpHeaders } from 'http';
+import flatten from 'lodash.flatten';
+import path from 'path';
 import { getDebugFunction } from '../utils/logger';
 const debug = getDebugFunction('twilio-run:new:template-data');
 
@@ -10,7 +10,7 @@ const TEMPLATE_BASE_REPO =
   process.env.TWILIO_SERVERLESS_TEMPLATE_REPO ||
   'twilio-labs/function-templates';
 const TEMPLATE_BASE_BRANCH =
-  process.env.TWILIO_SERVERLESS_TEMPLATE_BRANCH || 'master';
+  process.env.TWILIO_SERVERLESS_TEMPLATE_BRANCH || 'main';
 
 export const TEMPLATES_URL = `https://raw.githubusercontent.com/${TEMPLATE_BASE_REPO}/${TEMPLATE_BASE_BRANCH}/templates.json`;
 export const CONTENT_BASE_URL = `https://api.github.com/repos/${TEMPLATE_BASE_REPO}/contents`;

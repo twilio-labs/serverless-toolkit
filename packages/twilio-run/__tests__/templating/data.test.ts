@@ -16,7 +16,7 @@ describe('base API configuration', () => {
     } = require('../../src/templating/data');
 
     expect(TEMPLATES_URL).toBe(
-      'https://raw.githubusercontent.com/twilio-labs/function-templates/master/templates.json'
+      'https://raw.githubusercontent.com/twilio-labs/function-templates/main/templates.json'
     );
     expect(CONTENT_BASE_URL).toBe(
       'https://api.github.com/repos/twilio-labs/function-templates/contents'
@@ -32,7 +32,7 @@ describe('base API configuration', () => {
     } = require('../../src/templating/data');
 
     expect(TEMPLATES_URL).toBe(
-      'https://raw.githubusercontent.com/dkundel/function-templates/master/templates.json'
+      'https://raw.githubusercontent.com/dkundel/function-templates/main/templates.json'
     );
     expect(CONTENT_BASE_URL).toBe(
       'https://api.github.com/repos/dkundel/function-templates/contents'
@@ -86,7 +86,7 @@ describe('with a mocked GitHub API', () => {
 
       const basePath = '/repos/twilio-labs/function-templates/contents/blank';
       const templateContentScope = gitHubApi
-        .get(`${basePath}?ref=master`)
+        .get(`${basePath}?ref=main`)
         .reply(200, []);
       const result = await getTemplateFiles('blank');
 
@@ -102,7 +102,7 @@ describe('with a mocked GitHub API', () => {
       const basePath =
         '/repos/twilio-labs/function-templates/contents/blank/functions';
       const templateContentScope = gitHubApi
-        .get(`${basePath}?ref=master`)
+        .get(`${basePath}?ref=main`)
         .reply(200, [
           {
             name: 'blank.js',
@@ -110,21 +110,21 @@ describe('with a mocked GitHub API', () => {
             sha: '8ffaf92aea1c5cd224fafa30165462c9eb0214bd',
             size: 80,
             url:
-              'https://api.github.com/repos/twilio-labs/function-templates/contents/blank/functions/blank.js?ref=master',
+              'https://api.github.com/repos/twilio-labs/function-templates/contents/blank/functions/blank.js?ref=main',
             html_url:
-              'https://github.com/twilio-labs/function-templates/blob/master/blank/functions/blank.js',
+              'https://github.com/twilio-labs/function-templates/blob/main/blank/functions/blank.js',
             git_url:
               'https://api.github.com/repos/twilio-labs/function-templates/git/blobs/8ffaf92aea1c5cd224fafa30165462c9eb0214bd',
             download_url:
-              'https://raw.githubusercontent.com/twilio-labs/function-templates/master/blank/functions/blank.js',
+              'https://raw.githubusercontent.com/twilio-labs/function-templates/main/blank/functions/blank.js',
             type: 'file',
             _links: {
               self:
-                'https://api.github.com/repos/twilio-labs/function-templates/contents/blank/functions/blank.js?ref=master',
+                'https://api.github.com/repos/twilio-labs/function-templates/contents/blank/functions/blank.js?ref=main',
               git:
                 'https://api.github.com/repos/twilio-labs/function-templates/git/blobs/8ffaf92aea1c5cd224fafa30165462c9eb0214bd',
               html:
-                'https://github.com/twilio-labs/function-templates/blob/master/blank/functions/blank.js',
+                'https://github.com/twilio-labs/function-templates/blob/main/blank/functions/blank.js',
             },
           },
         ]);
@@ -136,27 +136,27 @@ describe('with a mocked GitHub API', () => {
       expect(file.name).toEqual('blank.js');
       expect(file.type).toEqual('functions');
       expect(file.content).toEqual(
-        'https://raw.githubusercontent.com/twilio-labs/function-templates/master/blank/functions/blank.js'
+        'https://raw.githubusercontent.com/twilio-labs/function-templates/main/blank/functions/blank.js'
       );
     });
 
     test('gets a template directory with nested functions from GH and translate to template file info', async () => {
       const basePath =
         '/repos/twilio-labs/function-templates/contents/nested/functions';
-      gitHubApi.get(`${basePath}?ref=master`).reply(200, [
+      gitHubApi.get(`${basePath}?ref=main`).reply(200, [
         {
           name: 'blank.js',
           path: 'nested/functions/blank.js',
           sha: '8ffaf92aea1c5cd224fafa30165462c9eb0214bd',
           size: 80,
           url:
-            'https://api.github.com/repos/twilio-labs/function-templates/contents/nested/functions/blank.js?ref=master',
+            'https://api.github.com/repos/twilio-labs/function-templates/contents/nested/functions/blank.js?ref=main',
           html_url:
-            'https://github.com/twilio-labs/function-templates/blob/master/nested/functions/blank.js',
+            'https://github.com/twilio-labs/function-templates/blob/main/nested/functions/blank.js',
           git_url:
             'https://api.github.com/repos/twilio-labs/function-templates/git/blobs/8ffaf92aea1c5cd224fafa30165462c9eb0214bd',
           download_url:
-            'https://raw.githubusercontent.com/twilio-labs/function-templates/master/nested/functions/blank.js',
+            'https://raw.githubusercontent.com/twilio-labs/function-templates/main/nested/functions/blank.js',
           type: 'file',
         },
         {
@@ -203,7 +203,7 @@ describe('with a mocked GitHub API', () => {
       expect(file.name).toEqual('blank.js');
       expect(file.type).toEqual('functions');
       expect(file.content).toEqual(
-        'https://raw.githubusercontent.com/twilio-labs/function-templates/master/nested/functions/blank.js'
+        'https://raw.githubusercontent.com/twilio-labs/function-templates/main/nested/functions/blank.js'
       );
       const nestedFile = files[1];
       expect(nestedFile.directory).toEqual('admin');
