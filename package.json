@@ -13,7 +13,8 @@
     "test": "run-s build:noemit jest",
     "contrib:add": "all-contributors add",
     "contrib:generate": "all-contributors generate",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "docs": "lerna run docs"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.1.0",
