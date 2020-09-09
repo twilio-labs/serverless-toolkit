@@ -24,7 +24,7 @@ This project is a monorepo, meaning it contains multiple packages in one reposit
 - [`serverless-api`](https://github.com/twilio-labs/serverless-api) - The module used to interact with the actual [Serverless API](https://github.com/twilio-labs/serverless-api)
 - [`function-templates`](https://github.com/twilio-labs/function-templates) - The templates used by the toolkit to create new Functions
 
-To understand more about the structure and the design of the Toolkit check out the [design documentation](DESIGN.md).
+To understand more about the structure and the design of the Toolkit check out the [design documentation](docs/DESIGN.md).
 
 ## Setup & Development
 
