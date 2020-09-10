@@ -168,7 +168,6 @@ export async function getConfigFromCli(
   config.baseDir = getBaseDirectory(cli);
   config.env = await getEnvironment(cli, config.baseDir);
   config.port = getPort(cli);
-  config.url = await getUrl(cli, config.port);
   config.detailedLogs = cli.detailedLogs;
   config.live = cli.live;
   config.logs = cli.logs;
