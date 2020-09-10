@@ -10,6 +10,7 @@ import { getDebugFunction, logger, setLogLevelByName } from '../utils/logger';
 import { ExternalCliOptions, sharedCliOptions } from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
+import { getUrl } from '../config/start';
 
 const debug = getDebugFunction('twilio-run:start');
 
@@ -74,9 +75,15 @@ export async function handler(
   return new Promise((resolve, reject) => {
     let attempts = 1;
     const MAX_ATTEMPTS = 3;
-    const serverStartedSuccessfully = async () => {
-      printRouteInfo(config);
-      resolve();
+    const serverStartedSuccessfully = (port?: number) => {
+      return async () => {
+        if (port) {
+          config.port = port;
+        }
+        config.url = await getUrl(argv, config.port);
+        printRouteInfo(config);
+        resolve();
+      };
     };
     const handleServerError = async (error: ServerError) => {
       if (error.code === 'EADDRINUSE') {
@@ -96,7 +103,7 @@ export async function handler(
           attempts += 1;
           const server = app.listen(
             answers.newPortNumber,
-            serverStartedSuccessfully
+            serverStartedSuccessfully(answers.newPortNumber)
           );
           server.on('error', handleServerError);
         }
@@ -105,7 +112,7 @@ export async function handler(
       }
     };
 
-    const server = app.listen(config.port, serverStartedSuccessfully);
+    const server = app.listen(config.port, serverStartedSuccessfully());
     server.on('error', handleServerError);
   });
 }
