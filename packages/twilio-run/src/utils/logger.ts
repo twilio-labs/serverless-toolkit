@@ -1,5 +1,5 @@
 import { ClientApiError } from '@twilio-labs/serverless-api/dist/utils/error';
-import debug from 'debug';
+import debug from './debug';
 import ora from 'ora';
 import { Writable } from 'stream';
 import terminalLink from 'terminal-link';

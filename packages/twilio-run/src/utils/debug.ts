@@ -77,3 +77,5 @@ debug.formatters.r = function redactedFormatterSameline(v: any): string {
   }
   return debug.formatters.o.bind(debug)(v);
 };
+
+export default debug;
