@@ -6,7 +6,6 @@ import * as NewCommand from './commands/new';
 import * as StartCommand from './commands/start';
 import * as ListTemplatesCommand from './commands/list-templates';
 import * as LogsCommand from './commands/logs';
-import './utils/debug';
 
 export async function run(rawArgs: string[]) {
   yargs
