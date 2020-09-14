@@ -28,9 +28,13 @@ export async function getPaginatedResource<
       }
       const resp = await client.request('get', nextPageUrl, opts);
       const body = resp.body as TList;
-      nextPageUrl = body.meta.next_page_url;
-      const entries = body[body.meta.key] as TEntry[];
-      result = [...result, ...entries];
+      if (body && body.meta) {
+        nextPageUrl = body.meta.next_page_url;
+        const entries = body[body.meta.key] as TEntry[];
+        result = [...result, ...entries];
+      } else {
+        nextPageUrl = null;
+      }
     } catch (err) {
       log('%O', new ClientApiError(err));
 
