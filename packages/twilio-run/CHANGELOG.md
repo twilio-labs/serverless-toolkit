@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.0.0-canary.0 (2020-09-14)
+
+
+### Bug Fixes
+
+* **debugger:** fixes debugger redaction in plugin-serverless ([#187](https://github.com/twilio-labs/serverless-toolkit/issues/187)) ([4a0c04b](https://github.com/twilio-labs/serverless-toolkit/commit/4a0c04b04f5856c51d1d1c672ffc879c5a6882e9)), closes [#185](https://github.com/twilio-labs/serverless-toolkit/issues/185)
+* **twilio-run:promote:** better error message for 409 error ([7a6a49f](https://github.com/twilio-labs/serverless-toolkit/commit/7a6a49f1e9fd477d1f1213fd96b759a7c73f0852)), closes [#171](https://github.com/twilio-labs/serverless-toolkit/issues/171)
+* **twilio-run:runtime:** delete from require cache on page load in live ([#181](https://github.com/twilio-labs/serverless-toolkit/issues/181)) ([5108d30](https://github.com/twilio-labs/serverless-toolkit/commit/5108d307bace834452eae5b06924b9b538f16615))
+* **twilio-run:start:** changing port numbers changes output ([#189](https://github.com/twilio-labs/serverless-toolkit/issues/189)) ([6f3ad06](https://github.com/twilio-labs/serverless-toolkit/commit/6f3ad06d094057f7fc718881ce4fea22fdbafb79)), closes [#188](https://github.com/twilio-labs/serverless-toolkit/issues/188)
+
+
+### Features
+
+* **twilio-run:templates:** pull function-templates from main ([#182](https://github.com/twilio-labs/serverless-toolkit/issues/182)) ([8bbbc92](https://github.com/twilio-labs/serverless-toolkit/commit/8bbbc925532945da73949ff56624b2f376a8e8f3))
+
+
+
+
+
 # 3.0.0-beta.0 (2020-08-27)
 
 
