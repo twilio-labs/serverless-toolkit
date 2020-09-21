@@ -1,6 +1,6 @@
-const path = require("path");
-const camelCase = require("lodash.camelcase");
-const { flags } = require("@oclif/command");
+const path = require('path');
+const camelCase = require('lodash.camelcase');
+const { flags } = require('@oclif/command');
 
 function convertYargsOptionsToOclifFlags(options) {
   const flagsResult = Object.keys(options).reduce((result, name) => {
@@ -11,14 +11,19 @@ function convertYargsOptionsToOclifFlags(options) {
       hidden: opt.hidden,
     };
 
-    if (typeof opt.default !== "undefined") {
+    if (typeof opt.default !== 'undefined') {
       flag.default = opt.default;
 
-      if (opt.type === "boolean") {
+      if (opt.type === 'boolean') {
         if (flag.default === true) {
           flag.allowNo = true;
         }
       }
+    }
+
+    if (opt.type === 'number') {
+      opt.type = 'string';
+      flag.parse = input => parseFloat(input);
     }
 
     if (opt.alias) {
@@ -37,7 +42,7 @@ function convertYargsOptionsToOclifFlags(options) {
 
 function normalizeFlags(flags) {
   const result = Object.keys(flags).reduce((current, name) => {
-    if (name.includes("-")) {
+    if (name.includes('-')) {
       const normalizedName = camelCase(name);
       current[normalizedName] = flags[name];
     }

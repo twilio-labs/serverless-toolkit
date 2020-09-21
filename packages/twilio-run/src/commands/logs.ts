@@ -112,6 +112,12 @@ export const cliInfo: CliInfo = {
       describe:
         'Path to .env file for environment variables that should be installed',
     },
+    'log-cache-size': {
+      type: 'number',
+      hidden: true,
+      describe:
+        'Tailing the log endpoint will cache previously seen entries to avoid duplicates. The cache is topped at a maximum of 1000 by default. This option can change that.',
+    },
   },
 };
 
