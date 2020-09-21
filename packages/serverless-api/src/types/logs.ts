@@ -9,6 +9,7 @@ export type LogsConfig = {
   limit?: number;
   filterByFunction?: string | Sid;
   pollingFrequency?: number;
+  logCacheSize?: number;
 };
 
 export type LogFilters = {

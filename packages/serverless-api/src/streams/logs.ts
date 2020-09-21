@@ -1,11 +1,12 @@
 import { Readable } from 'stream';
 import { listOnePageLogResources } from '../api/logs';
-import { Sid } from '../types';
 import { TwilioServerlessApiClient } from '../client';
+import { Sid } from '../types';
 import { LogsConfig } from '../types/logs';
 
 export class LogsStream extends Readable {
   private _pollingFrequency: number;
+  private _pollingCacheSize: number;
   private _interval: NodeJS.Timeout | undefined;
   private _viewedSids: Set<Sid>;
 
@@ -19,6 +20,7 @@ export class LogsStream extends Readable {
     this._interval = undefined;
     this._viewedSids = new Set();
     this._pollingFrequency = config.pollingFrequency || 1000;
+    this._pollingCacheSize = config.logCacheSize || 1000;
   }
 
   set pollingFrequency(frequency: number) {
@@ -43,17 +45,22 @@ export class LogsStream extends Readable {
         }
       );
       logs
-        .filter((log) => !this._viewedSids.has(log.sid))
+        .filter(log => !this._viewedSids.has(log.sid))
         .reverse()
-        .forEach((log) => {
+        .forEach(log => {
           this.push(log);
         });
-      // Replace the set each time rather than adding to the set.
-      // This way the set is always the size of a page of logs and the next page
-      // will either overlap or not. This is instead of keeping an ever growing
-      // set of viewSids which would cause memory issues for long running log
-      // tails.
-      this._viewedSids = new Set(logs.map((log) => log.sid));
+
+      // The logs endpoint is not reliably returning logs in the same order
+      // Therefore we need to keep a set of all previously seen log entries
+      // In order to avoid memory leaks we cap the total size of logs at 1000
+      // If the new set is larger we'll instead only use the SIDs from the current
+      // request.
+      if (logs.length + this._viewedSids.size <= this._pollingCacheSize) {
+        logs.map(log => log.sid).forEach(sid => this._viewedSids.add(sid));
+      } else {
+        this._viewedSids = new Set(logs.map(log => log.sid));
+      }
       if (!this.config.tail) {
         this.push(null);
       }
