@@ -1,6 +1,6 @@
 {
   "name": "@twilio-labs/serverless-twilio-runtime",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0-fix-logs.0",
   "description": "Serverless framework integartion for Twilio runtime",
   "main": "index.js",
   "scripts": {
