@@ -32,6 +32,7 @@ export type LogsCliFlags = Arguments<
     functionSid?: string;
     tail: boolean;
     outputFormat?: string;
+    logCacheSize?: number;
   }
 >;
 
@@ -81,5 +82,6 @@ export async function getConfigFromFlags(
     tail: flags.tail,
     region,
     edge,
+    logCacheSize: flags.logCacheSize,
   };
 }
