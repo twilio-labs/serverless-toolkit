@@ -1,10 +1,10 @@
 /** @module @twilio-labs/serverless-api/dist/api */
 
 import debug from 'debug';
-import { ServiceList, ServiceResource, Sid } from '../types';
 import { TwilioServerlessApiClient } from '../client';
-import { getPaginatedResource } from './utils/pagination';
+import { ServiceList, ServiceResource, Sid } from '../types';
 import { ClientApiError } from '../utils/error';
+import { getPaginatedResource } from './utils/pagination';
 
 const log = debug('twilio-serverless-api:services');
 
@@ -25,7 +25,7 @@ export async function createService(
       form: {
         UniqueName: serviceName,
         FriendlyName: serviceName,
-        IncludeCrendentials: true,
+        IncludeCredentials: true,
       },
     });
     const service = (resp.body as unknown) as ServiceResource;
