@@ -69,5 +69,6 @@ dist/
 
 *.tsbuildinfo
 .twilio-functions
+*.twiliodeployinfo
 
 packages/serverless-api/docs/

@@ -1,7 +1,5 @@
-import {
-  ExternalCliOptions,
-  SharedFlagsWithCredentials,
-} from '../../commands/shared';
+import { ExternalCliOptions } from '../../commands/shared';
+import { SharedFlagsWithCredentials } from '../../flags';
 import { EnvironmentVariablesWithAuth } from '../../types/generic';
 import { getDebugFunction } from '../../utils/logger';
 

@@ -1,12 +1,18 @@
 import { TwilioServerlessApiClient } from '@twilio-labs/serverless-api';
+import { ClientApiError } from '@twilio-labs/serverless-api/dist/utils/error';
 import { Ora } from 'ora';
 import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
 import {
-  ActivateCliFlags,
-  ActivateConfig,
   getConfigFromFlags,
-} from '../config/activate';
+  PromoteCliFlags,
+  PromoteConfig,
+} from '../config/promote';
+import {
+  BASE_API_FLAG_NAMES,
+  BASE_CLI_FLAG_NAMES,
+  getRelevantFlags,
+} from '../flags';
 import { printActivateConfig, printActivateResult } from '../printers/activate';
 import {
   getDebugFunction,
@@ -15,15 +21,10 @@ import {
   logger,
   setLogLevelByName,
 } from '../utils/logger';
-import {
-  ExternalCliOptions,
-  sharedApiRelatedCliOptions,
-  sharedCliOptions,
-} from './shared';
+import { ExternalCliOptions } from './shared';
 import { CliInfo } from './types';
-import { ClientApiError } from '@twilio-labs/serverless-api/dist/utils/error';
 
-const debug = getDebugFunction('twilio-run:activate');
+const debug = getDebugFunction('twilio-run:promote');
 
 function logError(msg: string) {
   logger.error(msg);
@@ -48,11 +49,11 @@ function handleError(err: Error, spinner: Ora) {
 }
 
 export async function handler(
-  flags: ActivateCliFlags,
+  flags: PromoteCliFlags,
   externalCliOptions?: ExternalCliOptions
 ): Promise<void> {
   setLogLevelByName(flags.logLevel);
-  let config: ActivateConfig;
+  let config: PromoteConfig;
   try {
     config = await getConfigFromFlags(flags, externalCliOptions);
   } catch (err) {
@@ -93,52 +94,22 @@ export async function handler(
 
 export const cliInfo: CliInfo = {
   options: {
-    ...sharedCliOptions,
-    ...sharedApiRelatedCliOptions,
-    'service-sid': {
-      type: 'string',
-      describe: 'SID of the Twilio Serverless Service to deploy to',
-    },
-    'build-sid': {
-      type: 'string',
-      alias: 'from-build',
-      describe: 'An existing Build SID to deploy to the new environment',
-    },
-    'source-environment': {
-      type: 'string',
-      alias: 'from',
-      describe:
-        'SID or suffix of an existing environment you want to deploy from.',
-    },
-    environment: {
-      type: 'string',
-      alias: 'to',
-      describe: 'The environment suffix or SID to deploy to.',
-    },
-    production: {
-      type: 'boolean',
-      describe:
-        'Promote build to the production environment (no domain suffix). Overrides environment flag',
-    },
-    'create-environment': {
-      type: 'boolean',
-      describe: "Creates environment if it couldn't find it.",
-      default: false,
-    },
-    force: {
-      type: 'boolean',
-      describe: 'Will run deployment in force mode. Can be dangerous.',
-      default: false,
-    },
-    env: {
-      type: 'string',
-      describe:
-        'Path to .env file for environment variables that should be installed',
-    },
+    ...getRelevantFlags([
+      ...BASE_CLI_FLAG_NAMES,
+      ...BASE_API_FLAG_NAMES,
+      'service-sid',
+      'build-sid',
+      'source-environment',
+      'environment',
+      'production',
+      'create-environment',
+      'force',
+      'env',
+    ]),
   },
 };
 
-function optionBuilder<T>(yargs: Argv<any>): Argv<ActivateCliFlags> {
+function optionBuilder<T>(yargs: Argv<any>): Argv<PromoteCliFlags> {
   yargs = yargs
     .example(
       '$0 promote --environment=prod --source-environment=dev  ',

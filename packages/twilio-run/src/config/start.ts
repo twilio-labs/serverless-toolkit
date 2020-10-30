@@ -3,8 +3,9 @@ import dotenv from 'dotenv';
 import { readFileSync } from 'fs';
 import path, { resolve } from 'path';
 import { Arguments } from 'yargs';
-import { ExternalCliOptions, SharedFlags } from '../commands/shared';
+import { ExternalCliOptions } from '../commands/shared';
 import { CliInfo } from '../commands/types';
+import { AllAvailableFlagTypes, SharedFlagNames } from '../flags';
 import { EnvironmentVariablesWithAuth } from '../types/generic';
 import { fileExists } from '../utils/fs';
 import { getDebugFunction, logger } from '../utils/logger';
@@ -39,24 +40,24 @@ export type StartCliConfig = {
   forkProcess: boolean;
 };
 
+export type ConfigurableStartCliFlags = Pick<
+  AllAvailableFlagTypes,
+  | SharedFlagNames
+  | 'loadLocalEnv'
+  | 'port'
+  | 'ngrok'
+  | 'logs'
+  | 'detailedLogs'
+  | 'live'
+  | 'inspect'
+  | 'inspectBrk'
+  | 'legacyMode'
+  | 'assetsFolder'
+  | 'functionsFolder'
+  | 'experimentalForkProcess'
+>;
 export type StartCliFlags = Arguments<
-  SharedFlags & {
-    dir?: string;
-    cwd?: string;
-    loadLocalEnv: boolean;
-    env?: string;
-    port: string;
-    ngrok?: string | boolean;
-    logs: boolean;
-    detailedLogs: boolean;
-    live: boolean;
-    inspect?: string;
-    inspectBrk?: string;
-    legacyMode: boolean;
-    assetsFolder?: string;
-    functionsFolder?: string;
-    experimentalForkProcess: boolean;
-  }
+  ConfigurableStartCliFlags & { dir?: string }
 >;
 
 export type WrappedStartCliFlags = {
@@ -82,7 +83,7 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
 export function getPort(cli: StartCliFlags): number {
   let port = process.env.PORT || 3000;
   if (typeof cli.port !== 'undefined') {
-    port = parseInt(cli.port, 10);
+    port = cli.port;
     debug('Overriding port via command-line flag to %d', port);
   }
   if (typeof port === 'string') {
@@ -155,13 +156,13 @@ export async function getConfigFromCli(
   const configFlags = readSpecializedConfig(
     flags.cwd || process.cwd(),
     flags.config,
-    'startConfig',
+    'start',
     {
-      projectId:
+      accountSid:
         (externalCliOptions && externalCliOptions.accountSid) || undefined,
     }
   ) as StartCliFlags;
-  const cli = mergeFlagsAndConfig(configFlags, flags, cliInfo);
+  const cli = mergeFlagsAndConfig<StartCliFlags>(configFlags, flags, cliInfo);
   const config = {} as StartCliConfig;
 
   config.inspect = getInspectInfo(cli);

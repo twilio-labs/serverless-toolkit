@@ -2,12 +2,14 @@ import { ActivateConfig as ApiActivateConfig } from '@twilio-labs/serverless-api
 import path from 'path';
 import { Arguments } from 'yargs';
 import checkForValidServiceSid from '../checks/check-service-sid';
-import { cliInfo } from '../commands/activate';
-import {
-  ExternalCliOptions,
-  SharedFlagsWithCredentials,
-} from '../commands/shared';
+import { cliInfo } from '../commands/promote';
+import { ExternalCliOptions } from '../commands/shared';
 import { getFullCommand } from '../commands/utils';
+import {
+  AllAvailableFlagTypes,
+  SharedFlagsWithCredentialNames,
+} from '../flags';
+import { getFunctionServiceSid } from '../serverless-api/utils';
 import { readSpecializedConfig } from './global';
 import {
   filterEnvVariablesForDeploy,
@@ -16,50 +18,46 @@ import {
 } from './utils';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 
-export type ActivateConfig = ApiActivateConfig & {
+export type PromoteConfig = ApiActivateConfig & {
   cwd: string;
   username: string;
   password: string;
 };
 
-export type ActivateCliFlags = Arguments<
-  SharedFlagsWithCredentials & {
-    cwd?: string;
-    serviceSid?: string;
-    buildSid?: string;
-    sourceEnvironment?: string;
-    environment: string;
-    production: boolean;
-    createEnvironment: boolean;
-    force: boolean;
-  }
+export type ConfigurablePromoteCliFlags = Pick<
+  AllAvailableFlagTypes,
+  | SharedFlagsWithCredentialNames
+  | 'serviceSid'
+  | 'buildSid'
+  | 'sourceEnvironment'
+  | 'environment'
+  | 'production'
+  | 'createEnvironment'
+  | 'force'
 >;
+export type PromoteCliFlags = Arguments<ConfigurablePromoteCliFlags>;
 
 export async function getConfigFromFlags(
-  flags: ActivateCliFlags,
+  flags: PromoteCliFlags,
   externalCliOptions?: ExternalCliOptions
-): Promise<ActivateConfig> {
+): Promise<PromoteConfig> {
   let cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
   flags.cwd = cwd;
-  const configFlags = readSpecializedConfig(
-    cwd,
-    flags.config,
-    'activateConfig',
-    {
-      projectId:
-        flags.accountSid ||
-        (externalCliOptions && externalCliOptions.accountSid) ||
-        undefined,
-      environmentSuffix: flags.environment,
-    }
-  );
-
-  flags = mergeFlagsAndConfig(configFlags, flags, cliInfo);
-  cwd = flags.cwd || cwd;
 
   if (flags.production) {
     flags.environment = '';
   }
+
+  const configFlags = readSpecializedConfig(cwd, flags.config, 'promote', {
+    accountSid:
+      flags.accountSid ||
+      (externalCliOptions && externalCliOptions.accountSid) ||
+      undefined,
+    environmentSuffix: flags.environment,
+  });
+
+  flags = mergeFlagsAndConfig<PromoteCliFlags>(configFlags, flags, cliInfo);
+  cwd = flags.cwd || cwd;
 
   const { localEnv: envVariables } = await readLocalEnvFile(flags);
   const { accountSid, authToken } = await getCredentialsFromFlags(
@@ -70,7 +68,21 @@ export async function getConfigFromFlags(
   const env = filterEnvVariablesForDeploy(envVariables);
 
   const command = getFullCommand(flags);
-  const serviceSid = checkForValidServiceSid(command, flags.serviceSid);
+
+  const potentialServiceSid =
+    flags.serviceSid ||
+    (await getFunctionServiceSid(
+      cwd,
+      flags.config,
+      'promote',
+      flags.accountSid?.startsWith('AC')
+        ? flags.accountSid
+        : accountSid.startsWith('AC')
+        ? accountSid
+        : externalCliOptions?.accountSid
+    ));
+
+  const serviceSid = checkForValidServiceSid(command, potentialServiceSid);
   const region = flags.region;
   const edge = flags.edge;
 

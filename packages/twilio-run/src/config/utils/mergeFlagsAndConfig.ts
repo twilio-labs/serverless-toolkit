@@ -1,9 +1,9 @@
 import kebabCase from 'lodash.kebabcase';
-import { SharedFlags } from '../../commands/shared';
 import { CliInfo } from '../../commands/types';
+import { AllAvailableFlagTypes, SharedFlagNames } from '../../flags';
 
 export function mergeFlagsAndConfig<
-  T extends SharedFlags & {
+  T extends Pick<AllAvailableFlagTypes, SharedFlagNames> & {
     [key: string]: any;
   }
 >(config: Partial<T>, flags: T, cliInfo: CliInfo): T {
