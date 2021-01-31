@@ -171,7 +171,7 @@ export const cliInfo: CliInfo = {
     'inspect-brk': {
       type: 'string',
       describe:
-        'Enables Node.js debugging protocol, stops executioin until debugger is attached',
+        'Enables Node.js debugging protocol, stops execution until debugger is attached',
     },
     'legacy-mode': {
       type: 'boolean',
