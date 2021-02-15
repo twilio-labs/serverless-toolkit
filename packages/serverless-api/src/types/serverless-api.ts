@@ -82,7 +82,8 @@ export type FunctionContent = {
 };
 
 export type BuildStatus = 'building' | 'completed' | 'failed';
-export type BuildRuntime = 'node10' | 'node12';
+export const availableRuntimes = ['node10', 'node12'] as const;
+export type BuildRuntime = typeof availableRuntimes[number];
 
 export interface VersionOnBuild extends UpdateableResourceBase {
   path: string;

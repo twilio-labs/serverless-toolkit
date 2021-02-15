@@ -12,6 +12,7 @@ import {
 } from '../config/deploy';
 import { printConfigInfo, printDeployedResources } from '../printers/deploy';
 import { HttpError, saveLatestDeploymentData } from '../serverless-api/utils';
+import { availableRuntimes } from '@twilio-labs/serverless-api';
 import {
   getDebugFunction,
   getOraSpinner,
@@ -45,7 +46,7 @@ function handleError(
     const fullCommand = getFullCommand(flags);
     const messageBody = stripIndent`
       Here are a few ways to solve this problem:
-      
+
       - Rename your project in the package.json "name" property
       - Pass an explicit name to your deployment
         > ${constructCommandName(fullCommand, 'deploy', [
@@ -59,7 +60,7 @@ function handleError(
           '--override-existing-project',
         ])}
       - Run deployment in force mode
-        > ${constructCommandName(fullCommand, 'deploy', ['--force'])} 
+        > ${constructCommandName(fullCommand, 'deploy', ['--force'])}
     `;
     logger.error(messageBody, err.message);
   } else if (err.name === 'TwilioApiError') {
@@ -202,6 +203,11 @@ export const cliInfo: CliInfo = {
     'functions-folder': {
       type: 'string',
       describe: 'Specific folder name to be used for static functions',
+    },
+    runtime: {
+      type: 'string',
+      describe: 'The version of Node.js to deploy the build to.',
+      choices: availableRuntimes,
     },
   },
 };

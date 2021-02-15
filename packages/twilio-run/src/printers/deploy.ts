@@ -60,6 +60,7 @@ function plainPrintDeployedResources(
     environmentSuffix: config.functionsEnv,
     environmentSid: result.environmentSid,
     buildSid: result.buildSid,
+    runtime: result.runtime,
     viewLiveLogs: getTwilioConsoleDeploymentUrl(
       result.serviceSid,
       result.environmentSid
@@ -92,6 +93,7 @@ function prettyPrintConfigInfo(config: DeployLocalProjectConfig) {
 {bold.cyan Root Directory}\t${config.cwd}
 {bold.cyan Dependencies}\t${dependencyString}
 {bold.cyan Env Variables}\t${Object.keys(config.env).join(', ')}
+{bold.cyan Runtime}\t\t${config.runtime}
 `
   );
 }
@@ -108,6 +110,7 @@ function plainPrintConfigInfo(config: DeployLocalProjectConfig) {
     rootDirectory: config.cwd,
     dependencies: dependencyString,
     environmentVariables: Object.keys(config.env).join(','),
+    runtime: config.runtime,
   };
   writeOutput(`configInfo\n${printObjectWithoutHeaders(printObj)}\n`);
 }
@@ -131,9 +134,11 @@ function prettyPrintDeployedResources(
 {bold.cyan Service:}
    ${config.serviceName} {dim (${result.serviceSid})}
 {bold.cyan Environment:}
-   ${config.functionsEnv} {dim (${result.environmentSid})} 
+   ${config.functionsEnv} {dim (${result.environmentSid})}
 {bold.cyan Build SID:}
    ${result.buildSid}
+{bold.cyan Runtime:}
+   ${result.runtime}
 {bold.cyan View Live Logs:}
    ${twilioConsoleLogsLink}
   `.trim()
