@@ -9,7 +9,7 @@ import {
   ServerlessResourceConfig,
   FunctionResource,
 } from './generic';
-import { Sid } from './serverless-api';
+import { BuildRuntime, Sid } from './serverless-api';
 
 /**
  * Shared configuration of Deploy functions
@@ -43,6 +43,10 @@ type DeployProjectConfigBase = {
    * If no `serviceSid` is specified but a service with `serviceName` is found, it will deploy to that one.
    */
   overrideExistingService?: boolean;
+  /**
+   * Version of Node.js to deploy with in Twilio Runtime. Can be "node10" or "node12"
+   */
+  runtime?: BuildRuntime;
 };
 
 /**
@@ -106,6 +110,7 @@ export type DeployResult = {
   domain: string;
   functionResources: FunctionResource[];
   assetResources: AssetResource[];
+  runtime: BuildRuntime;
 };
 
 export type StatusUpdate = {

@@ -88,7 +88,7 @@ export async function triggerBuild(
   serviceSid: string,
   client: TwilioServerlessApiClient
 ): Promise<BuildResource> {
-  const { functionVersions, dependencies, assetVersions } = config;
+  const { functionVersions, dependencies, assetVersions, runtime } = config;
   try {
     const body: ParsedUrlQueryInput = {};
 
@@ -103,6 +103,10 @@ export async function triggerBuild(
 
     if (Array.isArray(assetVersions) && assetVersions.length > 0) {
       body.AssetVersions = assetVersions;
+    }
+
+    if (runtime) {
+      body.Runtime = runtime;
     }
 
     const resp = await client.request('post', `Services/${serviceSid}/Builds`, {
