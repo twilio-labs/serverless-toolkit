@@ -164,6 +164,23 @@ export async function createServer(
       const routeInfo = routeMap.get(req.path);
 
       if (routeInfo && routeInfo.type === 'function') {
+        if (req.method === 'OPTIONS') {
+          res.set({
+            'access-control-allow-origin': '*',
+            'access-control-allow-headers':
+              'Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since, User-Agent',
+            'access-control-allow-methods': 'GET, POST, OPTIONS',
+            'access-control-expose-headers': 'ETag',
+            'access-control-max-age': '86400',
+            'access-control-allow-credentials': true,
+            'content-type:': 'text/plain; charset=UTF-8',
+            'content-length': '0',
+          });
+          res.status(200).end();
+
+          return;
+        }
+
         const functionPath = routeInfo.filePath;
         try {
           if (!functionPath) {
