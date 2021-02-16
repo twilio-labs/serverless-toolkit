@@ -29,6 +29,7 @@
     "twilio": "^3.33.0"
   },
   "devDependencies": {
+    "@types/express": "^4.17.11",
     "all-contributors-cli": "^6.7.0"
   },
   "publishConfig": {
