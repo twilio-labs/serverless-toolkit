@@ -12,7 +12,6 @@ import {
 } from '../config/deploy';
 import { printConfigInfo, printDeployedResources } from '../printers/deploy';
 import { HttpError, saveLatestDeploymentData } from '../serverless-api/utils';
-import { availableRuntimes } from '@twilio-labs/serverless-api';
 import {
   getDebugFunction,
   getOraSpinner,
@@ -206,8 +205,8 @@ export const cliInfo: CliInfo = {
     },
     runtime: {
       type: 'string',
-      describe: 'The version of Node.js to deploy the build to.',
-      choices: availableRuntimes,
+      describe:
+        'The version of Node.js to deploy the build to. (node10 or node12)',
     },
   },
 };

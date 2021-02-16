@@ -1,7 +1,4 @@
-import {
-  BuildRuntime,
-  DeployLocalProjectConfig as ApiDeployLocalProjectConfig,
-} from '@twilio-labs/serverless-api';
+import { DeployLocalProjectConfig as ApiDeployLocalProjectConfig } from '@twilio-labs/serverless-api';
 import path from 'path';
 import { Arguments } from 'yargs';
 import { cliInfo } from '../commands/deploy';
@@ -18,7 +15,6 @@ import {
   getServiceNameFromFlags,
   readLocalEnvFile,
   readPackageJsonContent,
-  isBuildRuntime,
 } from './utils';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 
@@ -105,9 +101,7 @@ export async function getConfigFromFlags(
     );
   }
 
-  const runtime = isBuildRuntime(flags.runtime) ? flags.runtime : undefined;
-
-  const { region, edge } = flags;
+  const { region, edge, runtime } = flags;
 
   return {
     cwd,

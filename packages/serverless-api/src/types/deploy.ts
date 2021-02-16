@@ -9,7 +9,7 @@ import {
   ServerlessResourceConfig,
   FunctionResource,
 } from './generic';
-import { BuildRuntime, Sid } from './serverless-api';
+import { Sid } from './serverless-api';
 
 /**
  * Shared configuration of Deploy functions
@@ -46,7 +46,7 @@ type DeployProjectConfigBase = {
   /**
    * Version of Node.js to deploy with in Twilio Runtime. Can be "node10" or "node12"
    */
-  runtime?: BuildRuntime;
+  runtime?: string;
 };
 
 /**
@@ -110,7 +110,7 @@ export type DeployResult = {
   domain: string;
   functionResources: FunctionResource[];
   assetResources: AssetResource[];
-  runtime: BuildRuntime;
+  runtime: string;
 };
 
 export type StatusUpdate = {

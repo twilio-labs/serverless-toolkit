@@ -82,8 +82,6 @@ export type FunctionContent = {
 };
 
 export type BuildStatus = 'building' | 'completed' | 'failed';
-export const availableRuntimes = ['node10', 'node12'] as const;
-export type BuildRuntime = typeof availableRuntimes[number];
 
 export interface VersionOnBuild extends UpdateableResourceBase {
   path: string;
@@ -103,7 +101,7 @@ export interface BuildResource extends UpdateableResourceBase {
   status: BuildStatus;
   function_versions: FunctionVersion[];
   asset_versions: AssetVersion[];
-  runtime: BuildRuntime;
+  runtime: string;
 }
 
 export interface BuildList extends BaseList<'builds'> {
@@ -125,7 +123,7 @@ export type BuildConfig = {
   dependencies?: Dependency[];
   functionVersions?: Sid[];
   assetVersions?: Sid[];
-  runtime?: BuildRuntime;
+  runtime?: string;
 };
 
 export interface LogApiResource extends ResourceBase {

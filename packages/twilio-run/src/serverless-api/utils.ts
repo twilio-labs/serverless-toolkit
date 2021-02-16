@@ -1,7 +1,5 @@
-import { BuildRuntime } from '@twilio-labs/serverless-api';
 import { getConfig, readSpecializedConfig } from '../config/global';
 import { getDebugFunction } from '../utils/logger';
-import { isBuildRuntime } from '../config/utils';
 
 const log = getDebugFunction('twilio-run:internal:utils');
 
