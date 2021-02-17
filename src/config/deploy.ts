@@ -37,6 +37,7 @@ export type DeployCliFlags = Arguments<
     assets: boolean;
     assetsFolder?: string;
     functionsFolder?: string;
+    runtime?: string;
   }
 >;
 
@@ -100,8 +101,7 @@ export async function getConfigFromFlags(
     );
   }
 
-  const region = flags.region;
-  const edge = flags.edge;
+  const { region, edge, runtime } = flags;
 
   return {
     cwd,
@@ -121,5 +121,6 @@ export async function getConfigFromFlags(
     noFunctions: !flags.functions,
     region,
     edge,
+    runtime,
   };
 }
