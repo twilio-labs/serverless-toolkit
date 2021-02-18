@@ -161,26 +161,26 @@ export async function createServer(
         return;
       }
 
+      if (req.method === 'OPTIONS') {
+        res.set({
+          'access-control-allow-origin': '*',
+          'access-control-allow-headers':
+            'Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since, User-Agent',
+          'access-control-allow-methods': 'GET, POST, OPTIONS',
+          'access-control-expose-headers': 'ETag',
+          'access-control-max-age': '86400',
+          'access-control-allow-credentials': true,
+          'content-type:': 'text/plain; charset=UTF-8',
+          'content-length': '0',
+        });
+        res.status(204).end();
+
+        return;
+      }
+
       const routeInfo = routeMap.get(req.path);
 
       if (routeInfo && routeInfo.type === 'function') {
-        if (req.method === 'OPTIONS') {
-          res.set({
-            'access-control-allow-origin': '*',
-            'access-control-allow-headers':
-              'Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since, User-Agent',
-            'access-control-allow-methods': 'GET, POST, OPTIONS',
-            'access-control-expose-headers': 'ETag',
-            'access-control-max-age': '86400',
-            'access-control-allow-credentials': true,
-            'content-type:': 'text/plain; charset=UTF-8',
-            'content-length': '0',
-          });
-          res.status(200).end();
-
-          return;
-        }
-
         const functionPath = routeInfo.filePath;
         try {
           if (!functionPath) {
@@ -217,17 +217,6 @@ export async function createServer(
         if (routeInfo.filePath) {
           if (routeInfo.access === 'private') {
             res.status(403).send('This asset has been marked as private');
-          } else if (req.method === 'OPTIONS') {
-            res.set({
-              'access-control-allow-origin': '*',
-              'access-control-allow-headers':
-                'Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since',
-              'access-control-allow-methods': 'GET, POST, OPTIONS',
-              'access-control-expose-headers': 'ETag',
-              'access-control-max-age': '86400',
-              'access-control-allow-credentials': true,
-            });
-            res.status(200).end();
           } else {
             res.sendFile(routeInfo.filePath);
           }
