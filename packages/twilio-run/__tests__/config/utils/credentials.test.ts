@@ -11,8 +11,8 @@ describe('getCredentialsFromFlags', () => {
   test('should return empty if nothing is passed', async () => {
     const credentials = await getCredentialsFromFlags(baseFlags, {}, undefined);
     expect(credentials).toEqual({
-      accountSid: '',
-      authToken: '',
+      username: '',
+      password: '',
     });
   });
 
@@ -23,8 +23,8 @@ describe('getCredentialsFromFlags', () => {
       undefined
     );
     expect(credentials).toEqual({
-      accountSid: 'ACxxxxx',
-      authToken: 'some-token',
+      username: 'ACxxxxx',
+      password: 'some-token',
     });
   });
 
@@ -38,8 +38,8 @@ describe('getCredentialsFromFlags', () => {
       undefined
     );
     expect(credentials).toEqual({
-      accountSid: 'ACyyyyyyyyy',
-      authToken: 'example-token',
+      username: 'ACyyyyyyyyy',
+      password: 'example-token',
     });
   });
 
@@ -50,12 +50,12 @@ describe('getCredentialsFromFlags', () => {
       { username: 'ACzzzzzzz', password: 'api-secret', profile: undefined }
     );
     expect(credentials).toEqual({
-      accountSid: 'ACzzzzzzz',
-      authToken: 'api-secret',
+      username: 'ACzzzzzzz',
+      password: 'api-secret',
     });
   });
 
-  test('env variables should override external default options', async () => {
+  test('env variables should not override external default options', async () => {
     const credentials = await getCredentialsFromFlags(
       { ...baseFlags },
       {
@@ -65,8 +65,8 @@ describe('getCredentialsFromFlags', () => {
       { username: 'ACzzzzzzz', password: 'api-secret', profile: undefined }
     );
     expect(credentials).toEqual({
-      accountSid: 'ACyyyyyyyyy',
-      authToken: 'example-token',
+      username: 'ACzzzzzzz',
+      password: 'api-secret',
     });
   });
 
@@ -80,8 +80,8 @@ describe('getCredentialsFromFlags', () => {
       { username: 'ACzzzzzzz', password: 'api-secret', profile: 'demo' }
     );
     expect(credentials).toEqual({
-      accountSid: 'ACzzzzzzz',
-      authToken: 'api-secret',
+      username: 'ACzzzzzzz',
+      password: 'api-secret',
     });
   });
 
@@ -104,8 +104,8 @@ describe('getCredentialsFromFlags', () => {
       }
     );
     expect(credentials).toEqual({
-      accountSid: 'ACzzzzzzz',
-      authToken: 'api-secret',
+      username: 'ACzzzzzzz',
+      password: 'api-secret',
     });
   });
 
@@ -119,8 +119,8 @@ describe('getCredentialsFromFlags', () => {
       { username: 'ACzzzzzzz', password: 'api-secret', profile: 'demo' }
     );
     expect(credentials).toEqual({
-      accountSid: 'ACzzzzzzz',
-      authToken: 'api-secret',
+      username: 'ACzzzzzzz',
+      password: 'api-secret',
     });
   });
 
@@ -136,8 +136,8 @@ describe('getCredentialsFromFlags', () => {
       { username: 'ACzzzzzzz', password: 'api-secret', project: 'demo' }
     );
     expect(credentials).toEqual({
-      accountSid: 'ACzzzzzzz',
-      authToken: 'api-secret',
+      username: 'ACzzzzzzz',
+      password: 'api-secret',
     });
   });
 
@@ -156,8 +156,8 @@ describe('getCredentialsFromFlags', () => {
       }
     );
     expect(credentials).toEqual({
-      accountSid: 'ACxxxxx',
-      authToken: 'some-token',
+      username: 'ACxxxxx',
+      password: 'some-token',
     });
   });
 });
