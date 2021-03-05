@@ -199,22 +199,22 @@ describe('constructContext function', () => {
     const config = {
       url: 'http://localhost:8000',
       env: {
-        ACCOUNT_SID: 'ACxxxxxxxxxxx',
-        AUTH_TOKEN: 'xyz',
+        ACCOUNT_SID: 'ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        AUTH_TOKEN: 'authauthauthauthauthauthauthauth',
       },
     } as StartCliConfig;
     const context = constructContext(config, '/test');
     expect(context.DOMAIN_NAME).toBe('localhost:8000');
     expect(context.PATH).toBe('/test');
-    expect(context.ACCOUNT_SID).toBe('ACxxxxxxxxxxx');
-    expect(context.AUTH_TOKEN).toBe('xyz');
+    expect(context.ACCOUNT_SID).toBe('ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+    expect(context.AUTH_TOKEN).toBe('authauthauthauthauthauthauthauth');
     expect(typeof context.getTwilioClient).toBe('function');
   });
 
   test('does not override existing PATH values', () => {
     const env: EnvironmentVariablesWithAuth = {
-      ACCOUNT_SID: 'ACxxxxxxxxxxx',
-      AUTH_TOKEN: 'xyz',
+      ACCOUNT_SID: 'ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      AUTH_TOKEN: 'authauthauthauthauthauthauthauth',
       PATH: '/usr/bin:/bin',
     };
 
@@ -228,8 +228,8 @@ describe('constructContext function', () => {
 
   test('does not override existing DOMAIN_NAME values', () => {
     const env: EnvironmentVariablesWithAuth = {
-      ACCOUNT_SID: 'ACxxxxxxxxxxx',
-      AUTH_TOKEN: 'xyz',
+      ACCOUNT_SID: 'ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      AUTH_TOKEN: 'authauthauthauthauthauthauthauth',
       DOMAIN_NAME: 'hello.world',
     };
 
@@ -243,7 +243,7 @@ describe('constructContext function', () => {
 
   test('getTwilioClient calls twilio constructor', () => {
     const ACCOUNT_SID = 'ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
-    const AUTH_TOKEN = 'xyz';
+    const AUTH_TOKEN = 'authauthauthauthauthauthauthauth';
 
     const config = {
       url: 'http://localhost:8000',
@@ -254,14 +254,14 @@ describe('constructContext function', () => {
     context.getTwilioClient();
     expect(twilioFn).toHaveBeenCalledWith(
       'ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-      'xyz'
+      'authauthauthauthauthauthauthauth'
     );
   });
 });
 
 describe('constructGlobalScope function', () => {
   const ACCOUNT_SID = 'ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
-  const AUTH_TOKEN = 'xyz';
+  const AUTH_TOKEN = 'authauthauthauthauthauthauthauth';
   let config: StartCliConfig;
 
   function resetGlobals() {
