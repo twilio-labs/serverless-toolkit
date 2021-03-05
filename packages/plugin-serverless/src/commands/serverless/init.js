@@ -18,8 +18,8 @@ class FunctionsInit extends TwilioClientCommand {
     flags = normalizeFlags(flags);
 
     const opts = Object.assign({}, flags, args);
-    opts.accountSid = flags.accountSid || this.twilioClient.username;
-    opts.authToken = flags.authToken || this.twilioClient.password;
+    opts.accountSid = flags.accountSid || this.twilioClient.accountSid;
+    opts.authToken = flags.authToken || '';
 
     opts.path = process.cwd();
     opts.skipCredentials = true;
@@ -33,7 +33,8 @@ FunctionsInit.args = [
   {
     name: 'name',
     required: true,
-    description: 'Name of Serverless project and directory that will be created',
+    description:
+      'Name of Serverless project and directory that will be created',
   },
 ];
 
