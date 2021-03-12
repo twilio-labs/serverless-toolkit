@@ -65,6 +65,7 @@
     "file-type": "^14.2.0",
     "form-data": "^2.5.0",
     "got": "^11.0.1",
+    "hpagent": "^0.1.1",
     "mime-types": "^2.1.22",
     "p-limit": "^2.3.0",
     "recursive-readdir": "^2.2.2",
