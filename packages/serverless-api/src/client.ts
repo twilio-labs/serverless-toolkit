@@ -61,6 +61,7 @@ import {
 } from 'got/dist/source';
 import pLimit, { Limit } from 'p-limit';
 import { deprecate } from 'util';
+import { HttpsProxyAgent } from 'hpagent';
 
 const log = debug('twilio-serverless-api:client');
 
@@ -75,7 +76,7 @@ export function createGotClient(config: ClientConfig): GotClient {
     username = config.username;
     password = config.password;
   }
-  const client = got.extend({
+  let client = got.extend({
     prefixUrl: getApiUrl(config),
     responseType: 'json',
     username: username,
@@ -84,6 +85,19 @@ export function createGotClient(config: ClientConfig): GotClient {
       'User-Agent': 'twilio-serverless-api',
     },
   }) as GotClient;
+  if (process.env.HTTP_PROXY) {
+    /*
+     * If environment variable HTTP_PROXY is set,
+     * add a proxy agent to the got client.
+     */
+    client = client.extend({
+      agent: {
+        https: new HttpsProxyAgent({
+          proxy: process.env.HTTP_PROXY,
+        }),
+      },
+    });
+  }
   return client;
 }
 
