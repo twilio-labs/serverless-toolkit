@@ -79,6 +79,10 @@ export TWILIO_SERVERLESS_API_CONCURRENCY=1
 export TWILIO_SERVERLESS_API_RETRY_LIMIT=0
 ```
 
+### Usage with proxy
+
+ - `HTTP_PROXY`: If deploying behind a proxy, set the URL of the proxy in an environment variable called `HTTP_PROXY`.
+
 ## API
 
 You can find the full reference documentation of everything at: https://serverless-api.twilio-labs.com
