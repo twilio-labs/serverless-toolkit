@@ -1,4 +1,5 @@
 import camelCase from 'lodash.camelcase';
+import os from 'os';
 import path from 'path';
 import { Options } from 'yargs';
 import { ALL_FLAGS } from '../flags';
@@ -29,11 +30,11 @@ function templateFlagAsConfig([flag, config]: [string, Options]) {
   } */,`;
 }
 
-function templateDefaultConfigFile() {
+export function templateDefaultConfigFile() {
   const lines = Object.entries(ALL_FLAGS)
     .sort((a, b) => a[0].localeCompare(b[0]))
     .map(templateFlagAsConfig)
-    .join('\n');
+    .join(os.EOL);
   return [
     '{',
     `\t"commands": {},`,
@@ -41,7 +42,7 @@ function templateDefaultConfigFile() {
     `\t"projects": {},`,
     lines,
     '}',
-  ].join('\n');
+  ].join(os.EOL);
 }
 
 export async function writeDefaultConfigFile(
