@@ -9,7 +9,11 @@
   "dependencies": {
     "@oclif/command": "^1.5.19",
     "@oclif/config": "^1.13.3",
-    "@twilio/cli-core": "^4.3.3"
+    "@twilio-labs/serverless-api": "^5.0.0-beta.0",
+    "@twilio/cli-core": "^5.19.0",
+    "debug": "^4.3.1",
+    "inquirer": "^8.0.0",
+    "ora": "^5.4.0"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.2",
@@ -44,6 +48,9 @@
     "topics": {
       "assets": {
         "description": "Easily upload assets to a Twilio Assets service"
+      },
+      "assets:init": {
+        "description": "Create a new assets service to use as a bucket"
       },
       "assets:upload": {
         "description": "Upload a new asset to the Assets service"
