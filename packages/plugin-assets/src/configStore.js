@@ -16,7 +16,6 @@ class ConfigStore {
       });
       return JSON.parse(contents);
     } catch (error) {
-      console.error('No config file found, returning empty object.');
       return {};
     }
   }

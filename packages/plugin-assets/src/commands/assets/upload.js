@@ -204,7 +204,7 @@ class UploadCommand extends TwilioClientCommand {
       }
     } else {
       spinner.fail(
-        'No Service Sid or Environment Sid provided. Make sure you run twilio assets:init before uploading your first asset'
+        'No Service Sid or Environment Sid provided. Make sure you run `twilio assets:init` before trying to upload your first asset'
       );
     }
   }
