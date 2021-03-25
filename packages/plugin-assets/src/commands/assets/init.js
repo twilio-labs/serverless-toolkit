@@ -4,7 +4,7 @@ const { init } = require('../../init');
 class InitCommand extends TwilioClientCommand {
   async run() {
     await super.run();
-    await init({
+    return init({
       apiKey: this.currentProfile.apiKey,
       apiSecret: this.currentProfile.apiSecret,
       accountSid: this.currentProfile.accountSid,
