@@ -21,6 +21,7 @@ const EventEmitter = require('events');
 
 const { ConfigStore } = require('./configStore');
 const { createUtils } = require('./utils');
+const { printInBox } = require('./print');
 
 const { spinner, debug, handleError } = createUtils('upload');
 
@@ -45,6 +46,9 @@ const upload = async ({ configDir, apiKey, apiSecret, accountSid, file }) => {
     });
     spinner.text = 'Checking assets service';
     try {
+      debug(
+        `Fetching environment with sid ${environmentSid} from service with sid ${serviceSid}`
+      );
       environment = await getEnvironment(environmentSid, serviceSid, client);
     } catch (error) {
       handleError(error, 'Could not fetch asset service environment');
@@ -52,6 +56,7 @@ const upload = async ({ configDir, apiKey, apiSecret, accountSid, file }) => {
     }
     if (environment.build_sid) {
       try {
+        debug(`Fetching build with sid ${environment.build_sid}`);
         lastBuild = await getBuild(environment.build_sid, serviceSid, client);
         if (lastBuild.function_versions.length > 0) {
           spinner.fail(
@@ -70,6 +75,7 @@ const upload = async ({ configDir, apiKey, apiSecret, accountSid, file }) => {
     spinner.text = 'Preparing asset';
     try {
       filePath = resolve(file);
+      debug(`Reading file from ${filePath}`);
       assetContent = await readFile(filePath);
     } catch (error) {
       handleError(error, `Could not read ${filePath}`);
@@ -84,6 +90,7 @@ const upload = async ({ configDir, apiKey, apiSecret, accountSid, file }) => {
     };
 
     try {
+      debug('Finding existing asset resources');
       existingAssets = await listAssetResources(serviceSid, client);
     } catch (error) {
       handleError(error, 'Could not load existing asset resources');
@@ -104,16 +111,30 @@ const upload = async ({ configDir, apiKey, apiSecret, accountSid, file }) => {
       if (answers.conflict === 'Overwrite') {
         newAsset.sid = existingAsset.sid;
       } else if (answers.conflict === 'Rename') {
-        const newNameAnswers = await inquirer.prompt([
+        let newNameAnswers = await inquirer.prompt([
           {
             name: 'newName',
             type: 'input',
             message: 'Enter a new filename:',
           },
         ]);
+        while (
+          existingAssets.find(
+            asset => asset.friendly_name === newNameAnswers.newName
+          )
+        ) {
+          newNameAnswers = await inquirer.prompt([
+            {
+              name: 'newName',
+              type: 'input',
+              message: 'That filename also exists, please enter another:',
+            },
+          ]);
+        }
         newAsset.name = newAsset.path = newNameAnswers.newName;
-        spinner.start('Creating new asset resource');
+        spinner.start('Creating new asset');
         try {
+          debug(`Creating new asset resource called ${newAsset.name}`);
           const assetResource = await createAssetResource(
             newAsset.name,
             serviceSid,
@@ -125,12 +146,13 @@ const upload = async ({ configDir, apiKey, apiSecret, accountSid, file }) => {
           return;
         }
       } else if (answers.conflict === 'Abort') {
-        console.log('Aborting');
+        spinner.fail('Upload cancelled');
         return;
       }
     } else {
       try {
-        spinner.start('Creating new asset resource');
+        spinner.start('Creating new asset');
+        debug(`Creating new asset resource called ${newAsset.name}`);
         const assetResource = await createAssetResource(
           newAsset.name,
           serviceSid,
@@ -143,7 +165,7 @@ const upload = async ({ configDir, apiKey, apiSecret, accountSid, file }) => {
       }
     }
     try {
-      spinner.start('Creating new asset version');
+      debug(`Creating new asset version for asset with sid ${newAsset.sid}`);
       assetVersion = await createAssetVersion(newAsset, serviceSid, client, {});
     } catch (error) {
       handleError(error, 'Could not create new asset version');
@@ -156,7 +178,7 @@ const upload = async ({ configDir, apiKey, apiSecret, accountSid, file }) => {
         .forEach(assetVersion => assetVersions.push(assetVersion.sid));
     }
     try {
-      spinner.text = 'Creating new build';
+      debug(`Triggering new build for ${assetVersions.length} asset versions`);
       build = await triggerBuild(
         { assetVersions: assetVersions },
         serviceSid,
@@ -167,10 +189,9 @@ const upload = async ({ configDir, apiKey, apiSecret, accountSid, file }) => {
       return;
     }
     try {
-      spinner.text = 'Waiting for deployment. Current status:';
       const updateHandler = new EventEmitter();
       updateHandler.on('status-update', update => {
-        spinner.text = update.message;
+        debug(update.message);
       });
       await waitForSuccessfulBuild(
         build.sid,
@@ -183,12 +204,13 @@ const upload = async ({ configDir, apiKey, apiSecret, accountSid, file }) => {
       return;
     }
     try {
-      spinner.text = 'Activating build';
+      debug(`Activating build with sid ${build.sid}`);
       await activateBuild(build.sid, environment.sid, serviceSid, client);
-      spinner.succeed('Build complete');
-      build.asset_versions.forEach(assetVersion => {
-        console.log(`https://${environment.domain_name}${assetVersion.path}`);
-      });
+      spinner.succeed('Asset deployed');
+      printInBox(
+        'Your asset has been uploaded',
+        `Your new asset: https://${environment.domain_name}${assetVersion.path}`
+      );
     } catch (error) {
       handleError(error, 'Could not activate build');
       return;

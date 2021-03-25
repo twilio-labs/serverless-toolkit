@@ -8,6 +8,7 @@ const {
 } = require('@twilio-labs/serverless-api/dist/api/environments');
 const { ConfigStore } = require('./configStore');
 const { createUtils } = require('./utils');
+const { printInBox } = require('./print');
 
 const { spinner, debug, handleError } = createUtils('init');
 
@@ -31,7 +32,7 @@ const init = async ({ apiKey, apiSecret, accountSid, configDir }) => {
   const configStore = new ConfigStore(configDir);
   const config = await configStore.load();
   if (config[accountSid]?.serviceSid && config[accountSid]?.environmentSid) {
-    spinner.text = 'Checking existing service';
+    spinner.text = 'Existing service found. Loading';
     const { serviceSid, environmentSid } = config[accountSid];
     try {
       const environment = await getEnvironment(
@@ -40,7 +41,10 @@ const init = async ({ apiKey, apiSecret, accountSid, configDir }) => {
         client
       );
       spinner.stop();
-      console.log(`Assets base URL is ${environment.domain_name}`);
+      printInBox(
+        `Assets base URL is ${environment.domain_name}`,
+        "Run 'twilio assets:list' to see the available assets"
+      );
     } catch (error) {
       handleError(error);
     }

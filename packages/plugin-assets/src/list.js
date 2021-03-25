@@ -6,6 +6,7 @@ const { getBuild } = require('@twilio-labs/serverless-api/dist/api/builds');
 
 const { ConfigStore } = require('./configStore');
 const { createUtils } = require('./utils');
+const { printInBox } = require('./print');
 
 const { spinner, debug, handleError } = createUtils('list');
 
@@ -22,6 +23,9 @@ const list = async ({ configDir, apiKey, apiSecret, accountSid }) => {
     });
     spinner.text = 'Fetching asset URLs';
     try {
+      debug(
+        `Fetching environment with sid ${environmentSid} from service with sid ${serviceSid}`
+      );
       environment = await getEnvironment(environmentSid, serviceSid, client);
     } catch (error) {
       handleError(error, 'Could not fetch asset service environment');
@@ -29,11 +33,14 @@ const list = async ({ configDir, apiKey, apiSecret, accountSid }) => {
     }
     if (environment.build_sid) {
       try {
+        debug(`Fetching build with sid ${environment.build_sid}`);
         const build = await getBuild(environment.build_sid, serviceSid, client);
         spinner.stop();
-        build.asset_versions.forEach(assetVersion => {
-          console.log(`https://${environment.domain_name}${assetVersion.path}`);
-        });
+        const assets = build.asset_versions.map(
+          assetVersion =>
+            `https://${environment.domain_name}${assetVersion.path}`
+        );
+        printInBox('Available assets:', assets.join('\n'));
       } catch (error) {
         handleError(
           error,
@@ -42,11 +49,13 @@ const list = async ({ configDir, apiKey, apiSecret, accountSid }) => {
         return;
       }
     } else {
-      spinner.fail('No assets deployed');
+      spinner.fail(
+        "No assets deployed yet. Deploy your first asset with 'twilio assets:upload path/to/file'"
+      );
     }
   } else {
     spinner.fail(
-      'No Service Sid or Environment Sid provided. Make sure you run twilio assets:init before listing your assets'
+      "No Service Sid or Environment Sid provided. Make sure you run 'twilio assets:init' before listing your assets"
     );
   }
 };
