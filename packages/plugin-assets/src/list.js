@@ -4,13 +4,10 @@ const {
 } = require('@twilio-labs/serverless-api/dist/api/environments');
 const { getBuild } = require('@twilio-labs/serverless-api/dist/api/builds');
 
-const ora = require('ora');
 const { ConfigStore } = require('./configStore');
-const { createErrorHandler } = require('./errors');
+const { createUtils } = require('./utils');
 
-const debug = require('debug')('twilio:assets:list');
-const spinner = ora();
-const handleError = createErrorHandler(debug, spinner);
+const { spinner, debug, handleError } = createUtils('list');
 
 const list = async ({ configDir, apiKey, apiSecret, accountSid }) => {
   let environment;

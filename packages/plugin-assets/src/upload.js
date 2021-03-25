@@ -13,7 +13,6 @@ const {
   waitForSuccessfulBuild,
   getBuild,
 } = require('@twilio-labs/serverless-api/dist/api/builds');
-const ora = require('ora');
 const inquirer = require('inquirer');
 
 const { resolve, basename } = require('path');
@@ -21,11 +20,9 @@ const { readFile } = require('fs/promises');
 const EventEmitter = require('events');
 
 const { ConfigStore } = require('./configStore');
-const { createErrorHandler } = require('./errors');
+const { createUtils } = require('./utils');
 
-const debug = require('debug')('twilio:assets:upload');
-const spinner = ora();
-const handleError = createErrorHandler(debug, spinner);
+const { spinner, debug, handleError } = createUtils('upload');
 
 const upload = async ({ configDir, apiKey, apiSecret, accountSid, file }) => {
   let environment,

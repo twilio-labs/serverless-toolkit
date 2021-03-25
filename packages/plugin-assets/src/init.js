@@ -6,13 +6,10 @@ const {
   createEnvironmentFromSuffix,
   getEnvironment,
 } = require('@twilio-labs/serverless-api/dist/api/environments');
-const ora = require('ora');
 const { ConfigStore } = require('./configStore');
-const { createErrorHandler } = require('./errors');
+const { createUtils } = require('./utils');
 
-const debug = require('debug')('twilio:assets:init');
-const spinner = ora();
-const handleError = createErrorHandler(debug, spinner);
+const { spinner, debug, handleError } = createUtils('init');
 
 const DEFAULT_ASSET_SERVICE_NAME = 'CLI-Assets-Bucket';
 
