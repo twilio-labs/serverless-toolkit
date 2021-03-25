@@ -22,12 +22,14 @@ const EventEmitter = require('events');
 const { ConfigStore } = require('./configStore');
 const { createUtils } = require('./utils');
 const { printInBox } = require('./print');
+const {
+  listFunctionResources,
+} = require('@twilio-labs/serverless-api/dist/api/functions');
 
 const { spinner, debug, handleError } = createUtils('upload');
 
 const upload = async ({ configDir, apiKey, apiSecret, accountSid, file }) => {
   let environment,
-    lastBuild,
     build,
     assetContent,
     filePath,
@@ -54,23 +56,19 @@ const upload = async ({ configDir, apiKey, apiSecret, accountSid, file }) => {
       handleError(error, 'Could not fetch asset service environment');
       return;
     }
-    if (environment.build_sid) {
-      try {
-        debug(`Fetching build with sid ${environment.build_sid}`);
-        lastBuild = await getBuild(environment.build_sid, serviceSid, client);
-        if (lastBuild.function_versions.length > 0) {
-          spinner.fail(
-            'Not an Asset Plugin service: service contains functions'
-          );
-          return;
-        }
-      } catch (error) {
-        handleError(
-          error,
-          'Could not fetch last build of asset service environment'
-        );
+    try {
+      debug(`Checking for functions in service with sid ${serviceSid}`);
+      const functions = await listFunctionResources(serviceSid, client);
+      if (functions.length > 0) {
+        spinner.fail('Not an Asset Plugin service: service contains functions');
         return;
       }
+    } catch (error) {
+      handleError(
+        error,
+        'Could not fetch last build of asset service environment'
+      );
+      return;
     }
     spinner.text = 'Preparing asset';
     try {
@@ -172,7 +170,15 @@ const upload = async ({ configDir, apiKey, apiSecret, accountSid, file }) => {
       return;
     }
     assetVersions.push(assetVersion.sid);
-    if (lastBuild) {
+    if (environment.build_sid) {
+      debug(
+        `Getting existing asset versions from build with sid ${environment.build_sid}`
+      );
+      const lastBuild = await getBuild(
+        environment.build_sid,
+        serviceSid,
+        client
+      );
       lastBuild.asset_versions
         .filter(av => av.asset_sid !== assetVersion.asset_sid)
         .forEach(assetVersion => assetVersions.push(assetVersion.sid));
