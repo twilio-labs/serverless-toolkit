@@ -437,8 +437,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
         ...this.config,
         ...deployConfig,
       };
-
-      const { functions, assets } = config;
+      const { functions, assets, runtime } = config;
 
       let serviceSid = config.serviceSid;
       if (!serviceSid) {
@@ -541,7 +540,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
       });
       const dependencies = getDependencies(config.pkgJson);
       const build = await triggerBuild(
-        { functionVersions, dependencies, assetVersions },
+        { functionVersions, dependencies, assetVersions, runtime },
         serviceSid,
         this
       );
@@ -575,6 +574,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
         domain,
         functionResources,
         assetResources,
+        runtime: build.runtime,
       };
     } catch (err) {
       convertApiErrorsAndThrow(err);

@@ -101,6 +101,7 @@ export interface BuildResource extends UpdateableResourceBase {
   status: BuildStatus;
   function_versions: FunctionVersion[];
   asset_versions: AssetVersion[];
+  runtime: string;
 }
 
 export interface BuildList extends BaseList<'builds'> {
@@ -122,6 +123,7 @@ export type BuildConfig = {
   dependencies?: Dependency[];
   functionVersions?: Sid[];
   assetVersions?: Sid[];
+  runtime?: string;
 };
 
 export interface LogApiResource extends ResourceBase {
