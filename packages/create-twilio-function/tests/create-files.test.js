@@ -78,6 +78,7 @@ describe('create-files', () => {
       expect(packageJSON.devDependencies['twilio-run']).toEqual(
         versions.twilioRun
       );
+      expect(packageJSON.dependencies['twilio']).toEqual(versions.twilio);
       cleanUp();
     });
 
@@ -103,6 +104,7 @@ describe('create-files', () => {
       expect(
         packageJSON.dependencies['@twilio-labs/serverless-runtime-types']
       ).toEqual(versions.serverlessRuntimeTypes);
+      expect(packageJSON.dependencies['twilio']).toEqual(versions.twilio);
       cleanUp();
     });
     test('it rejects if there is already a package.json', async () => {

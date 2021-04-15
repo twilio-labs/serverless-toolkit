@@ -1,4 +1,5 @@
 module.exports = {
+  twilio: '^3.56',
   twilioRun: '^2.6.0',
   node: '10',
   typescript: '^3.8',
