@@ -1,5 +1,6 @@
 import inquirer from 'inquirer';
 import { Argv } from 'yargs';
+import { Server } from 'http';
 import checkNodejsVersion from '../checks/nodejs-version';
 import checkProjectStructure from '../checks/project-structure';
 import { getConfigFromCli, StartCliFlags } from '../config/start';
@@ -71,6 +72,7 @@ export async function handler(
   }
 
   const app = await createServer(config.port, config);
+  let server: Server;
   debug('Start server on port %d', config.port);
   return new Promise((resolve, reject) => {
     let attempts = 1;
@@ -80,9 +82,18 @@ export async function handler(
         if (port) {
           config.port = port;
         }
-        config.url = await getUrl(argv, config.port);
-        printRouteInfo(config);
-        resolve();
+        try {
+          config.url = await getUrl(argv, config.port);
+          printRouteInfo(config);
+          resolve();
+        } catch (error) {
+          server.close(() => {
+            logger.info(
+              'ngrok could not be started because the module is not installed. Please install optional dependencies and try again.'
+            );
+            process.exit(1);
+          });
+        }
       };
     };
     const handleServerError = async (error: ServerError) => {
@@ -101,7 +112,7 @@ export async function handler(
             },
           ]);
           attempts += 1;
-          const server = app.listen(
+          server = app.listen(
             answers.newPortNumber,
             serverStartedSuccessfully(answers.newPortNumber)
           );
@@ -112,7 +123,7 @@ export async function handler(
       }
     };
 
-    const server = app.listen(config.port, serverStartedSuccessfully());
+    server = app.listen(config.port, serverStartedSuccessfully());
     server.on('error', handleServerError);
   });
 }
