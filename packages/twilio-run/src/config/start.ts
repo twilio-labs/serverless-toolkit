@@ -54,7 +54,7 @@ export type ConfigurableStartCliFlags = Pick<
   | 'legacyMode'
   | 'assetsFolder'
   | 'functionsFolder'
-  | 'experimentalForkProcess'
+  | 'forkProcess'
 >;
 export type StartCliFlags = Arguments<
   ConfigurableStartCliFlags & { dir?: string }
@@ -176,7 +176,7 @@ export async function getConfigFromCli(
   config.appName = 'twilio-run';
   config.assetsFolderName = cli.assetsFolder;
   config.functionsFolderName = cli.functionsFolder;
-  config.forkProcess = cli.experimentalForkProcess;
+  config.forkProcess = cli.forkProcess;
 
   return config;
 }

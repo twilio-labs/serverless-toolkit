@@ -1,6 +1,6 @@
+import { Server } from 'http';
 import inquirer from 'inquirer';
 import { Argv } from 'yargs';
-import { Server } from 'http';
 import checkNodejsVersion from '../checks/nodejs-version';
 import checkProjectStructure from '../checks/project-structure';
 import { getConfigFromCli, getUrl, StartCliFlags } from '../config/start';
@@ -149,7 +149,7 @@ export const cliInfo: CliInfo = {
       'legacy-mode',
       'assets-folder',
       'functions-folder',
-      'experimental-fork-process',
+      'fork-process',
     ]),
     cwd: {
       ...ALL_FLAGS['cwd'],
