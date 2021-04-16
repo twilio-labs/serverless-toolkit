@@ -93,8 +93,8 @@ export async function getConfigFromFlags(
       'deploy',
       flags.accountSid && flags.accountSid.startsWith('AC')
         ? flags.accountSid
-        : accountSid.startsWith('AC')
-        ? accountSid
+        : username.startsWith('AC')
+        ? username
         : externalCliOptions?.accountSid
     ));
 

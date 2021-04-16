@@ -80,8 +80,8 @@ export async function getConfigFromFlags(
       'list',
       flags.accountSid?.startsWith('AC')
         ? flags.accountSid
-        : accountSid.startsWith('AC')
-        ? accountSid
+        : username.startsWith('AC')
+        ? username
         : externalCliOptions?.accountSid
     ));
 

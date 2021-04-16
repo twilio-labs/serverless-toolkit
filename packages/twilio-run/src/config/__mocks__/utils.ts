@@ -12,8 +12,8 @@ export let _envPath = '/some/path/to/env';
 export let _serviceName = 'test_service_name';
 
 export let _credentials = {
-  accountSid: 'ACyyyyyyyy',
-  authToken: 'test_auth_token',
+  username: 'ACyyyyyyyy',
+  password: 'test_auth_token',
 };
 
 export const getServiceNameFromFlags = jest.fn(() => {
