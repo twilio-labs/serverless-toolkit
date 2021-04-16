@@ -1,9 +1,9 @@
 import chalk from 'chalk';
 import { Arguments } from 'yargs';
+import { BaseFlags, BASE_CLI_FLAG_NAMES, getRelevantFlags } from '../flags';
 import { fetchListOfTemplates } from '../templating/actions';
 import { getOraSpinner, setLogLevelByName } from '../utils/logger';
 import { writeOutput } from '../utils/output';
-import { baseCliOptions, BaseFlags } from './shared';
 import { CliInfo } from './types';
 
 export async function handler(flags: Arguments<BaseFlags>): Promise<void> {
@@ -28,6 +28,8 @@ export async function handler(flags: Arguments<BaseFlags>): Promise<void> {
   });
 }
 
-export const cliInfo: CliInfo = { options: { ...baseCliOptions } };
+export const cliInfo: CliInfo = {
+  options: { ...getRelevantFlags([...BASE_CLI_FLAG_NAMES]) },
+};
 export const command = ['list-templates'];
 export const describe = 'Lists the available Twilio Function templates';

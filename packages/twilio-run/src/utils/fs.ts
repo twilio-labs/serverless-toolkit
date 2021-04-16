@@ -20,6 +20,15 @@ export async function fileExists(filePath: string): Promise<boolean> {
   }
 }
 
+export function fileExistsSync(filePath: string): boolean {
+  try {
+    fs.accessSync(filePath, fs.constants.R_OK | fs.constants.W_OK);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
 export function downloadFile(
   contentUrl: string,
   targetPath: string

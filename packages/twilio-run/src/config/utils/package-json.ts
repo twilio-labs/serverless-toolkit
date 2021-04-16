@@ -1,6 +1,6 @@
 import path from 'path';
 import { PackageJson } from 'type-fest';
-import { SharedFlags } from '../../commands/shared';
+import { SharedFlags } from '../../flags';
 import { fileExists, readFile } from '../../utils/fs';
 
 export async function readPackageJsonContent({

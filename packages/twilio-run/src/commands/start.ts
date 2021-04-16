@@ -1,16 +1,22 @@
 import inquirer from 'inquirer';
 import { Argv } from 'yargs';
+import { Server } from 'http';
 import checkNodejsVersion from '../checks/nodejs-version';
 import checkProjectStructure from '../checks/project-structure';
-import { getConfigFromCli, StartCliFlags } from '../config/start';
+import { getConfigFromCli, getUrl, StartCliFlags } from '../config/start';
+import {
+  ALL_FLAGS,
+  BASE_API_FLAG_NAMES,
+  BASE_CLI_FLAG_NAMES,
+  getRelevantFlags,
+} from '../flags';
 import { printRouteInfo } from '../printers/start';
 import { createServer } from '../runtime/server';
 import { startInspector } from '../runtime/utils/inspector';
 import { getDebugFunction, logger, setLogLevelByName } from '../utils/logger';
-import { ExternalCliOptions, sharedCliOptions } from './shared';
+import { ExternalCliOptions } from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
-import { getUrl } from '../config/start';
 
 const debug = getDebugFunction('twilio-run:start');
 
@@ -71,6 +77,7 @@ export async function handler(
   }
 
   const app = await createServer(config.port, config);
+  let server: Server;
   debug('Start server on port %d', config.port);
   return new Promise((resolve, reject) => {
     let attempts = 1;
@@ -80,9 +87,18 @@ export async function handler(
         if (port) {
           config.port = port;
         }
-        config.url = await getUrl(argv, config.port);
-        printRouteInfo(config);
-        resolve();
+        try {
+          config.url = await getUrl(argv, config.port);
+          printRouteInfo(config);
+          resolve();
+        } catch (error) {
+          server.close(() => {
+            logger.info(
+              'ngrok could not be started because the module is not installed. Please install optional dependencies and try again.'
+            );
+            process.exit(1);
+          });
+        }
       };
     };
     const handleServerError = async (error: ServerError) => {
@@ -101,7 +117,7 @@ export async function handler(
             },
           ]);
           attempts += 1;
-          const server = app.listen(
+          server = app.listen(
             answers.newPortNumber,
             serverStartedSuccessfully(answers.newPortNumber)
           );
@@ -112,85 +128,33 @@ export async function handler(
       }
     };
 
-    const server = app.listen(config.port, serverStartedSuccessfully());
+    server = app.listen(config.port, serverStartedSuccessfully());
     server.on('error', handleServerError);
   });
 }
 
 export const cliInfo: CliInfo = {
   options: {
-    ...sharedCliOptions,
-    'load-local-env': {
-      alias: 'f',
-      default: false,
-      type: 'boolean',
-      describe: 'Includes the local environment variables',
-    },
+    ...getRelevantFlags([
+      ...BASE_API_FLAG_NAMES,
+      ...BASE_CLI_FLAG_NAMES,
+      'load-local-env',
+      'port',
+      'ngrok',
+      'logs',
+      'detailed-logs',
+      'live',
+      'inspect',
+      'inspect-brk',
+      'legacy-mode',
+      'assets-folder',
+      'functions-folder',
+      'experimental-fork-process',
+    ]),
     cwd: {
-      type: 'string',
+      ...ALL_FLAGS['cwd'],
       describe:
         'Alternative way to define the directory to start the server in. Overrides the [dir] argument passed.',
-    },
-    env: {
-      alias: 'e',
-      type: 'string',
-      describe: 'Loads .env file, overrides local env variables',
-    },
-    port: {
-      alias: 'p',
-      type: 'string',
-      describe: 'Override default port of 3000',
-      default: '3000',
-      requiresArg: true,
-    },
-    ngrok: {
-      type: 'string',
-      describe:
-        'Uses ngrok to create a public url. Pass a string to set the subdomain (requires a paid-for ngrok account).',
-    },
-    logs: {
-      type: 'boolean',
-      default: true,
-      describe: 'Toggles request logging',
-    },
-    'detailed-logs': {
-      type: 'boolean',
-      default: false,
-      describe:
-        'Toggles detailed request logging by showing request body and query params',
-    },
-    live: {
-      type: 'boolean',
-      default: true,
-      describe: 'Always serve from the current functions (no caching)',
-    },
-    inspect: {
-      type: 'string',
-      describe: 'Enables Node.js debugging protocol',
-    },
-    'inspect-brk': {
-      type: 'string',
-      describe:
-        'Enables Node.js debugging protocol, stops executioin until debugger is attached',
-    },
-    'legacy-mode': {
-      type: 'boolean',
-      describe:
-        'Enables legacy mode, it will prefix your asset paths with /assets',
-    },
-    'assets-folder': {
-      type: 'string',
-      describe: 'Specific folder name to be used for static assets',
-    },
-    'functions-folder': {
-      type: 'string',
-      describe: 'Specific folder name to be used for static functions',
-    },
-    'experimental-fork-process': {
-      type: 'boolean',
-      describe:
-        'Enable forking function processes to emulate production environment',
-      default: false,
     },
   },
 };

@@ -1,13 +1,13 @@
 import { ActivateResult } from '@twilio-labs/serverless-api';
 import { stripIndent } from 'common-tags';
-import { ActivateConfig } from '../config/activate';
+import { PromoteConfig } from '../config/promote';
 import { logger } from '../utils/logger';
 import { writeOutput } from '../utils/output';
 import { getTwilioConsoleDeploymentUrl, redactPartOfString } from './utils';
 import chalk = require('chalk');
 import terminalLink = require('terminal-link');
 
-export function printActivateConfig(config: ActivateConfig) {
+export function printActivateConfig(config: PromoteConfig) {
   const message = chalk`
     {cyan.bold Account} ${config.username}
     {cyan.bold Token}   ${redactPartOfString(config.password)}

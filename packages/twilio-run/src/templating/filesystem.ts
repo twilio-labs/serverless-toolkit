@@ -8,9 +8,9 @@ import { install, InstallResult } from 'pkg-install';
 import {
   downloadFile,
   fileExists,
+  mkdir,
   readFile,
   writeFile,
-  mkdir,
 } from '../utils/fs';
 import { logger } from '../utils/logger';
 import { TemplateFileInfo } from './data';
@@ -154,14 +154,14 @@ export async function writeFiles(
               path.join(assetsTargetDir, file.directory, file.name)
             ),
         };
-      } else if (file.type === '.env') {
+      } else if (file.type === '.env' || file.type === '.env.example') {
         return {
           title: 'Configuring Environment Variables in .env',
           task: async (ctx: any) => {
             const output = await writeEnvFile(
               file.content,
               targetDir,
-              file.name
+              namespace
             );
             ctx.env = output;
           },

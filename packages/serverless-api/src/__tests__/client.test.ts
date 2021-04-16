@@ -69,4 +69,14 @@ describe('createGotClient', () => {
       DEFAULT_TEST_CLIENT_CONFIG.authToken
     );
   });
+
+  test('works with HTTP_PROXY', async () => {
+    process.env.HTTP_PROXY = 'http://someproxy.com:8080';
+    const config = DEFAULT_TEST_CLIENT_CONFIG;
+    const client = createGotClient(config);
+    const agent = client.defaults.options.agent as any;
+    const httpAgent = agent.https as any;
+    expect(httpAgent.proxy.hostname).toBe('someproxy.com');
+    expect(httpAgent.proxy.port).toBe('8080');
+  });
 });

@@ -3,7 +3,7 @@ import '../../../src/config/utils/mergeFlagsAndConfig';
 import { mergeFlagsAndConfig } from '../../../src/config/utils/mergeFlagsAndConfig';
 
 const baseFlags = {
-  config: '.twilio-functions',
+  config: '.twilioserverlessrc',
   cwd: process.cwd(),
   list: true,
 };
@@ -58,7 +58,7 @@ describe('mergeFlagsAndConfig', () => {
     expect(merged).toEqual({
       template: 'bye',
       list: false,
-      config: '.twilio-functions',
+      config: '.twilioserverlessrc',
       cwd: process.cwd(),
     });
   });
@@ -75,7 +75,7 @@ describe('mergeFlagsAndConfig', () => {
     expect(merged).toEqual({
       template: 'hello',
       list: false,
-      config: '.twilio-functions',
+      config: '.twilioserverlessrc',
       cwd: process.cwd(),
     });
   });
@@ -93,7 +93,7 @@ describe('mergeFlagsAndConfig', () => {
     expect(merged).toEqual({
       template: 'hello',
       list: false,
-      config: '.twilio-functions',
+      config: '.twilioserverlessrc',
       cwd: '/some/path',
     });
   });

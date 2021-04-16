@@ -6,6 +6,12 @@ import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
 import checkForValidServiceSid from '../checks/check-service-sid';
 import { getConfigFromFlags, LogsCliFlags, LogsConfig } from '../config/logs';
+import {
+  ALL_FLAGS,
+  BASE_API_FLAG_NAMES,
+  BASE_CLI_FLAG_NAMES,
+  getRelevantFlags,
+} from '../flags';
 import { printLog, printLogs } from '../printers/logs';
 import {
   getDebugFunction,
@@ -13,11 +19,7 @@ import {
   logger,
   setLogLevelByName,
 } from '../utils/logger';
-import {
-  ExternalCliOptions,
-  sharedApiRelatedCliOptions,
-  sharedCliOptions,
-} from './shared';
+import { ExternalCliOptions } from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
 
@@ -81,42 +83,19 @@ export async function handler(
 
 export const cliInfo: CliInfo = {
   options: {
-    ...sharedCliOptions,
-    ...sharedApiRelatedCliOptions,
-    'service-sid': {
-      type: 'string',
-      describe: 'Specific Serverless Service SID to retrieve logs for',
-    },
+    ...getRelevantFlags([
+      ...BASE_CLI_FLAG_NAMES,
+      ...BASE_API_FLAG_NAMES,
+      'service-sid',
+      'function-sid',
+      'tail',
+      'output-format',
+      'log-cache-size',
+    ]),
     environment: {
-      type: 'string',
+      ...ALL_FLAGS['environment'],
       describe: 'The environment to retrieve the logs for',
       default: 'dev',
-    },
-    'function-sid': {
-      type: 'string',
-      describe: 'Specific Function SID to retrieve logs for',
-    },
-    tail: {
-      type: 'boolean',
-      describe: 'Continuously stream the logs',
-    },
-    'output-format': {
-      type: 'string',
-      alias: 'o',
-      default: '',
-      describe: 'Output the log in a different format',
-      choices: ['', 'json'],
-    },
-    env: {
-      type: 'string',
-      describe:
-        'Path to .env file for environment variables that should be installed',
-    },
-    'log-cache-size': {
-      type: 'number',
-      hidden: true,
-      describe:
-        'Tailing the log endpoint will cache previously seen entries to avoid duplicates. The cache is topped at a maximum of 1000 by default. This option can change that.',
     },
   },
 };

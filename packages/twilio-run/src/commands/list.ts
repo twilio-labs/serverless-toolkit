@@ -3,6 +3,12 @@ import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
 import checkForValidServiceSid from '../checks/check-service-sid';
 import { getConfigFromFlags, ListCliFlags, ListConfig } from '../config/list';
+import {
+  ALL_FLAGS,
+  BASE_API_FLAG_NAMES,
+  BASE_CLI_FLAG_NAMES,
+  getRelevantFlags,
+} from '../flags';
 import { printListResult } from '../printers/list';
 import {
   getDebugFunction,
@@ -10,11 +16,7 @@ import {
   logger,
   setLogLevelByName,
 } from '../utils/logger';
-import {
-  ExternalCliOptions,
-  sharedApiRelatedCliOptions,
-  sharedCliOptions,
-} from './shared';
+import { ExternalCliOptions } from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
 
@@ -77,50 +79,18 @@ export const cliInfo: CliInfo = {
     types: 'services',
   },
   options: {
-    ...sharedCliOptions,
-    ...sharedApiRelatedCliOptions,
-    'service-name': {
-      type: 'string',
-      alias: 'n',
-      describe:
-        'Overrides the name of the Serverless project. Default: the name field in your package.json',
-    },
-    'project-name': {
-      type: 'string',
-      hidden: true,
-      describe:
-        'DEPRECATED: Overrides the name of the project. Default: the name field in your package.json',
-    },
-    properties: {
-      type: 'string',
-      describe:
-        'Specify the output properties you want to see. Works best on single types',
-      hidden: true,
-    },
-    'extended-output': {
-      type: 'boolean',
-      describe: 'Show an extended set of properties on the output',
-      default: false,
-    },
-    cwd: {
-      type: 'string',
-      hidden: true,
-      describe:
-        'Sets the directory of your existing Serverless project. Defaults to current directory',
-    },
+    ...getRelevantFlags([
+      ...BASE_CLI_FLAG_NAMES,
+      ...BASE_API_FLAG_NAMES,
+      'service-name',
+      'properties',
+      'extended-output',
+      'service-sid',
+    ]),
     environment: {
-      type: 'string',
+      ...ALL_FLAGS['environment'],
       describe: 'The environment to list variables for',
       default: 'dev',
-    },
-    'service-sid': {
-      type: 'string',
-      describe: 'Specific Serverless Service SID to run list for',
-    },
-    env: {
-      type: 'string',
-      describe:
-        'Path to .env file for environment variables that should be installed',
     },
   },
 };

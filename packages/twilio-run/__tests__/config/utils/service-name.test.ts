@@ -6,7 +6,7 @@ import { readPackageJsonContent } from '../../../src/config/utils/package-json';
 import { getServiceNameFromFlags } from '../../../src/config/utils/service-name';
 
 const baseFlags = {
-  config: '.twilio-functions',
+  config: '.twilioserverlessrc',
   logLevel: 'info' as 'info',
 };
 

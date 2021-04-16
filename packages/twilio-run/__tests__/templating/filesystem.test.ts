@@ -415,9 +415,9 @@ test('installation with an existing dot-env file', async () => {
   expect(writeFile).toHaveBeenCalledWith(
     join('testing', '.env'),
     '# Comment\n' +
-    'FOO=BAR\n' +
-    '\n\n' +
-    '# Variables for function ".env"\n' + // This seems to be a bug but is the output.
+      'FOO=BAR\n' +
+      '\n\n' +
+      '# Variables for function "example"\n' +
       '# ---\n' +
       'HELLO=WORLD\n',
     'utf8'

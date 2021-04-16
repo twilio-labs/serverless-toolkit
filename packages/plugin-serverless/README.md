@@ -70,7 +70,7 @@ USAGE
   $ twilio serverless:deploy
 
 OPTIONS
-  -c, --config=config                  [default: .twilio-functions] Location of the config file. Absolute path or
+  -c, --config=config                  Location of the config file. Absolute path or
                                        relative to current working directory (cwd)
 
   -l, --logLevel=logLevel              [default: info] Level of logging messages.
@@ -156,7 +156,7 @@ ARGUMENTS
   TYPES  [default: services] Comma separated list of things to list (services,environments,functions,assets,variables)
 
 OPTIONS
-  -c, --config=config              [default: .twilio-functions] Location of the config file. Absolute path or relative
+  -c, --config=config              Location of the config file. Absolute path or relative
                                    to current working directory (cwd)
 
   -l, --logLevel=logLevel          [default: info] Level of logging messages.
@@ -207,7 +207,7 @@ USAGE
   $ twilio serverless:logs
 
 OPTIONS
-  -c, --config=config                [default: .twilio-functions] Location of the config file. Absolute path or relative
+  -c, --config=config                Location of the config file. Absolute path or relative
                                      to current working directory (cwd)
 
   -l, --logLevel=logLevel            [default: info] Level of logging messages.
@@ -266,7 +266,7 @@ USAGE
   $ twilio serverless:promote
 
 OPTIONS
-  -c, --config=config                          [default: .twilio-functions] Location of the config file. Absolute path
+  -c, --config=config                          Location of the config file. Absolute path
                                                or relative to current working directory (cwd)
 
   -f, --source-environment=source-environment  SID or suffix of an existing environment you want to deploy from.
@@ -319,7 +319,7 @@ ARGUMENTS
   DIR  Root directory to serve local Functions/Assets from
 
 OPTIONS
-  -c, --config=config                  [default: .twilio-functions] Location of the config file. Absolute path or
+  -c, --config=config                  Location of the config file. Absolute path or
                                        relative to current working directory (cwd)
 
   -e, --env=env                        Loads .env file, overrides local env variables
@@ -343,7 +343,7 @@ OPTIONS
 
   --inspect=inspect                    Enables Node.js debugging protocol
 
-  --inspect-brk=inspect-brk            Enables Node.js debugging protocol, stops executioin until debugger is attached
+  --inspect-brk=inspect-brk            Enables Node.js debugging protocol, stops execution until debugger is attached
 
   --legacy-mode                        Enables legacy mode, it will prefix your asset paths with /assets
 

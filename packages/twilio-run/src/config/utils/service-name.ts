@@ -1,5 +1,5 @@
-import { SharedFlags } from '../../commands/shared';
 import { deprecateProjectName } from '../../commands/utils';
+import { SharedFlags } from '../../flags';
 import { getDebugFunction } from '../../utils/logger';
 import { readPackageJsonContent } from './package-json';
 

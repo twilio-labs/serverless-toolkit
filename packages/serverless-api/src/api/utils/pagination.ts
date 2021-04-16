@@ -24,7 +24,7 @@ export async function getPaginatedResource<
   do {
     try {
       if (nextPageUrl.startsWith('http')) {
-        opts.prefixUrl = undefined;
+        opts.prefixUrl = '';
       }
       const resp = await client.request('get', nextPageUrl, opts);
       const body = resp.body as TList;
