@@ -77,7 +77,7 @@
     "yargs": "^13.2.2"
   },
   "optionalDependencies": {
-    "ngrok": "^3.3.0"
+    "ngrok": "^4.0.1"
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.12",

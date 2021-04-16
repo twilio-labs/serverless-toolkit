@@ -13,7 +13,7 @@ import { fileExists } from '../utils/fs';
 import { getDebugFunction, logger } from '../utils/logger';
 import { readSpecializedConfig } from './global';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
-import { INgrokOptions } from 'ngrok';
+import { Ngrok } from 'ngrok';
 import { parse } from 'yaml';
 
 const debug = getDebugFunction('twilio-run:cli:config');
@@ -71,7 +71,7 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
     debug('Starting ngrok tunnel');
     // Setup default ngrok config, setting the protocol and the port number to
     // forward to.
-    const defaultConfig: INgrokOptions = { addr: port, proto: 'http' };
+    const defaultConfig: Ngrok.Options = { addr: port, proto: 'http' };
     let tunnelConfig = defaultConfig;
     let ngrokConfig;
     if (typeof cli.ngrokConfig === 'string') {
