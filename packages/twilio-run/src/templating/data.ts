@@ -149,6 +149,7 @@ export async function getTemplateFiles(
         return (
           file.name === 'package.json' ||
           file.name === '.env' ||
+          file.name === '.env.example' ||
           file.name === 'README.md'
         );
       })
