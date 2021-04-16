@@ -104,6 +104,14 @@ export interface BuildResource extends UpdateableResourceBase {
   runtime: string;
 }
 
+export interface BuildStatusResource {
+  sid: Sid;
+  service_sid: Sid;
+  account_sid: Sid;
+  url: string;
+  status: BuildStatus;
+}
+
 export interface BuildList extends BaseList<'builds'> {
   builds: BuildResource[];
 }
