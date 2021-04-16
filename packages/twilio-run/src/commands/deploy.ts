@@ -10,6 +10,12 @@ import {
   DeployLocalProjectConfig,
   getConfigFromFlags,
 } from '../config/deploy';
+import {
+  ALL_FLAGS,
+  BASE_API_FLAG_NAMES,
+  BASE_CLI_FLAG_NAMES,
+  getRelevantFlags,
+} from '../flags';
 import { printConfigInfo, printDeployedResources } from '../printers/deploy';
 import { HttpError, saveLatestDeploymentData } from '../serverless-api/utils';
 import {
@@ -19,11 +25,7 @@ import {
   logger,
   setLogLevelByName,
 } from '../utils/logger';
-import {
-  ExternalCliOptions,
-  sharedApiRelatedCliOptions,
-  sharedCliOptions,
-} from './shared';
+import { ExternalCliOptions } from './shared';
 import { CliInfo } from './types';
 import { constructCommandName, getFullCommand } from './utils';
 
@@ -129,84 +131,25 @@ export async function handler(
 
 export const cliInfo: CliInfo = {
   options: {
-    ...sharedCliOptions,
-    ...sharedApiRelatedCliOptions,
-    cwd: {
-      type: 'string',
-      describe: 'Sets the directory from which to deploy',
-    },
-    'service-sid': {
-      type: 'string',
-      describe: 'SID of the Twilio Serverless service you want to deploy to.',
-      hidden: true,
-    },
-    'functions-env': {
-      type: 'string',
-      describe: 'DEPRECATED: Use --environment instead',
-      hidden: true,
-    },
-    environment: {
-      type: 'string',
-      describe:
-        'The environment name (domain suffix) you want to use for your deployment',
-      default: 'dev',
-    },
+    ...getRelevantFlags([
+      ...BASE_CLI_FLAG_NAMES,
+      ...BASE_API_FLAG_NAMES,
+      'service-sid',
+      'environment',
+      'service-name',
+      'override-existing-project',
+      'force',
+      'functions',
+      'assets',
+      'assets-folder',
+      'functions-folder',
+      'runtime',
+    ]),
     production: {
-      type: 'boolean',
+      ...ALL_FLAGS['production'],
       describe:
         'Please prefer the "activate" command! Deploys to the production environment (no domain suffix). Overrides the value passed via the environment flag.',
       default: false,
-    },
-    'service-name': {
-      type: 'string',
-      alias: 'n',
-      describe:
-        'Overrides the name of the Serverless project. Default: the name field in your package.json',
-    },
-    'project-name': {
-      type: 'string',
-      hidden: true,
-      describe:
-        'DEPRECATED: Overrides the name of the project. Default: the name field in your package.json',
-    },
-    env: {
-      type: 'string',
-      describe:
-        'Path to .env file. If none, the local .env in the current working directory is used.',
-    },
-    'override-existing-project': {
-      type: 'boolean',
-      describe:
-        'Deploys Serverless project to existing service if a naming conflict has been found.',
-      default: false,
-    },
-    force: {
-      type: 'boolean',
-      describe: 'Will run deployment in force mode. Can be dangerous.',
-      default: false,
-    },
-    functions: {
-      type: 'boolean',
-      describe: 'Upload functions. Can be turned off with --no-functions',
-      default: true,
-    },
-    assets: {
-      type: 'boolean',
-      describe: 'Upload assets. Can be turned off with --no-assets',
-      default: true,
-    },
-    'assets-folder': {
-      type: 'string',
-      describe: 'Specific folder name to be used for static assets',
-    },
-    'functions-folder': {
-      type: 'string',
-      describe: 'Specific folder name to be used for static functions',
-    },
-    runtime: {
-      type: 'string',
-      describe:
-        'The version of Node.js to deploy the build to. (node10 or node12)',
     },
   },
 };

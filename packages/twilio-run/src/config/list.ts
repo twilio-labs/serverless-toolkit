@@ -5,10 +5,11 @@ import {
 import path from 'path';
 import { Arguments } from 'yargs';
 import { cliInfo } from '../commands/list';
+import { ExternalCliOptions } from '../commands/shared';
 import {
-  ExternalCliOptions,
-  SharedFlagsWithCredentials,
-} from '../commands/shared';
+  AllAvailableFlagTypes,
+  SharedFlagsWithCredentialNames,
+} from '../flags';
 import { getFunctionServiceSid } from '../serverless-api/utils';
 import { readSpecializedConfig } from './global';
 import {
@@ -26,16 +27,19 @@ export type ListConfig = ApiListConfig & {
   extendedOutput: boolean;
 };
 
+export type ConfigurableListCliFlags = Pick<
+  AllAvailableFlagTypes,
+  | SharedFlagsWithCredentialNames
+  | 'serviceName'
+  | 'properties'
+  | 'extendedOutput'
+  | 'environment'
+  | 'serviceSid'
+>;
 export type ListCliFlags = Arguments<
-  SharedFlagsWithCredentials & {
+  ConfigurableListCliFlags & {
     types: string;
     projectName?: string;
-    serviceName?: string;
-    properties?: string;
-    extendedOutput: boolean;
-    cwd?: string;
-    environment?: string;
-    serviceSid?: string;
   }
 >;
 
@@ -50,15 +54,15 @@ export async function getConfigFromFlags(
   let cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
   flags.cwd = cwd;
 
-  const configFlags = readSpecializedConfig(cwd, flags.config, 'listConfig', {
-    projectId:
+  const configFlags = readSpecializedConfig(cwd, flags.config, 'list', {
+    accountSid:
       flags.accountSid ||
       (externalCliOptions && externalCliOptions.accountSid) ||
       undefined,
     environmentSuffix: flags.environment,
   });
 
-  flags = mergeFlagsAndConfig(configFlags, flags, cliInfo);
+  flags = mergeFlagsAndConfig<ListCliFlags>(configFlags, flags, cliInfo);
   cwd = flags.cwd || cwd;
 
   const { localEnv: envFileVars, envPath } = await readLocalEnvFile(flags);
@@ -70,7 +74,16 @@ export async function getConfigFromFlags(
 
   const serviceSid =
     flags.serviceSid ||
-    (await getFunctionServiceSid(cwd, flags.config, 'listConfig'));
+    (await getFunctionServiceSid(
+      cwd,
+      flags.config,
+      'list',
+      flags.accountSid?.startsWith('AC')
+        ? flags.accountSid
+        : accountSid.startsWith('AC')
+        ? accountSid
+        : externalCliOptions?.accountSid
+    ));
 
   let serviceName = await getServiceNameFromFlags(flags);
 

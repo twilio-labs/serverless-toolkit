@@ -1,116 +1,70 @@
-import Conf from 'conf';
-import { ActivateCliFlags } from './activate';
-import { DeployCliFlags } from './deploy';
-import { ListCliFlags } from './list';
-import { StartCliFlags } from './start';
-import { LogsCliFlags } from './logs';
-
-const DEFAULT_CONFIG_NAME = '.twilio-functions';
-
-type CommandConfigurations = {
-  deployConfig: Partial<DeployCliFlags>;
-  listConfig: Partial<ListCliFlags>;
-  startConfig: Partial<StartCliFlags & { serviceSid: string }>;
-  activateConfig: Partial<ActivateCliFlags>;
-  logsConfig: Partial<LogsCliFlags>;
-};
-
-type ProjectConfigurations = Partial<CommandConfigurations> & {
-  serviceSid?: string;
-  latestBuild?: string;
-  environments?: {
-    [environmentSuffix: string]: Partial<CommandConfigurations>;
-  };
-};
-
-type ConfigurationFile = Partial<CommandConfigurations> &
-  ProjectConfigurations & {
-    projects: {
-      [id: string]: ProjectConfigurations;
-    };
-  };
-
-let config: undefined | Conf<any>;
-
-export function getConfig(
-  baseDir: string,
-  configName: string = DEFAULT_CONFIG_NAME
-) {
-  if (config) {
-    return config;
-  }
-  config = new Conf<any>({
-    cwd: baseDir,
-    fileExtension: '',
-    configName: configName,
-    defaults: {
-      projects: {},
-    },
-  });
-  return config;
-}
+import {
+  CommandConfigurationNames,
+  CommandConfigurations,
+} from '../types/config';
+import { getConfig } from './utils/configLoader';
 
 export type SpecializedConfigOptions = {
-  projectId: string;
+  accountSid: string;
   environmentSuffix: string;
 };
 
-export function readSpecializedConfig<T extends keyof CommandConfigurations>(
+export function readSpecializedConfig<T extends CommandConfigurationNames>(
   baseDir: string,
   configFileName: string,
   commandConfigName: T,
   opts?: Partial<SpecializedConfigOptions>
-): CommandConfigurations[T] {
+): Required<CommandConfigurations>[T] {
   const config = getConfig(baseDir, configFileName);
-  let result: CommandConfigurations[T] = {};
+  let result: Required<CommandConfigurations>[T] = {};
 
-  if (config.has('serviceSid')) {
-    result.serviceSid = config.get('serviceSid');
-  }
+  const {
+    projects: projectsConfig,
+    environments: environmentsConfig,
+    commands: commandConfig,
+    ...baseConfig
+  } = config;
 
-  if (config.has(commandConfigName)) {
-    const partial = config.get(commandConfigName) as CommandConfigurations[T];
+  // take base level config logic
+  result = baseConfig;
+
+  // override if command specific config exists
+  if (commandConfig?.hasOwnProperty(commandConfigName)) {
     result = {
       ...result,
-      ...partial,
+      ...(commandConfig as any)[commandConfigName],
     };
   }
 
-  if (opts) {
-    if (opts.projectId) {
-      const projectConfigPath = `projects.${opts.projectId}`;
-      if (config.has(projectConfigPath)) {
-        const partial = config.get(projectConfigPath);
-        delete partial.environments;
-        delete partial.listConfig;
-        delete partial.startConfig;
-        delete partial.deployConfig;
-        delete partial.activateConfig;
-        result = { ...result, ...partial };
-      }
+  const environmentValue =
+    typeof opts?.environmentSuffix === 'string' &&
+    opts.environmentSuffix.length === 0
+      ? '*'
+      : opts?.environmentSuffix;
 
-      const commandConfigPath = `projects.${opts.projectId}.${commandConfigName}`;
-      if (config.has(commandConfigPath)) {
-        const partial = config.get(commandConfigPath);
-        result = { ...result, ...partial };
-      }
-    }
+  // override if environment config exists
+  if (
+    environmentValue &&
+    environmentsConfig &&
+    environmentsConfig[environmentValue]
+  ) {
+    result = {
+      ...result,
+      ...environmentsConfig[environmentValue],
+    };
+  }
 
-    if (opts.environmentSuffix) {
-      const environmentConfigPath = `environments.${opts.environmentSuffix}.${commandConfigName}`;
-      if (config.has(environmentConfigPath)) {
-        const partial = config.get(environmentConfigPath);
-        result = { ...result, ...partial };
-      }
-    }
-
-    if (opts.projectId && opts.environmentSuffix) {
-      const configPath = `projects.${opts.projectId}.environments.${opts.environmentSuffix}.${commandConfigName}`;
-      if (config.has(configPath)) {
-        const partial = config.get(configPath);
-        result = { ...result, ...partial };
-      }
-    }
+  // override if project specific config exists
+  if (
+    opts &&
+    opts.accountSid &&
+    projectsConfig &&
+    projectsConfig[opts.accountSid]
+  ) {
+    result = {
+      ...result,
+      ...projectsConfig[opts.accountSid],
+    };
   }
 
   return result;

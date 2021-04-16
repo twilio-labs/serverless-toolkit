@@ -1,29 +1,31 @@
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import path from 'path';
-import { Merge } from 'type-fest';
 import { Arguments, Argv } from 'yargs';
 import checkProjectStructure from '../checks/project-structure';
+import {
+  AllAvailableFlagTypes,
+  BaseFlagNames,
+  BASE_CLI_FLAG_NAMES,
+  getRelevantFlags,
+} from '../flags';
 import { downloadTemplate, fetchListOfTemplates } from '../templating/actions';
-import { setLogLevelByName, logger } from '../utils/logger';
-import { baseCliOptions, BaseFlags, ExternalCliOptions } from './shared';
+import { logger, setLogLevelByName } from '../utils/logger';
+import { ExternalCliOptions } from './shared';
 import { CliInfo } from './types';
 import { getFullCommand } from './utils';
 
+export type ConfigurableNewCliFlags = Pick<
+  AllAvailableFlagTypes,
+  BaseFlagNames | 'template'
+>;
 export type NewCliFlags = Arguments<
-  BaseFlags & {
+  ConfigurableNewCliFlags & {
     namespace?: string;
-    template?: string;
   }
 >;
 
-export type NewConfig = Merge<
-  NewCliFlags,
-  {
-    namespace?: string;
-    template?: string;
-  }
->;
+export type NewConfig = NewCliFlags;
 
 async function getMissingInfo(flags: NewCliFlags): Promise<NewConfig> {
   const questions: inquirer.QuestionCollection[] = [];
@@ -121,11 +123,7 @@ export async function handler(
 
 export const cliInfo: CliInfo = {
   options: {
-    ...baseCliOptions,
-    template: {
-      type: 'string',
-      description: 'Name of template to be used',
-    },
+    ...getRelevantFlags([...BASE_CLI_FLAG_NAMES, 'template']),
   },
 };
 

@@ -2,11 +2,12 @@ import { DeployLocalProjectConfig as ApiDeployLocalProjectConfig } from '@twilio
 import path from 'path';
 import { Arguments } from 'yargs';
 import { cliInfo } from '../commands/deploy';
-import {
-  ExternalCliOptions,
-  SharedFlagsWithCredentials,
-} from '../commands/shared';
+import { ExternalCliOptions } from '../commands/shared';
 import { deprecateFunctionsEnv } from '../commands/utils';
+import {
+  AllAvailableFlagTypes,
+  SharedFlagsWithCredentialNames,
+} from '../flags';
 import { getFunctionServiceSid } from '../serverless-api/utils';
 import { readSpecializedConfig } from './global';
 import {
@@ -23,21 +24,25 @@ export type DeployLocalProjectConfig = ApiDeployLocalProjectConfig & {
   password: string;
 };
 
+export type ConfigurableDeployCliFlags = Pick<
+  AllAvailableFlagTypes,
+  | SharedFlagsWithCredentialNames
+  | 'serviceSid'
+  | 'environment'
+  | 'production'
+  | 'serviceName'
+  | 'overrideExistingProject'
+  | 'force'
+  | 'functions'
+  | 'assets'
+  | 'assetsFolder'
+  | 'functionsFolder'
+  | 'runtime'
+>;
 export type DeployCliFlags = Arguments<
-  SharedFlagsWithCredentials & {
-    serviceSid?: string;
+  ConfigurableDeployCliFlags & {
     functionsEnv?: string;
-    environment: string;
-    production: boolean;
     projectName?: string;
-    serviceName?: string;
-    overrideExistingProject: boolean;
-    force: boolean;
-    functions: boolean;
-    assets: boolean;
-    assetsFolder?: string;
-    functionsFolder?: string;
-    runtime?: string;
   }
 >;
 
@@ -56,20 +61,20 @@ export async function getConfigFromFlags(
     delete flags.functionsEnv;
   }
 
-  const configFlags = readSpecializedConfig(cwd, flags.config, 'deployConfig', {
-    projectId:
+  if (flags.production) {
+    flags.environment = '';
+  }
+
+  const configFlags = readSpecializedConfig(cwd, flags.config, 'deploy', {
+    accountSid:
       flags.accountSid ||
       (externalCliOptions && externalCliOptions.accountSid) ||
       undefined,
     environmentSuffix: flags.environment,
   });
 
-  flags = mergeFlagsAndConfig(configFlags, flags, cliInfo);
+  flags = mergeFlagsAndConfig<DeployCliFlags>(configFlags, flags, cliInfo);
   cwd = flags.cwd || cwd;
-
-  if (flags.production) {
-    flags.environment = '';
-  }
 
   const { localEnv: envFileVars, envPath } = await readLocalEnvFile(flags);
   const { accountSid, authToken } = await getCredentialsFromFlags(
@@ -85,10 +90,12 @@ export async function getConfigFromFlags(
     (await getFunctionServiceSid(
       cwd,
       flags.config,
-      'deployConfig',
+      'deploy',
       flags.accountSid && flags.accountSid.startsWith('AC')
         ? flags.accountSid
-        : externalCliOptions && externalCliOptions.accountSid
+        : accountSid.startsWith('AC')
+        ? accountSid
+        : externalCliOptions?.accountSid
     ));
 
   const pkgJson = await readPackageJsonContent(flags);

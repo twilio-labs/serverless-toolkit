@@ -1,7 +1,11 @@
-import { getConfig, readSpecializedConfig } from '../config/global';
+import { readSpecializedConfig } from '../config/global';
+import {
+  getDeployInfoCache,
+  updateDeployInfoCache,
+} from '../utils/deployInfoCache';
 import { getDebugFunction } from '../utils/logger';
 
-const log = getDebugFunction('twilio-run:internal:utils');
+const debug = getDebugFunction('twilio-run:internal:utils');
 
 export interface HttpError extends Error {
   name: 'HTTPError';
@@ -17,38 +21,49 @@ export type ApiErrorResponse = {
 export async function getFunctionServiceSid(
   cwd: string,
   configName: string,
-  commandConfig:
-    | 'deployConfig'
-    | 'listConfig'
-    | 'activateConfig'
-    | 'logsConfig',
-  projectId?: string
+  commandConfig: 'deploy' | 'list' | 'logs' | 'promote',
+  accountSid?: string
 ): Promise<string | undefined> {
   const twilioConfig = readSpecializedConfig(cwd, configName, commandConfig, {
-    projectId,
+    accountSid,
   });
-  return twilioConfig.serviceSid;
+  if (twilioConfig.serviceSid) {
+    debug('Found serviceSid in config, "%s"', twilioConfig.serviceSid);
+    return twilioConfig.serviceSid;
+  }
+
+  if (accountSid) {
+    debug('Attempting to read serviceSid from a deployinfo file');
+    const deployInfoCache = getDeployInfoCache(cwd);
+    if (
+      deployInfoCache &&
+      deployInfoCache[accountSid] &&
+      deployInfoCache[accountSid].serviceSid
+    ) {
+      debug(
+        'Found service sid from debug info, "%s"',
+        deployInfoCache[accountSid].serviceSid
+      );
+      return deployInfoCache[accountSid].serviceSid;
+    }
+  }
+
+  debug('Could not determine existing serviceSid');
+  return undefined;
 }
 
 export async function saveLatestDeploymentData(
   cwd: string,
   serviceSid: string,
   buildSid: string,
-  projectId?: string
+  accountSid?: string
 ): Promise<void> {
-  const config = getConfig(cwd);
-  if (!config.has('serviceSid')) {
-    config.set('serviceSid', serviceSid);
+  if (!accountSid) {
+    return;
   }
 
-  if (config.get('serviceSid') === serviceSid) {
-    config.set('latestBuild', buildSid);
-  }
-
-  if (projectId) {
-    if (!config.has(`projects.${projectId}.serviceSid`)) {
-      config.set(`projects.${projectId}.serviceSid`, serviceSid);
-    }
-    config.set(`projects.${projectId}.latestBuild`, buildSid);
-  }
+  return updateDeployInfoCache(cwd, accountSid, {
+    serviceSid,
+    latestBuild: buildSid,
+  });
 }
