@@ -95,7 +95,7 @@ describe('with an express app', () => {
           )) as InternalResponse;
           expect(response.headers['access-control-allow-origin']).toEqual('*');
           expect(response.headers['access-control-allow-headers']).toEqual(
-            'Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since'
+            'Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since, User-Agent'
           );
           expect(response.headers['access-control-allow-methods']).toEqual(
             'GET, POST, OPTIONS'

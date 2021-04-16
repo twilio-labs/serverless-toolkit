@@ -170,7 +170,7 @@ export async function createServer(
           'access-control-expose-headers': 'ETag',
           'access-control-max-age': '86400',
           'access-control-allow-credentials': true,
-          'content-type:': 'text/plain; charset=UTF-8',
+          'content-type': 'text/plain; charset=UTF-8',
           'content-length': '0',
         });
         res.status(204).end();
