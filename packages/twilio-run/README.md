@@ -152,9 +152,31 @@ twilio-run --inspect
 # Exposes the Twilio functions via ngrok to share them
 twilio-run --ngrok
 
-# Exposes the Twilio functions via ngrok using a custom subdomain (requires a paid-for ngrok account)
+# Uses a custom project ngrok config and named tunnel to expose the functions via ngrok
+twilio-run --ngrok --ngrok-config=./ngrok.yml --ngrok-name=example
+```
+
+#### ngrok
+
+`twilio-run` lets you open a tunnel using [ngrok](https://ngrok.com/) (see the examples above). By default, just setting the `--ngrok` flag will use a randomly generated subdomain. If you have a paid for ngrok account, you can customise this experience.
+
+##### Custom ngrok subdomain
+
+Run the following command:
+
+```
 twilio-run --ngrok=subdomain
 ```
+
+This will start the `twilio-run` server and also tunnel to it over ngrok via the domain `subdomain.ngrok.io`.
+
+##### Custom ngrok config
+
+You can create an [ngrok config file](https://ngrok.com/docs#config-location) which allows you to name tunnels and include other settings for those named tunnels, such as the subdomain, auth, or host headers.
+
+You can choose to run a named tunnel with `twilio-run` by passing the `--ngrok-name` flag. This will find the named tunnel in your default config, over-ride the `proto` to http and the `addr` to the port your Twilio Functions are running on, otherwise keeping the rest of the settings.
+
+You can also choose to use a different config file by setting the `--ngrok-config` flag.
 
 ### `twilio-run deploy`
 

@@ -1,7 +1,10 @@
 import { EnvironmentVariables } from '@twilio-labs/serverless-api';
 import dotenv from 'dotenv';
-import { readFileSync } from 'fs';
-import path, { resolve } from 'path';
+import { readFile } from 'fs';
+import { promisify } from 'util';
+const readFilePromise = promisify(readFile);
+import path, { resolve, join } from 'path';
+import { homedir } from 'os';
 import { Arguments } from 'yargs';
 import { ExternalCliOptions, SharedFlags } from '../commands/shared';
 import { CliInfo } from '../commands/types';
@@ -10,13 +13,10 @@ import { fileExists } from '../utils/fs';
 import { getDebugFunction, logger } from '../utils/logger';
 import { readSpecializedConfig } from './global';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
+import { Ngrok } from 'ngrok';
+import { parse } from 'yaml';
 
 const debug = getDebugFunction('twilio-run:cli:config');
-
-type NgrokConfig = {
-  addr: string | number;
-  subdomain?: string;
-};
 
 type InspectInfo = {
   hostPort: string;
@@ -47,6 +47,8 @@ export type StartCliFlags = Arguments<
     env?: string;
     port: string;
     ngrok?: string | boolean;
+    ngrokConfig?: string;
+    ngrokName?: string;
     logs: boolean;
     detailedLogs: boolean;
     live: boolean;
@@ -67,12 +69,73 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
   let url = `http://localhost:${port}`;
   if (typeof cli.ngrok !== 'undefined') {
     debug('Starting ngrok tunnel');
-    const ngrokConfig: NgrokConfig = { addr: port };
-    if (typeof cli.ngrok === 'string' && cli.ngrok.length > 0) {
-      ngrokConfig.subdomain = cli.ngrok;
+    // Setup default ngrok config, setting the protocol and the port number to
+    // forward to.
+    const defaultConfig: Ngrok.Options = { addr: port, proto: 'http' };
+    let tunnelConfig = defaultConfig;
+    let ngrokConfig;
+    if (typeof cli.ngrokConfig === 'string') {
+      // If we set a config path then try to load that config. If the config
+      // fails to load then we'll try to load the default config instead.
+      const configPath = join(cli.cwd || process.cwd(), cli.ngrokConfig);
+      try {
+        ngrokConfig = parse(await readFilePromise(configPath, 'utf-8'));
+      } catch (err) {
+        logger.warn(`Could not find ngrok config file at ${configPath}`);
+      }
     }
-
-    url = await require('ngrok').connect(ngrokConfig);
+    if (!ngrokConfig) {
+      // Try to load default config. If there is no default config file, set
+      // `ngrokConfig` to be an empty object.
+      const configPath = join(homedir(), '.ngrok2', 'ngrok.yml');
+      try {
+        ngrokConfig = parse(await readFilePromise(configPath, 'utf-8'));
+      } catch (err) {
+        ngrokConfig = {};
+      }
+    }
+    if (
+      typeof cli.ngrokName === 'string' &&
+      typeof ngrokConfig.tunnels === 'object'
+    ) {
+      // If we've asked for a named ngrok tunnel and there are available tunnels
+      // in the config, then set the `tunnelConfig` to the options from the
+      // config, overriding the addr and proto to the defaults.
+      tunnelConfig = { ...ngrokConfig.tunnels[cli.ngrokName], ...tunnelConfig };
+      if (!tunnelConfig) {
+        // If the config does not include the named tunnel, then set it back to
+        // the default options.
+        logger.warn(
+          `Could not find config for named tunnel "${cli.ngrokName}". Falling back to other options.`
+        );
+        tunnelConfig = defaultConfig;
+      }
+    }
+    if (typeof ngrokConfig.authtoken === 'string') {
+      // If there is an authtoken in the config, add it to the tunnel config.
+      tunnelConfig.authToken = ngrokConfig.authtoken;
+    }
+    if (typeof cli.ngrok === 'string' && cli.ngrok.length > 0) {
+      // If we've asked for a custom subdomain, override the tunnel config with
+      // it.
+      tunnelConfig.subdomain = cli.ngrok;
+    }
+    const ngrok = require('ngrok');
+    try {
+      // Try to open the ngrok tunnel.
+      url = await ngrok.connect(tunnelConfig);
+    } catch (error) {
+      // If it fails, it is likely to be because the tunnel config we pass is
+      // not allowed (e.g. using a custom subdomain without an authtoken). The
+      // error message from ngrok itself should describe the issue.
+      logger.warn(error.message);
+      if (
+        typeof error.details !== 'undefined' &&
+        typeof error.details.err !== 'undefined'
+      ) {
+        logger.warn(error.details.err);
+      }
+    }
     debug('ngrok tunnel URL: %s', url);
   }
 
@@ -106,7 +169,7 @@ export async function getEnvironment(
   if (await fileExists(fullEnvPath)) {
     try {
       debug(`Read .env file at "%s"`, fullEnvPath);
-      const envContent = readFileSync(fullEnvPath, 'utf8');
+      const envContent = await readFilePromise(fullEnvPath, 'utf8');
       const envValues = dotenv.parse(envContent);
       for (const [key, val] of Object.entries(envValues)) {
         env[key] = val;

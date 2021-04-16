@@ -159,6 +159,14 @@ export const cliInfo: CliInfo = {
       describe:
         'Uses ngrok to create a public url. Pass a string to set the subdomain (requires a paid-for ngrok account).',
     },
+    'ngrok-config': {
+      type: 'string',
+      describe: 'Path to custom ngrok config for project specific config.',
+    },
+    'ngrok-name': {
+      type: 'string',
+      describe: 'Name of ngrok tunnel config.',
+    },
     logs: {
       type: 'boolean',
       default: true,
