@@ -8,7 +8,7 @@ export function printConfigWarning() {
   const msg = stripIndent`
     We found a .twilio-functions file in your project. This file is incompatible with the current version of the CLI you are using and will be ignored.
 
-    In most cases you will be able to delete the existing .twilio-functions file. If you have any configuration/modifications you did to the file yourself, head over to twil.io/serverlessv3 to learn how to migrate your configuration.
+    In most cases you will be able to delete the existing .twilio-functions file. If you have any configuration/modifications you did to the file yourself, head over to https://twil.io/serverlessv3 to learn how to migrate your configuration.
   `;
 
   logger.warn(msg, title);

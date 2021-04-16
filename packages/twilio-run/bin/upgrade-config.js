@@ -21,7 +21,13 @@ async function run() {
     return 1;
   }
 
-  const oldConfigContent = JSON.parse(await readFile(oldConfigPath, 'utf8'));
+  let oldConfigContent = undefined;
+
+  try {
+    oldConfigContent = JSON.parse(await readFile(oldConfigPath, 'utf8'));
+  } catch (err) {
+    console.error(err);
+  }
 
   if (!oldConfigContent) {
     console.error('Could not read old config file.');
