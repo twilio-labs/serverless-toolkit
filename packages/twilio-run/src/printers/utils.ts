@@ -13,7 +13,7 @@ export function getTwilioConsoleDeploymentUrl(
   serviceSid: string,
   environmentSid: string
 ) {
-  return `https://www.twilio.com/console/assets/api/${serviceSid}/environment/${environmentSid}`;
+  return `https://www.twilio.com/console/functions/editor/${serviceSid}/environment/${environmentSid}`;
 }
 
 export function printObjectWithoutHeaders(obj: {}): string {
