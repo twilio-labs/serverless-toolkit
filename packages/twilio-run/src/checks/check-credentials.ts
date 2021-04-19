@@ -15,11 +15,11 @@ export function checkConfigForCredentials(
   }
 
   const msg = stripIndent`
-      We couldn't find any Twilio credentials for you. 
-      
+      We couldn't find any Twilio credentials for you.
+
       Please enter ACCOUNT_SID and AUTH_TOKEN in your .env file.
-      
-      Alternatively you can specify them via the command-line using "--account-sid" and "--auth-token"
+
+      Alternatively you can specify them via the command-line using "--username" and "--password"
 
       For more information use "--help"
     `;

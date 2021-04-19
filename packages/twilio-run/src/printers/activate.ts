@@ -9,8 +9,8 @@ import terminalLink = require('terminal-link');
 
 export function printActivateConfig(config: PromoteConfig) {
   const message = chalk`
-    {cyan.bold Account} ${config.username}
-    {cyan.bold Token}   ${redactPartOfString(config.password)}
+    {cyan.bold Username} ${config.username}
+    {cyan.bold Password} ${redactPartOfString(config.password)}
   `;
   logger.info(stripIndent(message) + '\n');
 }
