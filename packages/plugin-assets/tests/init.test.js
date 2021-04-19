@@ -2,7 +2,6 @@ const { init } = require('../src/init');
 const path = require('path');
 const fs = require('fs/promises');
 const { tmpdir } = require('os');
-const { equal } = require('assert');
 
 jest.mock('@twilio-labs/serverless-api/dist/api/services', () => {
   return { createService: jest.fn().mockResolvedValue('new-service-sid') };
@@ -23,6 +22,7 @@ describe('init', () => {
         'scratch',
         'plugin-assets-config.json'
       );
+      await fs.mkdir(path.dirname(configPath), { recursive: true });
       await init({
         apiKey: 'apiKey',
         apiSecret: 'apiSecret',
