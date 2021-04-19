@@ -52,13 +52,13 @@ export async function getCredentialsFromFlags<
   }
 
   // specific flag passed. override for that flag (1)
-  if (flags.accountSid) {
+  if (flags.username) {
     debug('Override accountSid with value from flag');
-    username = flags.accountSid;
+    username = flags.username;
   }
-  if (flags.authToken) {
+  if (flags.password) {
     debug('Override authToken with value from flag');
-    password = flags.authToken;
+    password = flags.password;
   }
 
   return {

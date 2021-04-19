@@ -18,7 +18,7 @@ describe('getCredentialsFromFlags', () => {
 
   test('should return flag values if passed', async () => {
     const credentials = await getCredentialsFromFlags(
-      { ...baseFlags, accountSid: 'ACxxxxx', authToken: 'some-token' },
+      { ...baseFlags, username: 'ACxxxxx', password: 'some-token' },
       {},
       undefined
     );
@@ -143,7 +143,7 @@ describe('getCredentialsFromFlags', () => {
 
   test('should prefer flag over everything', async () => {
     const credentials = await getCredentialsFromFlags(
-      { ...baseFlags, accountSid: 'ACxxxxx', authToken: 'some-token' },
+      { ...baseFlags, username: 'ACxxxxx', password: 'some-token' },
       {
         ACCOUNT_SID: 'ACyyyyyyyyy',
         AUTH_TOKEN: 'example-token',

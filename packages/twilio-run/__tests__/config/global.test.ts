@@ -120,7 +120,7 @@ describe('readSpecializedConfig', () => {
     expect(
       readSpecializedConfig('/tmp', '.twilioserverlessrc', 'deploy', {
         environmentSuffix: 'stage',
-        accountSid: 'AC11112222111122221111222211114444',
+        username: 'AC11112222111122221111222211114444',
       })
     ).toEqual({
       serviceSid: 'ZS11112222111122221111222211114444',

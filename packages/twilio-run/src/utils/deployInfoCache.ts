@@ -12,7 +12,7 @@ export type DeployInfo = {
 };
 
 export type DeployInfoCache = {
-  [accountSid: string]: DeployInfo;
+  [username: string]: DeployInfo;
 };
 
 function validDeployInfoCache(data: unknown): data is DeployInfoCache {
@@ -60,7 +60,7 @@ export function getDeployInfoCache(
 
 export function updateDeployInfoCache(
   baseDir: string,
-  accountSid: string,
+  username: string,
   deployInfo: DeployInfo,
   deployInfoCacheFileName: string = '.twiliodeployinfo'
 ): void {
@@ -73,7 +73,7 @@ export function updateDeployInfoCache(
 
   const newDeployInfoCache = {
     ...currentDeployInfoCache,
-    [accountSid]: deployInfo,
+    [username]: deployInfo,
   };
 
   if (!validDeployInfoCache(newDeployInfoCache)) {

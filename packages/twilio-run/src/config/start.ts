@@ -158,7 +158,7 @@ export async function getConfigFromCli(
     flags.config,
     'start',
     {
-      accountSid:
+      username:
         (externalCliOptions && externalCliOptions.accountSid) || undefined,
     }
   ) as StartCliFlags;

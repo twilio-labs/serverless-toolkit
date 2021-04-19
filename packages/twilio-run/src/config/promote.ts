@@ -49,8 +49,8 @@ export async function getConfigFromFlags(
   }
 
   const configFlags = readSpecializedConfig(cwd, flags.config, 'promote', {
-    accountSid:
-      flags.accountSid ||
+    username:
+      flags.username ||
       (externalCliOptions && externalCliOptions.accountSid) ||
       undefined,
     environmentSuffix: flags.environment,
@@ -75,8 +75,8 @@ export async function getConfigFromFlags(
       cwd,
       flags.config,
       'promote',
-      flags.accountSid?.startsWith('AC')
-        ? flags.accountSid
+      flags.username?.startsWith('AC')
+        ? flags.username
         : username.startsWith('AC')
         ? username
         : externalCliOptions?.accountSid
