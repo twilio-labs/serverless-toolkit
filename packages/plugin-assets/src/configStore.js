@@ -1,5 +1,5 @@
 const { join } = require('path');
-const { readFile, writeFile } = require('fs/promises');
+const { readFile, writeFile, mkdir } = require('fs/promises');
 
 const CONFIG_FILE_NAME = 'plugin-assets-config.json';
 
@@ -21,6 +21,7 @@ class ConfigStore {
   }
 
   async save(config) {
+    await mkdir(this.configDir, { recursive: true });
     writeFile(this.configPath, JSON.stringify(config), { encoding: 'utf-8' });
   }
 }

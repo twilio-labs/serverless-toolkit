@@ -10,7 +10,7 @@ const { ConfigStore } = require('./configStore');
 const { createUtils } = require('./utils');
 const { printInBox } = require('./print');
 
-const { spinner, debug, handleError } = createUtils('init');
+const { spinner, handleError } = createUtils('init');
 
 const DEFAULT_ASSET_SERVICE_NAME = 'CLI-Assets-Bucket';
 
