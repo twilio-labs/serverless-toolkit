@@ -34,7 +34,7 @@ describe('init', () => {
     await fs.mkdir(path.dirname(configPath), { recursive: true });
   });
   afterEach(async () => {
-    await fs.rm(configPath, { force: true });
+    await fs.unlink(configPath, { force: true });
   });
 
   describe('with nothing in the config', () => {
