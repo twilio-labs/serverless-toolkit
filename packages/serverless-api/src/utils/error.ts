@@ -22,7 +22,7 @@ function toTwilioApiError(response: unknown): TwilioApiError | undefined {
  * Explictly removes username and password from a URL.
  * @param unfilteredUrl any URL string
  */
-function filterUrl(unfilteredUrl: string | undefined): string {
+export function filterUrl(unfilteredUrl: string | undefined): string {
   if (!unfilteredUrl) {
     return '';
   }
@@ -49,8 +49,9 @@ export function convertApiErrorsAndThrow(err: any): never {
  * An Error wrapper to provide more useful error information without exposing credentials
  */
 export class ClientApiError extends Error {
-  public details?: TwilioApiError & { request_url?: string };
+  public details?: TwilioApiError;
   public code?: number | string;
+  public url?: string;
 
   constructor(requestError: RequestError) {
     const twilioApiErrorInfo = toTwilioApiError(requestError.response?.body);
@@ -59,13 +60,13 @@ export class ClientApiError extends Error {
     Error.captureStackTrace(this, this.constructor);
     this.name = requestError.name;
     this.message = message;
-    this.code = twilioApiErrorInfo?.code || requestError.code;
+    this.code = twilioApiErrorInfo?.code || requestError.response?.statusCode;
+    this.url = filterUrl(requestError.response?.requestUrl);
 
     if (requestError.name === 'HTTPError' && twilioApiErrorInfo) {
       this.name = 'TwilioApiError';
       this.details = {
         ...twilioApiErrorInfo,
-        request_url: filterUrl(requestError.response?.requestUrl),
       };
     }
   }
