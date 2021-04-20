@@ -18,6 +18,26 @@ To transition your `.twilio-functions` file we provide a convenience script that
 npx -p twilio-run@3 twilio-upgrade-config
 ```
 
+### 2. Changed credential handling
+
+**If you are using the [Twilio CLI](https://twil.io/cli)** the credentials in your `.env` file are no longer used for anything other than local development. Instead we'll default to the credentials your Twilio CLI is using unless you explicitly change them using either the `-p` flag or `--username` and `--password`.
+
+**If you are using `twilio-run` directly**: The `--accountSid` and `--authToken` flags are no longer valid. Use `--username` and `--password` instead.
+
+### 3. Forked Processes for Function Executions
+
+The local development feature of the Serverless Toolkit is not an identical implementation of the Twilio Functions runtime, however, we try to mimic it as close as possible while helping to adhere to best practices. 
+
+In the latest version we have enabled process forking for Function executions. What this means is that every invocation of your Function locally will be executed in a standalone matter. That means state between two executions is no longer shared. This effectively simulates a "cold" start of your Functions. While you can share state between deployed Function invokations while the Function is considered "hot", you should ideally not rely on it.
+
+If you are relying on said behavior and need to revert to sharing state during local development, you can use the `--no-fork-process` flag: `twilio serverless:start --no-fork-process` or by adding the following to your `.twilioserverlessrc` file:
+
+```json
+{
+  "forkProcess": false
+}
+```
+
 ## FAQ
 
 ### How do I know which version I'm using?
