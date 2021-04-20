@@ -58,7 +58,7 @@ export async function getBuildStatus(
       'get',
       `Services/${serviceSid}/Builds/${buildSid}/Status`
     );
-    // const resp = await getBuild(buildSid, serviceSid, client);
+
     return ((resp.body as unknown) as BuildStatusResource).status;
   } catch (err) {
     log('%O', new ClientApiError(err));
