@@ -49,8 +49,8 @@ export async function getConfigFromFlags(
   flags.environment = environment;
 
   const configFlags = readSpecializedConfig(cwd, flags.config, 'logs', {
-    accountSid:
-      flags.accountSid ||
+    username:
+      flags.username ||
       (externalCliOptions && externalCliOptions.accountSid) ||
       undefined,
     environmentSuffix: environment,
@@ -61,7 +61,7 @@ export async function getConfigFromFlags(
   environment = flags.environment || environment;
 
   const { localEnv: envFileVars, envPath } = await readLocalEnvFile(flags);
-  const { accountSid, authToken } = await getCredentialsFromFlags(
+  const { username, password } = await getCredentialsFromFlags(
     flags,
     envFileVars,
     externalCliOptions
@@ -75,10 +75,10 @@ export async function getConfigFromFlags(
       cwd,
       flags.config,
       'logs',
-      flags.accountSid?.startsWith('AC')
-        ? flags.accountSid
-        : accountSid.startsWith('AC')
-        ? accountSid
+      flags.username?.startsWith('AC')
+        ? flags.username
+        : username.startsWith('AC')
+        ? username
         : externalCliOptions?.accountSid
     ));
 
@@ -89,8 +89,8 @@ export async function getConfigFromFlags(
 
   return {
     cwd,
-    username: accountSid,
-    password: authToken,
+    username,
+    password,
     environment,
     serviceSid,
     outputFormat,

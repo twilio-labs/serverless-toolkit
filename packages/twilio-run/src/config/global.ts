@@ -5,7 +5,7 @@ import {
 import { getConfig } from './utils/configLoader';
 
 export type SpecializedConfigOptions = {
-  accountSid: string;
+  username: string;
   environmentSuffix: string;
 };
 
@@ -57,13 +57,13 @@ export function readSpecializedConfig<T extends CommandConfigurationNames>(
   // override if project specific config exists
   if (
     opts &&
-    opts.accountSid &&
+    opts.username &&
     projectsConfig &&
-    projectsConfig[opts.accountSid]
+    projectsConfig[opts.username]
   ) {
     result = {
       ...result,
-      ...projectsConfig[opts.accountSid],
+      ...projectsConfig[opts.username],
     };
   }
 

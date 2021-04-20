@@ -86,8 +86,8 @@ function prettyPrintConfigInfo(config: DeployLocalProjectConfig) {
   logger.info('\nDeploying functions & assets to the Twilio Runtime');
   writeOutput(
     chalk`
-{bold.cyan Account}\t\t${config.username}
-{bold.cyan Token}\t\t${redactPartOfString(config.password)}
+{bold.cyan Username}\t\t${config.username}
+{bold.cyan Password}\t\t${redactPartOfString(config.password)}
 {bold.cyan Service Name}\t${config.serviceName}
 {bold.cyan Environment}\t${config.functionsEnv}
 {bold.cyan Root Directory}\t${config.cwd}

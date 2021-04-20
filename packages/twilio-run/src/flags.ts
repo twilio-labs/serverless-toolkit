@@ -42,16 +42,16 @@ export const sharedApiRelatedCliOptions = {
     hidden: true,
     describe: 'Twilio API Region',
   } as Options,
-  'account-sid': {
+  username: {
     type: 'string',
     alias: 'u',
     describe:
-      'A specific account SID to be used for deployment. Uses fields in .env otherwise',
+      'A specific API key or account SID to be used for deployment. Uses fields in .env otherwise',
   } as Options,
-  'auth-token': {
+  password: {
     type: 'string',
     describe:
-      'Use a specific auth token for deployment. Uses fields from .env otherwise',
+      'A specific API secret or auth token for deployment. Uses fields from .env otherwise',
   } as Options,
   'load-system-env': {
     default: false,
@@ -257,8 +257,8 @@ export type SharedFlags = BaseFlags & {
 export type SharedFlagNames = keyof SharedFlags;
 
 export type SharedFlagsWithCredentials = SharedFlags & {
-  accountSid?: string;
-  authToken?: string;
+  username?: string;
+  password?: string;
   region?: string;
   edge?: string;
   loadSystemEnv: boolean;

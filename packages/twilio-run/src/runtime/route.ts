@@ -11,6 +11,7 @@ import {
 } from 'express';
 import twilio, { twiml } from 'twilio';
 import { checkForValidAccountSid } from '../checks/check-account-sid';
+import { checkForValidAuthToken } from '../checks/check-auth-token';
 import { StartCliConfig } from '../config/start';
 import { wrapErrorInHtml } from '../utils/error-html';
 import { getDebugFunction } from '../utils/logger';
@@ -42,6 +43,11 @@ export function constructContext<T extends {} = {}>(
 }> {
   function getTwilioClient(): twilio.Twilio {
     checkForValidAccountSid(env.ACCOUNT_SID, {
+      shouldPrintMessage: true,
+      shouldThrowError: true,
+      functionName: 'context.getTwilioClient()',
+    });
+    checkForValidAuthToken(env.AUTH_TOKEN, {
       shouldPrintMessage: true,
       shouldThrowError: true,
       functionName: 'context.getTwilioClient()',
