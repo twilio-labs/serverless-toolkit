@@ -220,11 +220,11 @@ export const ALL_FLAGS = {
     describe:
       'Enables legacy mode, it will prefix your asset paths with /assets',
   } as Options,
-  'experimental-fork-process': {
+  'fork-process': {
     type: 'boolean',
     describe:
-      'Enable forking function processes to emulate production environment',
-    default: false,
+      'Disable forking function processes to emulate production environment',
+    default: true,
   } as Options,
   runtime: {
     type: 'string',
@@ -295,6 +295,6 @@ export type AllAvailableFlagTypes = SharedFlagsWithCredentials & {
   inspect?: string;
   inspectBrk?: string;
   legacyMode: boolean;
-  experimentalForkProcess: boolean;
+  forkProcess: boolean;
   runtime?: string;
 };
