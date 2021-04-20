@@ -2,8 +2,14 @@
 
 import debug from 'debug';
 import querystring, { ParsedUrlQueryInput } from 'querystring';
-import { BuildConfig, BuildList, BuildResource, BuildStatus } from '../types';
 import { TwilioServerlessApiClient } from '../client';
+import {
+  BuildConfig,
+  BuildList,
+  BuildResource,
+  BuildStatus,
+  BuildStatusResource,
+} from '../types';
 import { DeployStatus } from '../types/consts';
 import { ClientApiError } from '../utils/error';
 import { sleep } from '../utils/sleep';
@@ -42,14 +48,18 @@ export async function getBuild(
  * @param {TwilioServerlessApiClient} client API client
  * @returns {Promise<BuildStatus>}
  */
-async function getBuildStatus(
+export async function getBuildStatus(
   buildSid: string,
   serviceSid: string,
   client: TwilioServerlessApiClient
 ): Promise<BuildStatus> {
   try {
-    const resp = await getBuild(buildSid, serviceSid, client);
-    return resp.status;
+    const resp = await client.request(
+      'get',
+      `Services/${serviceSid}/Builds/${buildSid}/Status`
+    );
+
+    return ((resp.body as unknown) as BuildStatusResource).status;
   } catch (err) {
     log('%O', new ClientApiError(err));
     throw err;
