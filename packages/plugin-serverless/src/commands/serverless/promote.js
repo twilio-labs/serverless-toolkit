@@ -1,16 +1,16 @@
-const { TwilioClientCommand } = require("@twilio/cli-core").baseCommands;
+const { TwilioClientCommand } = require('@twilio/cli-core').baseCommands;
 
 const {
   handler,
   cliInfo,
   describe,
-} = require("twilio-run/dist/commands/activate");
+} = require('twilio-run/dist/commands/promote');
 const {
   convertYargsOptionsToOclifFlags,
   normalizeFlags,
   createExternalCliOptions,
   getRegionAndEdge,
-} = require("../../utils");
+} = require('../../utils');
 
 class FunctionsPromote extends TwilioClientCommand {
   async run() {
@@ -38,6 +38,6 @@ FunctionsPromote.flags = Object.assign(
   { profile: TwilioClientCommand.flags.profile }
 );
 
-FunctionsPromote.aliases = ["serverless:activate"];
+FunctionsPromote.aliases = ['serverless:activate'];
 
 module.exports = FunctionsPromote;
