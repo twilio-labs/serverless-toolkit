@@ -4,6 +4,7 @@ import { Ora } from 'ora';
 import path from 'path';
 import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
+import checkLegacyConfig from '../checks/legacy-config';
 import checkProjectStructure from '../checks/project-structure';
 import {
   DeployCliFlags,
@@ -80,6 +81,11 @@ export async function handler(
 
   const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
   flags.cwd = cwd;
+  const continueWork = await checkLegacyConfig(cwd);
+  if (!continueWork) {
+    process.exit(1);
+  }
+
   const command = getFullCommand(flags);
   await checkProjectStructure(cwd, command, true);
 

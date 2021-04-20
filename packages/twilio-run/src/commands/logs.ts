@@ -5,6 +5,7 @@ import {
 import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
 import checkForValidServiceSid from '../checks/check-service-sid';
+import checkLegacyConfig from '../checks/legacy-config';
 import { getConfigFromFlags, LogsCliFlags, LogsConfig } from '../config/logs';
 import {
   ALL_FLAGS,
@@ -44,6 +45,11 @@ export async function handler(
   externalCliOptions?: ExternalCliOptions
 ): Promise<void> {
   setLogLevelByName(flags.logLevel);
+
+  const continueWork = await checkLegacyConfig(flags.cwd);
+  if (!continueWork) {
+    process.exit(1);
+  }
 
   let config: LogsConfig;
   try {
