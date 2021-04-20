@@ -31,7 +31,11 @@ const init = async ({ apiKey, apiSecret, accountSid, configDir }) => {
   });
   const configStore = new ConfigStore(configDir);
   const config = await configStore.load();
-  if (config[accountSid]?.serviceSid && config[accountSid]?.environmentSid) {
+  if (
+    config[accountSid] &&
+    config[accountSid].serviceSid &&
+    config[accountSid].environmentSid
+  ) {
     spinner.text = 'Existing service found. Loading';
     const { serviceSid, environmentSid } = config[accountSid];
     try {

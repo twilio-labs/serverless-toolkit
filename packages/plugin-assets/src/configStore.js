@@ -22,7 +22,9 @@ class ConfigStore {
 
   async save(config) {
     await mkdir(this.configDir, { recursive: true });
-    writeFile(this.configPath, JSON.stringify(config), { encoding: 'utf-8' });
+    await writeFile(this.configPath, JSON.stringify(config), {
+      encoding: 'utf-8',
+    });
   }
 }
 

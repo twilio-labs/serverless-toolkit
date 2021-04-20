@@ -15,7 +15,11 @@ const list = async ({ configDir, apiKey, apiSecret, accountSid }) => {
   spinner.start('Loading config');
   const configStore = new ConfigStore(configDir);
   const config = await configStore.load();
-  if (config[accountSid]?.serviceSid && config[accountSid]?.environmentSid) {
+  if (
+    config[accountSid] &&
+    config[accountSid].serviceSid &&
+    config[accountSid].environmentSid
+  ) {
     const { serviceSid, environmentSid } = config[accountSid];
     const client = new TwilioServerlessApiClient({
       username: apiKey,
