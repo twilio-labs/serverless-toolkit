@@ -16,7 +16,7 @@ const {
 const inquirer = require('inquirer');
 
 const { resolve, basename } = require('path');
-const { readFile } = require('fs/promises');
+const { readFile } = require('fs').promises;
 const EventEmitter = require('events');
 
 const { ConfigStore } = require('./configStore');

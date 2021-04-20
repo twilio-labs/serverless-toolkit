@@ -1,6 +1,6 @@
 const { init } = require('../src/init');
 const path = require('path');
-const fs = require('fs/promises');
+const fs = require('fs').promises;
 const { tmpdir } = require('os');
 
 jest.mock('@twilio-labs/serverless-api/dist/api/services', () => {

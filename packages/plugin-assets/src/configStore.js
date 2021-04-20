@@ -1,5 +1,5 @@
 const { join } = require('path');
-const { readFile, writeFile, mkdir } = require('fs/promises');
+const { readFile, writeFile, mkdir } = require('fs').promises;
 
 const CONFIG_FILE_NAME = 'plugin-assets-config.json';
 
