@@ -2,13 +2,13 @@
 
 ![Npm Version](https://img.shields.io/npm/v/@twilio-labs/serverless-twilio-runtime.svg?style=flat-square)
 
-Serverless Framework plugin to deploy to the Twilio Runtime
+Serverless Framework plugin to deploy to the Twilio Runtime.
 
 ## Getting started
 
 ### Pre-requisites
 
-- Node.js v8.10.0 (this is the runtime version supported by Twilio Functions)
+- Node.js v12.x (this is the runtime version supported by Twilio Functions)
 - Serverless CLI v1.50.0+. You can run npm i -g serverless if you don't already have it.
 - A Twilio account. If you don't have one you can [sign up quickly](https://www.twilio.com/try-twilio).
 
