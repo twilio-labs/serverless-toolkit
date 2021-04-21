@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 2.0.0-beta.1 (2021-04-21)
+
+
+### Bug Fixes
+
+* update to correct type import ([ea0994f](https://github.com/twilio-labs/serverless-toolkit/commit/ea0994f598a550188794d84554e1d11b5edbc198))
+* **deps:** npm is not happy about @types/qs ([0d4e6a8](https://github.com/twilio-labs/serverless-toolkit/commit/0d4e6a894d154996470b9ab4bdd9b72095b7bd94))
+* **types:** add extended sync service types ([e735e81](https://github.com/twilio-labs/serverless-toolkit/commit/e735e81a3872a723b8276506eb046f6d327166c6))
+* **types:** add other values to callback signature ([d024032](https://github.com/twilio-labs/serverless-toolkit/commit/d024032b8200d8c8fba41f557752b5b5a1ba9cf6))
+* **types:** improve types for Twilio Functions ([c7eb678](https://github.com/twilio-labs/serverless-toolkit/commit/c7eb678ff3e8d0fd27ec595945ab944679e54177))
+
+
+### Features
+
+* add initial release ([b8177f7](https://github.com/twilio-labs/serverless-toolkit/commit/b8177f777b03582d607173e96f1c778e703a90e4))
+* **deploy:** adds runtime as a flag to the deploy command ([#218](https://github.com/twilio-labs/serverless-toolkit/issues/218)) ([789ec02](https://github.com/twilio-labs/serverless-toolkit/commit/789ec027f1151be156e1fb01b4e4110ca0de9c44))
+* **twilio-run:** restructure configuration ([#198](https://github.com/twilio-labs/serverless-toolkit/issues/198)) ([f88d490](https://github.com/twilio-labs/serverless-toolkit/commit/f88d49027980ee4c4d7f630918f860a987f13887)), closes [#166](https://github.com/twilio-labs/serverless-toolkit/issues/166)
+* **types:** add Context type ([ce2e171](https://github.com/twilio-labs/serverless-toolkit/commit/ce2e17151520f5722327692f5f3c55f7dbbceef0))
+* **types:** add ServerlessFunctionSignature types ([3d258ba](https://github.com/twilio-labs/serverless-toolkit/commit/3d258ba126cc976d967aa16012960e5185b6e6d2))
+
+
+### BREAKING CHANGES
+
+* **twilio-run:** Drops support for .twilio-functions files and internally restructures activate
+files to promote
+
+
+
+
+
 # 2.0.0-beta.0 (2020-08-27)
 
 

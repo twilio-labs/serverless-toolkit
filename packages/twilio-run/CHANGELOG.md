@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.0.0-beta.1 (2021-04-21)
+
+
+* feat(twilio-run)!: enable process forking by default (#238) ([13b83b9](https://github.com/twilio-labs/serverless-toolkit/commit/13b83b987695e77ed8bd85c3aed10e567028e4fb)), closes [#238](https://github.com/twilio-labs/serverless-toolkit/issues/238) [#223](https://github.com/twilio-labs/serverless-toolkit/issues/223) [#135](https://github.com/twilio-labs/serverless-toolkit/issues/135)
+
+
+### Bug Fixes
+
+* **debugger:** fixes debugger redaction in plugin-serverless ([#187](https://github.com/twilio-labs/serverless-toolkit/issues/187)) ([4a0c04b](https://github.com/twilio-labs/serverless-toolkit/commit/4a0c04b04f5856c51d1d1c672ffc879c5a6882e9)), closes [#185](https://github.com/twilio-labs/serverless-toolkit/issues/185)
+* add hidden logCacheSize option ([e8c02dc](https://github.com/twilio-labs/serverless-toolkit/commit/e8c02dc4469dd5dba6f7662750dae2446f6eb894))
+* **deps:** npm is not happy about @types/qs ([0d4e6a8](https://github.com/twilio-labs/serverless-toolkit/commit/0d4e6a894d154996470b9ab4bdd9b72095b7bd94))
+* **twilio-run:** change the url to the Twilio Console ([#236](https://github.com/twilio-labs/serverless-toolkit/issues/236)) ([d753af3](https://github.com/twilio-labs/serverless-toolkit/commit/d753af3393f75e96701022427f14c8e8837d4366))
+* **twilio-run:** fixes indentation on deploy screen ([1dc9c69](https://github.com/twilio-labs/serverless-toolkit/commit/1dc9c691a99e9d6e1319b54595bd0cd6798c4c8b)), closes [#245](https://github.com/twilio-labs/serverless-toolkit/issues/245)
+* **twilio-run:checks:** change to Node.js v12 check ([29f6547](https://github.com/twilio-labs/serverless-toolkit/commit/29f6547fa56ae851558e6c16e91ad8e9f9ad21df))
+* **twilio-run:promote:** better error message for 409 error ([7a6a49f](https://github.com/twilio-labs/serverless-toolkit/commit/7a6a49f1e9fd477d1f1213fd96b759a7c73f0852)), closes [#171](https://github.com/twilio-labs/serverless-toolkit/issues/171)
+* **twilio-run:runtime:** delete from require cache on page load in live ([#181](https://github.com/twilio-labs/serverless-toolkit/issues/181)) ([5108d30](https://github.com/twilio-labs/serverless-toolkit/commit/5108d307bace834452eae5b06924b9b538f16615))
+* **twilio-run:start:** changing port numbers changes output ([#189](https://github.com/twilio-labs/serverless-toolkit/issues/189)) ([6f3ad06](https://github.com/twilio-labs/serverless-toolkit/commit/6f3ad06d094057f7fc718881ce4fea22fdbafb79)), closes [#188](https://github.com/twilio-labs/serverless-toolkit/issues/188)
+
+
+### Features
+
+* **deploy:** adds runtime as a flag to the deploy command ([#218](https://github.com/twilio-labs/serverless-toolkit/issues/218)) ([789ec02](https://github.com/twilio-labs/serverless-toolkit/commit/789ec027f1151be156e1fb01b4e4110ca0de9c44))
+* **templating:** add support for .env.example files ([#235](https://github.com/twilio-labs/serverless-toolkit/issues/235)) ([9c40a7f](https://github.com/twilio-labs/serverless-toolkit/commit/9c40a7f5ff24ed49e982033eac548e458162d892))
+* **twilio-run:** restructure configuration ([#198](https://github.com/twilio-labs/serverless-toolkit/issues/198)) ([f88d490](https://github.com/twilio-labs/serverless-toolkit/commit/f88d49027980ee4c4d7f630918f860a987f13887)), closes [#166](https://github.com/twilio-labs/serverless-toolkit/issues/166)
+* **twilio-run:start:** handle OPTIONS requests for Functions ([#220](https://github.com/twilio-labs/serverless-toolkit/issues/220)) ([ad6ba06](https://github.com/twilio-labs/serverless-toolkit/commit/ad6ba06fa39dc996d80f29cc0ce4ee6659ec8c23))
+* **twilio-run:start:** make ngrok optional and handle failure ([#207](https://github.com/twilio-labs/serverless-toolkit/issues/207)) ([3061015](https://github.com/twilio-labs/serverless-toolkit/commit/30610158d3e29a43e0ece91c2ad6253483699c37)), closes [#205](https://github.com/twilio-labs/serverless-toolkit/issues/205)
+* **twilio-run:templates:** pull function-templates from main ([#182](https://github.com/twilio-labs/serverless-toolkit/issues/182)) ([8bbbc92](https://github.com/twilio-labs/serverless-toolkit/commit/8bbbc925532945da73949ff56624b2f376a8e8f3))
+* check for legacy config ([#246](https://github.com/twilio-labs/serverless-toolkit/issues/246)) ([1aad8da](https://github.com/twilio-labs/serverless-toolkit/commit/1aad8dac44ebbae16651dc2bcb02780193a44481))
+
+
+### BREAKING CHANGES
+
+* Functions invokations are not separated from each other
+* **twilio-run:** Drops support for .twilio-functions files and internally restructures activate
+files to promote
+
+
+
+
+
 # 3.0.0-beta.0 (2020-08-27)
 
 

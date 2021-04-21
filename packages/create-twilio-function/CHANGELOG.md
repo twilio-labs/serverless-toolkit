@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.0.0-beta.1 (2021-04-21)
+
+
+### Bug Fixes
+
+* **create-twilio-function:** add early exit for invalid options ([3338e3d](https://github.com/twilio-labs/serverless-toolkit/commit/3338e3daff2b6d7a0931da5064d5088deb92d76d))
+
+
+### Features
+
+* **create-twilio-function:** adds twilio to default package.json ([#217](https://github.com/twilio-labs/serverless-toolkit/issues/217)) ([6ff8225](https://github.com/twilio-labs/serverless-toolkit/commit/6ff822586abd5c7cb486d03f482733a1a5b36039))
+* **create-twilio-function:** update default Node.js version ([#231](https://github.com/twilio-labs/serverless-toolkit/issues/231)) ([064f8a5](https://github.com/twilio-labs/serverless-toolkit/commit/064f8a50e1bed0521f7845898ec604d7ad47837a))
+
+
+
+
+
 # 3.0.0-beta.0 (2020-08-27)
 
 
