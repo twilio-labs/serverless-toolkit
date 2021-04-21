@@ -10,7 +10,7 @@
     "@oclif/command": "^1.5.19",
     "@oclif/config": "^1.13.3",
     "@twilio-labs/serverless-api": "^5.0.0-beta.0",
-    "@twilio/cli-core": "^5.19.0",
+    "@twilio/cli-core": "^5.22.0",
     "boxen": "^5.0.0",
     "chalk": "^4.1.0",
     "debug": "^4.3.1",

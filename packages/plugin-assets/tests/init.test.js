@@ -35,57 +35,57 @@ const mockLogger = {
 const configPath = path.join(tmpdir(), 'scratch', 'plugin-assets-config.json');
 
 describe('init', () => {
-  beforeEach(async () => {
-    await fs.mkdir(path.dirname(configPath), { recursive: true });
-  });
-  afterEach(async () => {
-    await fs.unlink(configPath, { force: true });
-  });
-
   describe('with nothing in the config', () => {
+    const fakeConfig = {
+      getConfig: jest.fn().mockResolvedValue({}),
+      setConfig: jest.fn().mockResolvedValue(),
+    };
     it('creates a new service and environment and writes it to config', async () => {
       const result = await init({
         apiKey: 'apiKey',
         apiSecret: 'apiSecret',
         accountSid: 'test-account-sid',
-        configDir: path.dirname(configPath),
+        pluginConfig: fakeConfig,
         logger: mockLogger,
       });
 
-      const config = JSON.parse(
-        await fs.readFile(configPath, { encoding: 'utf-8' })
-      );
-      expect(config['test-account-sid']['serviceSid']).toBe('new-service-sid');
-      expect(config['test-account-sid']['environmentSid']).toBe(
-        'new-environment-sid'
-      );
       expect(createEnvironmentFromSuffix).toHaveBeenCalledTimes(1);
       expect(createService).toHaveBeenCalledTimes(1);
       expect(getEnvironment).not.toHaveBeenCalled();
+      expect(fakeConfig.getConfig).toHaveBeenCalledTimes(1);
+      expect(fakeConfig.setConfig).toHaveBeenCalledTimes(1);
+      expect(fakeConfig.setConfig).toHaveBeenCalledWith({
+        'test-account-sid': {
+          serviceSid: 'new-service-sid',
+          environmentSid: 'new-environment-sid',
+        },
+      });
       expect(result.sid).toBe('new-environment-sid');
     });
   });
 
   describe('with a service sid and environment sid in the config', () => {
-    beforeEach(async () => {
-      const configStore = new ConfigStore(path.dirname(configPath));
-      await configStore.save({
+    const fakeConfig = {
+      getConfig: jest.fn().mockResolvedValue({
         'test-account-sid': {
           serviceSid: 'old-service-sid',
           environmentSid: 'old-environment-sid',
         },
-      });
-    });
+      }),
+      setConfig: jest.fn().mockResolvedValue(),
+    };
 
     it('displays the environment domain name', async () => {
       const result = await init({
         apiKey: 'apiKey',
         apiSecret: 'apiSecret',
         accountSid: 'test-account-sid',
-        configDir: path.dirname(configPath),
+        pluginConfig: fakeConfig,
         logger: mockLogger,
       });
 
+      expect(fakeConfig.getConfig).toHaveBeenCalledTimes(1);
+      expect(fakeConfig.setConfig).not.toHaveBeenCalled();
       expect(getEnvironment).toHaveBeenCalledTimes(1);
       expect(getEnvironment).toHaveBeenCalledWith(
         'old-environment-sid',

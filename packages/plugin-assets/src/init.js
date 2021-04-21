@@ -6,7 +6,6 @@ const {
   createEnvironmentFromSuffix,
   getEnvironment,
 } = require('@twilio-labs/serverless-api/dist/api/environments');
-const { ConfigStore } = require('./configStore');
 const { TwilioCliError } = require('@twilio/cli-core').services.error;
 
 const DEFAULT_ASSET_SERVICE_NAME = 'CLI-Assets-Bucket';
@@ -20,14 +19,19 @@ const createServiceAndEnvironment = async client => {
   };
 };
 
-const init = async ({ apiKey, apiSecret, accountSid, configDir, logger }) => {
+const init = async ({
+  apiKey,
+  apiSecret,
+  accountSid,
+  pluginConfig,
+  logger,
+}) => {
   logger.debug('Loading config');
   const client = new TwilioServerlessApiClient({
     username: apiKey,
     password: apiSecret,
   });
-  const configStore = new ConfigStore(configDir);
-  const config = await configStore.load();
+  const config = await pluginConfig.getConfig();
   if (
     config[accountSid] &&
     config[accountSid].serviceSid &&
@@ -61,7 +65,7 @@ const init = async ({ apiKey, apiSecret, accountSid, configDir, logger }) => {
         serviceSid: serviceAndEnvironment.serviceSid,
         environmentSid: serviceAndEnvironment.environment.sid,
       };
-      await configStore.save(config);
+      await pluginConfig.setConfig(config);
       return serviceAndEnvironment.environment;
     } catch (error) {
       logger.debug(error.toString());

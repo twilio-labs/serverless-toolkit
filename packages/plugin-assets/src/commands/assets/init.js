@@ -10,7 +10,7 @@ class InitCommand extends TwilioClientCommand {
         apiKey: this.currentProfile.apiKey,
         apiSecret: this.currentProfile.apiSecret,
         accountSid: this.currentProfile.accountSid,
-        configDir: this.config.configDir,
+        pluginConfig: this.pluginConfig,
         logger: this.logger,
       });
       this.output(result, this.flags.properties);
