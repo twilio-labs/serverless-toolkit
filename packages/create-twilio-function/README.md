@@ -127,30 +127,7 @@ Options:
 
 ## Contributing
 
-Any help contributing to this project is welcomed. Make sure you read and agree with the [code of conduct](CODE_OF_CONDUCT.md).
-
-1. Fork the project
-2. Clone the fork like so:
-
-```bash
-git clone git@github.com:YOUR_USERNAME/create-twilio-function.git
-```
-
-3. Install the dependencies
-
-```bash
-cd create-twilio-function
-npm install
-```
-
-4. Make your changes
-5. Test your changes with
-
-```bash
-npm test
-```
-
-6. Commit your changes and open a pull request
+This project welcomes contributions from the community. Please see the [`CONTRIBUTING.md`](https://github.com/twilio-labs/serverless-toolkit/blob/main/docs/CONTRIBUTING.md) file for more details.
 
 ## LICENSE
 

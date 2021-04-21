@@ -166,7 +166,7 @@ const api = require("@twilio-labs/serverless-api/dist/api");
 const utils = require("@twilio-labs/serverless-api/dist/utils");
 ```
 
-## Contributing
+## Contributing 
 
 This project welcomes contributions from the community. Please see the [`CONTRIBUTING.md`](https://github.com/twilio-labs/serverless-toolkit/blob/main/docs/CONTRIBUTING.md) file for more details.
 

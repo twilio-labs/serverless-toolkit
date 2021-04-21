@@ -227,7 +227,7 @@ sls invoke -f hello-world
 
 ## Contributing
 
-This project welcomes contributions from the community.
+This project welcomes contributions from the community. Please see the [`CONTRIBUTING.md`](https://github.com/twilio-labs/serverless-toolkit/blob/main/docs/CONTRIBUTING.md) file for more details.
 
 ### Code of conduct
 
