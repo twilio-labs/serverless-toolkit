@@ -1,8 +1,16 @@
+import path from 'path';
 import { mocked } from 'ts-jest/utils';
 import checkLegacyConfig, {
   printConfigWarning,
 } from '../../src/checks/legacy-config';
+import { fileExistsSync } from '../../src/utils/fs';
 import { logger } from '../../src/utils/logger';
+
+jest.mock('inquirer', () => {
+  return {
+    prompt: jest.fn(() => Promise.resolve({ continue: USER_CONTINUES })),
+  };
+});
 
 jest.mock('../../src/utils/fs', () => ({
   fileExistsSync: jest.fn(() => {
@@ -17,6 +25,7 @@ jest.mock('../../src/utils/logger', () => ({
 }));
 
 var SHOULD_FILE_EXIST = false;
+var USER_CONTINUES = true;
 
 describe('printLegacyConfig', () => {
   it('should log a message with the correct title', () => {
@@ -34,15 +43,57 @@ describe('printLegacyConfig', () => {
 });
 
 describe('checkLegacyConfig', () => {
-  it('should print a warning if the config file exists', () => {
+  it('should print a warning if the config file exists', async () => {
     SHOULD_FILE_EXIST = true;
-    checkLegacyConfig();
+    await checkLegacyConfig();
     expect(logger.warn).toHaveBeenCalled();
   });
 
-  it('should not print a warning if the file does not exist', () => {
+  it('should not print a warning if the file does not exist', async () => {
     SHOULD_FILE_EXIST = false;
-    checkLegacyConfig();
+    await checkLegacyConfig();
     expect(logger.warn).not.toHaveBeenCalled();
+  });
+
+  it('should use default path to look for file', async () => {
+    SHOULD_FILE_EXIST = true;
+    await checkLegacyConfig();
+    expect(mocked(fileExistsSync)).toHaveBeenCalledWith(
+      path.resolve(process.cwd(), '.twilio-functions')
+    );
+  });
+
+  it('should override directory to look for file', async () => {
+    SHOULD_FILE_EXIST = true;
+    await checkLegacyConfig('/tmp');
+    expect(mocked(fileExistsSync)).toHaveBeenCalledWith(
+      path.resolve('/tmp', '.twilio-functions')
+    );
+  });
+
+  it('should prompt the user by default and return result', async () => {
+    USER_CONTINUES = false;
+    const result = await checkLegacyConfig('/tmp');
+    expect(mocked(fileExistsSync)).toHaveBeenCalledWith(
+      path.resolve('/tmp', '.twilio-functions')
+    );
+    expect(result).toBe(false);
+  });
+
+  it('should prompt the user with specified option and return result', async () => {
+    USER_CONTINUES = true;
+    const result = await checkLegacyConfig('/tmp', true);
+    expect(mocked(fileExistsSync)).toHaveBeenCalledWith(
+      path.resolve('/tmp', '.twilio-functions')
+    );
+    expect(result).toBe(true);
+  });
+
+  it('should return true if not prompted', async () => {
+    const result = await checkLegacyConfig('/tmp', false);
+    expect(mocked(fileExistsSync)).toHaveBeenCalledWith(
+      path.resolve('/tmp', '.twilio-functions')
+    );
+    expect(result).toBe(true);
   });
 });

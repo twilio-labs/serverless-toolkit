@@ -1,4 +1,5 @@
 import { stripIndent } from 'common-tags';
+import inquirer from 'inquirer';
 import path from 'path';
 import { fileExistsSync } from '../utils/fs';
 import { logger } from '../utils/logger';
@@ -14,17 +15,37 @@ export function printConfigWarning() {
   logger.warn(msg, title);
 }
 
+export async function promptForContinue(): Promise<boolean> {
+  const answers = await inquirer.prompt([
+    {
+      name: 'continue',
+      type: 'confirm',
+      default: true,
+      message: 'Do you want to continue with the ignored configuration?',
+    },
+  ]);
+  return answers.continue;
+}
+
 /**
- * This function checks if there is a .twilio-functions file in the project and prints a warning.
+ * This function checks if there is a .twilio-functions file in the project and prints a warning and an optional continue prompt.
  *
  * **Only checks** in the current working directory because it's being executed at the beginning of the script.
  *
  * @export
  */
-export function checkLegacyConfig() {
-  const legacyFilePath = path.resolve(process.cwd(), '.twilio-functions');
+export async function checkLegacyConfig(
+  cwd: string = process.cwd(),
+  shouldPrompt: boolean = true
+) {
+  const legacyFilePath = path.resolve(cwd, '.twilio-functions');
   if (fileExistsSync(legacyFilePath)) {
     printConfigWarning();
+    if (shouldPrompt) {
+      return promptForContinue();
+    } else {
+      return true;
+    }
   }
 }
 

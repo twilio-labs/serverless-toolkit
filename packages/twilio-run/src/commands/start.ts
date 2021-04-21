@@ -1,6 +1,7 @@
 import { Server } from 'http';
 import inquirer from 'inquirer';
 import { Argv } from 'yargs';
+import checkLegacyConfig from '../checks/legacy-config';
 import checkNodejsVersion from '../checks/nodejs-version';
 import checkProjectStructure from '../checks/project-structure';
 import { getConfigFromCli, getUrl, StartCliFlags } from '../config/start';
@@ -48,6 +49,7 @@ export async function handler(
   setLogLevelByName(argv.logLevel);
 
   checkNodejsVersion();
+  await checkLegacyConfig(argv.cwd, false);
 
   const config = await getConfigFromCli(argv, cliInfo, externalCliOptions);
 

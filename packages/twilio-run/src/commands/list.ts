@@ -2,6 +2,7 @@ import { TwilioServerlessApiClient } from '@twilio-labs/serverless-api';
 import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
 import checkForValidServiceSid from '../checks/check-service-sid';
+import checkLegacyConfig from '../checks/legacy-config';
 import { getConfigFromFlags, ListCliFlags, ListConfig } from '../config/list';
 import {
   ALL_FLAGS,
@@ -41,6 +42,8 @@ export async function handler(
   externalCliOptions?: ExternalCliOptions
 ): Promise<void> {
   setLogLevelByName(flags.logLevel);
+
+  await checkLegacyConfig(flags.cwd, false);
 
   let config: ListConfig;
   try {

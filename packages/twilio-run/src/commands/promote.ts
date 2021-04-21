@@ -3,6 +3,7 @@ import { ClientApiError } from '@twilio-labs/serverless-api/dist/utils/error';
 import { Ora } from 'ora';
 import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
+import checkLegacyConfig from '../checks/legacy-config';
 import {
   getConfigFromFlags,
   PromoteCliFlags,
@@ -53,6 +54,12 @@ export async function handler(
   externalCliOptions?: ExternalCliOptions
 ): Promise<void> {
   setLogLevelByName(flags.logLevel);
+
+  const continueWork = await checkLegacyConfig(flags.cwd);
+  if (!continueWork) {
+    process.exit(1);
+  }
+
   let config: PromoteConfig;
   try {
     config = await getConfigFromFlags(flags, externalCliOptions);
