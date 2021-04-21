@@ -67,9 +67,9 @@ describe('init', () => {
   });
 
   describe('with a service sid and environment sid in the config', () => {
-    beforeAll(() => {
+    beforeEach(async () => {
       const configStore = new ConfigStore(path.dirname(configPath));
-      configStore.save({
+      await configStore.save({
         'test-account-sid': {
           serviceSid: 'old-service-sid',
           environmentSid: 'old-environment-sid',
