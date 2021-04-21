@@ -1,6 +1,6 @@
 {
   "name": "@twilio/runtime-handler",
-  "version": "1.0.2-beta.1",
+  "version": "1.0.2-beta.2",
   "description": "Stub runtime for Twilio Functions",
   "keywords": [
     "twilio",
