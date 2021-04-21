@@ -43,10 +43,7 @@ export async function handler(
 ): Promise<void> {
   setLogLevelByName(flags.logLevel);
 
-  const continueWork = await checkLegacyConfig(flags.cwd);
-  if (!continueWork) {
-    process.exit(1);
-  }
+  await checkLegacyConfig(flags.cwd, false);
 
   let config: ListConfig;
   try {
