@@ -27,6 +27,11 @@ jest.mock('@twilio-labs/serverless-api/dist/api/environments', () => {
   };
 });
 
+const mockLogger = {
+  error: jest.fn(),
+  debug: jest.fn(),
+};
+
 const configPath = path.join(tmpdir(), 'scratch', 'plugin-assets-config.json');
 
 describe('init', () => {
@@ -39,11 +44,12 @@ describe('init', () => {
 
   describe('with nothing in the config', () => {
     it('creates a new service and environment and writes it to config', async () => {
-      await init({
+      const result = await init({
         apiKey: 'apiKey',
         apiSecret: 'apiSecret',
         accountSid: 'test-account-sid',
         configDir: path.dirname(configPath),
+        logger: mockLogger,
       });
 
       const config = JSON.parse(
@@ -56,6 +62,7 @@ describe('init', () => {
       expect(createEnvironmentFromSuffix).toHaveBeenCalledTimes(1);
       expect(createService).toHaveBeenCalledTimes(1);
       expect(getEnvironment).not.toHaveBeenCalled();
+      expect(result.sid).toBe('new-environment-sid');
     });
   });
 
@@ -70,24 +77,13 @@ describe('init', () => {
       });
     });
 
-    let logs, oldLog;
-
-    beforeEach(() => {
-      logs = [];
-      oldLog = console.log;
-      console.log = output => logs.push(output);
-    });
-
-    afterEach(() => {
-      console.log = oldLog;
-    });
-
     it('displays the environment domain name', async () => {
-      await init({
+      const result = await init({
         apiKey: 'apiKey',
         apiSecret: 'apiSecret',
         accountSid: 'test-account-sid',
         configDir: path.dirname(configPath),
+        logger: mockLogger,
       });
 
       expect(getEnvironment).toHaveBeenCalledTimes(1);
@@ -96,7 +92,7 @@ describe('init', () => {
         'old-service-sid',
         expect.anything() // client
       );
-      expect(logs[0]).toContain('foobar-1234-stage.twil.io');
+      expect(result.domain_name).toBe('foobar-1234-stage.twil.io');
       expect(createEnvironmentFromSuffix).not.toHaveBeenCalled();
       expect(createService).not.toHaveBeenCalled();
     });

@@ -7,10 +7,7 @@ const {
   getEnvironment,
 } = require('@twilio-labs/serverless-api/dist/api/environments');
 const { ConfigStore } = require('./configStore');
-const { createUtils } = require('./utils');
-const { printInBox } = require('./print');
-
-const { spinner, handleError } = createUtils('init');
+const { TwilioCliError } = require('@twilio/cli-core').services.error;
 
 const DEFAULT_ASSET_SERVICE_NAME = 'CLI-Assets-Bucket';
 
@@ -19,12 +16,12 @@ const createServiceAndEnvironment = async client => {
   const environment = await createEnvironmentFromSuffix('', serviceSid, client);
   return {
     serviceSid,
-    environmentSid: environment.sid,
+    environment,
   };
 };
 
-const init = async ({ apiKey, apiSecret, accountSid, configDir }) => {
-  spinner.start('Loading config');
+const init = async ({ apiKey, apiSecret, accountSid, configDir, logger }) => {
+  logger.debug('Loading config');
   const client = new TwilioServerlessApiClient({
     username: apiKey,
     password: apiSecret,
@@ -36,31 +33,41 @@ const init = async ({ apiKey, apiSecret, accountSid, configDir }) => {
     config[accountSid].serviceSid &&
     config[accountSid].environmentSid
   ) {
-    spinner.text = 'Existing service found. Loading';
     const { serviceSid, environmentSid } = config[accountSid];
+    logger.debug(
+      `Fetching environment with sid ${environmentSid} from service with sid ${serviceSid}`
+    );
     try {
       const environment = await getEnvironment(
         environmentSid,
         serviceSid,
         client
       );
-      spinner.stop();
-      printInBox(
-        `Assets base URL is ${environment.domain_name}`,
-        "Run 'twilio assets:list' to see the available assets"
-      );
+      return environment;
     } catch (error) {
-      handleError(error);
+      logger.debug(error.toString());
+      throw new TwilioCliError(
+        `Could not fetch asset service environment with config:
+
+   Environment Sid: ${environmentSid}
+   Service Sid      ${serviceSid}`
+      );
     }
   } else {
     try {
-      spinner.text = 'Creating new assets service and environment';
-      const accountConfig = await createServiceAndEnvironment(client);
-      config[accountSid] = accountConfig;
+      logger.debug('Creating new assets service and environment');
+      const serviceAndEnvironment = await createServiceAndEnvironment(client);
+      config[accountSid] = {
+        serviceSid: serviceAndEnvironment.serviceSid,
+        environmentSid: serviceAndEnvironment.environment.sid,
+      };
       await configStore.save(config);
-      spinner.stop();
+      return serviceAndEnvironment.environment;
     } catch (error) {
-      handleError(error);
+      logger.debug(error.toString());
+      throw new TwilioCliError(
+        `Could not create a new asset service for account ${accountSid}`
+      );
     }
   }
 };

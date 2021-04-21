@@ -3,16 +3,12 @@ const {
   getEnvironment,
 } = require('@twilio-labs/serverless-api/dist/api/environments');
 const { getBuild } = require('@twilio-labs/serverless-api/dist/api/builds');
+const { TwilioCliError } = require('@twilio/cli-core').services.error;
 
 const { ConfigStore } = require('./configStore');
-const { createUtils } = require('./utils');
-const { printInBox } = require('./print');
 
-const { spinner, debug, handleError } = createUtils('list');
-
-const list = async ({ configDir, apiKey, apiSecret, accountSid }) => {
+const list = async ({ configDir, apiKey, apiSecret, accountSid, logger }) => {
   let environment;
-  spinner.start('Loading config');
   const configStore = new ConfigStore(configDir);
   const config = await configStore.load();
   if (
@@ -25,40 +21,48 @@ const list = async ({ configDir, apiKey, apiSecret, accountSid }) => {
       username: apiKey,
       password: apiSecret,
     });
-    spinner.text = 'Fetching asset URLs';
     try {
-      debug(
+      logger.debug(
         `Fetching environment with sid ${environmentSid} from service with sid ${serviceSid}`
       );
       environment = await getEnvironment(environmentSid, serviceSid, client);
     } catch (error) {
-      handleError(error, 'Could not fetch asset service environment');
-      return;
+      logger.debug(error.toString());
+      throw new TwilioCliError(
+        `Could not fetch asset service environment with config:
+
+   Environment Sid: ${environmentSid}
+   Service Sid      ${serviceSid}`
+      );
     }
     if (environment.build_sid) {
       try {
-        debug(`Fetching build with sid ${environment.build_sid}`);
+        logger.debug(`Fetching build with sid ${environment.build_sid}`);
         const build = await getBuild(environment.build_sid, serviceSid, client);
-        spinner.stop();
-        const assets = build.asset_versions.map(
-          assetVersion =>
-            `https://${environment.domain_name}${assetVersion.path}`
-        );
-        printInBox('Available assets:', assets.join('\n'));
+        const assets = build.asset_versions.map(assetVersion => {
+          if (assetVersion.visibility === 'public') {
+            assetVersion.url = `https://${environment.domain_name}${assetVersion.path}`;
+          }
+          return assetVersion;
+        });
+        return assets;
       } catch (error) {
-        handleError(
-          error,
-          'Could not fetch last build of asset service environment'
+        logger.debug(error.toString());
+        throw new TwilioCliError(
+          `Could not fetch last build of asset service environment with config:
+
+   Build Sid:       ${environment.build_sid}
+   Environment Sid: ${environmentSid}
+   Service Sid:     ${serviceSid}`
         );
-        return;
       }
     } else {
-      spinner.fail(
+      throw new TwilioCliError(
         "No assets deployed yet. Deploy your first asset with 'twilio assets:upload path/to/file'"
       );
     }
   } else {
-    spinner.fail(
+    throw new TwilioCliError(
       "No Service Sid or Environment Sid provided. Make sure you run 'twilio assets:init' before listing your assets"
     );
   }
