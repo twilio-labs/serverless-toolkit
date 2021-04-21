@@ -1,5 +1,27 @@
 # Configuration
 
+## Your Configuration File
+
+By default the Serverless Toolkit will look into your current working directory (which you can override using the `--cwd` flag) for a `.twilioserverlessrc` file. Alternatively you can specify the location explicitly using the `--config` flag.
+
+The `.twilioserverlessrc` file by default uses [JSON5](https://json5.org/) meaning any valid JSON will be valid as well as some additional features.
+
+Alternatively you can name your config file `.twilioserverlessrc.js` to use JavaScript. Make sure to export your configuration:
+
+```js
+module.exports = {
+  // your config
+}
+```
+
+Lastly you can use YAML by naming your config file `.twilioserverlessrc.yml` instead.
+
+## Content
+
+Basically any CLI flag you can define can be used in the configuration file using [`camelCase` notation](https://en.wikipedia.org/wiki/Camel_case). 
+
+Additionally you can scope settings based on `"environments"`, `"projects"` and `"commands"`. Check out the [Examples](#examples) for concrete use cases.
+
 ## Examples
 
 ### Functions with Preprocessor like TypeScript or Babel
@@ -39,6 +61,22 @@ For example:
       "env": ".env.prod"
     }
   }
+}
+```
+
+### Use a different `.env` file for deployments and local development
+
+For local development you use the "start" command and for deployments "deploy". By setting the config based on those respective "commands" they'll only be used if that command is used.
+
+```json
+{
+  "commands": {
+    "start": {
+      "env": ".env"
+    },
+    "deploy": {
+      "env": ".env.prod"
+    }
 }
 ```
 
