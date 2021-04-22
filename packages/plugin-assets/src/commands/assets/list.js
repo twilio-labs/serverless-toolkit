@@ -1,5 +1,6 @@
 const { flags } = require('@oclif/command');
 const { TwilioClientCommand } = require('@twilio/cli-core').baseCommands;
+const { getPluginConfig } = require('../../pluginConfig');
 const { list } = require('../../list');
 
 class ListCommand extends TwilioClientCommand {
@@ -7,11 +8,12 @@ class ListCommand extends TwilioClientCommand {
     await super.run();
 
     try {
+      const pluginConfig = getPluginConfig(this);
       const assets = await list({
         apiKey: this.currentProfile.apiKey,
         apiSecret: this.currentProfile.apiSecret,
         accountSid: this.currentProfile.accountSid,
-        configDir: this.config.configDir,
+        pluginConfig: pluginConfig,
         logger: this.logger,
       });
       this.output(assets, this.flags.properties);

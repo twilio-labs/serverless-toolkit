@@ -21,7 +21,7 @@
     "@oclif/dev-cli": "^1.22.2",
     "@oclif/plugin-help": "^2.2.1",
     "@oclif/test": "^1.2.5",
-    "@twilio/cli-test": "^2.0.2",
+    "@twilio/cli-test": "^2.1.1",
     "jest": "^26.6.3",
     "rimraf": "^3.0.2"
   },

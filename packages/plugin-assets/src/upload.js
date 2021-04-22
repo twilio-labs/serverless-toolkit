@@ -19,7 +19,6 @@ const { resolve, basename } = require('path');
 const { readFile } = require('fs').promises;
 const EventEmitter = require('events');
 
-const { ConfigStore } = require('./configStore');
 const { createUtils } = require('./utils');
 const { printInBox } = require('./print');
 const {
@@ -28,7 +27,13 @@ const {
 
 const { spinner, debug, handleError } = createUtils('upload');
 
-const upload = async ({ configDir, apiKey, apiSecret, accountSid, file }) => {
+const upload = async ({
+  pluginConfig,
+  apiKey,
+  apiSecret,
+  accountSid,
+  file,
+}) => {
   let environment,
     build,
     assetContent,
@@ -38,8 +43,7 @@ const upload = async ({ configDir, apiKey, apiSecret, accountSid, file }) => {
     assetVersions = [];
 
   spinner.start('Loading config');
-  const configStore = new ConfigStore(configDir);
-  const config = await configStore.load();
+  const config = await pluginConfig.getConfig();
   if (
     config[accountSid] &&
     config[accountSid].serviceSid &&
@@ -162,6 +166,7 @@ const upload = async ({ configDir, apiKey, apiSecret, accountSid, file }) => {
         );
         newAsset.sid = assetResource.sid;
       } catch (error) {
+        console.log(error);
         handleError(error, 'Could not create new asset resource');
         return;
       }

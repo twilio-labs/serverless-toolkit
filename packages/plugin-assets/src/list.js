@@ -5,12 +5,15 @@ const {
 const { getBuild } = require('@twilio-labs/serverless-api/dist/api/builds');
 const { TwilioCliError } = require('@twilio/cli-core').services.error;
 
-const { ConfigStore } = require('./configStore');
-
-const list = async ({ configDir, apiKey, apiSecret, accountSid, logger }) => {
+const list = async ({
+  pluginConfig,
+  apiKey,
+  apiSecret,
+  accountSid,
+  logger,
+}) => {
   let environment;
-  const configStore = new ConfigStore(configDir);
-  const config = await configStore.load();
+  const config = await pluginConfig.getConfig();
   if (
     config[accountSid] &&
     config[accountSid].serviceSid &&

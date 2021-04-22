@@ -3,8 +3,6 @@ const path = require('path');
 const fs = require('fs').promises;
 const { tmpdir } = require('os');
 
-const { ConfigStore } = require('../src/configStore');
-
 const {
   createService,
 } = require('@twilio-labs/serverless-api/dist/api/services');
