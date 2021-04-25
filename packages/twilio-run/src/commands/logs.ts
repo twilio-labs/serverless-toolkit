@@ -94,11 +94,17 @@ export const cliInfo: CliInfo = {
       'tail',
       'output-format',
       'log-cache-size',
+      'production',
     ]),
     environment: {
       ...ALL_FLAGS['environment'],
       describe: 'The environment to retrieve the logs for',
       default: 'dev',
+    },
+    production: {
+      ...ALL_FLAGS['production'],
+      describe:
+        'Retrieve logs for the production environment. Overrides the "environment" flag',
     },
   },
 };
@@ -110,8 +116,8 @@ function optionBuilder(yargs: Argv<any>): Argv<LogsCliFlags> {
       'Prints the last 50 logs for the current project in the dev environment'
     )
     .example(
-      '$0 logs --environment=production',
-      'Prints the last 50 logs for the current project in the production environment'
+      '$0 logs --environment=stage',
+      'Prints the last 50 logs for the current project in the stage environment'
     )
     .example(
       '$0 logs --tail',
