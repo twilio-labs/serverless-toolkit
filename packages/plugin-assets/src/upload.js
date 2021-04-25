@@ -1,4 +1,7 @@
+const ora = require('ora');
+const inquirer = require('inquirer');
 const { TwilioServerlessApiClient } = require('@twilio-labs/serverless-api');
+const { TwilioCliError } = require('@twilio/cli-core').services.error;
 const {
   getEnvironment,
 } = require('@twilio-labs/serverless-api/dist/api/environments');
@@ -13,19 +16,16 @@ const {
   waitForSuccessfulBuild,
   getBuild,
 } = require('@twilio-labs/serverless-api/dist/api/builds');
-const inquirer = require('inquirer');
 
 const { resolve, basename } = require('path');
 const { readFile } = require('fs').promises;
 const EventEmitter = require('events');
 
-const { createUtils } = require('./utils');
-const { printInBox } = require('./print');
 const {
   listFunctionResources,
 } = require('@twilio-labs/serverless-api/dist/api/functions');
 
-const { spinner, debug, handleError } = createUtils('upload');
+const spinner = ora();
 
 const upload = async ({
   pluginConfig,
@@ -33,6 +33,7 @@ const upload = async ({
   apiSecret,
   accountSid,
   file,
+  logger,
 }) => {
   let environment,
     build,
@@ -41,6 +42,23 @@ const upload = async ({
     existingAssets,
     assetVersion,
     assetVersions = [];
+
+  const debug = message => {
+    const wasSpinning = spinner.isSpinning;
+    spinner.stop();
+    logger.debug(message);
+    if (wasSpinning) {
+      spinner.start();
+    }
+  };
+
+  const handleError = (message, error) => {
+    spinner.stop();
+    if (error) {
+      debug(error.toString());
+    }
+    throw new TwilioCliError(message);
+  };
 
   spinner.start('Loading config');
   const config = await pluginConfig.getConfig();
@@ -61,22 +79,19 @@ const upload = async ({
       );
       environment = await getEnvironment(environmentSid, serviceSid, client);
     } catch (error) {
-      handleError(error, 'Could not fetch asset service environment');
-      return;
+      handleError('Could not fetch asset service environment', error);
     }
     try {
       debug(`Checking for functions in service with sid ${serviceSid}`);
       const functions = await listFunctionResources(serviceSid, client);
       if (functions.length > 0) {
-        spinner.fail('Not an Asset Plugin service: service contains functions');
-        return;
+        handleError('Not an Asset Plugin service: service contains functions');
       }
     } catch (error) {
       handleError(
-        error,
-        'Could not fetch last build of asset service environment'
+        'Could not fetch last build of asset service environment',
+        error
       );
-      return;
     }
     spinner.text = 'Preparing asset';
     try {
@@ -84,8 +99,7 @@ const upload = async ({
       debug(`Reading file from ${filePath}`);
       assetContent = await readFile(filePath);
     } catch (error) {
-      handleError(error, `Could not read ${filePath}`);
-      return;
+      handleError(`Could not read ${filePath}`, error);
     }
     const path = `/${basename(filePath)}`;
     const newAsset = {
@@ -99,7 +113,10 @@ const upload = async ({
       debug('Finding existing asset resources');
       existingAssets = await listAssetResources(serviceSid, client);
     } catch (error) {
-      handleError(error, 'Could not load existing asset resources');
+      handleError(
+        `Could not load existing asset resources from service ${serviceSid}`,
+        error
+      );
     }
     const existingAsset = existingAssets.find(
       asset => asset.friendly_name === newAsset.name
@@ -116,6 +133,7 @@ const upload = async ({
       ]);
       if (answers.conflict === 'Overwrite') {
         newAsset.sid = existingAsset.sid;
+        spinner.start('Overwriting existing asset');
       } else if (answers.conflict === 'Rename') {
         let newNameAnswers = await inquirer.prompt([
           {
@@ -124,20 +142,25 @@ const upload = async ({
             message: 'Enter a new filename:',
           },
         ]);
+        let newName = newNameAnswers.newName.trim();
         while (
-          existingAssets.find(
-            asset => asset.friendly_name === newNameAnswers.newName
-          )
+          existingAssets.find(asset => asset.friendly_name === newName) ||
+          newName === ''
         ) {
+          const message =
+            newName === ''
+              ? 'Please enter a new filename'
+              : 'That filename also exists, please enter another:';
           newNameAnswers = await inquirer.prompt([
             {
               name: 'newName',
               type: 'input',
-              message: 'That filename also exists, please enter another:',
+              message,
             },
           ]);
+          newName = newNameAnswers.newName.trim();
         }
-        newAsset.name = newAsset.path = newNameAnswers.newName;
+        newAsset.name = newAsset.path = newName;
         spinner.start('Creating new asset');
         try {
           debug(`Creating new asset resource called ${newAsset.name}`);
@@ -148,12 +171,10 @@ const upload = async ({
           );
           newAsset.sid = assetResource.sid;
         } catch (error) {
-          handleError(error, 'Could not create new asset resource');
-          return;
+          handleError('Could not create new asset resource', error);
         }
       } else if (answers.conflict === 'Abort') {
-        spinner.fail('Upload cancelled');
-        return;
+        handleError('Upload cancelled');
       }
     } else {
       try {
@@ -166,17 +187,14 @@ const upload = async ({
         );
         newAsset.sid = assetResource.sid;
       } catch (error) {
-        console.log(error);
-        handleError(error, 'Could not create new asset resource');
-        return;
+        handleError('Could not create new asset resource', error);
       }
     }
     try {
       debug(`Creating new asset version for asset with sid ${newAsset.sid}`);
       assetVersion = await createAssetVersion(newAsset, serviceSid, client, {});
     } catch (error) {
-      handleError(error, 'Could not create new asset version');
-      return;
+      handleError('Could not create new asset version', error);
     }
     assetVersions.push(assetVersion.sid);
     if (environment.build_sid) {
@@ -200,8 +218,7 @@ const upload = async ({
         client
       );
     } catch (error) {
-      handleError(error, 'Could not create a new build');
-      return;
+      handleError('Could not create a new build', error);
     }
     try {
       const updateHandler = new EventEmitter();
@@ -215,23 +232,19 @@ const upload = async ({
         updateHandler
       );
     } catch (error) {
-      handleError(error, 'Error while waiting for the build to complete');
-      return;
+      handleError('Error while waiting for the build to complete', error);
     }
     try {
       debug(`Activating build with sid ${build.sid}`);
       await activateBuild(build.sid, environment.sid, serviceSid, client);
-      spinner.succeed('Asset deployed');
-      printInBox(
-        'Your asset has been uploaded',
-        `Your new asset: https://${environment.domain_name}${assetVersion.path}`
-      );
+      spinner.stop();
+      assetVersion.url = `https://${environment.domain_name}${assetVersion.path}`;
+      return assetVersion;
     } catch (error) {
-      handleError(error, 'Could not activate build');
-      return;
+      handleError('Could not activate build', error);
     }
   } else {
-    spinner.fail(
+    handleError(
       'No Service Sid or Environment Sid provided. Make sure you run `twilio assets:init` before trying to upload your first asset'
     );
   }
