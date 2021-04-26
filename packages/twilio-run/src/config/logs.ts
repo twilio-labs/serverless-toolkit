@@ -35,6 +35,7 @@ export type ConfigurableLogsCliFlags = Pick<
   | 'tail'
   | 'outputFormat'
   | 'logCacheSize'
+  | 'production'
 >;
 export type LogsCliFlags = Arguments<ConfigurableLogsCliFlags>;
 
@@ -59,6 +60,10 @@ export async function getConfigFromFlags(
   flags = mergeFlagsAndConfig<LogsCliFlags>(configFlags, flags, cliInfo);
   cwd = flags.cwd || cwd;
   environment = flags.environment || environment;
+
+  if (flags.production) {
+    environment = '';
+  }
 
   const { localEnv: envFileVars, envPath } = await readLocalEnvFile(flags);
   const { username, password } = await getCredentialsFromFlags(
