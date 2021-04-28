@@ -10,22 +10,16 @@ const { TwilioCliError } = require('@twilio/cli-core').services.error;
 
 const DEFAULT_ASSET_SERVICE_NAME = 'CLI-Assets-Bucket';
 
-const createServiceAndEnvironment = async client => {
+async function createServiceAndEnvironment(client) {
   const serviceSid = await createService(DEFAULT_ASSET_SERVICE_NAME, client);
   const environment = await createEnvironmentFromSuffix('', serviceSid, client);
   return {
     serviceSid,
     environment,
   };
-};
+}
 
-const init = async ({
-  apiKey,
-  apiSecret,
-  accountSid,
-  pluginConfig,
-  logger,
-}) => {
+async function init({ apiKey, apiSecret, accountSid, pluginConfig, logger }) {
   logger.debug('Loading config');
   const client = new TwilioServerlessApiClient({
     username: apiKey,
@@ -74,5 +68,5 @@ const init = async ({
       );
     }
   }
-};
+}
 module.exports = { init };

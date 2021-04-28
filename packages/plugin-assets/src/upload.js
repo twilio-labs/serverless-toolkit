@@ -27,14 +27,14 @@ const {
 
 const spinner = ora();
 
-const upload = async ({
+async function upload({
   pluginConfig,
   apiKey,
   apiSecret,
   accountSid,
   file,
   logger,
-}) => {
+}) {
   let environment,
     build,
     assetContent,
@@ -43,22 +43,22 @@ const upload = async ({
     assetVersion,
     assetVersions = [];
 
-  const debug = message => {
+  function debug(message) {
     const wasSpinning = spinner.isSpinning;
     spinner.stop();
     logger.debug(message);
     if (wasSpinning) {
       spinner.start();
     }
-  };
+  }
 
-  const handleError = (message, error) => {
+  function handleError(message, error) {
     spinner.stop();
     if (error) {
       debug(error.toString());
     }
     throw new TwilioCliError(message);
-  };
+  }
 
   spinner.start('Loading config');
   const config = await pluginConfig.getConfig();
@@ -222,9 +222,7 @@ const upload = async ({
     }
     try {
       const updateHandler = new EventEmitter();
-      updateHandler.on('status-update', update => {
-        debug(update.message);
-      });
+      updateHandler.on('status-update', update => debug(update.message));
       await waitForSuccessfulBuild(
         build.sid,
         serviceSid,
@@ -248,6 +246,6 @@ const upload = async ({
       'No Service Sid or Environment Sid provided. Make sure you run `twilio assets:init` before trying to upload your first asset'
     );
   }
-};
+}
 
 module.exports = { upload };

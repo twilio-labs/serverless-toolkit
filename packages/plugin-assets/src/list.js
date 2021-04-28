@@ -5,13 +5,7 @@ const {
 const { getBuild } = require('@twilio-labs/serverless-api/dist/api/builds');
 const { TwilioCliError } = require('@twilio/cli-core').services.error;
 
-const list = async ({
-  pluginConfig,
-  apiKey,
-  apiSecret,
-  accountSid,
-  logger,
-}) => {
+async function list({ pluginConfig, apiKey, apiSecret, accountSid, logger }) {
   let environment;
   const config = await pluginConfig.getConfig();
   if (
@@ -69,6 +63,6 @@ const list = async ({
       "No Service Sid or Environment Sid provided. Make sure you run 'twilio assets:init' before listing your assets"
     );
   }
-};
+}
 
 module.exports = { list };
