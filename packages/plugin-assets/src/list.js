@@ -4,6 +4,7 @@ const {
 } = require('@twilio-labs/serverless-api/dist/api/environments');
 const { getBuild } = require('@twilio-labs/serverless-api/dist/api/builds');
 const { TwilioCliError } = require('@twilio/cli-core').services.error;
+const { couldNotGetEnvironment, couldNotGetBuild } = require('./errorMessages');
 
 async function list({ pluginConfig, apiKey, apiSecret, accountSid, logger }) {
   let environment;
@@ -26,10 +27,7 @@ async function list({ pluginConfig, apiKey, apiSecret, accountSid, logger }) {
     } catch (error) {
       logger.debug(error.toString());
       throw new TwilioCliError(
-        `Could not fetch asset service environment with config:
-
-   Environment Sid: ${environmentSid}
-   Service Sid      ${serviceSid}`
+        couldNotGetEnvironment(accountSid, serviceSid, environmentSid)
       );
     }
     if (environment.build_sid) {
@@ -46,11 +44,7 @@ async function list({ pluginConfig, apiKey, apiSecret, accountSid, logger }) {
       } catch (error) {
         logger.debug(error.toString());
         throw new TwilioCliError(
-          `Could not fetch last build of asset service environment with config:
-
-   Build Sid:       ${environment.build_sid}
-   Environment Sid: ${environmentSid}
-   Service Sid:     ${serviceSid}`
+          couldNotGetBuild(environment.build_sid, environmentSid, serviceSid)
         );
       }
     } else {

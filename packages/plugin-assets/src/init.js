@@ -8,6 +8,8 @@ const {
 } = require('@twilio-labs/serverless-api/dist/api/environments');
 const { TwilioCliError } = require('@twilio/cli-core').services.error;
 
+const { couldNotGetEnvironment } = require('./errorMessages');
+
 const DEFAULT_ASSET_SERVICE_NAME = 'CLI-Assets-Bucket';
 
 async function createServiceAndEnvironment(client) {
@@ -45,10 +47,7 @@ async function init({ apiKey, apiSecret, accountSid, pluginConfig, logger }) {
     } catch (error) {
       logger.debug(error.toString());
       throw new TwilioCliError(
-        `Could not fetch asset service environment with config:
-
-   Environment Sid: ${environmentSid}
-   Service Sid      ${serviceSid}`
+        couldNotGetEnvironment(accountSid, serviceSid, environmentSid)
       );
     }
   } else {

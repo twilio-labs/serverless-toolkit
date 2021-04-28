@@ -25,6 +25,8 @@ const {
   listFunctionResources,
 } = require('@twilio-labs/serverless-api/dist/api/functions');
 
+const { couldNotGetEnvironment, couldNotGetBuild } = require('./errorMessages');
+
 const spinner = ora();
 
 async function upload({
@@ -79,7 +81,10 @@ async function upload({
       );
       environment = await getEnvironment(environmentSid, serviceSid, client);
     } catch (error) {
-      handleError('Could not fetch asset service environment', error);
+      handleError(
+        couldNotGetEnvironment(accountSid, serviceSid, environmentSid),
+        error
+      );
     }
     try {
       debug(`Checking for functions in service with sid ${serviceSid}`);
@@ -201,14 +206,20 @@ async function upload({
       debug(
         `Getting existing asset versions from build with sid ${environment.build_sid}`
       );
-      const lastBuild = await getBuild(
-        environment.build_sid,
-        serviceSid,
-        client
-      );
-      lastBuild.asset_versions
-        .filter(av => av.asset_sid !== assetVersion.asset_sid)
-        .forEach(assetVersion => assetVersions.push(assetVersion.sid));
+      try {
+        const lastBuild = await getBuild(
+          environment.build_sid,
+          serviceSid,
+          client
+        );
+        lastBuild.asset_versions
+          .filter(av => av.asset_sid !== assetVersion.asset_sid)
+          .forEach(assetVersion => assetVersions.push(assetVersion.sid));
+      } catch (error) {
+        handleError(
+          couldNotGetBuild(environment.build_sid, environmentSid, serviceSid)
+        );
+      }
     }
     try {
       debug(`Triggering new build for ${assetVersions.length} asset versions`);
