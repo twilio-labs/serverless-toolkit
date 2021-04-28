@@ -23,6 +23,8 @@ class ListCommand extends TwilioClientCommand {
   }
 }
 
+ListCommand.description = 'List all the assets in the service';
+
 ListCommand.flags = {
   properties: flags.string({
     default: 'sid, path, url, visibility',

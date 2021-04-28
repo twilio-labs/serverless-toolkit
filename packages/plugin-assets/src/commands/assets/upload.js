@@ -25,6 +25,8 @@ class UploadCommand extends TwilioClientCommand {
   }
 }
 
+UploadCommand.description = 'Upload a new asset to the Assets service';
+
 UploadCommand.args = [
   {
     name: 'file',

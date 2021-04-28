@@ -6,6 +6,8 @@
 
 This plugin adds functionality to the [Twilio CLI](https://github.com/twilio/twilio-cli) to upload and manage assets to a Twilio Assets service. It's a part of the [Serverless Toolkit](https://github.com/twilio-labs/serverless-toolkit) and uses the [Serverless API](https://github.com/twilio-labs/serverless-toolkit/tree/main/packages/serverless-api).
 
+The plugin creates a new Runtime Service which it then uses as a bucket to which it upload assets. You can upload new files or list your available assets.
+
 <!-- toc -->
 
 <!-- tocstop -->
@@ -40,7 +42,75 @@ USAGE
 ## Commands
 
 <!-- commands -->
+* [`twilio assets:init`](#twilio-assetsinit)
+* [`twilio assets:list`](#twilio-assetslist)
+* [`twilio assets:upload FILE`](#twilio-assetsupload-file)
 
+## `twilio assets:init`
+
+Create a new assets service to use as a bucket
+
+```
+Create a new assets service to use as a bucket
+
+USAGE
+  $ twilio assets:init
+
+OPTIONS
+  -l=(debug|info|warn|error|none)  [default: info] Level of logging messages.
+  -o=(columns|json|tsv)            [default: columns] Format of command output.
+  -p, --profile=profile            Shorthand identifier for your profile.
+
+  --properties=properties          [default: service_sid, sid, domain_name] The asset service environment properties you
+                                   would like to display (JSON output always shows all properties).
+```
+
+_See code: [src/commands/assets/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v0.0.1/src/commands/assets/init.js)_
+
+## `twilio assets:list`
+
+List all the assets in the service
+
+```
+List all the assets in the service
+
+USAGE
+  $ twilio assets:list
+
+OPTIONS
+  -l=(debug|info|warn|error|none)  [default: info] Level of logging messages.
+  -o=(columns|json|tsv)            [default: columns] Format of command output.
+  -p, --profile=profile            Shorthand identifier for your profile.
+
+  --properties=properties          [default: sid, path, url, visibility] The asset properties you would like to display
+                                   (JSON output always shows all properties).
+```
+
+_See code: [src/commands/assets/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v0.0.1/src/commands/assets/list.js)_
+
+## `twilio assets:upload FILE`
+
+Upload a new asset to the Assets service
+
+```
+Upload a new asset to the Assets service
+
+USAGE
+  $ twilio assets:upload FILE
+
+ARGUMENTS
+  FILE  The path to the file you want to upload
+
+OPTIONS
+  -l=(debug|info|warn|error|none)  [default: info] Level of logging messages.
+  -o=(columns|json|tsv)            [default: columns] Format of command output.
+  -p, --profile=profile            Shorthand identifier for your profile.
+
+  --properties=properties          [default: sid, path, url, visibility] The asset properties you would like to display
+                                   (JSON output always shows all properties).
+```
+
+_See code: [src/commands/assets/upload.js](https://github.com/twilio-labs/serverless-toolkit/blob/v0.0.1/src/commands/assets/upload.js)_
 <!-- commandsstop -->
 
 ## Contributing
