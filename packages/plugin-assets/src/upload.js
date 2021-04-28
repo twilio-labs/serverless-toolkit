@@ -199,7 +199,10 @@ async function upload({
       debug(`Creating new asset version for asset with sid ${newAsset.sid}`);
       assetVersion = await createAssetVersion(newAsset, serviceSid, client, {});
     } catch (error) {
-      handleError('Could not create new asset version', error);
+      handleError(
+        `Could not create new asset version with path: ${newAsset.path}`,
+        error
+      );
     }
     assetVersions.push(assetVersion.sid);
     if (environment.build_sid) {
