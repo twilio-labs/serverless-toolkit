@@ -27,8 +27,6 @@ const {
 
 const { couldNotGetEnvironment, couldNotGetBuild } = require('./errorMessages');
 
-const spinner = ora();
-
 async function upload({
   pluginConfig,
   apiKey,
@@ -44,6 +42,10 @@ async function upload({
     existingAssets,
     assetVersion,
     assetVersions = [];
+
+  const spinner = ora({
+    isSilent: logger.config.level > 0,
+  });
 
   function debug(message) {
     const wasSpinning = spinner.isSpinning;
