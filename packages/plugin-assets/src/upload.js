@@ -101,7 +101,7 @@ async function upload({
     } catch (error) {
       handleError(`Could not read ${filePath}`, error);
     }
-    const path = `/${basename(filePath)}`;
+    const path = `${basename(filePath)}`;
     const newAsset = {
       name: path,
       access: 'public',
