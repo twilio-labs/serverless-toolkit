@@ -1,12 +1,13 @@
 import { SearchConfig } from '@twilio-labs/serverless-api/dist/utils';
 import { ServerlessFunctionSignature } from '@twilio-labs/serverless-runtime-types/types';
+import type { LocalDevelopmentServer as LDS } from '@twilio/runtime-handler/dist/dev-runtime/server';
 import bodyParser from 'body-parser';
 import chokidar from 'chokidar';
 import express, {
   Express,
   NextFunction,
   Request as ExpressRequest,
-  Response as ExpressResponse,
+  Response as ExpressResponse
 } from 'express';
 import userAgentMiddleware from 'express-useragent';
 import debounce from 'lodash.debounce';
@@ -15,14 +16,16 @@ import path from 'path';
 import { StartCliConfig } from '../config/start';
 import { printRouteInfo } from '../printers/start';
 import { wrapErrorInHtml } from '../utils/error-html';
-import { getDebugFunction } from '../utils/logger';
+import { getDebugFunction, logger } from '../utils/logger';
+import { writeOutput } from '../utils/output';
+import { requireFromProject } from '../utils/requireFromProject';
 import { createLogger } from './internal/request-logger';
 import { setRoutes } from './internal/route-cache';
-import { getFunctionsAndAssets } from './internal/runtime-paths';
+import { getFunctionsAndAssets, RouteInfo } from './internal/runtime-paths';
 import {
   constructGlobalScope,
-  functionToRoute,
   functionPathToRoute,
+  functionToRoute
 } from './route';
 
 const debug = getDebugFunction('twilio-run:server');
@@ -57,6 +60,98 @@ function requireCacheCleaner(
   next();
 }
 
+async function findRoutes(config: StartCliConfig): Promise<RouteInfo> {
+  const searchConfig: SearchConfig = {};
+
+  if (config.functionsFolderName) {
+    searchConfig.functionsFolderNames = [config.functionsFolderName];
+    console.log(searchConfig);
+  }
+
+  if (config.assetsFolderName) {
+    searchConfig.assetsFolderNames = [config.assetsFolderName];
+  }
+
+  return getFunctionsAndAssets(config.baseDir, searchConfig);
+}
+
+function configureWatcher(config: StartCliConfig, server: LDS) {
+  const watcher = chokidar.watch(
+      [
+        path.join(config.baseDir, config.functionsFolderName ? `/(${config.functionsFolderName})/**/*)` : '/(functions|src)/**/*.js'),
+        path.join(config.baseDir, config.assetsFolderName ? `/(${config.assetsFolderName})/**/*)` : '/(assets|static)/**/*'),
+      ],
+      {
+        ignoreInitial: true,
+      }
+    );
+
+    const reloadRoutes = async () => {
+      const routes = await findRoutes(config);
+      server.update(routes);
+    };
+
+    // Debounce so we don't needlessly reload when multiple files are changed
+    const debouncedReloadRoutes = debounce(reloadRoutes, RELOAD_DEBOUNCE_MS);
+
+    watcher
+      .on('add', path => {
+        debug(`Reloading Routes: add @ ${path}`);
+        debouncedReloadRoutes();
+      })
+      .on('unlink', path => {
+        debug(`Reloading Routes: unlink @ ${path}`);
+        debouncedReloadRoutes();
+      });
+
+    // Clean the watcher up when exiting.
+    process.on('exit', () => watcher.close());
+}
+
+export async function createLocalDevelopmentServer(
+  port: string | number = DEFAULT_PORT,
+  config: StartCliConfig
+): Promise<Express> {
+  try {
+    const { LocalDevelopmentServer } = requireFromProject(
+      config.baseDir,
+      '@twilio/runtime-handler'
+    ) as { LocalDevelopmentServer: LDS };
+
+    const routes = await findRoutes(config);
+
+    const server = new LocalDevelopmentServer(port, {
+      inspect: config.inspect,
+      baseDir: config.baseDir,
+      env: config.env,
+      port: config.port,
+      url: config.url,
+      detailedLogs: config.detailedLogs,
+      live: config.live,
+      logs: config.logs,
+      legacyMode: config.legacyMode,
+      appName: config.appName,
+      forkProcess: config.forkProcess,
+      logger: logger,
+      routes: routes
+    });
+    server.on('request-log', (logMessage) => {
+      writeOutput(logMessage)
+    });
+    server.on('updated-routes', async (config) => {
+      await printRouteInfo(config);
+    })
+    configureWatcher(config, server);
+    return server.getApp();
+  } catch (err) {
+    debug(
+      'Failed to load server from @twilio/runtime-handler. Falling back to built-in.'
+    );
+    return createServer(port, config);
+  }
+}
+
+/** @deprecated */
 export async function createServer(
   port: string | number = DEFAULT_PORT,
   config: StartCliConfig

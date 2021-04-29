@@ -66,3 +66,10 @@ export type ResponseConstructor = new (...args: any[]) => TwilioResponse;
 export type GlobalTwilio = Omit<typeof twilio, 'default'> & {
   Response: ResponseConstructor;
 };
+
+export { ServiceContext } from 'twilio/lib/rest/sync/v1/service';
+export { SyncListListInstance } from 'twilio/lib/rest/sync/v1/service/syncList';
+export { SyncMapListInstance } from 'twilio/lib/rest/sync/v1/service/syncMap';
+export { TwilioClientOptions } from 'twilio/lib/rest/Twilio';
+export type TwilioClient = twilio.Twilio;
+export type TwilioPackage = typeof twilio;
