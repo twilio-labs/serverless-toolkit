@@ -16,6 +16,7 @@ export type SearchConfig = {
 export type EnvironmentVariablesWithAuth = {
   ACCOUNT_SID?: string;
   AUTH_TOKEN?: string;
+  [key: string]: string | undefined;
 };
 
 export type InspectInfo = {

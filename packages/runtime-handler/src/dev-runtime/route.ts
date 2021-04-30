@@ -12,7 +12,7 @@ import {
   RequestHandler as ExpressRequestHandler,
   Response as ExpressResponse,
 } from 'express';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import { deserializeError } from 'serialize-error';
 import { checkForValidAccountSid } from './checks/check-account-sid';
 import { checkForValidAuthToken } from './checks/check-auth-token';
@@ -26,6 +26,10 @@ import { requireFromProject } from './utils/requireFromProject';
 import { cleanUpStackTrace } from './utils/stack-trace/clean-up';
 
 const log = debug('twilio-runtime-handler:dev:route');
+
+const RUNNER_PATH = jest
+  ? resolve(__dirname, '../../dist/dev-runtime/internal/functionRunner')
+  : join(__dirname, 'internal', 'functionRunner');
 
 let twilio: TwilioPackage;
 
@@ -168,7 +172,7 @@ export function functionPathToRoute(
     next: NextFunction
   ) {
     const event = constructEvent(req);
-    const forked = fork(join(__dirname, 'internal', 'functionRunner'));
+    const forked = fork(RUNNER_PATH);
     forked.on(
       'message',
       ({
@@ -229,10 +233,12 @@ export function functionToRoute(
       run_timings.end = process.hrtime();
       log('Function execution %s finished', req.path);
       log(
-        `(Estimated) Total Execution Time: ${(run_timings.end[0] * 1e9 +
-          run_timings.end[1] -
-          (run_timings.start[0] * 1e9 + run_timings.start[1])) /
-          1e6}ms`
+        `(Estimated) Total Execution Time: ${
+          (run_timings.end[0] * 1e9 +
+            run_timings.end[1] -
+            (run_timings.start[0] * 1e9 + run_timings.start[1])) /
+          1e6
+        }ms`
       );
       if (err) {
         handleError(err, req, res, functionFilePath);

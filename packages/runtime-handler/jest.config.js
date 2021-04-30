@@ -4,7 +4,7 @@ module.exports = {
   ...base,
   globals: {
     'ts-jest': {
-      tsConfig: './tsconfig.test.json',
+      tsconfig: './tsconfig.test.json',
     },
   },
   name: 'serverless-api',
