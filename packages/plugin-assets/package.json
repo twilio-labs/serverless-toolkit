@@ -1,0 +1,81 @@
+{
+  "name": "@twilio-labs/plugin-assets",
+  "description": "Easily upload assets to a Twilio Assets service",
+  "version": "0.0.1",
+  "author": "Twilio Inc. <open-source@twilio.com> (https://www.twilio.com/labs)",
+  "contributors": [
+    "Phil Nash <philnash@twilio.com>"
+  ],
+  "dependencies": {
+    "@oclif/command": "^1.5.19",
+    "@oclif/config": "^1.13.3",
+    "@twilio-labs/serverless-api": "^5.0.0-beta.0",
+    "@twilio/cli-core": "^5.22.0",
+    "inquirer": "^8.0.0",
+    "ora": "^5.4.0"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1.22.2",
+    "@oclif/plugin-help": "^2.2.1",
+    "@oclif/test": "^1.2.5",
+    "@twilio/cli-test": "^2.1.1",
+    "jest": "^26.6.3",
+    "rimraf": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "files": [
+    "/oclif.manifest.json",
+    "/src",
+    "LICENSE",
+    "README.md"
+  ],
+  "keywords": [
+    "oclif-plugin",
+    "twilio-cli-plugin",
+    "twilio-ci",
+    "twilio",
+    "assets"
+  ],
+  "license": "MIT",
+  "oclif": {
+    "name": "assets",
+    "commands": "./src/commands",
+    "bin": "twilio",
+    "devPlugins": [
+      "@oclif/plugin-help"
+    ],
+    "topics": {
+      "assets": {
+        "description": "Easily upload assets to a Twilio Assets service"
+      },
+      "assets:init": {
+        "description": "Create a new assets service to use as a bucket"
+      },
+      "assets:upload": {
+        "description": "Upload a new asset to the Assets service"
+      },
+      "assets:list": {
+        "description": "List all the assets in the service"
+      }
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/twilio-labs/serverless-toolkit.git"
+  },
+  "homepage": "https://github.com/twilio-labs/serverless-toolkit",
+  "bugs": {
+    "url": "https://github.com/twilio-labs/serverless-toolkit/issues"
+  },
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "prepack": "oclif-dev manifest && oclif-dev readme",
+    "version": "oclif-dev readme && git add README.md",
+    "test": "jest"
+  }
+}
