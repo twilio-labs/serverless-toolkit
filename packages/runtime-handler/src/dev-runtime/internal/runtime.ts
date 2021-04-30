@@ -6,10 +6,10 @@ import {
   RuntimeSyncClientOptions,
   RuntimeSyncServiceContext
 } from '@twilio-labs/serverless-runtime-types/types';
-import debug from 'debug';
 import { readFileSync } from 'fs';
 import { checkForValidAccountSid } from '../checks/check-account-sid';
 import { ServerConfig } from '../types';
+import debug from '../utils/debug';
 import { requireFromProject } from '../utils/requireFromProject';
 import { getCachedResources } from './route-cache';
 

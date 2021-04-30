@@ -6,7 +6,6 @@ import {
   TwilioPackage,
 } from '@twilio-labs/serverless-runtime-types/types';
 import { fork } from 'child_process';
-import debug from 'debug';
 import {
   NextFunction,
   Request as ExpressRequest,
@@ -21,6 +20,7 @@ import { Reply } from './internal/functionRunner';
 import { Response } from './internal/response';
 import * as Runtime from './internal/runtime';
 import { ServerConfig } from './types';
+import debug from './utils/debug';
 import { wrapErrorInHtml } from './utils/error-html';
 import { requireFromProject } from './utils/requireFromProject';
 import { cleanUpStackTrace } from './utils/stack-trace/clean-up';

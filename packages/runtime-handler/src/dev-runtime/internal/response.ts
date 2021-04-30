@@ -1,6 +1,6 @@
 import { TwilioResponse } from '@twilio-labs/serverless-runtime-types/types';
-import debug from 'debug';
 import { Response as ExpressResponse } from 'express';
+import debug from '../utils/debug';
 
 const log = debug('twilio-runtime-handler:dev:response');
 

@@ -75,6 +75,7 @@ export type ServerConfig = {
   forkProcess: boolean;
   logger?: LoggerInstance;
   routes: RouteInfo;
+  enableDebugLogs: boolean;
 };
 
 export type LoggerInstance = {

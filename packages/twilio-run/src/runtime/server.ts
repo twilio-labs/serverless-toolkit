@@ -115,7 +115,7 @@ export async function createLocalDevelopmentServer(
   try {
     const { LocalDevelopmentServer } = requireFromProject(
       config.baseDir,
-      '@twilio/runtime-handler'
+      '@twilio/runtime-handler/dev'
     ) as { LocalDevelopmentServer: LDS };
 
     const routes = await findRoutes(config);
@@ -133,7 +133,8 @@ export async function createLocalDevelopmentServer(
       appName: config.appName,
       forkProcess: config.forkProcess,
       logger: logger,
-      routes: routes
+      routes: routes,
+      enableDebugLogs: true
     });
     server.on('request-log', (logMessage) => {
       writeOutput(logMessage)
@@ -145,7 +146,7 @@ export async function createLocalDevelopmentServer(
     return server.getApp();
   } catch (err) {
     debug(
-      'Failed to load server from @twilio/runtime-handler. Falling back to built-in.'
+      'Failed to load server from @twilio/runtime-handler/dev. Falling back to built-in.'
     );
     return createServer(port, config);
   }

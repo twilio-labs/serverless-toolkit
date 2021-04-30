@@ -1,6 +1,6 @@
 import { ServerlessFunctionSignature } from '@twilio-labs/serverless-runtime-types/types';
 import bodyParser from 'body-parser';
-import debug from 'debug';
+import EventEmitter from 'events';
 import express, {
   Express,
   NextFunction,
@@ -9,7 +9,6 @@ import express, {
 } from 'express';
 import userAgentMiddleware from 'express-useragent';
 import nocache from 'nocache';
-import EventEmitter from 'node:events';
 import { createLogger } from './internal/request-logger';
 import { setRoutes } from './internal/route-cache';
 import {
@@ -18,6 +17,7 @@ import {
   functionToRoute,
 } from './route';
 import { RouteInfo, ServerConfig } from './types';
+import debug from './utils/debug';
 import { wrapErrorInHtml } from './utils/error-html';
 
 const log = debug('twilio-runtime-handler:dev:server');
@@ -70,7 +70,10 @@ export class LocalDevelopmentServer extends EventEmitter {
     private config: ServerConfig
   ) {
     super();
-    debug.enable(process.env.DEBUG || '');
+    if (this.config.enableDebugLogs) {
+      debug.enable('twilio-runtime-handler:*');
+    }
+
     this.normalizeConfig();
     this.routes = this.config.routes;
     this.setRoutes(this.config.routes);
