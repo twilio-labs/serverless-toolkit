@@ -49,7 +49,7 @@ This project uses [`lerna version`](https://www.npmjs.com/package/@lerna/version
 For example to release a new pre-release version containing `beta` and releasing it as `next`:
 
 ```bash
-npm run release -- --conventional-prerelease --preid beta
+npm run release -- --conventional-prerelease --exact --preid beta
 git push origin main --follow-tags
 npm run publish -- --otp=<OTP> --dist-tag next
 ```
