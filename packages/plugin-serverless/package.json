@@ -23,7 +23,7 @@
     "globby": "^8.0.2"
   },
   "engines": {
-    "node": ">=8.10.0"
+    "node": ">=12.22.1"
   },
   "files": [
     "/oclif.manifest.json",
