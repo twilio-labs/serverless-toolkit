@@ -27,9 +27,10 @@ import { cleanUpStackTrace } from './utils/stack-trace/clean-up';
 
 const log = debug('twilio-runtime-handler:dev:route');
 
-const RUNNER_PATH = jest
-  ? resolve(__dirname, '../../dist/dev-runtime/internal/functionRunner')
-  : join(__dirname, 'internal', 'functionRunner');
+const RUNNER_PATH =
+  process.env.NODE_ENV === 'test'
+    ? resolve(__dirname, '../../dist/dev-runtime/internal/functionRunner')
+    : join(__dirname, 'internal', 'functionRunner');
 
 let twilio: TwilioPackage;
 

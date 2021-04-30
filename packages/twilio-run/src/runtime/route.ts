@@ -23,9 +23,10 @@ import { Reply } from './internal/functionRunner';
 import { Response } from './internal/response';
 import * as Runtime from './internal/runtime';
 
-const RUNNER_PATH = jest
-  ? resolve(__dirname, '../../dist/runtime/internal/functionRunner')
-  : join(__dirname, 'internal', 'functionRunner');
+const RUNNER_PATH =
+  process.env.NODE_ENV === 'test'
+    ? resolve(__dirname, '../../dist/runtime/internal/functionRunner')
+    : join(__dirname, 'internal', 'functionRunner');
 
 const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
 
