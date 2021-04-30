@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-beta.4](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-api@5.0.0-beta.3...@twilio-labs/serverless-api@5.0.0-beta.4) (2021-04-30)
+
+
+### Bug Fixes
+
+* **assets, serverless-api:** uri encode path names for asset versions ([c2b1f3d](https://github.com/twilio-labs/serverless-toolkit/commit/c2b1f3d16ce6af31ef2aaa1d086b3565bbcd1c7d))
+
+
+### Features
+
+* **plugin-assets:** first version of working assets plugin ([4ee08d3](https://github.com/twilio-labs/serverless-toolkit/commit/4ee08d3ebcb82abe1cb11752d45021f2ca3e03c6))
+
+
+
+
+
 # [5.0.0-beta.3](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-api@5.0.0-beta.2...@twilio-labs/serverless-api@5.0.0-beta.3) (2021-04-21)
 
 **Note:** Version bump only for package @twilio-labs/serverless-api

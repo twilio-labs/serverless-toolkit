@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-beta.4](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.0.0-beta.3...twilio-run@3.0.0-beta.4) (2021-04-30)
+
+
+### chore
+
+* remove Node.js 10 support ([#253](https://github.com/twilio-labs/serverless-toolkit/issues/253)) ([f6192fa](https://github.com/twilio-labs/serverless-toolkit/commit/f6192fad188a787dfbb7d1ed6a32f5d2baa4570c))
+
+
+### Features
+
+* **twilio-run:logs:** adds production flag ([#248](https://github.com/twilio-labs/serverless-toolkit/issues/248)) ([0327454](https://github.com/twilio-labs/serverless-toolkit/commit/0327454b749e424822f44e2274c3ba3a90a4461d)), closes [#208](https://github.com/twilio-labs/serverless-toolkit/issues/208)
+
+
+### BREAKING CHANGES
+
+* Installing the new version on Node.js 10 will result in an error
+
+
+
+
+
 # [3.0.0-beta.3](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.0.0-beta.2...twilio-run@3.0.0-beta.3) (2021-04-21)
 
 **Note:** Version bump only for package twilio-run
