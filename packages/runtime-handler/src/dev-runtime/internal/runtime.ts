@@ -1,10 +1,14 @@
-import type { ServiceContext, SyncListListInstance, SyncMapListInstance } from '@twilio-labs/serverless-runtime-types/types';
+import type {
+  ServiceContext,
+  SyncListListInstance,
+  SyncMapListInstance,
+} from '@twilio-labs/serverless-runtime-types/types';
 import {
   AssetResourceMap,
   ResourceMap,
   RuntimeInstance,
   RuntimeSyncClientOptions,
-  RuntimeSyncServiceContext
+  RuntimeSyncServiceContext,
 } from '@twilio-labs/serverless-runtime-types/types';
 import { readFileSync } from 'fs';
 import { checkForValidAccountSid } from '../checks/check-account-sid';
@@ -53,11 +57,15 @@ export type ExtendedSyncServiceContext = ServiceContext & {
   lists: SyncListListInstance;
 };
 
-export function create({ env, logger, baseDir }: ServerConfig): RuntimeInstance {
+export function create({
+  env,
+  logger,
+  baseDir,
+}: ServerConfig): RuntimeInstance {
   function getSync(
     options?: RuntimeSyncClientOptions
   ): RuntimeSyncServiceContext {
-    options = { serviceName: 'default', ...options };
+    options = { serviceName: 'default', lazyLoading: true, ...options };
     const { serviceName } = options;
     delete options.serviceName;
 
@@ -69,7 +77,11 @@ export function create({ env, logger, baseDir }: ServerConfig): RuntimeInstance 
         .map((x: any) => JSON.stringify(x))
         .join(',')})`,
     });
-    const client = requireFromProject(baseDir, 'twilio')(env.ACCOUNT_SID, env.AUTH_TOKEN, options);
+    const client = requireFromProject(baseDir, 'twilio')(
+      env.ACCOUNT_SID,
+      env.AUTH_TOKEN,
+      options
+    );
     const service = client.sync.services(
       serviceName || 'default'
     ) as RuntimeSyncServiceContext;

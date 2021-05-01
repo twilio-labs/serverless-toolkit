@@ -271,7 +271,8 @@ describe('constructContext function', () => {
     context.getTwilioClient();
     expect(twilioFn).toHaveBeenCalledWith(
       'ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-      'authauthauthauthauthauthauthauth'
+      'authauthauthauthauthauthauthauth',
+      { lazyLoading: true }
     );
   });
 });

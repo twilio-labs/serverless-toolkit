@@ -3,6 +3,7 @@ import {
   ServerlessCallback,
   ServerlessFunctionSignature,
   TwilioClient,
+  TwilioClientOptions,
   TwilioPackage,
 } from '@twilio-labs/serverless-runtime-types/types';
 import { fork } from 'child_process';
@@ -48,7 +49,7 @@ export function constructContext<T extends {} = {}>(
   PATH: string;
   [key: string]: string | undefined | Function;
 }> {
-  function getTwilioClient(): TwilioClient {
+  function getTwilioClient(opts?: TwilioClientOptions): TwilioClient {
     checkForValidAccountSid(env.ACCOUNT_SID, {
       shouldPrintMessage: true,
       shouldThrowError: true,
@@ -64,7 +65,11 @@ export function constructContext<T extends {} = {}>(
 
     return requireFromProject(baseDir, 'twilio')(
       env.ACCOUNT_SID,
-      env.AUTH_TOKEN
+      env.AUTH_TOKEN,
+      {
+        lazyLoading: true,
+        ...opts,
+      }
     );
   }
   const DOMAIN_NAME = url.replace(/^https?:\/\//, '');

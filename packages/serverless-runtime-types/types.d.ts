@@ -44,7 +44,7 @@ export type RuntimeInstance = {
 };
 
 export type Context<T = {}> = {
-  getTwilioClient(): twilio.Twilio;
+  getTwilioClient(options?: TwilioClientOptions): twilio.Twilio;
   DOMAIN_NAME: string;
 } & T;
 
