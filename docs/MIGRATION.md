@@ -15,7 +15,7 @@ The `.twiliodeployinfo` file can be commited to your project but is primarily in
 To transition your `.twilio-functions` file we provide a convenience script that takes care of some of the work. You can run it by running:
 
 ```bash
-npx -p twilio-run@3 twilio-upgrade-config
+npx -p twilio-run@next twilio-upgrade-config
 ```
 
 ### 2. Changed credential handling
