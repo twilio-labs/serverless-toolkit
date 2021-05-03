@@ -1,4 +1,3 @@
-import { SearchConfig } from '@twilio-labs/serverless-api/dist/utils';
 import { ServerlessFunctionSignature } from '@twilio-labs/serverless-runtime-types/types';
 import bodyParser from 'body-parser';
 import chokidar from 'chokidar';
@@ -17,8 +16,8 @@ import { printRouteInfo } from '../printers/start';
 import { wrapErrorInHtml } from '../utils/error-html';
 import { getDebugFunction } from '../utils/logger';
 import { createLogger } from './internal/request-logger';
-import { setRoutes } from './internal/route-cache';
-import { getFunctionsAndAssets } from './internal/runtime-paths';
+import { getRouteMap } from './internal/route-cache';
+
 import {
   constructGlobalScope,
   functionToRoute,
@@ -29,11 +28,6 @@ const debug = getDebugFunction('twilio-run:server');
 const DEFAULT_PORT = process.env.PORT || 3000;
 const RELOAD_DEBOUNCE_MS = 250;
 const DEFAULT_BODY_SIZE_LAMBDA = '6mb';
-
-function requireUncached(module: string): any {
-  delete require.cache[require.resolve(module)];
-  return require(module);
-}
 
 function loadTwilioFunction(fnPath: string): ServerlessFunctionSignature {
   return require(fnPath).handler;
@@ -101,19 +95,7 @@ export async function createServer(
     });
   }
 
-  const searchConfig: SearchConfig = {};
-
-  if (config.functionsFolderName) {
-    searchConfig.functionsFolderNames = [config.functionsFolderName];
-    console.log(searchConfig);
-  }
-
-  if (config.assetsFolderName) {
-    searchConfig.assetsFolderNames = [config.assetsFolderName];
-  }
-
-  let routes = await getFunctionsAndAssets(config.baseDir, searchConfig);
-  let routeMap = setRoutes(routes);
+  let routeMap = await getRouteMap(config);
 
   if (config.live) {
     const watcher = chokidar.watch(
@@ -127,8 +109,7 @@ export async function createServer(
     );
 
     const reloadRoutes = async () => {
-      routes = await getFunctionsAndAssets(config.baseDir, searchConfig);
-      routeMap = setRoutes(routes);
+      routeMap = await getRouteMap(config);
 
       await printRouteInfo(config);
     };

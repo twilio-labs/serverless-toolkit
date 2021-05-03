@@ -1,6 +1,8 @@
 import { ServerlessResourceConfigWithFilePath } from '@twilio-labs/serverless-api';
+import { SearchConfig } from '@twilio-labs/serverless-api/dist/utils';
 import { Merge } from 'type-fest';
-import { RouteInfo } from './runtime-paths';
+import { RouteInfo, getFunctionsAndAssets } from './runtime-paths';
+import { StartCliConfig } from '../../config/start';
 
 type ExtendedRouteInfo =
   | Merge<{ type: 'function' }, ServerlessResourceConfigWithFilePath>
@@ -10,7 +12,22 @@ const allRoutes = new Map<string, ExtendedRouteInfo>();
 const assetsCache = new Set<ServerlessResourceConfigWithFilePath>();
 const functionsCache = new Set<ServerlessResourceConfigWithFilePath>();
 
-export function setRoutes({ functions, assets }: RouteInfo) {
+export async function getRouteMap(config: StartCliConfig) {
+  const searchConfig: SearchConfig = {};
+
+  if (config.functionsFolderName) {
+    searchConfig.functionsFolderNames = [config.functionsFolderName];
+  }
+
+  if (config.assetsFolderName) {
+    searchConfig.assetsFolderNames = [config.assetsFolderName];
+  }
+
+  let routes = await getFunctionsAndAssets(config.baseDir, searchConfig);
+  return setRoutes(routes);
+}
+
+function setRoutes({ functions, assets }: RouteInfo) {
   allRoutes.clear();
   assetsCache.clear();
   functionsCache.clear();

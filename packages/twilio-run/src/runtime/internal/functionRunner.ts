@@ -3,6 +3,7 @@ import { Response } from './response';
 import { serializeError } from 'serialize-error';
 import { ServerlessCallback } from '@twilio-labs/serverless-runtime-types/types';
 import { constructGlobalScope, constructContext } from '../route';
+import { getRouteMap } from '../internal/route-cache';
 
 const sendDebugMessage = (debugMessage: string, ...debugArgs: any) => {
   process.send && process.send({ debugMessage, debugArgs });
@@ -48,9 +49,10 @@ const handleSuccess = (responseObject?: string | number | boolean | object) => {
   }
 };
 
-process.on('message', ({ functionPath, event, config, path }) => {
+process.on('message', async ({ functionPath, event, config, path }) => {
   const { handler } = require(functionPath);
   try {
+    await getRouteMap(config);
     constructGlobalScope(config);
     const context = constructContext(config, path);
     sendDebugMessage('Context for %s: %p', path, context);
