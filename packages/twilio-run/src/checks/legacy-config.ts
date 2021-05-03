@@ -46,6 +46,8 @@ export async function checkLegacyConfig(
     } else {
       return true;
     }
+  } else {
+    return true;
   }
 }
 
