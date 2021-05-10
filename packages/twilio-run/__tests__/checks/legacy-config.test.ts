@@ -45,19 +45,22 @@ describe('printLegacyConfig', () => {
 describe('checkLegacyConfig', () => {
   it('should print a warning if the config file exists', async () => {
     SHOULD_FILE_EXIST = true;
-    await checkLegacyConfig();
+    const result = await checkLegacyConfig();
+    expect(result).toBe(true);
     expect(logger.warn).toHaveBeenCalled();
   });
 
   it('should not print a warning if the file does not exist', async () => {
     SHOULD_FILE_EXIST = false;
-    await checkLegacyConfig();
+    const result = await checkLegacyConfig();
+    expect(result).toBe(true);
     expect(logger.warn).not.toHaveBeenCalled();
   });
 
   it('should use default path to look for file', async () => {
     SHOULD_FILE_EXIST = true;
-    await checkLegacyConfig();
+    const result = await checkLegacyConfig();
+    expect(result).toBe(true);
     expect(mocked(fileExistsSync)).toHaveBeenCalledWith(
       path.resolve(process.cwd(), '.twilio-functions')
     );
@@ -65,7 +68,8 @@ describe('checkLegacyConfig', () => {
 
   it('should override directory to look for file', async () => {
     SHOULD_FILE_EXIST = true;
-    await checkLegacyConfig('/tmp');
+    const result = await checkLegacyConfig('/tmp');
+    expect(result).toBe(true);
     expect(mocked(fileExistsSync)).toHaveBeenCalledWith(
       path.resolve('/tmp', '.twilio-functions')
     );
