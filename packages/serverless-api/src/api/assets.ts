@@ -142,7 +142,7 @@ export async function createAssetVersion(
     };
 
     const form = new FormData();
-    form.append('Path', encodeURIComponent(asset.path));
+    form.append('Path', asset.path);
     form.append('Visibility', asset.access);
     form.append('Content', asset.content, contentOpts);
 

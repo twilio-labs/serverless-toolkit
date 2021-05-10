@@ -93,7 +93,7 @@ ${debugFlagMessage}`,
       filePath = resolve(file);
       debug(`Reading file from ${filePath}`);
       const assetContent = await readFile(filePath);
-      const path = `${basename(filePath)}`;
+      const path = `${encodeURIComponent(basename(filePath))}`;
       const newAsset = {
         name: path,
         access: 'public',
