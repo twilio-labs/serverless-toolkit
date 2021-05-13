@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-beta.1](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-assets@0.1.0-beta.0...@twilio-labs/plugin-assets@0.1.0-beta.1) (2021-05-13)
+
+
+### Bug Fixes
+
+* **serverless-api:** fixes assets paths in deployment ([#258](https://github.com/twilio-labs/serverless-toolkit/issues/258)) ([e37ecb3](https://github.com/twilio-labs/serverless-toolkit/commit/e37ecb336eaec74130d98066a63b858d71f26f62))
+
+
+
+
+
 # 0.1.0-beta.0 (2021-04-30)
 
 
