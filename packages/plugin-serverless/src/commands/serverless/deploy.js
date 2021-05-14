@@ -1,23 +1,25 @@
-const { TwilioClientCommand } = require("@twilio/cli-core").baseCommands;
+const { TwilioClientCommand } = require('@twilio/cli-core').baseCommands;
 
 const {
   handler,
   cliInfo,
   describe,
-} = require("twilio-run/dist/commands/deploy");
+} = require('twilio-run/dist/commands/deploy');
 const {
   convertYargsOptionsToOclifFlags,
   normalizeFlags,
   createExternalCliOptions,
   getRegionAndEdge,
-} = require("../../utils");
+} = require('../../utils');
+
+const { flags, aliasMap } = convertYargsOptionsToOclifFlags(cliInfo.options);
 
 class FunctionsDeploy extends TwilioClientCommand {
   async run() {
     await super.run();
 
     let { flags, args } = this.parse(FunctionsDeploy);
-    flags = normalizeFlags(flags);
+    flags = normalizeFlags(flags, aliasMap);
 
     const externalOptions = createExternalCliOptions(flags, this.twilioClient);
 
@@ -32,9 +34,8 @@ class FunctionsDeploy extends TwilioClientCommand {
 
 FunctionsDeploy.description = describe;
 
-FunctionsDeploy.flags = Object.assign(
-  convertYargsOptionsToOclifFlags(cliInfo.options),
-  { profile: TwilioClientCommand.flags.profile }
-);
+FunctionsDeploy.flags = Object.assign(flags, {
+  profile: TwilioClientCommand.flags.profile,
+});
 
 module.exports = FunctionsDeploy;
