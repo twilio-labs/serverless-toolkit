@@ -18,6 +18,7 @@ const {
   createNvmrcFile,
   createTsconfigFile,
   createEmptyFileStructure,
+  createServerlessConfigFile,
 } = require('../src/create-twilio-function/create-files');
 
 function setupDir() {
@@ -296,6 +297,49 @@ describe('create-files', () => {
       } catch (e) {
         expect(e.toString()).toMatch('file already exists');
       }
+      cleanUp();
+    });
+  });
+
+  describe('createServerlessConfigFile', () => {
+    test('it creates a new .twilioserverlessrc file', async () => {
+      const { tmpDir: scratchDir, cleanUp } = setupDir();
+      const name = 'test-serverlessrc-1';
+      const basePath = path.join(scratchDir, name);
+      fs.mkdirSync(basePath, { recursive: true });
+
+      await createServerlessConfigFile(basePath);
+      const file = await stat(path.join(basePath, '.twilioserverlessrc'));
+      expect(file.isFile());
+      const contents = fs.readFileSync(
+        path.join(basePath, '.twilioserverlessrc'),
+        {
+          encoding: 'utf-8',
+        }
+      );
+      expect(contents.startsWith('{')).toBe(true);
+      cleanUp();
+    });
+
+    test('it does not override if there is already a file', async () => {
+      const { tmpDir: scratchDir, cleanUp } = setupDir();
+      const name = 'test-serverlessrc-2';
+      const basePath = path.join(scratchDir, name);
+      fs.mkdirSync(basePath, { recursive: true });
+
+      fs.closeSync(
+        fs.openSync(path.join(basePath, '.twilioserverlessrc'), 'w')
+      );
+      const result = await createServerlessConfigFile(basePath);
+      expect(result).toBe(false);
+
+      const contents = fs.readFileSync(
+        path.join(basePath, '.twilioserverlessrc'),
+        {
+          encoding: 'utf-8',
+        }
+      );
+      expect(contents.startsWith('{')).toBe(false);
       cleanUp();
     });
   });
