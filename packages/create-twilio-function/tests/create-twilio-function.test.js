@@ -161,6 +161,10 @@ describe('createTwilioFunction', () => {
         expect(env.isFile());
         const nvmrc = await stat(path.join(scratchDir, name, '.nvmrc'));
         expect(nvmrc.isFile());
+        const serverlessrc = await stat(
+          path.join(scratchDir, name, '.twilioserverlessrc')
+        );
+        expect(serverlessrc.isFile());
 
         const packageJSON = await stat(
           path.join(scratchDir, name, 'package.json')

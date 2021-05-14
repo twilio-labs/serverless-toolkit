@@ -19,6 +19,7 @@ const {
   createNvmrcFile,
   createTsconfigFile,
   createEmptyFileStructure,
+  createServerlessConfigFile,
 } = require('./create-twilio-function/create-files');
 const createGitignore = require('./create-twilio-function/create-gitignore');
 const importCredentials = require('./create-twilio-function/import-credentials');
@@ -113,6 +114,7 @@ async function createTwilioFunction(config) {
   });
   await createNvmrcFile(projectDir);
   await createPackageJSON(projectDir, config.name, projectType);
+  await createServerlessConfigFile(projectDir);
   if (projectType === 'typescript') {
     await createTsconfigFile(projectDir);
   }

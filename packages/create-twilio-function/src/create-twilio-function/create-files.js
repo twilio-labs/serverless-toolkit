@@ -1,5 +1,8 @@
 const fs = require('fs');
 const path = require('path');
+const {
+  writeDefaultConfigFile,
+} = require('twilio-run/dist/templating/defaultConfig');
 const { promisify } = require('util');
 
 const versions = require('./versions');
@@ -69,10 +72,10 @@ function createPackageJSON(pathName, name, projectType = 'javascript') {
 }
 
 function copyRecursively(src, dest) {
-  return readdir(src).then(children => {
+  return readdir(src).then((children) => {
     return Promise.all(
-      children.map(child =>
-        stat(path.join(src, child)).then(stats => {
+      children.map((child) =>
+        stat(path.join(src, child)).then((stats) => {
           if (stats.isDirectory()) {
             return mkdir(path.join(dest, child)).then(() =>
               copyRecursively(path.join(src, child), path.join(dest, child))
@@ -107,6 +110,10 @@ function createNvmrcFile(pathName) {
   const fullPath = path.join(pathName, '.nvmrc');
   const content = versions.node;
   return createFile(fullPath, content);
+}
+
+function createServerlessConfigFile(pathName) {
+  return writeDefaultConfigFile(pathName, false, '.twilioserverlessrc');
 }
 
 function createTsconfigFile(pathName) {
@@ -148,6 +155,7 @@ module.exports = {
   createExampleFromTemplates,
   createEnvFile,
   createNvmrcFile,
+  createServerlessConfigFile,
   createTsconfigFile,
   createEmptyFileStructure,
 };
