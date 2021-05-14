@@ -41,7 +41,7 @@ export async function getFunctionServiceSid(
       deployInfoCache[username].serviceSid
     ) {
       debug(
-        'Found service sid from debug info, "%s"',
+        'Found service sid from deploy info, "%s"',
         deployInfoCache[username].serviceSid
       );
       return deployInfoCache[username].serviceSid;

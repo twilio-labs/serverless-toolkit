@@ -102,7 +102,9 @@ export async function getConfigFromFlags(
 
   let serviceName: string | undefined = await getServiceNameFromFlags(flags);
 
-  if (!serviceName) {
+  if (serviceSid?.startsWith('ZS')) {
+    serviceName = '';
+  } else if (!serviceName) {
     throw new Error(
       'Please pass --service-name or add a "name" field to your package.json'
     );

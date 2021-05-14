@@ -32,7 +32,7 @@ function plainPrintDeployedResources(
   result: DeployResult
 ) {
   const functionsOutput: string = columnify(
-    result.functionResources.sort(sortByAccess).map(fn => ({
+    result.functionResources.sort(sortByAccess).map((fn) => ({
       ...fn,
       url: `https://${result.domain}${fn.path}`,
     })),
@@ -43,7 +43,7 @@ function plainPrintDeployedResources(
   );
 
   const assetsOutput: string = columnify(
-    result.assetResources.sort(sortByAccess).map(asset => ({
+    result.assetResources.sort(sortByAccess).map((asset) => ({
       ...asset,
       url: `https://${result.domain}${asset.path}`,
     })),
@@ -83,12 +83,16 @@ function prettyPrintConfigInfo(config: DeployLocalProjectConfig) {
     dependencyString = Object.keys(config.pkgJson.dependencies).join(', ');
   }
 
+  const serviceInfo = config.serviceSid?.startsWith('ZS')
+    ? chalk`{bold.cyan Service SID}\t${config.serviceSid}`
+    : chalk`{bold.cyan Service Name}\t${config.serviceName}`;
+
   logger.info('\nDeploying functions & assets to the Twilio Runtime');
   writeOutput(
     chalk`
 {bold.cyan Username}\t${config.username}
 {bold.cyan Password}\t${redactPartOfString(config.password)}
-{bold.cyan Service Name}\t${config.serviceName}
+${serviceInfo}
 {bold.cyan Environment}\t${config.functionsEnv}
 {bold.cyan Root Directory}\t${config.cwd}
 {bold.cyan Dependencies}\t${dependencyString}
@@ -106,12 +110,18 @@ function plainPrintConfigInfo(config: DeployLocalProjectConfig) {
   const printObj = {
     account: config.username,
     serviceName: config.serviceName,
+    serviceSid: config.serviceSid,
     environment: config.functionsEnv,
     rootDirectory: config.cwd,
     dependencies: dependencyString,
     environmentVariables: Object.keys(config.env).join(','),
     runtime: config.runtime,
   };
+
+  if (printObj.serviceSid) {
+    delete printObj.serviceName;
+  }
+
   writeOutput(`configInfo\n${printObjectWithoutHeaders(printObj)}\n`);
 }
 
@@ -132,7 +142,7 @@ function prettyPrintDeployedResources(
 {bold.cyan.underline Deployment Details}
 {bold.cyan Domain:} ${result.domain}
 {bold.cyan Service:}
-   ${config.serviceName} {dim (${result.serviceSid})}
+   ${result.serviceName} {dim (${result.serviceSid})}
 {bold.cyan Environment:}
    ${config.functionsEnv} {dim (${result.environmentSid})}
 {bold.cyan Build SID:}
@@ -147,7 +157,7 @@ function prettyPrintDeployedResources(
   if (result.functionResources) {
     const functionMessage = result.functionResources
       .sort(sortByAccess)
-      .map(fn => {
+      .map((fn) => {
         const accessPrefix =
           fn.access !== 'public' ? chalk`{bold [${fn.access}]} ` : '';
         return chalk`   ${accessPrefix}{dim https://${result.domain}}${fn.path}`;
@@ -160,7 +170,7 @@ function prettyPrintDeployedResources(
   if (result.assetResources) {
     const assetMessage = result.assetResources
       .sort(sortByAccess)
-      .map(asset => {
+      .map((asset) => {
         const accessPrefix =
           asset.access !== 'public' ? chalk`{bold [${asset.access}]} ` : '';
         const accessUrl =
