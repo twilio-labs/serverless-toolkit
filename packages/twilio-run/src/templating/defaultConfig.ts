@@ -2,6 +2,7 @@ import camelCase from 'lodash.camelcase';
 import os from 'os';
 import path from 'path';
 import { Options } from 'yargs';
+import { EXCLUDED_FLAGS } from '../config/global';
 import { ALL_FLAGS } from '../flags';
 import { fileExists, writeFile } from '../utils/fs';
 import { getDebugFunction } from '../utils/logger';
@@ -32,6 +33,7 @@ function templateFlagAsConfig([flag, config]: [string, Options]) {
 
 export function templateDefaultConfigFile() {
   const lines = Object.entries(ALL_FLAGS)
+    .filter(([name]) => !EXCLUDED_FLAGS.includes(name))
     .sort((a, b) => a[0].localeCompare(b[0]))
     .map(templateFlagAsConfig)
     .join(os.EOL);

@@ -8,7 +8,6 @@ exports[`writeDefaultConfigFile default file should match snapshot 1`] = `
 	// \\"assets\\": true 	/* Upload assets. Can be turned off with --no-assets */,
 	// \\"assetsFolder\\": null 	/* Specific folder name to be used for static assets */,
 	// \\"buildSid\\": null 	/* An existing Build SID to deploy to the new environment */,
-	// \\"config\\": null 	/* Location of the config file. Absolute path or relative to current working directory (cwd) */,
 	// \\"createEnvironment\\": false 	/* Creates environment if it couldn't find it. */,
 	// \\"cwd\\": null 	/* Sets the directory of your existing Serverless project. Defaults to current directory */,
 	// \\"detailedLogs\\": false 	/* Toggles detailed request logging by showing request body and query params */,
@@ -33,7 +32,6 @@ exports[`writeDefaultConfigFile default file should match snapshot 1`] = `
 	// \\"ngrok\\": null 	/* Uses ngrok to create a public url. Pass a string to set the subdomain (requires a paid-for ngrok account). */,
 	// \\"outputFormat\\": \\"\\" 	/* Output the log in a different format */,
 	// \\"overrideExistingProject\\": false 	/* Deploys Serverless project to existing service if a naming conflict has been found. */,
-	// \\"password\\": null 	/* A specific API secret or auth token for deployment. Uses fields from .env otherwise */,
 	// \\"port\\": \\"3000\\" 	/* Override default port of 3000 */,
 	// \\"production\\": false 	/* Promote build to the production environment (no domain suffix). Overrides environment flag */,
 	// \\"properties\\": null 	/* Specify the output properties you want to see. Works best on single types */,
@@ -44,6 +42,5 @@ exports[`writeDefaultConfigFile default file should match snapshot 1`] = `
 	// \\"sourceEnvironment\\": null 	/* SID or suffix of an existing environment you want to deploy from. */,
 	// \\"tail\\": false 	/* Continuously stream the logs */,
 	// \\"template\\": null 	/* undefined */,
-	// \\"username\\": null 	/* A specific API key or account SID to be used for deployment. Uses fields in .env otherwise */,
 }"
 `;
