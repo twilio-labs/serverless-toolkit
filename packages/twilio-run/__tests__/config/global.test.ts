@@ -23,6 +23,23 @@ describe('readSpecializedConfig', () => {
     });
   });
 
+  test('deletes unwanted keys from config', () => {
+    __setTestConfig({
+      serviceSid: 'ZS11112222111122221111222211112222',
+      env: '.env.example',
+      username: 'hello',
+      password: 'bye',
+      config: 'configfile',
+    });
+
+    expect(
+      readSpecializedConfig('/tmp', '.twilioserverlessrc', 'deploy')
+    ).toEqual({
+      serviceSid: 'ZS11112222111122221111222211112222',
+      env: '.env.example',
+    });
+  });
+
   test('merges command-specific config', () => {
     __setTestConfig({
       serviceSid: 'ZS11112222111122221111222211112222',
