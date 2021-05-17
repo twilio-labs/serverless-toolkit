@@ -6,8 +6,8 @@ import { DeployStatus } from './consts';
 import {
   AssetResource,
   EnvironmentVariables,
-  ServerlessResourceConfig,
   FunctionResource,
+  ServerlessResourceConfig,
 } from './generic';
 import { Sid } from './serverless-api';
 
@@ -111,6 +111,7 @@ export type DeployResult = {
   functionResources: FunctionResource[];
   assetResources: AssetResource[];
   runtime: string;
+  serviceName: string;
 };
 
 export type StatusUpdate = {

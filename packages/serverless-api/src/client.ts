@@ -2,6 +2,16 @@
 
 import debug from 'debug';
 import events from 'events';
+import {
+  HTTPAlias,
+  Options,
+  OptionsOfJSONResponseBody,
+  OptionsOfTextResponseBody,
+  Response,
+} from 'got/dist/source';
+import { HttpsProxyAgent } from 'hpagent';
+import pLimit, { Limit } from 'p-limit';
+import { deprecate } from 'util';
 import { getOrCreateAssetResources, uploadAsset } from './api/assets';
 import {
   activateBuild,
@@ -26,9 +36,14 @@ import {
   uploadFunction,
 } from './api/functions';
 import { listOnePageLogResources } from './api/logs';
-import { createService, findServiceSid, listServices } from './api/services';
+import {
+  createService,
+  findServiceSid,
+  getService,
+  listServices,
+} from './api/services';
 import { getApiUrl } from './api/utils/api-client';
-import { RETRY_LIMIT, CONCURRENCY } from './api/utils/http_config';
+import { CONCURRENCY, RETRY_LIMIT } from './api/utils/http_config';
 import {
   listVariablesForEnvironment,
   setEnvironmentVariables,
@@ -52,16 +67,6 @@ import {
 import { DeployStatus } from './types/consts';
 import { ClientApiError, convertApiErrorsAndThrow } from './utils/error';
 import { getListOfFunctionsAndAssets, SearchConfig } from './utils/fs';
-import {
-  HTTPAlias,
-  OptionsOfJSONResponseBody,
-  OptionsOfTextResponseBody,
-  Options,
-  Response,
-} from 'got/dist/source';
-import pLimit, { Limit } from 'p-limit';
-import { deprecate } from 'util';
-import { HttpsProxyAgent } from 'hpagent';
 
 const log = debug('twilio-serverless-api:client');
 
@@ -273,7 +278,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
           this
         );
         const foundFunction = availableFunctions.find(
-          fn => fn.friendly_name === filterByFunction
+          (fn) => fn.friendly_name === filterByFunction
         );
         if (!foundFunction) {
           throw new Error('Invalid Function Name or SID');
@@ -311,7 +316,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
           this
         );
         const foundFunction = availableFunctions.find(
-          fn => fn.friendly_name === filterByFunction
+          (fn) => fn.friendly_name === filterByFunction
         );
         if (!foundFunction) {
           throw new Error('Invalid Function Name or SID');
@@ -453,6 +458,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
       };
       const { functions, assets, runtime } = config;
 
+      let serviceName = config.serviceName;
       let serviceSid = config.serviceSid;
       if (!serviceSid) {
         this.emit('status-update', {
@@ -485,6 +491,9 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
             throw error;
           }
         }
+      } else {
+        const serviceResource = await getService(serviceSid, this);
+        serviceName = serviceResource.unique_name;
       }
 
       this.emit('status-update', {
@@ -519,7 +528,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
         message: `Uploading ${functions.length} Functions`,
       });
       const functionVersions = await Promise.all(
-        functionResources.map(fn => {
+        functionResources.map((fn) => {
           return uploadFunction(fn, serviceSid as string, this, this.config);
         })
       );
@@ -543,7 +552,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
         message: `Uploading ${assets.length} Assets`,
       });
       const assetVersions = await Promise.all(
-        assetResources.map(asset => {
+        assetResources.map((asset) => {
           return uploadAsset(asset, serviceSid as string, this, this.config);
         })
       );
@@ -589,6 +598,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
         functionResources,
         assetResources,
         runtime: build.runtime,
+        serviceName,
       };
     } catch (err) {
       convertApiErrorsAndThrow(err);
