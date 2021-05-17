@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-beta.7](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.0.0-beta.6...twilio-run@3.0.0-beta.7) (2021-05-17)
+
+
+### Bug Fixes
+
+* **twilio-run:** remove api flags from start command ([#264](https://github.com/twilio-labs/serverless-toolkit/issues/264)) ([51839e9](https://github.com/twilio-labs/serverless-toolkit/commit/51839e9ce789ea89f124950bfa398ce4af4dc69b)), closes [#260](https://github.com/twilio-labs/serverless-toolkit/issues/260)
+* **twilio-run:** remove irrelevant config options ([8d400c6](https://github.com/twilio-labs/serverless-toolkit/commit/8d400c65abb796e5a75371e2f55eae4fa22dc69e)), closes [#243](https://github.com/twilio-labs/serverless-toolkit/issues/243)
+* **twilio-run:** show service sid if available instead of name ([#265](https://github.com/twilio-labs/serverless-toolkit/issues/265)) ([816a26f](https://github.com/twilio-labs/serverless-toolkit/commit/816a26f7d64ed4193cd02a68abc8667334001771)), closes [#262](https://github.com/twilio-labs/serverless-toolkit/issues/262)
+
+
+### BREAKING CHANGES
+
+* **twilio-run:** The output of the config info in deployment changed
+
+
+
+
+
 # [3.0.0-beta.6](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.0.0-beta.5...twilio-run@3.0.0-beta.6) (2021-05-13)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.7](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.0.0-beta.6...@twilio-labs/plugin-serverless@2.0.0-beta.7) (2021-05-17)
+
+
+### Bug Fixes
+
+* **plugin-serverless:** add alias support ([#267](https://github.com/twilio-labs/serverless-toolkit/issues/267)) ([de3cdb4](https://github.com/twilio-labs/serverless-toolkit/commit/de3cdb4750641004272fedd38e8cca7e31396109)), closes [#242](https://github.com/twilio-labs/serverless-toolkit/issues/242)
+
+
+
+
+
 # [2.0.0-beta.6](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.0.0-beta.5...@twilio-labs/plugin-serverless@2.0.0-beta.6) (2021-05-13)
 
 **Note:** Version bump only for package @twilio-labs/plugin-serverless

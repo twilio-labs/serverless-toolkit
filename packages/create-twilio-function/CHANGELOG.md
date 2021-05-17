@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-beta.7](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.0.0-beta.6...create-twilio-function@3.0.0-beta.7) (2021-05-17)
+
+
+### Bug Fixes
+
+* **create-twilio-function:** use latest twilio-run version ([#263](https://github.com/twilio-labs/serverless-toolkit/issues/263)) ([1c91668](https://github.com/twilio-labs/serverless-toolkit/commit/1c9166858ea2a2bab978dc37528f4f476f21a677)), closes [#259](https://github.com/twilio-labs/serverless-toolkit/issues/259)
+
+
+### Features
+
+* **create-twilio-function:** generate default config file ([a8b5d1e](https://github.com/twilio-labs/serverless-toolkit/commit/a8b5d1ee0d4111521698c39537892c106212d68b)), closes [#244](https://github.com/twilio-labs/serverless-toolkit/issues/244)
+
+
+
+
+
 # [3.0.0-beta.6](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.0.0-beta.5...create-twilio-function@3.0.0-beta.6) (2021-05-13)
 
 **Note:** Version bump only for package create-twilio-function

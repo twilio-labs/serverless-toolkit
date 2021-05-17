@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-beta.6](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-api@5.0.0-beta.5...@twilio-labs/serverless-api@5.0.0-beta.6) (2021-05-17)
+
+
+### Bug Fixes
+
+* **twilio-run:** show service sid if available instead of name ([#265](https://github.com/twilio-labs/serverless-toolkit/issues/265)) ([816a26f](https://github.com/twilio-labs/serverless-toolkit/commit/816a26f7d64ed4193cd02a68abc8667334001771)), closes [#262](https://github.com/twilio-labs/serverless-toolkit/issues/262)
+
+
+### BREAKING CHANGES
+
+* **twilio-run:** The output of the config info in deployment changed
+
+
+
+
+
 # [5.0.0-beta.5](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-api@5.0.0-beta.4...@twilio-labs/serverless-api@5.0.0-beta.5) (2021-05-13)
 
 
