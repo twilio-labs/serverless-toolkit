@@ -10,12 +10,14 @@ const {
   normalizeFlags,
 } = require('../../utils');
 
+const { flags, aliasMap } = convertYargsOptionsToOclifFlags(cliInfo.options);
+
 class FunctionsInit extends TwilioClientCommand {
   async run() {
     await super.run();
 
     let { flags, args } = this.parse(FunctionsInit);
-    flags = normalizeFlags(flags);
+    flags = normalizeFlags(flags, aliasMap);
 
     const opts = Object.assign({}, flags, args);
     opts.accountSid = flags.accountSid || this.twilioClient.accountSid;
@@ -38,10 +40,8 @@ FunctionsInit.args = [
   },
 ];
 
-FunctionsInit.flags = Object.assign(
-  {},
-  convertYargsOptionsToOclifFlags(cliInfo.options),
-  { profile: TwilioClientCommand.flags.profile }
-);
+FunctionsInit.flags = Object.assign({}, flags, {
+  profile: TwilioClientCommand.flags.profile,
+});
 
 module.exports = FunctionsInit;

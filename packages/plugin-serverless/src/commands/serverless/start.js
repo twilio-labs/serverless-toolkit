@@ -10,11 +10,13 @@ const {
   normalizeFlags,
 } = require('../../utils');
 
+const { flags, aliasMap } = convertYargsOptionsToOclifFlags(cliInfo.options);
+
 class FunctionsStart extends Command {
   async run() {
     let { flags, args } = this.parse(FunctionsStart);
 
-    flags = normalizeFlags(flags);
+    flags = normalizeFlags(flags, aliasMap);
 
     const opts = Object.assign({}, flags, args);
     return handler(opts, undefined);
@@ -31,9 +33,7 @@ FunctionsStart.args = [
   },
 ];
 
-FunctionsStart.flags = Object.assign(
-  convertYargsOptionsToOclifFlags(cliInfo.options)
-);
+FunctionsStart.flags = Object.assign(flags);
 
 FunctionsStart.aliases = ['serverless:dev', 'serverless:run'];
 

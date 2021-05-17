@@ -3,6 +3,7 @@ const camelCase = require('lodash.camelcase');
 const { flags } = require('@oclif/command');
 
 function convertYargsOptionsToOclifFlags(options) {
+  const aliasMap = new Map();
   const flagsResult = Object.keys(options).reduce((result, name) => {
     const opt = options[name];
     const flag = {
@@ -23,10 +24,10 @@ function convertYargsOptionsToOclifFlags(options) {
 
     if (opt.type === 'number') {
       opt.type = 'string';
-      flag.parse = input => parseFloat(input);
+      flag.parse = (input) => parseFloat(input);
     }
 
-    if (opt.alias) {
+    if (opt.alias && opt.alias.length === 1) {
       flag.char = opt.alias;
     }
 
@@ -35,15 +36,25 @@ function convertYargsOptionsToOclifFlags(options) {
     }
 
     result[name] = flags[opt.type](flag);
+
+    if (opt.alias && opt.alias.length > 1) {
+      result[opt.alias] = flags[opt.type](flag);
+      aliasMap.set(opt.alias, name);
+    }
+
     return result;
   }, {});
-  return flagsResult;
+  return { flags: flagsResult, aliasMap };
 }
 
-function normalizeFlags(flags) {
+function normalizeFlags(flags, aliasMap) {
   const result = Object.keys(flags).reduce((current, name) => {
-    if (name.includes('-')) {
-      const normalizedName = camelCase(name);
+    const normalizedName = name.includes('-') ? camelCase(name) : name;
+
+    if (aliasMap.has(normalizedName)) {
+      const actualName = camelCase(aliasMap.get(normalizedName));
+      current[actualName] = flags[name];
+    } else {
       current[normalizedName] = flags[name];
     }
     return current;
@@ -51,6 +62,7 @@ function normalizeFlags(flags) {
   const [, command, ...args] = process.argv;
   result.$0 = path.basename(command);
   result._ = args;
+
   return result;
 }
 
