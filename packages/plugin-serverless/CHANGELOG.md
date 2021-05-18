@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.8](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.0.0-beta.7...@twilio-labs/plugin-serverless@2.0.0-beta.8) (2021-05-18)
+
+
+### Bug Fixes
+
+* **plugin-serverless:** handle direct username/password input ([#268](https://github.com/twilio-labs/serverless-toolkit/issues/268)) ([2c1dc3c](https://github.com/twilio-labs/serverless-toolkit/commit/2c1dc3ca5b6ac69efbb7f68cc6be07f6d0c182e1))
+
+
+
+
+
 # [2.0.0-beta.7](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.0.0-beta.6...@twilio-labs/plugin-serverless@2.0.0-beta.7) (2021-05-17)
 
 
