@@ -69,6 +69,20 @@ function normalizeFlags(flags, aliasMap) {
 function createExternalCliOptions(flags, twilioClient) {
   const profile = flags.profile;
 
+  if (
+    (typeof flags.username === 'string' && flags.username.length > 0) ||
+    (typeof flags.password === 'string' && flags.password.length > 0)
+  ) {
+    return {
+      username: flags.username,
+      password: flags.password,
+      accountSid: flags.username.startsWith('AC') ? flags.username : undefined,
+      profile: undefined,
+      logLevel: undefined,
+      outputFormat: undefined,
+    };
+  }
+
   return {
     username: twilioClient.username,
     password: twilioClient.password,
