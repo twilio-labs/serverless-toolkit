@@ -5,12 +5,7 @@ import checkLegacyConfig from '../checks/legacy-config';
 import checkNodejsVersion from '../checks/nodejs-version';
 import checkProjectStructure from '../checks/project-structure';
 import { getConfigFromCli, getUrl, StartCliFlags } from '../config/start';
-import {
-  ALL_FLAGS,
-  BASE_API_FLAG_NAMES,
-  BASE_CLI_FLAG_NAMES,
-  getRelevantFlags,
-} from '../flags';
+import { ALL_FLAGS, BASE_CLI_FLAG_NAMES, getRelevantFlags } from '../flags';
 import { printRouteInfo } from '../printers/start';
 import { createLocalDevelopmentServer } from '../runtime/server';
 import { startInspector } from '../runtime/utils/inspector';
@@ -138,7 +133,6 @@ export async function handler(
 export const cliInfo: CliInfo = {
   options: {
     ...getRelevantFlags([
-      ...BASE_API_FLAG_NAMES,
       ...BASE_CLI_FLAG_NAMES,
       'load-local-env',
       'port',

@@ -1,6 +1,8 @@
+const pkgJson = require('../../package.json');
+
 module.exports = {
   twilio: '^3.56',
-  twilioRun: '^2.6.0',
+  twilioRun: pkgJson.dependencies['twilio-run'],
   node: '12',
   typescript: '^3.8',
   serverlessRuntimeTypes: '^1.1',

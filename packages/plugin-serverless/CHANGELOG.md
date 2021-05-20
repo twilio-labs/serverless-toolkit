@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.1](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.0.0...@twilio-labs/plugin-serverless@2.0.1) (2021-05-20)
+
+**Note:** Version bump only for package @twilio-labs/plugin-serverless
+
+
+
+
+
+# [2.0.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.0.0-beta.8...@twilio-labs/plugin-serverless@2.0.0) (2021-05-19)
+
+**Note:** Version bump only for package @twilio-labs/plugin-serverless
+
+
+
+
+
+# [2.0.0-beta.8](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.0.0-beta.7...@twilio-labs/plugin-serverless@2.0.0-beta.8) (2021-05-18)
+
+
+### Bug Fixes
+
+* **plugin-serverless:** handle direct username/password input ([#268](https://github.com/twilio-labs/serverless-toolkit/issues/268)) ([2c1dc3c](https://github.com/twilio-labs/serverless-toolkit/commit/2c1dc3ca5b6ac69efbb7f68cc6be07f6d0c182e1))
+
+
+
+
+
+# [2.0.0-beta.7](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.0.0-beta.6...@twilio-labs/plugin-serverless@2.0.0-beta.7) (2021-05-17)
+
+
+### Bug Fixes
+
+* **plugin-serverless:** add alias support ([#267](https://github.com/twilio-labs/serverless-toolkit/issues/267)) ([de3cdb4](https://github.com/twilio-labs/serverless-toolkit/commit/de3cdb4750641004272fedd38e8cca7e31396109)), closes [#242](https://github.com/twilio-labs/serverless-toolkit/issues/242)
+
+
+
+
+
+# [2.0.0-beta.6](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.0.0-beta.5...@twilio-labs/plugin-serverless@2.0.0-beta.6) (2021-05-13)
+
+**Note:** Version bump only for package @twilio-labs/plugin-serverless
+
+
+
+
+
+# [2.0.0-beta.5](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.0.0-beta.4...@twilio-labs/plugin-serverless@2.0.0-beta.5) (2021-05-01)
+
+**Note:** Version bump only for package @twilio-labs/plugin-serverless
+
+
+
+
+
+# [2.0.0-beta.4](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.0.0-beta.3...@twilio-labs/plugin-serverless@2.0.0-beta.4) (2021-04-30)
+
+
+### chore
+
+* remove Node.js 10 support ([#253](https://github.com/twilio-labs/serverless-toolkit/issues/253)) ([f6192fa](https://github.com/twilio-labs/serverless-toolkit/commit/f6192fad188a787dfbb7d1ed6a32f5d2baa4570c))
+
+
+### BREAKING CHANGES
+
+* Installing the new version on Node.js 10 will result in an error
+
+
+
+
+
 # [2.0.0-beta.3](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.0.0-beta.2...@twilio-labs/plugin-serverless@2.0.0-beta.3) (2021-04-21)
 
 **Note:** Version bump only for package @twilio-labs/plugin-serverless

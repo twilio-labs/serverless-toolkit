@@ -9,6 +9,8 @@ export type SpecializedConfigOptions = {
   environmentSuffix: string;
 };
 
+export const EXCLUDED_FLAGS = ['username', 'password', 'config'];
+
 export function readSpecializedConfig<T extends CommandConfigurationNames>(
   baseDir: string,
   configFileName: string,
@@ -66,6 +68,10 @@ export function readSpecializedConfig<T extends CommandConfigurationNames>(
       ...projectsConfig[opts.username],
     };
   }
+
+  EXCLUDED_FLAGS.forEach((key) => {
+    delete (result as any)[key];
+  });
 
   return result;
 }

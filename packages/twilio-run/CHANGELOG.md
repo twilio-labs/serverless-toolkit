@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.1](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.0.0...twilio-run@3.0.1) (2021-05-20)
+
+
+### Bug Fixes
+
+* **twilio-run:** fix global scope in forked process ([#270](https://github.com/twilio-labs/serverless-toolkit/issues/270)) ([d705f8e](https://github.com/twilio-labs/serverless-toolkit/commit/d705f8eab7b4b11bb6131e46217ac0b6d0d40425))
+
+
+
+
+
+# [3.0.0](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.0.0-beta.7...twilio-run@3.0.0) (2021-05-19)
+
+
+### Bug Fixes
+
+* **twilio-run:** fix upgrade script for empty legacy files ([#269](https://github.com/twilio-labs/serverless-toolkit/issues/269)) ([a24f9be](https://github.com/twilio-labs/serverless-toolkit/commit/a24f9beb1d2c322ac2e64099a449b15e1823ab7c))
+
+
+
+
+
+# [3.0.0-beta.7](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.0.0-beta.6...twilio-run@3.0.0-beta.7) (2021-05-17)
+
+
+### Bug Fixes
+
+* **twilio-run:** remove api flags from start command ([#264](https://github.com/twilio-labs/serverless-toolkit/issues/264)) ([51839e9](https://github.com/twilio-labs/serverless-toolkit/commit/51839e9ce789ea89f124950bfa398ce4af4dc69b)), closes [#260](https://github.com/twilio-labs/serverless-toolkit/issues/260)
+* **twilio-run:** remove irrelevant config options ([8d400c6](https://github.com/twilio-labs/serverless-toolkit/commit/8d400c65abb796e5a75371e2f55eae4fa22dc69e)), closes [#243](https://github.com/twilio-labs/serverless-toolkit/issues/243)
+* **twilio-run:** show service sid if available instead of name ([#265](https://github.com/twilio-labs/serverless-toolkit/issues/265)) ([816a26f](https://github.com/twilio-labs/serverless-toolkit/commit/816a26f7d64ed4193cd02a68abc8667334001771)), closes [#262](https://github.com/twilio-labs/serverless-toolkit/issues/262)
+
+
+### BREAKING CHANGES
+
+* **twilio-run:** The output of the config info in deployment changed
+
+
+
+
+
+# [3.0.0-beta.6](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.0.0-beta.5...twilio-run@3.0.0-beta.6) (2021-05-13)
+
+
+### Bug Fixes
+
+* **twilio-run:** continue commands with no legacy config ([#257](https://github.com/twilio-labs/serverless-toolkit/issues/257)) ([fa8a3a8](https://github.com/twilio-labs/serverless-toolkit/commit/fa8a3a8416216e5a6213719d954737cf993d950d))
+* **twilio-run:start:** load functions & assets in forked process ([#256](https://github.com/twilio-labs/serverless-toolkit/issues/256)) ([eec8110](https://github.com/twilio-labs/serverless-toolkit/commit/eec8110736df81662be69bc18885ac04b704472d))
+
+
+
+
+
+# [3.0.0-beta.5](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.0.0-beta.4...twilio-run@3.0.0-beta.5) (2021-05-01)
+
+
+### Bug Fixes
+
+* **twilio-run:** fix migration script ([b15c3dd](https://github.com/twilio-labs/serverless-toolkit/commit/b15c3dd8b965284ff4d245b58b0639082401a620))
+
+
+
+
+
+# [3.0.0-beta.4](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.0.0-beta.3...twilio-run@3.0.0-beta.4) (2021-04-30)
+
+
+### chore
+
+* remove Node.js 10 support ([#253](https://github.com/twilio-labs/serverless-toolkit/issues/253)) ([f6192fa](https://github.com/twilio-labs/serverless-toolkit/commit/f6192fad188a787dfbb7d1ed6a32f5d2baa4570c))
+
+
+### Features
+
+* **twilio-run:logs:** adds production flag ([#248](https://github.com/twilio-labs/serverless-toolkit/issues/248)) ([0327454](https://github.com/twilio-labs/serverless-toolkit/commit/0327454b749e424822f44e2274c3ba3a90a4461d)), closes [#208](https://github.com/twilio-labs/serverless-toolkit/issues/208)
+
+
+### BREAKING CHANGES
+
+* Installing the new version on Node.js 10 will result in an error
+
+
+
+
+
 # [3.0.0-beta.3](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.0.0-beta.2...twilio-run@3.0.0-beta.3) (2021-04-21)
 
 **Note:** Version bump only for package twilio-run

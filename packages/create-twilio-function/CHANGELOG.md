@@ -3,6 +3,70 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.1](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.0.0...create-twilio-function@3.0.1) (2021-05-20)
+
+**Note:** Version bump only for package create-twilio-function
+
+
+
+
+
+# [3.0.0](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.0.0-beta.7...create-twilio-function@3.0.0) (2021-05-19)
+
+**Note:** Version bump only for package create-twilio-function
+
+
+
+
+
+# [3.0.0-beta.7](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.0.0-beta.6...create-twilio-function@3.0.0-beta.7) (2021-05-17)
+
+
+### Bug Fixes
+
+* **create-twilio-function:** use latest twilio-run version ([#263](https://github.com/twilio-labs/serverless-toolkit/issues/263)) ([1c91668](https://github.com/twilio-labs/serverless-toolkit/commit/1c9166858ea2a2bab978dc37528f4f476f21a677)), closes [#259](https://github.com/twilio-labs/serverless-toolkit/issues/259)
+
+
+### Features
+
+* **create-twilio-function:** generate default config file ([a8b5d1e](https://github.com/twilio-labs/serverless-toolkit/commit/a8b5d1ee0d4111521698c39537892c106212d68b)), closes [#244](https://github.com/twilio-labs/serverless-toolkit/issues/244)
+
+
+
+
+
+# [3.0.0-beta.6](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.0.0-beta.5...create-twilio-function@3.0.0-beta.6) (2021-05-13)
+
+**Note:** Version bump only for package create-twilio-function
+
+
+
+
+
+# [3.0.0-beta.5](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.0.0-beta.4...create-twilio-function@3.0.0-beta.5) (2021-05-01)
+
+**Note:** Version bump only for package create-twilio-function
+
+
+
+
+
+# [3.0.0-beta.4](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.0.0-beta.3...create-twilio-function@3.0.0-beta.4) (2021-04-30)
+
+
+### chore
+
+* remove Node.js 10 support ([#253](https://github.com/twilio-labs/serverless-toolkit/issues/253)) ([f6192fa](https://github.com/twilio-labs/serverless-toolkit/commit/f6192fad188a787dfbb7d1ed6a32f5d2baa4570c))
+
+
+### BREAKING CHANGES
+
+* Installing the new version on Node.js 10 will result in an error
+
+
+
+
+
 # [3.0.0-beta.3](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.0.0-beta.2...create-twilio-function@3.0.0-beta.3) (2021-04-21)
 
 **Note:** Version bump only for package create-twilio-function

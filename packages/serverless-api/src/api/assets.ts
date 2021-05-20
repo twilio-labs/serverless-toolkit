@@ -27,7 +27,7 @@ const log = debug('twilio-serverless-api:assets');
  * @param  {TwilioServerlessApiClient} client API client
  * @returns {Promise<AssetApiResource>}
  */
-async function createAssetResource(
+export async function createAssetResource(
   name: string,
   serviceSid: string,
   client: TwilioServerlessApiClient
@@ -84,9 +84,9 @@ export async function getOrCreateAssetResources(
   const existingAssets = await listAssetResources(serviceSid, client);
   const assetsToCreate: ServerlessResourceConfig[] = [];
 
-  assets.forEach((asset) => {
+  assets.forEach(asset => {
     const existingAsset = existingAssets.find(
-      (x) => asset.name === x.friendly_name
+      x => asset.name === x.friendly_name
     );
     if (!existingAsset) {
       assetsToCreate.push(asset);
@@ -99,7 +99,7 @@ export async function getOrCreateAssetResources(
   });
 
   const createdAssets = await Promise.all(
-    assetsToCreate.map(async (asset) => {
+    assetsToCreate.map(async asset => {
       const newAsset = await createAssetResource(
         asset.name,
         serviceSid,
@@ -123,7 +123,7 @@ export async function getOrCreateAssetResources(
  * @param  {TwilioServerlessApiClient} client API client
  * @returns {Promise<VersionResource>}
  */
-async function createAssetVersion(
+export async function createAssetVersion(
   asset: AssetResource,
   serviceSid: string,
   client: TwilioServerlessApiClient,

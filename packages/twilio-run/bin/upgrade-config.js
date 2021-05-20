@@ -47,24 +47,26 @@ async function run() {
     }
   }
 
-  const promptResults = await inquirer.prompt([
-    {
-      type: 'input',
-      default: accountSidForDeployInfo,
-      message: `Please enter your Twilio Account SID for your Functions Service: ${oldConfigContent.serviceSid}`,
-      name: 'accountSid',
-      validate: input =>
-        (input.startsWith('AC') && input.length === 34) ||
-        'Please enter a valid account SID. It should start with AC and is 34 characters long.',
-    },
-  ]);
+  const deployInfo = {};
 
-  const deployInfo = {
-    [promptResults.accountSid]: {
+  if (oldConfigContent.serviceSid) {
+    const promptResults = await inquirer.prompt([
+      {
+        type: 'input',
+        default: accountSidForDeployInfo,
+        message: `Please enter your Twilio Account SID for your Functions Service: ${oldConfigContent.serviceSid}`,
+        name: 'accountSid',
+        validate: (input) =>
+          (input.startsWith('AC') && input.length === 34) ||
+          'Please enter a valid account SID. It should start with AC and is 34 characters long.',
+      },
+    ]);
+
+    deployInfo[promptResults.accountSid] = {
       serviceSid: oldConfigContent.serviceSid,
       latestBuild: oldConfigContent.latestBuild,
-    },
-  };
+    };
+  }
 
   let hasCustomConfigPerProject = false;
   if (oldConfigContent.projects) {
@@ -125,12 +127,12 @@ async function run() {
     ]);
 
     if (deletePrompt.deleteOldConfig) {
-      await rimraf(oldConfigPath, { rmdir: false });
+      rimraf.sync(oldConfigPath, { rmdir: false });
       console.info('Old .twilio-functions file deleted.');
     }
   }
 }
 
 run()
-  .then(exitCode => process.exit(exitCode || 0))
+  .then((exitCode) => process.exit(exitCode || 0))
   .catch(console.error);

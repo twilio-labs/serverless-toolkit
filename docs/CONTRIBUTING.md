@@ -14,8 +14,8 @@ If you are planning to contribute something that does not have an open issue yet
 
 ## Requirements
 
-Make sure you have Node.js 10 or newer installed. Due to compatibility with Twilio
-Functions this project has to support at least Node.js 10.0.0.
+Make sure you have Node.js 12 or newer installed. Due to compatibility with Twilio
+Functions this project has to support at least Node.js 12.0.0.
 
 We are using the npm CLI to manage our project. You should be able to use yarn but you might hit some issues.
 
@@ -49,7 +49,7 @@ This project uses [`lerna version`](https://www.npmjs.com/package/@lerna/version
 For example to release a new pre-release version containing `beta` and releasing it as `next`:
 
 ```bash
-npm run release -- --conventional-prerelease --preid beta
+npm run release -- --conventional-prerelease --exact --preid beta
 git push origin main --follow-tags
 npm run publish -- --otp=<OTP> --dist-tag next
 ```

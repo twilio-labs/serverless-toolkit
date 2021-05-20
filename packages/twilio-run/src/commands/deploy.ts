@@ -55,9 +55,9 @@ function handleError(
           '-n',
           'my-new-service-name',
         ])}
-      - Deploy to the existing service with the name "${(err as any)[
-        'serviceName'
-      ] || config.serviceName}"
+      - Deploy to the existing service with the name "${
+        (err as any)['serviceName'] || config.serviceName
+      }"
         > ${constructCommandName(fullCommand, 'deploy', [
           '--override-existing-project',
         ])}
@@ -114,7 +114,7 @@ export async function handler(
   const spinner = getOraSpinner('Deploying Function').start();
   try {
     const client = new TwilioServerlessApiClient(config);
-    client.on('status-update', evt => {
+    client.on('status-update', (evt) => {
       spinner.text = evt.message + '\n';
     });
     const result = await client.deployLocalProject(config);

@@ -12,12 +12,14 @@ const {
   getRegionAndEdge,
 } = require('../../utils');
 
+const { flags, aliasMap } = convertYargsOptionsToOclifFlags(cliInfo.options);
+
 class FunctionsPromote extends TwilioClientCommand {
   async run() {
     await super.run();
 
     let { flags, args } = this.parse(FunctionsPromote);
-    flags = normalizeFlags(flags);
+    flags = normalizeFlags(flags, aliasMap);
 
     const externalOptions = createExternalCliOptions(flags, this.twilioClient);
 
@@ -32,11 +34,9 @@ class FunctionsPromote extends TwilioClientCommand {
 
 FunctionsPromote.description = describe;
 
-FunctionsPromote.flags = Object.assign(
-  {},
-  convertYargsOptionsToOclifFlags(cliInfo.options),
-  { profile: TwilioClientCommand.flags.profile }
-);
+FunctionsPromote.flags = Object.assign({}, flags, {
+  profile: TwilioClientCommand.flags.profile,
+});
 
 FunctionsPromote.aliases = ['serverless:activate'];
 

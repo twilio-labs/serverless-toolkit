@@ -2,7 +2,7 @@ import { ServerlessResourceConfigWithFilePath } from '@twilio-labs/serverless-ap
 import { SearchConfig } from '@twilio-labs/serverless-api/dist/utils';
 import { Merge } from 'type-fest';
 import { StartCliConfig } from '../../config/start';
-import { getFunctionsAndAssets, RouteInfo } from './runtime-paths';
+import { RouteInfo, getFunctionsAndAssets } from './runtime-paths';
 
 type ExtendedRouteInfo =
   | Merge<{ type: 'function' }, ServerlessResourceConfigWithFilePath>
