@@ -34,7 +34,7 @@ function getAssets(): AssetResourceMap {
       result[prefix + asset.path] = { path: asset.filePath, open };
     }
   }
-  log('Found the following assets available: %O', result);
+  log('Found the following assets available: %o', result);
   return result;
 }
 
@@ -48,7 +48,7 @@ function getFunctions(): ResourceMap {
   for (const fn of functions) {
     result[fn.path.substr(1)] = { path: fn.filePath };
   }
-  log('Found the following functions available: %O', result);
+  log('Found the following functions available: %o', result);
   return result;
 }
 

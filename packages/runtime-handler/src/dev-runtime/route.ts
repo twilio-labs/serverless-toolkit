@@ -91,7 +91,10 @@ export function constructGlobalScope(config: ServerConfig): void {
   ) {
     (global as any)['twilioClient'] = new twilio.Twilio(
       config.env.ACCOUNT_SID,
-      config.env.AUTH_TOKEN
+      config.env.AUTH_TOKEN,
+      {
+        lazyLoading: true,
+      }
     );
   }
 }

@@ -68,6 +68,11 @@ export class LocalDevelopmentServer extends EventEmitter {
     if (this.config.enableDebugLogs) {
       debug.enable('twilio-runtime-handler:*');
     }
+    log('Creating Local Development Server');
+    log(
+      '@twilio/runtime-handler version: %s',
+      require('../../package.json')?.version
+    );
 
     this.normalizeConfig();
     this.routes = this.config.routes;
