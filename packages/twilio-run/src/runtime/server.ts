@@ -1,3 +1,4 @@
+import { SearchConfig } from '@twilio-labs/serverless-api/dist/utils';
 import { ServerlessFunctionSignature } from '@twilio-labs/serverless-runtime-types/types';
 import type {
   LocalDevelopmentServer as LDS,
@@ -23,6 +24,7 @@ import { writeOutput } from '../utils/output';
 import { requireFromProject } from '../utils/requireFromProject';
 import { createLogger } from './internal/request-logger';
 import { getRouteMap } from './internal/route-cache';
+import { getFunctionsAndAssets, RouteInfo } from './internal/runtime-paths';
 import {
   constructGlobalScope,
   functionPathToRoute,
