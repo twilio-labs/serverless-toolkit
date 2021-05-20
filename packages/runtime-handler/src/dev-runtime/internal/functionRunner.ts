@@ -1,8 +1,9 @@
-import { isTwiml } from '../route';
-import { Response } from './response';
-import { serializeError } from 'serialize-error';
 import { ServerlessCallback } from '@twilio-labs/serverless-runtime-types/types';
-import { constructGlobalScope, constructContext } from '../route';
+import { serializeError } from 'serialize-error';
+import { constructContext, constructGlobalScope, isTwiml } from '../route';
+import { ServerConfig } from '../types';
+import { Response } from './response';
+import { setRoutes } from './route-cache';
 
 const sendDebugMessage = (debugMessage: string, ...debugArgs: any) => {
   process.send && process.send({ debugMessage, debugArgs });
@@ -12,6 +13,13 @@ export type Reply = {
   body?: string | number | boolean | object;
   headers?: { [key: string]: number | string };
   statusCode: number;
+};
+
+export type FunctionRunnerOptions = {
+  functionPath: string;
+  event: { [key: string]: any };
+  config: ServerConfig;
+  path: string;
 };
 
 const handleError = (err: Error | string | object) => {
@@ -48,40 +56,51 @@ const handleSuccess = (responseObject?: string | number | boolean | object) => {
   }
 };
 
-process.on('message', ({ functionPath, event, config, path }) => {
-  const { handler } = require(functionPath);
-  try {
-    constructGlobalScope(config);
-    const context = constructContext(config, path);
-    sendDebugMessage('Context for %s: %p', path, context);
-    sendDebugMessage('Event for %s: %o', path, event);
-    let run_timings: { start: [number, number]; end: [number, number] } = {
-      start: [0, 0],
-      end: [0, 0],
-    };
+process.on(
+  'message',
+  ({ functionPath, event, config, path }: FunctionRunnerOptions) => {
+    try {
+      setRoutes(config.routes);
+      constructGlobalScope(config);
+      const context = constructContext(config, path);
+      sendDebugMessage('Context for %s: %p', path, context);
+      sendDebugMessage('Event for %s: %o', path, event);
+      let run_timings: { start: [number, number]; end: [number, number] } = {
+        start: [0, 0],
+        end: [0, 0],
+      };
 
-    const callback: ServerlessCallback = (err, responseObject) => {
-      run_timings.end = process.hrtime();
-      sendDebugMessage('Function execution %s finished', path);
-      sendDebugMessage(
-        `(Estimated) Total Execution Time: ${(run_timings.end[0] * 1e9 +
-          run_timings.end[1] -
-          (run_timings.start[0] * 1e9 + run_timings.start[1])) /
-          1e6}ms`
-      );
-      if (err) {
-        handleError(err);
-      } else {
-        handleSuccess(responseObject);
+      const callback: ServerlessCallback = (err, responseObject) => {
+        run_timings.end = process.hrtime();
+        sendDebugMessage('Function execution %s finished', path);
+        sendDebugMessage(
+          `(Estimated) Total Execution Time: ${
+            (run_timings.end[0] * 1e9 +
+              run_timings.end[1] -
+              (run_timings.start[0] * 1e9 + run_timings.start[1])) /
+            1e6
+          }ms`
+        );
+        if (err) {
+          handleError(err);
+        } else {
+          handleSuccess(responseObject);
+        }
+      };
+
+      sendDebugMessage('Calling function for %s', path);
+      run_timings.start = process.hrtime();
+      const { handler } = require(functionPath);
+      if (typeof handler !== 'function') {
+        throw new Error(
+          `Could not find a "handler" function in file ${functionPath}`
+        );
       }
-    };
-
-    sendDebugMessage('Calling function for %s', path);
-    run_timings.start = process.hrtime();
-    handler(context, event, callback);
-  } catch (err) {
-    if (process.send) {
-      process.send({ err: serializeError(err) });
+      handler(context, event, callback);
+    } catch (err) {
+      if (process.send) {
+        process.send({ err: serializeError(err) });
+      }
     }
   }
-});
+);

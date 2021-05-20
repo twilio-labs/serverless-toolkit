@@ -25,11 +25,6 @@ const DEFAULT_PORT = process.env.PORT || 3000;
 const RELOAD_DEBOUNCE_MS = 250;
 const DEFAULT_BODY_SIZE_LAMBDA = '6mb';
 
-function requireUncached(module: string): any {
-  delete require.cache[require.resolve(module)];
-  return require(module);
-}
-
 function loadTwilioFunction(fnPath: string): ServerlessFunctionSignature {
   return require(fnPath).handler;
 }
@@ -40,7 +35,7 @@ function requireCacheCleaner(
   next: NextFunction
 ) {
   log('Deleting require cache');
-  Object.keys(require.cache).forEach(key => {
+  Object.keys(require.cache).forEach((key) => {
     // Entries in the cache that end with .node are compiled binaries, deleting
     // those has unspecified results, so we keep them.
     // Entries in the cache that include "twilio-run" are part of this module
@@ -172,18 +167,18 @@ export class LocalDevelopmentServer extends EventEmitter {
               throw new Error('Missing function path');
             }
 
-            log('Load & route to function at "%s"', functionPath);
-            const twilioFunction = loadTwilioFunction(functionPath);
-            if (typeof twilioFunction !== 'function') {
-              return res
-                .status(404)
-                .send(
-                  `Could not find a "handler" function in file ${functionPath}`
-                );
-            }
             if (this.config.forkProcess) {
               functionPathToRoute(functionPath, this.config)(req, res, next);
             } else {
+              log('Load & route to function at "%s"', functionPath);
+              const twilioFunction = loadTwilioFunction(functionPath);
+              if (typeof twilioFunction !== 'function') {
+                return res
+                  .status(404)
+                  .send(
+                    `Could not find a "handler" function in file ${functionPath}`
+                  );
+              }
               functionToRoute(twilioFunction, this.config, functionPath)(
                 req,
                 res,
@@ -240,3 +235,5 @@ export class LocalDevelopmentServer extends EventEmitter {
     this.emit('updated-routes', this.config, this.routes);
   };
 }
+
+export type { ServerConfig } from './types';
