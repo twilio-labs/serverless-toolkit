@@ -17,11 +17,10 @@ import { wrapErrorInHtml } from '../utils/error-html';
 import { getDebugFunction } from '../utils/logger';
 import { createLogger } from './internal/request-logger';
 import { getRouteMap } from './internal/route-cache';
-
 import {
   constructGlobalScope,
-  functionToRoute,
   functionPathToRoute,
+  functionToRoute,
 } from './route';
 
 const debug = getDebugFunction('twilio-run:server');
@@ -39,7 +38,7 @@ function requireCacheCleaner(
   next: NextFunction
 ) {
   debug('Deleting require cache');
-  Object.keys(require.cache).forEach(key => {
+  Object.keys(require.cache).forEach((key) => {
     // Entries in the cache that end with .node are compiled binaries, deleting
     // those has unspecified results, so we keep them.
     // Entries in the cache that include "twilio-run" are part of this module
@@ -118,11 +117,11 @@ export async function createServer(
     const debouncedReloadRoutes = debounce(reloadRoutes, RELOAD_DEBOUNCE_MS);
 
     watcher
-      .on('add', path => {
+      .on('add', (path) => {
         debug(`Reloading Routes: add @ ${path}`);
         debouncedReloadRoutes();
       })
-      .on('unlink', path => {
+      .on('unlink', (path) => {
         debug(`Reloading Routes: unlink @ ${path}`);
         debouncedReloadRoutes();
       });
@@ -168,18 +167,18 @@ export async function createServer(
             throw new Error('Missing function path');
           }
 
-          debug('Load & route to function at "%s"', functionPath);
-          const twilioFunction = loadTwilioFunction(functionPath);
-          if (typeof twilioFunction !== 'function') {
-            return res
-              .status(404)
-              .send(
-                `Could not find a "handler" function in file ${functionPath}`
-              );
-          }
           if (config.forkProcess) {
             functionPathToRoute(functionPath, config)(req, res, next);
           } else {
+            debug('Load & route to function at "%s"', functionPath);
+            const twilioFunction = loadTwilioFunction(functionPath);
+            if (typeof twilioFunction !== 'function') {
+              return res
+                .status(404)
+                .send(
+                  `Could not find a "handler" function in file ${functionPath}`
+                );
+            }
             functionToRoute(twilioFunction, config, functionPath)(
               req,
               res,
@@ -217,7 +216,7 @@ export async function runServer(
   config: StartCliConfig
 ): Promise<Express> {
   const app = await createServer(port, config);
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     app.listen(port);
     resolve(app);
   });
