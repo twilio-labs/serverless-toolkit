@@ -1,12 +1,12 @@
-const base = require("../../jest.config.base.js");
+const base = require('../../jest.config.base.js');
 
 module.exports = {
   ...base,
   globals: {
-    "ts-jest": {
-      tsConfig: "./tsconfig.test.json"
-    }
+    'ts-jest': {
+      tsconfig: './tsconfig.test.json',
+    },
   },
-  name: "serverless-api",
-  displayName: "serverless-api"
+  name: 'serverless-api',
+  displayName: 'serverless-api',
 };

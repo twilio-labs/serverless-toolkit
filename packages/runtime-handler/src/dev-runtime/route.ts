@@ -2,6 +2,9 @@ import {
   Context,
   ServerlessCallback,
   ServerlessFunctionSignature,
+  TwilioClient,
+  TwilioClientOptions,
+  TwilioPackage,
 } from '@twilio-labs/serverless-runtime-types/types';
 import { fork } from 'child_process';
 import {
@@ -12,32 +15,32 @@ import {
 } from 'express';
 import { join, resolve } from 'path';
 import { deserializeError } from 'serialize-error';
-import twilio, { twiml } from 'twilio';
-import { checkForValidAccountSid } from '../checks/check-account-sid';
-import { checkForValidAuthToken } from '../checks/check-auth-token';
-import { StartCliConfig } from '../config/start';
-import { wrapErrorInHtml } from '../utils/error-html';
-import { getDebugFunction } from '../utils/logger';
-import { cleanUpStackTrace } from '../utils/stack-trace/clean-up';
+import { checkForValidAccountSid } from './checks/check-account-sid';
+import { checkForValidAuthToken } from './checks/check-auth-token';
 import { Reply } from './internal/functionRunner';
 import { Response } from './internal/response';
 import * as Runtime from './internal/runtime';
+import { ServerConfig } from './types';
+import debug from './utils/debug';
+import { wrapErrorInHtml } from './utils/error-html';
+import { requireFromProject } from './utils/requireFromProject';
+import { cleanUpStackTrace } from './utils/stack-trace/clean-up';
+
+const log = debug('twilio-runtime-handler:dev:route');
 
 const RUNNER_PATH =
   process.env.NODE_ENV === 'test'
-    ? resolve(__dirname, '../../dist/runtime/internal/functionRunner')
+    ? resolve(__dirname, '../../dist/dev-runtime/internal/functionRunner')
     : join(__dirname, 'internal', 'functionRunner');
 
-const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
-
-const debug = getDebugFunction('twilio-run:route');
+let twilio: TwilioPackage;
 
 export function constructEvent<T extends {} = {}>(req: ExpressRequest): T {
   return { ...req.query, ...req.body };
 }
 
 export function constructContext<T extends {} = {}>(
-  { url, env }: StartCliConfig,
+  { url, env, logger, baseDir }: ServerConfig,
   functionPath: string
 ): Context<{
   ACCOUNT_SID?: string;
@@ -46,26 +49,36 @@ export function constructContext<T extends {} = {}>(
   PATH: string;
   [key: string]: string | undefined | Function;
 }> {
-  function getTwilioClient(): twilio.Twilio {
+  function getTwilioClient(opts?: TwilioClientOptions): TwilioClient {
     checkForValidAccountSid(env.ACCOUNT_SID, {
       shouldPrintMessage: true,
       shouldThrowError: true,
       functionName: 'context.getTwilioClient()',
+      logger: logger,
     });
     checkForValidAuthToken(env.AUTH_TOKEN, {
       shouldPrintMessage: true,
       shouldThrowError: true,
       functionName: 'context.getTwilioClient()',
+      logger: logger,
     });
 
-    return twilio(env.ACCOUNT_SID, env.AUTH_TOKEN);
+    return requireFromProject(baseDir, 'twilio')(
+      env.ACCOUNT_SID,
+      env.AUTH_TOKEN,
+      {
+        lazyLoading: true,
+        ...opts,
+      }
+    );
   }
   const DOMAIN_NAME = url.replace(/^https?:\/\//, '');
   const PATH = functionPath;
   return { PATH, DOMAIN_NAME, ...env, getTwilioClient };
 }
 
-export function constructGlobalScope(config: StartCliConfig): void {
+export function constructGlobalScope(config: ServerConfig): void {
+  twilio = requireFromProject(config.baseDir, 'twilio');
   const GlobalRuntime = Runtime.create(config);
   (global as any)['Twilio'] = { ...twilio, Response };
   (global as any)['Runtime'] = GlobalRuntime;
@@ -76,9 +89,12 @@ export function constructGlobalScope(config: StartCliConfig): void {
     checkForValidAccountSid(config.env.ACCOUNT_SID) &&
     config.env.AUTH_TOKEN
   ) {
-    (global as any)['twilioClient'] = twilio(
+    (global as any)['twilioClient'] = new twilio.Twilio(
       config.env.ACCOUNT_SID,
-      config.env.AUTH_TOKEN
+      config.env.AUTH_TOKEN,
+      {
+        lazyLoading: true,
+      }
     );
   }
 }
@@ -113,6 +129,11 @@ export function handleError(
 }
 
 export function isTwiml(obj: object): boolean {
+  if (!twilio) {
+    log('Unexpected call of isTwiml. Require twilio manual');
+    twilio = require('twilio');
+  }
+  const { VoiceResponse, MessagingResponse, FaxResponse } = twilio.twiml;
   const isVoiceTwiml = obj instanceof VoiceResponse;
   const isMessagingTwiml = obj instanceof MessagingResponse;
   const isFaxTwiml = obj instanceof FaxResponse;
@@ -125,7 +146,7 @@ export function handleSuccess(
 ) {
   res.status(200);
   if (typeof responseObject === 'string') {
-    debug('Sending basic string response');
+    log('Sending basic string response');
     res.type('text/plain').send(responseObject);
     return;
   }
@@ -135,24 +156,24 @@ export function handleSuccess(
     typeof responseObject === 'object' &&
     isTwiml(responseObject)
   ) {
-    debug('Sending TwiML response as XML string');
+    log('Sending TwiML response as XML string');
     res.type('text/xml').send(responseObject.toString());
     return;
   }
 
   if (responseObject && responseObject instanceof Response) {
-    debug('Sending custom response');
+    log('Sending custom response');
     responseObject.applyToExpressResponse(res);
     return;
   }
 
-  debug('Sending JSON response');
+  log('Sending JSON response');
   res.send(responseObject);
 }
 
 export function functionPathToRoute(
   functionPath: string,
-  config: StartCliConfig
+  config: ServerConfig
 ) {
   return function twilioFunctionHandler(
     req: ExpressRequest,
@@ -175,7 +196,7 @@ export function functionPathToRoute(
         debugArgs?: any[];
       }) => {
         if (debugMessage) {
-          debug(debugMessage, ...debugArgs);
+          log(debugMessage, ...debugArgs);
           return;
         }
         if (err) {
@@ -197,7 +218,7 @@ export function functionPathToRoute(
 
 export function functionToRoute(
   fn: ServerlessFunctionSignature,
-  config: StartCliConfig,
+  config: ServerConfig,
   functionFilePath?: string
 ): ExpressRequestHandler {
   return function twilioFunctionHandler(
@@ -206,9 +227,9 @@ export function functionToRoute(
     next: NextFunction
   ) {
     const event = constructEvent(req);
-    debug('Event for %s: %o', req.path, event);
+    log('Event for %s: %o', req.path, event);
     const context = constructContext(config, req.path);
-    debug('Context for %s: %p', req.path, context);
+    log('Context for %s: %p', req.path, context);
     let run_timings: {
       start: [number, number];
       end: [number, number];
@@ -219,8 +240,8 @@ export function functionToRoute(
 
     const callback: ServerlessCallback = function callback(err, payload?) {
       run_timings.end = process.hrtime();
-      debug('Function execution %s finished', req.path);
-      debug(
+      log('Function execution %s finished', req.path);
+      log(
         `(Estimated) Total Execution Time: ${
           (run_timings.end[0] * 1e9 +
             run_timings.end[1] -
@@ -235,7 +256,7 @@ export function functionToRoute(
       handleSuccess(payload, res);
     };
 
-    debug('Calling function for %s', req.path);
+    log('Calling function for %s', req.path);
     try {
       run_timings.start = process.hrtime();
       fn(context, event, callback);

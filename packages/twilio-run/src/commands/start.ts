@@ -7,7 +7,7 @@ import checkProjectStructure from '../checks/project-structure';
 import { getConfigFromCli, getUrl, StartCliFlags } from '../config/start';
 import { ALL_FLAGS, BASE_CLI_FLAG_NAMES, getRelevantFlags } from '../flags';
 import { printRouteInfo } from '../printers/start';
-import { createServer } from '../runtime/server';
+import { createLocalDevelopmentServer } from '../runtime/server';
 import { startInspector } from '../runtime/utils/inspector';
 import { getDebugFunction, logger, setLogLevelByName } from '../utils/logger';
 import { ExternalCliOptions } from './shared';
@@ -73,7 +73,7 @@ export async function handler(
     startInspector(config.inspect.hostPort, config.inspect.break);
   }
 
-  const app = await createServer(config.port, config);
+  const app = await createLocalDevelopmentServer(config.port, config);
   let server: Server;
   debug('Start server on port %d', config.port);
   return new Promise((resolve, reject) => {

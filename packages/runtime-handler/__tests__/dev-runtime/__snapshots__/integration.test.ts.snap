@@ -4,8 +4,12 @@ exports[`with an express app with forked process function handling Function inte
 Object {
   "body": Object {},
   "headers": Object {
+    "cache-control": "no-store, no-cache, must-revalidate, proxy-revalidate",
     "connection": "close",
     "content-type": "text/xml; charset=utf-8",
+    "expires": "0",
+    "pragma": "no-cache",
+    "surrogate-control": "no-store",
     "x-powered-by": "Express",
   },
   "statusCode": 200,
@@ -19,9 +23,12 @@ Object {
   "body": Object {},
   "headers": Object {
     "accept-ranges": "bytes",
-    "cache-control": "public, max-age=0",
+    "cache-control": "no-store, no-cache, must-revalidate, proxy-revalidate",
     "connection": "close",
     "content-type": "application/javascript; charset=UTF-8",
+    "expires": "0",
+    "pragma": "no-cache",
+    "surrogate-control": "no-store",
     "x-powered-by": "Express",
   },
   "statusCode": 200,
@@ -35,8 +42,12 @@ exports[`with an express app with inline function handling Function integration 
 Object {
   "body": Object {},
   "headers": Object {
+    "cache-control": "no-store, no-cache, must-revalidate, proxy-revalidate",
     "connection": "close",
     "content-type": "text/xml; charset=utf-8",
+    "expires": "0",
+    "pragma": "no-cache",
+    "surrogate-control": "no-store",
     "x-powered-by": "Express",
   },
   "statusCode": 200,

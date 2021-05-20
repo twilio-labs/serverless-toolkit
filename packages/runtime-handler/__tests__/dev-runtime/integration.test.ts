@@ -1,11 +1,14 @@
 jest.unmock('twilio');
 
 import { Express } from 'express';
-import { readdirSync } from 'fs';
+import { readdirSync, readFileSync } from 'fs';
 import { basename, resolve } from 'path';
 import request from 'supertest';
-import { StartCliConfig } from '../../src/config/start';
-import { createServer } from '../../src/runtime/server';
+import { LocalDevelopmentServer } from '../../src/dev-runtime/server';
+import {
+  ServerConfig,
+  ServerlessResourceConfigWithFilePath,
+} from '../../src/dev-runtime/types';
 
 const TEST_DIR = resolve(__dirname, '../../fixtures');
 
@@ -13,18 +16,38 @@ const TEST_FUNCTIONS_DIR = resolve(TEST_DIR, 'functions');
 const TEST_ASSETS_DIR = resolve(TEST_DIR, 'assets');
 const TEST_ENV = {};
 
-const availableFunctions = readdirSync(TEST_FUNCTIONS_DIR).map(
-  (name: string) => {
-    const path = resolve(TEST_FUNCTIONS_DIR, name);
-    const url = `/${basename(name, '.js')}`;
-    return { name, url, path };
-  }
-);
-const availableAssets = readdirSync(TEST_ASSETS_DIR).map((name: string) => {
-  const path = resolve(TEST_ASSETS_DIR, name);
-  const url = `/${name}`;
-  return { name, url, path };
+const availableFunctions: ServerlessResourceConfigWithFilePath[] = readdirSync(
+  TEST_FUNCTIONS_DIR
+).map((name: string) => {
+  const filePath = resolve(TEST_FUNCTIONS_DIR, name);
+  const content = readFileSync(filePath, 'utf8');
+  const url = `/${basename(name, '.js')}`;
+  return { name, path: url, filePath, access: 'public', content };
 });
+const availableAssets: ServerlessResourceConfigWithFilePath[] = readdirSync(
+  TEST_ASSETS_DIR
+).map((name: string) => {
+  const filePath = resolve(TEST_ASSETS_DIR, name);
+  const url = `/${name}`;
+  const content = readFileSync(filePath);
+  return { name, filePath, path: url, access: 'public', content };
+});
+
+const BASE_CONFIG: ServerConfig = {
+  baseDir: TEST_DIR,
+  env: TEST_ENV,
+  port: 9000,
+  url: 'http://localhost:9000',
+  detailedLogs: false,
+  live: true,
+  logs: false,
+  legacyMode: false,
+  appName: 'integration-test',
+  forkProcess: false,
+  logger: undefined,
+  routes: { assets: [], functions: [] },
+  enableDebugLogs: false,
+};
 
 type InternalResponse = request.Response & {
   statusCode: number;
@@ -60,17 +83,20 @@ describe('with an express app', () => {
 
   describe('with inline function handling', () => {
     beforeAll(async () => {
-      app = await createServer(9000, {
-        baseDir: TEST_DIR,
-        env: TEST_ENV,
-        logs: false,
-      } as StartCliConfig);
+      app = new LocalDevelopmentServer(9000, {
+        ...BASE_CONFIG,
+        routes: {
+          assets: availableAssets,
+          functions: availableFunctions,
+        },
+        forkProcess: false,
+      } as ServerConfig).getApp();
     });
 
     describe('Function integration tests', () => {
       for (const testFnCode of availableFunctions) {
         test(`${testFnCode.name} should match snapshot`, async () => {
-          const response = await request(app).get(testFnCode.url);
+          const response = await request(app).get(testFnCode.path);
           if (response.status === 500) {
             expect(response.text).toMatch(/Error/);
           } else {
@@ -84,14 +110,14 @@ describe('with an express app', () => {
     describe('Assets integration tests', () => {
       for (const testAsset of availableAssets) {
         test(`${testAsset.name} should match snapshot`, async () => {
-          const response = await request(app).get(testAsset.url);
+          const response = await request(app).get(testAsset.path);
           const result = responseToSnapshotJson(response as InternalResponse);
           expect(result).toMatchSnapshot();
         });
 
         test(`OPTIONS request to ${testAsset.name} should return CORS headers and no body`, async () => {
           const response = (await request(app).options(
-            testAsset.url
+            testAsset.path
           )) as InternalResponse;
           expect(response.headers['access-control-allow-origin']).toEqual('*');
           expect(response.headers['access-control-allow-headers']).toEqual(
@@ -112,7 +138,7 @@ describe('with an express app', () => {
 
         test(`GET request to ${testAsset.name} should not return CORS headers`, async () => {
           const response = (await request(app).get(
-            testAsset.url
+            testAsset.path
           )) as InternalResponse;
           expect(
             response.headers['access-control-allow-origin']
@@ -134,20 +160,20 @@ describe('with an express app', () => {
       }
     });
   });
+
   describe('with forked process function handling', () => {
     beforeAll(async () => {
-      app = await createServer(9000, {
-        baseDir: TEST_DIR,
-        env: TEST_ENV,
-        logs: false,
+      app = new LocalDevelopmentServer(9000, {
+        ...BASE_CONFIG,
+        routes: { assets: availableAssets, functions: availableFunctions },
         forkProcess: true,
-      } as StartCliConfig);
+      } as ServerConfig).getApp();
     });
 
     describe('Function integration tests', () => {
       for (const testFnCode of availableFunctions) {
         test(`${testFnCode.name} should match snapshot`, async () => {
-          const response = await request(app).get(testFnCode.url);
+          const response = await request(app).get(testFnCode.path);
           if (response.status === 500) {
             expect(response.text).toMatch(/Error/);
           } else {
