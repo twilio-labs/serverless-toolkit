@@ -1,9 +1,8 @@
-import { isTwiml } from '../route';
-import { Response } from './response';
-import { serializeError } from 'serialize-error';
 import { ServerlessCallback } from '@twilio-labs/serverless-runtime-types/types';
-import { constructGlobalScope, constructContext } from '../route';
+import { serializeError } from 'serialize-error';
 import { getRouteMap } from '../internal/route-cache';
+import { constructContext, constructGlobalScope, isTwiml } from '../route';
+import { Response } from './response';
 
 const sendDebugMessage = (debugMessage: string, ...debugArgs: any) => {
   process.send && process.send({ debugMessage, debugArgs });
@@ -50,7 +49,6 @@ const handleSuccess = (responseObject?: string | number | boolean | object) => {
 };
 
 process.on('message', async ({ functionPath, event, config, path }) => {
-  const { handler } = require(functionPath);
   try {
     await getRouteMap(config);
     constructGlobalScope(config);
@@ -66,10 +64,12 @@ process.on('message', async ({ functionPath, event, config, path }) => {
       run_timings.end = process.hrtime();
       sendDebugMessage('Function execution %s finished', path);
       sendDebugMessage(
-        `(Estimated) Total Execution Time: ${(run_timings.end[0] * 1e9 +
-          run_timings.end[1] -
-          (run_timings.start[0] * 1e9 + run_timings.start[1])) /
-          1e6}ms`
+        `(Estimated) Total Execution Time: ${
+          (run_timings.end[0] * 1e9 +
+            run_timings.end[1] -
+            (run_timings.start[0] * 1e9 + run_timings.start[1])) /
+          1e6
+        }ms`
       );
       if (err) {
         handleError(err);
@@ -80,6 +80,12 @@ process.on('message', async ({ functionPath, event, config, path }) => {
 
     sendDebugMessage('Calling function for %s', path);
     run_timings.start = process.hrtime();
+    const { handler } = require(functionPath);
+    if (typeof handler !== 'function') {
+      throw new Error(
+        `Could not find a "handler" function in file ${functionPath}`
+      );
+    }
     handler(context, event, callback);
   } catch (err) {
     if (process.send) {
