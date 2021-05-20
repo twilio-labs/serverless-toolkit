@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.1](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.0.0...twilio-run@3.0.1) (2021-05-20)
+
+
+### Bug Fixes
+
+* **twilio-run:** fix global scope in forked process ([#270](https://github.com/twilio-labs/serverless-toolkit/issues/270)) ([d705f8e](https://github.com/twilio-labs/serverless-toolkit/commit/d705f8eab7b4b11bb6131e46217ac0b6d0d40425))
+
+
+
+
+
 # [3.0.0](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.0.0-beta.7...twilio-run@3.0.0) (2021-05-19)
 
 
