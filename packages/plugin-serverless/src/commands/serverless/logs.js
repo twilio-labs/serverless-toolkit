@@ -16,7 +16,7 @@ class LogsList extends TwilioClientCommand {
     await super.run();
 
     let { flags, args } = this.parse(LogsList);
-    flags = normalizeFlags(flags, aliasMap);
+    flags = normalizeFlags(flags, aliasMap, process.argv);
 
     const externalOptions = createExternalCliOptions(flags, this.twilioClient);
 

@@ -19,7 +19,7 @@ class FunctionsPromote extends TwilioClientCommand {
     await super.run();
 
     let { flags, args } = this.parse(FunctionsPromote);
-    flags = normalizeFlags(flags, aliasMap);
+    flags = normalizeFlags(flags, aliasMap, process.argv);
 
     const externalOptions = createExternalCliOptions(flags, this.twilioClient);
 
