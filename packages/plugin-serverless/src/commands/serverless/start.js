@@ -16,7 +16,7 @@ class FunctionsStart extends Command {
   async run() {
     let { flags, args } = this.parse(FunctionsStart);
 
-    flags = normalizeFlags(flags, aliasMap);
+    flags = normalizeFlags(flags, aliasMap, process.argv);
 
     const opts = Object.assign({}, flags, args);
     return handler(opts, undefined);
