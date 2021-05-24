@@ -12,7 +12,7 @@
       "npmClientArgs": ["--no-package-lock"]
     },
     "version": {
-      "allowBranch": ["main", "feature/*"]
+      "allowBranch": ["main", "features/*"]
     }
   },
   "ignoreChanges": ["**/__fixtures__/**", "**/__tests__/**"],
