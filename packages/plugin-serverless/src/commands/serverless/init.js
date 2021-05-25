@@ -17,7 +17,7 @@ class FunctionsInit extends TwilioClientCommand {
     await super.run();
 
     let { flags, args } = this.parse(FunctionsInit);
-    flags = normalizeFlags(flags, aliasMap);
+    flags = normalizeFlags(flags, aliasMap, process.argv);
 
     const opts = Object.assign({}, flags, args);
     opts.accountSid = flags.accountSid || this.twilioClient.accountSid;

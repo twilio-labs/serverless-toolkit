@@ -15,7 +15,7 @@ class FunctionsList extends TwilioClientCommand {
     await super.run();
 
     let { flags, args } = this.parse(FunctionsList);
-    flags = normalizeFlags(flags, aliasMap);
+    flags = normalizeFlags(flags, aliasMap, process.argv);
 
     const externalOptions = createExternalCliOptions(flags, this.twilioClient);
 

@@ -3,12 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [2.0.2-rc.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.0.1...@twilio-labs/plugin-serverless@2.0.2-rc.0) (2021-05-24)
+## [2.0.2](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.0.1...@twilio-labs/plugin-serverless@2.0.2) (2021-05-21)
+
+### Bug Fixes
+
+* **plugin-serverless:** remove default from aliases ([#274](https://github.com/twilio-labs/serverless-toolkit/issues/274)) ([50a1f76](https://github.com/twilio-labs/serverless-toolkit/commit/50a1f7643a342dc88cbe052ae68e0fa230dbff5a)), closes [#272](https://github.com/twilio-labs/serverless-toolkit/issues/272)
+
+
+## [2.0.2-rc.1](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.0.1...@twilio-labs/plugin-serverless@2.0.2-rc.0) (2021-05-24)
 
 **Note:** Version bump only for package @twilio-labs/plugin-serverless
-
-
-
 
 
 ## [2.0.1](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.0.0...@twilio-labs/plugin-serverless@2.0.1) (2021-05-20)

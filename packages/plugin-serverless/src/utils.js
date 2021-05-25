@@ -38,7 +38,12 @@ function convertYargsOptionsToOclifFlags(options) {
     result[name] = flags[opt.type](flag);
 
     if (opt.alias && opt.alias.length > 1) {
-      result[opt.alias] = flags[opt.type](flag);
+      result[opt.alias] = flags[opt.type]({
+        ...flag,
+        default: undefined,
+        description: `[Alias for "${name}"]`,
+        required: undefined,
+      });
       aliasMap.set(opt.alias, name);
     }
 
@@ -47,7 +52,7 @@ function convertYargsOptionsToOclifFlags(options) {
   return { flags: flagsResult, aliasMap };
 }
 
-function normalizeFlags(flags, aliasMap) {
+function normalizeFlags(flags, aliasMap, argv) {
   const result = Object.keys(flags).reduce((current, name) => {
     const normalizedName = name.includes('-') ? camelCase(name) : name;
 
@@ -59,7 +64,7 @@ function normalizeFlags(flags, aliasMap) {
     }
     return current;
   }, flags);
-  const [, command, ...args] = process.argv;
+  const [, command, ...args] = argv;
   result.$0 = path.basename(command);
   result._ = args;
 

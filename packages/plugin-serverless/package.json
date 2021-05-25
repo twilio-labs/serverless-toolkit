@@ -1,7 +1,7 @@
 {
   "name": "@twilio-labs/plugin-serverless",
   "description": "Develop and deploy Twilio Serverless Functions",
-  "version": "2.0.2-rc.0",
+  "version": "2.0.3-rc.1",
   "author": "Twilio Inc. <open-source@twilio.com> (https://www.twilio.com/labs)",
   "contributors": [
     "Dominik Kundel <dkundel@twilio.com>"

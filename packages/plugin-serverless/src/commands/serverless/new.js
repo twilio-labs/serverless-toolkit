@@ -11,7 +11,7 @@ const { flags, aliasMap } = convertYargsOptionsToOclifFlags(cliInfo.options);
 class FunctionsNew extends Command {
   async run() {
     let { flags, args } = this.parse(FunctionsNew);
-    flags = normalizeFlags(flags, aliasMap);
+    flags = normalizeFlags(flags, aliasMap, process.argv);
 
     const opts = Object.assign({}, flags, args);
     return handler(opts, undefined);
