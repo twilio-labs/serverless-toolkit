@@ -1,0 +1,18 @@
+export const restrictedHeaders = [
+  /^I-Twilio-[A-Za-z0-9\-]*$/,
+  /^I-T-[A-Za-z0-9\-]*$/,
+  /^OT-[A-Za-z0-9\-]*$/,
+  /^X-Amz[A-Za-z0-9\-]*$/,
+  /^Via$/,
+  /^Referer$/,
+  /^Transfer-Encoding$/,
+  /^Proxy-Auth(orization|enticate)$/,
+  /^X-Forwarded-[A-Za-z0-9\-]*$/,
+  /^X-Real-IP$/,
+  /^Connection$/,
+  /^Proxy-Connection$/,
+  /^Expect$/,
+  /^Trailer$/,
+  /^Upgrade$/,
+  /^X-Accel-[A-Za-z0-9\-]*$/,
+];

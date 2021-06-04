@@ -22,6 +22,7 @@ import { Response } from '../../src/dev-runtime/internal/response';
 import {
   constructContext,
   constructEvent,
+  constructHeaders,
   constructGlobalScope,
   handleError,
   handleSuccess,
@@ -37,16 +38,16 @@ import { cleanUpStackTrace } from '../../src/dev-runtime/utils/stack-trace/clean
 
 const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
 
-const mockResponse = (new MockResponse() as unknown) as ExpressResponse;
+const mockResponse = new MockResponse() as unknown as ExpressResponse;
 mockResponse.type = jest.fn(() => mockResponse);
 
 function asExpressRequest(req: { query?: {}; body?: {} }): ExpressRequest {
-  return (req as unknown) as ExpressRequest;
+  return req as unknown as ExpressRequest;
 }
 
 describe('handleError function', () => {
   test('returns string error', () => {
-    const mockRequest = (new MockRequest() as unknown) as ExpressRequest;
+    const mockRequest = new MockRequest() as unknown as ExpressRequest;
     mockRequest['useragent'] = {
       isDesktop: true,
       isMobile: false,
@@ -59,7 +60,7 @@ describe('handleError function', () => {
   });
 
   test('handles objects as error argument', () => {
-    const mockRequest = (new MockRequest() as unknown) as ExpressRequest;
+    const mockRequest = new MockRequest() as unknown as ExpressRequest;
     mockRequest['useragent'] = {
       isDesktop: true,
       isMobile: false,
@@ -72,7 +73,7 @@ describe('handleError function', () => {
   });
 
   test('wraps error object for desktop requests', () => {
-    const mockRequest = (new MockRequest() as unknown) as ExpressRequest;
+    const mockRequest = new MockRequest() as unknown as ExpressRequest;
     mockRequest['useragent'] = {
       isDesktop: true,
       isMobile: false,
@@ -85,7 +86,7 @@ describe('handleError function', () => {
   });
 
   test('wraps error object for mobile requests', () => {
-    const mockRequest = (new MockRequest() as unknown) as ExpressRequest;
+    const mockRequest = new MockRequest() as unknown as ExpressRequest;
     mockRequest['useragent'] = {
       isDesktop: false,
       isMobile: true,
@@ -98,7 +99,7 @@ describe('handleError function', () => {
   });
 
   test('returns string version of error for other requests', () => {
-    const mockRequest = (new MockRequest() as unknown) as ExpressRequest;
+    const mockRequest = new MockRequest() as unknown as ExpressRequest;
     mockRequest['useragent'] = {
       isDesktop: false,
       isMobile: false,
@@ -128,7 +129,7 @@ describe('constructEvent function', () => {
         },
       })
     );
-    expect(event).toEqual({ Body: 'Hello', index: 5 });
+    expect(event).toEqual({ Body: 'Hello', index: 5, headers: {} });
   });
 
   test('overrides query with body', () => {
@@ -143,7 +144,7 @@ describe('constructEvent function', () => {
         },
       })
     );
-    expect(event).toEqual({ Body: 'Bye', From: '+123456789' });
+    expect(event).toEqual({ Body: 'Bye', From: '+123456789', headers: {} });
   });
 
   test('handles empty body', () => {
@@ -156,7 +157,7 @@ describe('constructEvent function', () => {
         },
       })
     );
-    expect(event).toEqual({ Body: 'Hello', From: '+123456789' });
+    expect(event).toEqual({ Body: 'Hello', From: '+123456789', headers: {} });
   });
 
   test('handles empty query', () => {
@@ -169,7 +170,7 @@ describe('constructEvent function', () => {
         query: {},
       })
     );
-    expect(event).toEqual({ Body: 'Hello', From: '+123456789' });
+    expect(event).toEqual({ Body: 'Hello', From: '+123456789', headers: {} });
   });
 
   test('handles both empty', () => {
@@ -179,7 +180,51 @@ describe('constructEvent function', () => {
         query: {},
       })
     );
-    expect(event).toEqual({});
+    expect(event).toEqual({ headers: {} });
+  });
+});
+
+describe('constructHeaders function', () => {
+  test('handles undefined', () => {
+    const headers = constructHeaders();
+    expect(headers).toEqual({});
+  });
+  test('handles an empty array', () => {
+    const headers = constructHeaders([]);
+    expect(headers).toEqual({});
+  });
+  test('it handles a single header value', () => {
+    const headers = constructHeaders(['X-Test', 'hello, world']);
+    expect(headers).toEqual({ 'X-Test': 'hello, world' });
+  });
+  test('it handles a duplicated header value', () => {
+    const headers = constructHeaders([
+      'X-Test',
+      'hello, world',
+      'X-Test',
+      'ahoy',
+    ]);
+    expect(headers).toEqual({ 'X-Test': ['hello, world', 'ahoy'] });
+  });
+  test('it handles a duplicated header value multiple times', () => {
+    const headers = constructHeaders([
+      'X-Test',
+      'hello, world',
+      'X-Test',
+      'ahoy',
+      'X-Test',
+      'third',
+    ]);
+    expect(headers).toEqual({ 'X-Test': ['hello, world', 'ahoy', 'third'] });
+  });
+  test('it strips restricted headers', () => {
+    const headers = constructHeaders([
+      'X-Test',
+      'hello, world',
+      'I-Twilio-Test',
+      'nope',
+    ]);
+    expect(headers).toEqual({ 'X-Test': 'hello, world' });
   });
 });
 
