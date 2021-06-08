@@ -1,18 +1,3 @@
-export type SearchConfig = {
-  /**
-   * Ordered folder names to search for to find functions
-   *
-   * @type {string[]}
-   */
-  functionsFolderNames?: string[];
-  /**
-   * Ordered folder names to search for to find assets
-   *
-   * @type {string[]}
-   */
-  assetsFolderNames?: string[];
-};
-
 export type EnvironmentVariablesWithAuth = {
   ACCOUNT_SID?: string;
   AUTH_TOKEN?: string;
