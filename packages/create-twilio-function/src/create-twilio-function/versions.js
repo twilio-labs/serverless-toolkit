@@ -2,6 +2,9 @@ const pkgJson = require('../../package.json');
 
 module.exports = {
   twilio: '^3.56',
+  twilioRuntimeHandler: pkgJson.devDependencies[
+    '@twilio/runtime-handler'
+  ].replace(/[\^~]/, ''),
   twilioRun: pkgJson.dependencies['twilio-run'],
   node: '12',
   typescript: '^3.8',
