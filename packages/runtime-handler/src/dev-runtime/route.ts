@@ -63,7 +63,7 @@ export function constructContext<T extends {} = {}>(
       logger: logger,
     });
 
-    return requireFromProject(baseDir, 'twilio')(
+    return requireFromProject(baseDir, 'twilio', true)(
       env.ACCOUNT_SID,
       env.AUTH_TOKEN,
       {
@@ -78,7 +78,7 @@ export function constructContext<T extends {} = {}>(
 }
 
 export function constructGlobalScope(config: ServerConfig): void {
-  twilio = requireFromProject(config.baseDir, 'twilio');
+  twilio = requireFromProject(config.baseDir, 'twilio', true);
   const GlobalRuntime = Runtime.create(config);
   (global as any)['Twilio'] = { ...twilio, Response };
   (global as any)['Runtime'] = GlobalRuntime;

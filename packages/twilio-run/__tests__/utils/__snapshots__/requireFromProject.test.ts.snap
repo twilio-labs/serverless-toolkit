@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`requireFromProject should fail for unknown dependency 1`] = `"Cannot resolve module '@twilio/invalid-dependency' from paths ['/Users/dkundel/dev/twilio-run/packages/runtime-handler/node_modules'] from /Users/dkundel/dev/twilio-run/packages/twilio-run/src/utils/requireFromProject.ts"`;

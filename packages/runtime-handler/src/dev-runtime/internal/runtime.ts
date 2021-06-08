@@ -77,7 +77,7 @@ export function create({
         .map((x: any) => JSON.stringify(x))
         .join(',')})`,
     });
-    const client = requireFromProject(baseDir, 'twilio')(
+    const client = requireFromProject(baseDir, 'twilio', true)(
       env.ACCOUNT_SID,
       env.AUTH_TOKEN,
       options
