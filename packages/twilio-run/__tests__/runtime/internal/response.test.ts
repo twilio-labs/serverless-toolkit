@@ -69,11 +69,11 @@ test('appends a header correctly with no existing one', () => {
 });
 
 test('calls express response correctly', () => {
-  const mockRes = ({
+  const mockRes = {
     status: jest.fn(),
     set: jest.fn(),
     send: jest.fn(),
-  } as unknown) as ExpressResponse;
+  } as unknown as ExpressResponse;
   const response = new Response();
   response.setBody(`I'm a teapot!`);
   response.setStatusCode(418);
@@ -83,4 +83,32 @@ test('calls express response correctly', () => {
   expect(mockRes.send).toHaveBeenCalledWith(`I'm a teapot!`);
   expect(mockRes.status).toHaveBeenCalledWith(418);
   expect(mockRes.set).toHaveBeenCalledWith({ 'Content-Type': 'text/plain' });
+});
+
+test('serializes a response', () => {
+  const response = new Response();
+  response.setBody("I'm a teapot!");
+  response.setStatusCode(418);
+  response.appendHeader('Content-Type', 'text/plain');
+
+  const serialized = response.serialize();
+
+  expect(serialized.body).toEqual("I'm a teapot!");
+  expect(serialized.statusCode).toEqual(418);
+  expect(serialized.headers).toEqual({ 'Content-Type': 'text/plain' });
+});
+
+test('serializes a response with content type set to application/json', () => {
+  const response = new Response();
+  response.setBody({ url: 'https://dkundel.com' });
+  response.setStatusCode(200);
+  response.appendHeader('Content-Type', 'application/json');
+
+  const serialized = response.serialize();
+
+  expect(serialized.body).toEqual(
+    JSON.stringify({ url: 'https://dkundel.com' })
+  );
+  expect(serialized.statusCode).toEqual(200);
+  expect(serialized.headers).toEqual({ 'Content-Type': 'application/json' });
 });
