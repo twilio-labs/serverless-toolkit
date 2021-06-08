@@ -7,6 +7,6 @@ module.exports = {
       tsconfig: './tsconfig.test.json',
     },
   },
-  name: 'serverless-api',
-  displayName: 'serverless-api',
+  name: 'runtime-handler',
+  displayName: 'runtime-handler',
 };
