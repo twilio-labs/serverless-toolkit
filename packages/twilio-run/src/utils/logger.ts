@@ -1,9 +1,9 @@
 import { ClientApiError } from '@twilio-labs/serverless-api/dist/utils/error';
-import debug from './debug';
 import ora from 'ora';
 import { Writable } from 'stream';
 import terminalLink from 'terminal-link';
 import { errorMessage, warningMessage } from '../printers/utils';
+import debug from './debug';
 
 // an empty stream that immediately drops everything. Like /dev/null
 const EmptyStream = new Writable();

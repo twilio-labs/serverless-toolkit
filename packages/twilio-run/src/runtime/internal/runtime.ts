@@ -72,9 +72,9 @@ export function create({ env }: StartCliConfig): RuntimeInstance {
         .join(',')})`,
     });
     const client = twilio(env.ACCOUNT_SID, env.AUTH_TOKEN, options);
-    const service = client.sync.services(
+    const service = (client.sync.services(
       serviceName || 'default'
-    ) as RuntimeSyncServiceContext;
+    ) as unknown) as RuntimeSyncServiceContext;
 
     service.maps = service.syncMaps;
     service.lists = service.syncLists;

@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`with an express app with forked process function handling Function integration tests basic-twiml.js should match snapshot 1`] = `
+Object {
+  "body": Object {},
+  "headers": Object {
+    "cache-control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+    "connection": "close",
+    "content-type": "text/xml; charset=utf-8",
+    "expires": "0",
+    "pragma": "no-cache",
+    "surrogate-control": "no-store",
+    "x-powered-by": "Express",
+  },
+  "statusCode": 200,
+  "text": "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><Response><Message>Hello World</Message></Response>",
+  "type": "text/xml",
+}
+`;
+
+exports[`with an express app with inline function handling Assets integration tests hello.js should match snapshot 1`] = `
+Object {
+  "body": Object {},
+  "headers": Object {
+    "accept-ranges": "bytes",
+    "cache-control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+    "connection": "close",
+    "content-type": "application/javascript; charset=UTF-8",
+    "expires": "0",
+    "pragma": "no-cache",
+    "surrogate-control": "no-store",
+    "x-powered-by": "Express",
+  },
+  "statusCode": 200,
+  "text": "alert('Hello world!');
+",
+  "type": "application/javascript",
+}
+`;
+
+exports[`with an express app with inline function handling Function integration tests basic-twiml.js should match snapshot 1`] = `
+Object {
+  "body": Object {},
+  "headers": Object {
+    "cache-control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+    "connection": "close",
+    "content-type": "text/xml; charset=utf-8",
+    "expires": "0",
+    "pragma": "no-cache",
+    "surrogate-control": "no-store",
+    "x-powered-by": "Express",
+  },
+  "statusCode": 200,
+  "text": "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><Response><Message>Hello World</Message></Response>",
+  "type": "text/xml",
+}
+`;

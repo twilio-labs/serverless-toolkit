@@ -3,12 +3,15 @@ import {
   ServerlessCallback,
   ServerlessFunctionSignature,
 } from '@twilio-labs/serverless-runtime-types/types';
+import { fork } from 'child_process';
 import {
   NextFunction,
   Request as ExpressRequest,
   RequestHandler as ExpressRequestHandler,
   Response as ExpressResponse,
 } from 'express';
+import { join, resolve } from 'path';
+import { deserializeError } from 'serialize-error';
 import twilio, { twiml } from 'twilio';
 import { checkForValidAccountSid } from '../checks/check-account-sid';
 import { checkForValidAuthToken } from '../checks/check-auth-token';
@@ -16,12 +19,14 @@ import { StartCliConfig } from '../config/start';
 import { wrapErrorInHtml } from '../utils/error-html';
 import { getDebugFunction } from '../utils/logger';
 import { cleanUpStackTrace } from '../utils/stack-trace/clean-up';
+import { Reply } from './internal/functionRunner';
 import { Response } from './internal/response';
 import * as Runtime from './internal/runtime';
-import { fork } from 'child_process';
-import { deserializeError } from 'serialize-error';
-import { Reply } from './internal/functionRunner';
-import { join } from 'path';
+
+const RUNNER_PATH =
+  process.env.NODE_ENV === 'test'
+    ? resolve(__dirname, '../../dist/runtime/internal/functionRunner')
+    : join(__dirname, 'internal', 'functionRunner');
 
 const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
 
@@ -155,7 +160,7 @@ export function functionPathToRoute(
     next: NextFunction
   ) {
     const event = constructEvent(req);
-    const forked = fork(join(__dirname, 'internal', 'functionRunner'));
+    const forked = fork(RUNNER_PATH);
     forked.on(
       'message',
       ({
@@ -216,10 +221,12 @@ export function functionToRoute(
       run_timings.end = process.hrtime();
       debug('Function execution %s finished', req.path);
       debug(
-        `(Estimated) Total Execution Time: ${(run_timings.end[0] * 1e9 +
-          run_timings.end[1] -
-          (run_timings.start[0] * 1e9 + run_timings.start[1])) /
-          1e6}ms`
+        `(Estimated) Total Execution Time: ${
+          (run_timings.end[0] * 1e9 +
+            run_timings.end[1] -
+            (run_timings.start[0] * 1e9 + run_timings.start[1])) /
+          1e6
+        }ms`
       );
       if (err) {
         handleError(err, req, res, functionFilePath);

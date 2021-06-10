@@ -134,7 +134,7 @@ describe('with an express app', () => {
       }
     });
   });
-  xdescribe('with forked process function handling', () => {
+  describe('with forked process function handling', () => {
     beforeAll(async () => {
       app = await createServer(9000, {
         baseDir: TEST_DIR,

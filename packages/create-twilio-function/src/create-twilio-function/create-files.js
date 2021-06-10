@@ -29,6 +29,7 @@ const typescriptDeps = {
 };
 const javaScriptDevDeps = { 'twilio-run': versions.twilioRun };
 const typescriptDevDeps = {
+  '@twilio/runtime-handler': versions.twilioRuntimeHandler,
   'twilio-run': versions.twilioRun,
   typescript: versions.typescript,
   copyfiles: versions.copyfiles,

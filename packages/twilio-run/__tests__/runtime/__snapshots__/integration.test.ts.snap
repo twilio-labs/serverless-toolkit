@@ -1,5 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`with an express app with forked process function handling Function integration tests basic-twiml.js should match snapshot 1`] = `
+Object {
+  "body": Object {},
+  "headers": Object {
+    "connection": "close",
+    "content-type": "text/xml; charset=utf-8",
+    "x-powered-by": "Express",
+  },
+  "statusCode": 200,
+  "text": "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><Response><Message>Hello World</Message></Response>",
+  "type": "text/xml",
+}
+`;
+
 exports[`with an express app with inline function handling Assets integration tests hello.js should match snapshot 1`] = `
 Object {
   "body": Object {},
