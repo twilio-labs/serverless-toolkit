@@ -36,7 +36,9 @@ describe('requireFromProject', () => {
   test('should fail for unknown dependency', () => {
     expect(() => {
       requireFromProject(PROJECT_DIR, '@twilio/invalid-dependency');
-    }).toThrowErrorMatchingSnapshot();
+    }).toThrowError(
+      /^Cannot resolve module '@twilio\/invalid-dependency' from paths/
+    );
   });
 
   test('should fallback for unmatched dependency', () => {
