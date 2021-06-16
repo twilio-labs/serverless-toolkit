@@ -4,6 +4,7 @@ import { Ora } from 'ora';
 import path from 'path';
 import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
+import { checkForValidRuntimeHandlerVersion } from '../checks/check-runtime-handler';
 import checkLegacyConfig from '../checks/legacy-config';
 import checkProjectStructure from '../checks/project-structure';
 import {
@@ -101,6 +102,11 @@ export async function handler(
 
   if (!config) {
     logError('Internal Error');
+    process.exit(1);
+    return;
+  }
+
+  if (!checkForValidRuntimeHandlerVersion(config.pkgJson)) {
     process.exit(1);
     return;
   }
