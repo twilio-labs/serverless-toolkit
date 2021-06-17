@@ -58,7 +58,10 @@ export class Response implements TwilioResponse {
   serialize() {
     return {
       statusCode: this.statusCode,
-      body: this.body.toString(),
+      body:
+        this.headers['Content-Type'] === 'application/json'
+          ? JSON.stringify(this.body)
+          : this.body,
       headers: this.headers,
     };
   }
