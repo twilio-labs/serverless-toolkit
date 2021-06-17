@@ -194,37 +194,94 @@ describe('constructHeaders function', () => {
     expect(headers).toEqual({});
   });
   test('it handles a single header value', () => {
-    const headers = constructHeaders(['X-Test', 'hello, world']);
-    expect(headers).toEqual({ 'X-Test': 'hello, world' });
+    const headers = constructHeaders(['x-test', 'hello, world']);
+    expect(headers).toEqual({ 'x-test': 'hello, world' });
   });
   test('it handles a duplicated header value', () => {
     const headers = constructHeaders([
-      'X-Test',
+      'x-test',
       'hello, world',
-      'X-Test',
+      'x-test',
       'ahoy',
     ]);
-    expect(headers).toEqual({ 'X-Test': ['hello, world', 'ahoy'] });
+    expect(headers).toEqual({ 'x-test': ['hello, world', 'ahoy'] });
   });
   test('it handles a duplicated header value multiple times', () => {
     const headers = constructHeaders([
-      'X-Test',
+      'x-test',
       'hello, world',
-      'X-Test',
+      'x-test',
       'ahoy',
-      'X-Test',
+      'x-test',
       'third',
     ]);
-    expect(headers).toEqual({ 'X-Test': ['hello, world', 'ahoy', 'third'] });
+    expect(headers).toEqual({ 'x-test': ['hello, world', 'ahoy', 'third'] });
   });
   test('it strips restricted headers', () => {
     const headers = constructHeaders([
-      'X-Test',
+      'x-test',
       'hello, world',
       'I-Twilio-Test',
       'nope',
     ]);
-    expect(headers).toEqual({ 'X-Test': 'hello, world' });
+    expect(headers).toEqual({ 'x-test': 'hello, world' });
+  });
+  test('it lowercases and combines header names', () => {
+    const headers = constructHeaders([
+      'X-Test',
+      'hello, world',
+      'X-test',
+      'ahoy',
+      'x-test',
+      'third',
+    ]);
+    expect(headers).toEqual({
+      'x-test': ['hello, world', 'ahoy', 'third'],
+    });
+  });
+
+  test("it doesn't pass on restricted headers", () => {
+    const headers = constructHeaders([
+      'I-Twilio-Example',
+      'example',
+      'I-T-Example',
+      'example',
+      'OT-Example',
+      'example',
+      'x-amz-example',
+      'example',
+      'via',
+      'example',
+      'Referer',
+      'example.com',
+      'transfer-encoding',
+      'example',
+      'proxy-authorization',
+      'example',
+      'proxy-authenticate',
+      'example',
+      'x-forwarded-example',
+      'example',
+      'x-real-ip',
+      'example',
+      'connection',
+      'example',
+      'proxy-connection',
+      'example',
+      'expect',
+      'example',
+      'trailer',
+      'example',
+      'upgrade',
+      'example',
+      'x-accel-example',
+      'example',
+      'x-actual-header',
+      'this works',
+    ]);
+    expect(headers).toEqual({
+      'x-actual-header': 'this works',
+    });
   });
 });
 

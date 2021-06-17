@@ -25,7 +25,10 @@ import debug from './utils/debug';
 import { wrapErrorInHtml } from './utils/error-html';
 import { requireFromProject } from './utils/requireFromProject';
 import { cleanUpStackTrace } from './utils/stack-trace/clean-up';
-import { restrictedHeaders } from './checks/restricted-headers';
+import {
+  restrictedHeaderPrefixes,
+  restrictedHeaderExactMatches,
+} from './checks/restricted-headers';
 
 const log = debug('twilio-runtime-handler:dev:route');
 
@@ -44,18 +47,24 @@ export function constructHeaders(rawHeaders?: string[]): Headers {
   if (rawHeaders && rawHeaders.length > 0) {
     const headers: Headers = {};
     for (let i = 0, len = rawHeaders.length; i < len; i += 2) {
+      const headerName = rawHeaders[i].toLowerCase();
       if (
-        restrictedHeaders.some((headerType) => rawHeaders[i].match(headerType))
+        restrictedHeaderExactMatches.some(
+          (headerType) => headerName === headerType
+        ) ||
+        restrictedHeaderPrefixes.some((headerType) =>
+          headerName.startsWith(headerType)
+        )
       ) {
         continue;
       }
-      const currentHeader = headers[rawHeaders[i]];
+      const currentHeader = headers[headerName];
       if (!currentHeader) {
-        headers[rawHeaders[i]] = rawHeaders[i + 1];
+        headers[headerName] = rawHeaders[i + 1];
       } else if (typeof currentHeader === 'string') {
-        headers[rawHeaders[i]] = [currentHeader, rawHeaders[i + 1]];
+        headers[headerName] = [currentHeader, rawHeaders[i + 1]];
       } else {
-        headers[rawHeaders[i]] = [...currentHeader, rawHeaders[i + 1]];
+        headers[headerName] = [...currentHeader, rawHeaders[i + 1]];
       }
     }
     return headers;
