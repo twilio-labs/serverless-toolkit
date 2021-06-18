@@ -76,7 +76,9 @@ export function constructEvent<T extends {} = {}>(req: ExpressRequest): T {
   return {
     ...req.query,
     ...req.body,
-    headers: constructHeaders(req.rawHeaders),
+    request: {
+      headers: constructHeaders(req.rawHeaders),
+    },
   };
 }
 

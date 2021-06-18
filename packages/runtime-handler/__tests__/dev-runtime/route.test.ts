@@ -129,7 +129,11 @@ describe('constructEvent function', () => {
         },
       })
     );
-    expect(event).toEqual({ Body: 'Hello', index: 5, headers: {} });
+    expect(event).toEqual({
+      Body: 'Hello',
+      index: 5,
+      request: { headers: {} },
+    });
   });
 
   test('overrides query with body', () => {
@@ -144,7 +148,11 @@ describe('constructEvent function', () => {
         },
       })
     );
-    expect(event).toEqual({ Body: 'Bye', From: '+123456789', headers: {} });
+    expect(event).toEqual({
+      Body: 'Bye',
+      From: '+123456789',
+      request: { headers: {} },
+    });
   });
 
   test('handles empty body', () => {
@@ -157,7 +165,11 @@ describe('constructEvent function', () => {
         },
       })
     );
-    expect(event).toEqual({ Body: 'Hello', From: '+123456789', headers: {} });
+    expect(event).toEqual({
+      Body: 'Hello',
+      From: '+123456789',
+      request: { headers: {} },
+    });
   });
 
   test('handles empty query', () => {
@@ -170,7 +182,11 @@ describe('constructEvent function', () => {
         query: {},
       })
     );
-    expect(event).toEqual({ Body: 'Hello', From: '+123456789', headers: {} });
+    expect(event).toEqual({
+      Body: 'Hello',
+      From: '+123456789',
+      request: { headers: {} },
+    });
   });
 
   test('handles both empty', () => {
@@ -180,7 +196,7 @@ describe('constructEvent function', () => {
         query: {},
       })
     );
-    expect(event).toEqual({ headers: {} });
+    expect(event).toEqual({ request: { headers: {} } });
   });
 });
 
