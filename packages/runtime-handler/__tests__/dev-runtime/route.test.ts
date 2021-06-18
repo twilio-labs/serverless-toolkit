@@ -41,7 +41,11 @@ const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
 const mockResponse = new MockResponse() as unknown as ExpressResponse;
 mockResponse.type = jest.fn(() => mockResponse);
 
-function asExpressRequest(req: { query?: {}; body?: {} }): ExpressRequest {
+function asExpressRequest(req: {
+  query?: {};
+  body?: {};
+  rawHeaders?: string[];
+}): ExpressRequest {
   return req as unknown as ExpressRequest;
 }
 
@@ -197,6 +201,17 @@ describe('constructEvent function', () => {
       })
     );
     expect(event).toEqual({ request: { headers: {} } });
+  });
+
+  test('constructs headers from rawHeaders', () => {
+    const event = constructEvent(
+      asExpressRequest({
+        body: {},
+        query: {},
+        rawHeaders: ['x-test', 'example'],
+      })
+    );
+    expect(event).toEqual({ request: { headers: { 'x-test': 'example' } } });
   });
 });
 
