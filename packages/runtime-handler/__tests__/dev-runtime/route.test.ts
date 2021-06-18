@@ -45,6 +45,7 @@ function asExpressRequest(req: {
   query?: {};
   body?: {};
   rawHeaders?: string[];
+  cookies?: {};
 }): ExpressRequest {
   return req as unknown as ExpressRequest;
 }
@@ -136,7 +137,7 @@ describe('constructEvent function', () => {
     expect(event).toEqual({
       Body: 'Hello',
       index: 5,
-      request: { headers: {} },
+      request: { headers: {}, cookies: {} },
     });
   });
 
@@ -155,7 +156,7 @@ describe('constructEvent function', () => {
     expect(event).toEqual({
       Body: 'Bye',
       From: '+123456789',
-      request: { headers: {} },
+      request: { headers: {}, cookies: {} },
     });
   });
 
@@ -172,7 +173,7 @@ describe('constructEvent function', () => {
     expect(event).toEqual({
       Body: 'Hello',
       From: '+123456789',
-      request: { headers: {} },
+      request: { headers: {}, cookies: {} },
     });
   });
 
@@ -189,7 +190,7 @@ describe('constructEvent function', () => {
     expect(event).toEqual({
       Body: 'Hello',
       From: '+123456789',
-      request: { headers: {} },
+      request: { headers: {}, cookies: {} },
     });
   });
 
@@ -200,10 +201,10 @@ describe('constructEvent function', () => {
         query: {},
       })
     );
-    expect(event).toEqual({ request: { headers: {} } });
+    expect(event).toEqual({ request: { headers: {}, cookies: {} } });
   });
 
-  test('constructs headers from rawHeaders', () => {
+  test('adds headers to request property', () => {
     const event = constructEvent(
       asExpressRequest({
         body: {},
@@ -211,7 +212,23 @@ describe('constructEvent function', () => {
         rawHeaders: ['x-test', 'example'],
       })
     );
-    expect(event).toEqual({ request: { headers: { 'x-test': 'example' } } });
+    expect(event).toEqual({
+      request: { headers: { 'x-test': 'example' }, cookies: {} },
+    });
+  });
+
+  test('adds cookies to request property', () => {
+    const event = constructEvent(
+      asExpressRequest({
+        body: {},
+        query: {},
+        rawHeaders: [],
+        cookies: { flavour: 'choc chip' },
+      })
+    );
+    expect(event).toEqual({
+      request: { headers: {}, cookies: { flavour: 'choc chip' } },
+    });
   });
 });
 

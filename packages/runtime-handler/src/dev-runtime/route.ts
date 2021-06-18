@@ -42,6 +42,9 @@ let twilio: TwilioPackage;
 type Headers = {
   [key: string]: string | string[];
 };
+type Cookies = {
+  [key: string]: string;
+};
 
 export function constructHeaders(rawHeaders?: string[]): Headers {
   if (rawHeaders && rawHeaders.length > 0) {
@@ -78,6 +81,7 @@ export function constructEvent<T extends {} = {}>(req: ExpressRequest): T {
     ...req.body,
     request: {
       headers: constructHeaders(req.rawHeaders),
+      cookies: (req.cookies || {}) as Cookies,
     },
   };
 }
