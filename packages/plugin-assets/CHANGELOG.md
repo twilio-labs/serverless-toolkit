@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-assets@1.0.0...@twilio-labs/plugin-assets@1.1.0) (2021-06-21)
+
+
+### Features
+
+* extract runtime-handler and lazyLoading ([#252](https://github.com/twilio-labs/serverless-toolkit/issues/252)) ([#271](https://github.com/twilio-labs/serverless-toolkit/issues/271)) ([0dde2a5](https://github.com/twilio-labs/serverless-toolkit/commit/0dde2a5a74035700e4ef6cf4b1c1189c78e2ff59))
+
+
+
+
+
 ## [1.0.1-rc.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-assets@1.0.0...@twilio-labs/plugin-assets@1.0.1-rc.0) (2021-05-24)
 
 **Note:** Version bump only for package @twilio-labs/plugin-assets

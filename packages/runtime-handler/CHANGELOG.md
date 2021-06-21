@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio/runtime-handler@1.0.2...@twilio/runtime-handler@1.1.0) (2021-06-21)
+
+
+### Bug Fixes
+
+* **twilio-run:** correctly serialize JSON Responses ([#277](https://github.com/twilio-labs/serverless-toolkit/issues/277)) ([a40291d](https://github.com/twilio-labs/serverless-toolkit/commit/a40291dd63332542eed03144ffd7b5c1bd245357))
+
+
+### Features
+
+* extract runtime-handler and lazyLoading ([#252](https://github.com/twilio-labs/serverless-toolkit/issues/252)) ([#271](https://github.com/twilio-labs/serverless-toolkit/issues/271)) ([0dde2a5](https://github.com/twilio-labs/serverless-toolkit/commit/0dde2a5a74035700e4ef6cf4b1c1189c78e2ff59))
+
+
+
+
+
 # [1.1.0-rc.3](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio/runtime-handler@1.0.2...@twilio/runtime-handler@1.1.0-rc.3) (2021-05-24)
 
 
