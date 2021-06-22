@@ -128,6 +128,8 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+  // removes all global values
+  // clears the require cache for Functions.
   cleanup();
 })
 
@@ -147,6 +149,10 @@ describe('test demo function', () => {
 ```
 
 ### "Integration" Tests
+
+The goal of "Integration" tests is to provide a simpler interface where you provide input and largely care about the output. You don't care much about the inner workings or even about whether `callback()` gets called with a `Twilio.Response` instance or a direct object. In this case we'll return a standardized response result that you can evaluate. 
+
+It also provides the ability to keep Functions "hot" to test behavior of shared state.
 
 #### Cold Starts
 
@@ -216,6 +222,12 @@ describe('testing demo function', () => {
 ```
 
 ### End-to-End Tests
+
+This is not truly E2E tests in the sense that nothing gets deployed to the Twilio Functions infrastructure. Instead it runs on the local infrastructure "emulating" the Functions environment. 
+
+While we could deploy Functions to a test environment in the future to handle true E2E tests but we'd have to provide ways for customers to intercept outgoing HTTP traffic for example if they don't really want to write to a database for example or make API requests.
+
+In the meantime this proposal is more the equivalent of running Cypress locally. 
 
 ```js
 const { createTestServer } = require('@twilio/runtime-handler/test');
