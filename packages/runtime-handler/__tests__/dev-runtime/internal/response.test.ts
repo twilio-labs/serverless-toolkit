@@ -3,31 +3,52 @@ import { Response } from '../../../src/dev-runtime/internal/response';
 
 test('has correct defaults', () => {
   const response = new Response();
-  expect(response['body']).toBeUndefined();
+  expect(response['body']).toBeNull();
   expect(response['statusCode']).toBe(200);
   expect(response['headers']).toEqual({});
+});
+
+test('sets status code, body and headers from constructor', () => {
+  const response = new Response({
+    headers: {
+      'Access-Control-Allow-Origin': 'example.com',
+      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+    body: 'Error',
+    statusCode: 400,
+  });
+  expect(response['statusCode']).toBe(400);
+  expect(response['body']).toBe('Error');
+  expect(response['headers']).toEqual({
+    'Access-Control-Allow-Origin': 'example.com',
+    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  });
 });
 
 test('sets status code', () => {
   const response = new Response();
   expect(response['statusCode']).toBe(200);
-  response.setStatusCode(418);
+  const response2 = response.setStatusCode(418);
   expect(response['statusCode']).toBe(418);
+  expect(response2).toBe(response);
 });
 
 test('sets body correctly', () => {
   const response = new Response();
-  expect(response['body']).toBeUndefined();
+  expect(response['body']).toBeNull();
   response.setBody('Hello');
   expect(response['body']).toBe('Hello');
-  response.setBody({ url: 'https://dkundel.com' });
+  const response2 = response.setBody({ url: 'https://dkundel.com' });
   expect(response['body']).toEqual({ url: 'https://dkundel.com' });
+  expect(response2).toBe(response);
 });
 
 test('sets headers correctly', () => {
   const response = new Response();
   expect(response['headers']).toEqual({});
-  response.setHeaders({
+  const response2 = response.setHeaders({
     'Access-Control-Allow-Origin': 'example.com',
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
     'Access-Control-Allow-Headers': 'Content-Type',
@@ -41,6 +62,7 @@ test('sets headers correctly', () => {
   // @ts-ignore
   response.setHeaders(undefined);
   expect(response['headers']).toEqual(expected);
+  expect(response2).toBe(response);
 });
 
 test('appends a new header correctly', () => {
@@ -50,11 +72,12 @@ test('appends a new header correctly', () => {
   expect(response['headers']).toEqual({
     'Access-Control-Allow-Origin': 'dkundel.com',
   });
-  response.appendHeader('Content-Type', 'application/json');
+  const response2 = response.appendHeader('Content-Type', 'application/json');
   expect(response['headers']).toEqual({
     'Access-Control-Allow-Origin': 'dkundel.com',
     'Content-Type': 'application/json',
   });
+  expect(response2).toBe(response);
 });
 
 test('appends a header correctly with no existing one', () => {
@@ -62,10 +85,14 @@ test('appends a header correctly with no existing one', () => {
   expect(response['headers']).toEqual({});
   // @ts-ignore
   response['headers'] = undefined;
-  response.appendHeader('Access-Control-Allow-Origin', 'dkundel.com');
+  const response2 = response.appendHeader(
+    'Access-Control-Allow-Origin',
+    'dkundel.com'
+  );
   expect(response['headers']).toEqual({
     'Access-Control-Allow-Origin': 'dkundel.com',
   });
+  expect(response2).toBe(response);
 });
 
 test('calls express response correctly', () => {

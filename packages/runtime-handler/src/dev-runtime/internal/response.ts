@@ -4,44 +4,64 @@ import debug from '../utils/debug';
 
 const log = debug('twilio-runtime-handler:dev:response');
 
+type ResponseOptions = {
+  headers?: Headers;
+  statusCode?: number;
+  body?: object | string;
+};
+
 type HeaderValue = number | string;
 type Headers = {
   [key: string]: HeaderValue;
 };
 
 export class Response implements TwilioResponse {
-  private body: undefined | any;
+  private body: null | any;
   private statusCode: number;
   private headers: Headers;
 
-  constructor() {
-    this.body = undefined;
+  constructor(options?: ResponseOptions) {
+    this.body = null;
     this.statusCode = 200;
     this.headers = {};
+
+    if (options && options.statusCode) {
+      this.statusCode = options.statusCode;
+    }
+    if (options && options.body) {
+      this.body = options.body;
+    }
+    if (options && options.headers) {
+      this.headers = options.headers;
+    }
   }
 
-  setStatusCode(statusCode: number): void {
+  setStatusCode(statusCode: number): Response {
     log('Setting status code to %d', statusCode);
     this.statusCode = statusCode;
+    return this;
   }
 
-  setBody(body: object | string): void {
+  setBody(body: object | string): Response {
     log('Setting response body to %o', body);
     this.body = body;
+    return this;
   }
 
-  setHeaders(headersObject: Headers): void {
+  setHeaders(headersObject: Headers): Response {
     log('Setting headers to: %P', headersObject);
     if (typeof headersObject !== 'object') {
-      return;
+      return this;
     }
     this.headers = headersObject;
+    return this;
   }
 
-  appendHeader(key: string, value: HeaderValue): void {
+  appendHeader(key: string, value: HeaderValue): Response {
     log('Appending header for %s', key, value);
     this.headers = this.headers || {};
     this.headers[key] = value;
+    return this;
   }
 
   applyToExpressResponse(res: ExpressResponse): void {
