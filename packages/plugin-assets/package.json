@@ -12,7 +12,8 @@
     "@twilio-labs/serverless-api": "^5.1.0",
     "@twilio/cli-core": "^5.22.0",
     "inquirer": "^8.0.0",
-    "ora": "^5.4.0"
+    "ora": "^5.4.0",
+    "project-name-generator": "^2.1.9"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.2",
