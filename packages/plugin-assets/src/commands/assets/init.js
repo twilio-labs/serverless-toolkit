@@ -9,7 +9,6 @@ class InitCommand extends TwilioClientCommand {
   async run() {
     await super.run();
     try {
-      const { flags } = this.parse(InitCommand);
       const pluginConfig = getPluginConfig(this);
       const result = await init({
         apiKey: this.currentProfile.apiKey,
@@ -17,7 +16,7 @@ class InitCommand extends TwilioClientCommand {
         accountSid: this.currentProfile.accountSid,
         pluginConfig: pluginConfig,
         logger: this.logger,
-        serviceName: flags['service-name'],
+        serviceName: this.flags['service-name'],
       });
       this.output(result, this.flags.properties);
     } catch (error) {
