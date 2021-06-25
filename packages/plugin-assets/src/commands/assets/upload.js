@@ -8,6 +8,7 @@ class UploadCommand extends TwilioClientCommand {
     await super.run();
 
     try {
+      const visibility = this.flags.protected ? 'protected' : 'public';
       const pluginConfig = getPluginConfig(this);
       const assets = await upload({
         apiKey: this.currentProfile.apiKey,
@@ -16,6 +17,7 @@ class UploadCommand extends TwilioClientCommand {
         pluginConfig: pluginConfig,
         file: this.args.file,
         logger: this.logger,
+        visibility,
       });
       this.output(assets, this.flags.properties);
     } catch (error) {
@@ -35,6 +37,10 @@ UploadCommand.args = [
 ];
 
 UploadCommand.flags = {
+  protected: flags.boolean({
+    default: false,
+    description: "Sets the uploaded asset's visibility to 'protected'",
+  }),
   properties: flags.string({
     default: 'sid, path, url, visibility',
     description:
