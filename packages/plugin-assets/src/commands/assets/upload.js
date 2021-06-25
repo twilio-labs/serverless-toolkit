@@ -8,14 +8,13 @@ class UploadCommand extends TwilioClientCommand {
     await super.run();
 
     try {
-      const { args } = this.parse(UploadCommand);
       const pluginConfig = getPluginConfig(this);
       const assets = await upload({
         apiKey: this.currentProfile.apiKey,
         apiSecret: this.currentProfile.apiSecret,
         accountSid: this.currentProfile.accountSid,
         pluginConfig: pluginConfig,
-        file: args.file,
+        file: this.args.file,
         logger: this.logger,
       });
       this.output(assets, this.flags.properties);

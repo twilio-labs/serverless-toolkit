@@ -30,8 +30,6 @@ const mockLogger = {
   debug: jest.fn(),
 };
 
-const configPath = path.join(tmpdir(), 'scratch', 'plugin-assets-config.json');
-
 describe('init', () => {
   describe('with nothing in the config', () => {
     const fakeConfig = {
@@ -45,6 +43,7 @@ describe('init', () => {
         accountSid: 'test-account-sid',
         pluginConfig: fakeConfig,
         logger: mockLogger,
+        serviceName: 'test-asset-service',
       });
 
       expect(createEnvironmentFromSuffix).toHaveBeenCalledTimes(1);

@@ -10,10 +10,8 @@ const { TwilioCliError } = require('@twilio/cli-core').services.error;
 
 const { couldNotGetEnvironment } = require('./errorMessages');
 
-const DEFAULT_ASSET_SERVICE_NAME = 'CLI-Assets-Bucket';
-
-async function createServiceAndEnvironment(client) {
-  const serviceSid = await createService(DEFAULT_ASSET_SERVICE_NAME, client);
+async function createServiceAndEnvironment(client, serviceName) {
+  const serviceSid = await createService(serviceName, client);
   const environment = await createEnvironmentFromSuffix('', serviceSid, client);
   return {
     serviceSid,
@@ -21,7 +19,22 @@ async function createServiceAndEnvironment(client) {
   };
 }
 
-async function init({ apiKey, apiSecret, accountSid, pluginConfig, logger }) {
+function validateServiceName(serviceName) {
+  if (!serviceName.match(/^(?=.*$)[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*$/)) {
+    throw new TwilioCliError(
+      `Service name may only contain alphanumeric characters and hyphens.`
+    );
+  }
+}
+
+async function init({
+  apiKey,
+  apiSecret,
+  accountSid,
+  pluginConfig,
+  logger,
+  serviceName,
+}) {
   logger.debug('Loading config');
   const client = new TwilioServerlessApiClient({
     username: apiKey,
@@ -53,7 +66,11 @@ async function init({ apiKey, apiSecret, accountSid, pluginConfig, logger }) {
   } else {
     try {
       logger.debug('Creating new assets service and environment');
-      const serviceAndEnvironment = await createServiceAndEnvironment(client);
+      validateServiceName(serviceName);
+      const serviceAndEnvironment = await createServiceAndEnvironment(
+        client,
+        serviceName
+      );
       config[accountSid] = {
         serviceSid: serviceAndEnvironment.serviceSid,
         environmentSid: serviceAndEnvironment.environment.sid,
@@ -62,9 +79,13 @@ async function init({ apiKey, apiSecret, accountSid, pluginConfig, logger }) {
       return serviceAndEnvironment.environment;
     } catch (error) {
       logger.debug(error.toString());
-      throw new TwilioCliError(
-        `Could not create a new asset service for account ${accountSid}`
-      );
+      if (error.name === 'TwilioCliError') {
+        throw error;
+      } else {
+        throw new TwilioCliError(
+          `Could not create a new asset service for account ${accountSid}`
+        );
+      }
     }
   }
 }

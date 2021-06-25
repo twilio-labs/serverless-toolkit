@@ -6,7 +6,6 @@ const { list } = require('../../list');
 class ListCommand extends TwilioClientCommand {
   async run() {
     await super.run();
-
     try {
       const pluginConfig = getPluginConfig(this);
       const assets = await list({
