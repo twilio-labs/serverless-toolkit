@@ -30,9 +30,8 @@ test('sets status code, body and headers from constructor', () => {
 test('sets status code', () => {
   const response = new Response();
   expect(response['statusCode']).toBe(200);
-  const response2 = response.setStatusCode(418);
+  response.setStatusCode(418);
   expect(response['statusCode']).toBe(418);
-  expect(response2).toBe(response);
 });
 
 test('sets body correctly', () => {
@@ -40,15 +39,14 @@ test('sets body correctly', () => {
   expect(response['body']).toBeNull();
   response.setBody('Hello');
   expect(response['body']).toBe('Hello');
-  const response2 = response.setBody({ url: 'https://dkundel.com' });
+  response.setBody({ url: 'https://dkundel.com' });
   expect(response['body']).toEqual({ url: 'https://dkundel.com' });
-  expect(response2).toBe(response);
 });
 
 test('sets headers correctly', () => {
   const response = new Response();
   expect(response['headers']).toEqual({});
-  const response2 = response.setHeaders({
+  response.setHeaders({
     'Access-Control-Allow-Origin': 'example.com',
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
     'Access-Control-Allow-Headers': 'Content-Type',
@@ -62,7 +60,6 @@ test('sets headers correctly', () => {
   // @ts-ignore
   response.setHeaders(undefined);
   expect(response['headers']).toEqual(expected);
-  expect(response2).toBe(response);
 });
 
 test('appends a new header correctly', () => {
@@ -72,12 +69,11 @@ test('appends a new header correctly', () => {
   expect(response['headers']).toEqual({
     'Access-Control-Allow-Origin': 'dkundel.com',
   });
-  const response2 = response.appendHeader('Content-Type', 'application/json');
+  response.appendHeader('Content-Type', 'application/json');
   expect(response['headers']).toEqual({
     'Access-Control-Allow-Origin': 'dkundel.com',
     'Content-Type': 'application/json',
   });
-  expect(response2).toBe(response);
 });
 
 test('appends a header correctly with no existing one', () => {
@@ -85,14 +81,30 @@ test('appends a header correctly with no existing one', () => {
   expect(response['headers']).toEqual({});
   // @ts-ignore
   response['headers'] = undefined;
-  const response2 = response.appendHeader(
-    'Access-Control-Allow-Origin',
-    'dkundel.com'
-  );
+  response.appendHeader('Access-Control-Allow-Origin', 'dkundel.com');
   expect(response['headers']).toEqual({
     'Access-Control-Allow-Origin': 'dkundel.com',
   });
-  expect(response2).toBe(response);
+});
+
+test('setStatusCode returns the response', () => {
+  const response = new Response();
+  expect(response.setStatusCode(418)).toBe(response);
+});
+
+test('setBody returns the response', () => {
+  const response = new Response();
+  expect(response.setBody('Hello')).toBe(response);
+});
+
+test('setHeader returns the response', () => {
+  const response = new Response();
+  expect(response.setHeaders({ 'X-Test': 'Hello' })).toBe(response);
+});
+
+test('appendHeader returns the response', () => {
+  const response = new Response();
+  expect(response.appendHeader('X-Test', 'Hello')).toBe(response);
 });
 
 test('calls express response correctly', () => {
