@@ -34,9 +34,14 @@ async function list({ pluginConfig, apiKey, apiSecret, accountSid, logger }) {
       try {
         logger.debug(`Fetching build with sid ${environment.build_sid}`);
         const build = await getBuild(environment.build_sid, serviceSid, client);
-        const assets = build.asset_versions.map(assetVersion => {
-          if (assetVersion.visibility === 'public') {
+        const assets = build.asset_versions.map((assetVersion) => {
+          if (
+            assetVersion.visibility === 'public' ||
+            assetVersion.visibility === 'protected'
+          ) {
             assetVersion.url = `https://${environment.domain_name}${assetVersion.path}`;
+          } else {
+            assetVersion.url = '';
           }
           return assetVersion;
         });

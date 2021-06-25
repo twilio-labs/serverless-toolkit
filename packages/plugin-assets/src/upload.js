@@ -86,7 +86,7 @@ ${debugFlagMessage}`,
     }
   }
 
-  async function prepareAsset(file) {
+  async function prepareAsset(file, options = {}) {
     let filePath;
     spinner.text = 'Preparing asset';
     try {
@@ -94,11 +94,12 @@ ${debugFlagMessage}`,
       debug(`Reading file from ${filePath}`);
       const assetContent = await readFile(filePath);
       const path = `${encodeURIComponent(basename(filePath))}`;
+      const access = options.access || 'public';
       const newAsset = {
-        name: path,
-        access: 'public',
-        path,
         content: assetContent,
+        name: path,
+        path,
+        access,
       };
       return newAsset;
     } catch (error) {
@@ -149,7 +150,7 @@ ${debugFlagMessage}`,
       ]);
       let newName = newNameAnswers.newName.trim();
       while (
-        existingAssets.find(asset => asset.friendly_name === newName) ||
+        existingAssets.find((asset) => asset.friendly_name === newName) ||
         newName === ''
       ) {
         const message =
@@ -244,7 +245,7 @@ ${debugFlagMessage}`,
   async function waitForBuild(buildSid, serviceSid, client) {
     try {
       const updateHandler = new EventEmitter();
-      updateHandler.on('status-update', update => debug(update.message));
+      updateHandler.on('status-update', (update) => debug(update.message));
       await waitForSuccessfulBuild(buildSid, serviceSid, client, updateHandler);
     } catch (error) {
       handleError(
@@ -298,6 +299,7 @@ async function upload({
   accountSid,
   file,
   logger,
+  visibility,
 }) {
   const spinner = ora({
     isSilent: logger.config.level > 0,
@@ -337,10 +339,10 @@ async function upload({
       accountSid
     );
     await checkServiceForFunctions(client, serviceSid);
-    let newAsset = await prepareAsset(file);
+    let newAsset = await prepareAsset(file, { access: visibility });
     const existingAssets = await getExistingAssets(client, serviceSid);
     const existingAsset = existingAssets.find(
-      asset => asset.friendly_name === newAsset.name
+      (asset) => asset.friendly_name === newAsset.name
     );
     if (existingAsset) {
       newAsset = await overwriteRenameOrAbort(
@@ -367,8 +369,8 @@ async function upload({
         client
       );
       existingAssetVersions
-        .filter(av => av.asset_sid !== assetVersion.asset_sid)
-        .forEach(assetVersion => assetVersions.push(assetVersion.sid));
+        .filter((av) => av.asset_sid !== assetVersion.asset_sid)
+        .forEach((assetVersion) => assetVersions.push(assetVersion.sid));
     }
     const build = await triggerNewBuild(
       Array.from(assetVersions),
