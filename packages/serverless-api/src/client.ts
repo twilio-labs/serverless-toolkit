@@ -343,13 +343,8 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
    */
   async activateBuild(activateConfig: ActivateConfig): Promise<ActivateResult> {
     try {
-      let {
-        buildSid,
-        targetEnvironment,
-        serviceSid,
-        sourceEnvironment,
-        env,
-      } = activateConfig;
+      let { buildSid, targetEnvironment, serviceSid, sourceEnvironment, env } =
+        activateConfig;
 
       if (!buildSid && !sourceEnvironment) {
         const error = new Error(
@@ -688,6 +683,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
       limit: this.config.retryLimit || RETRY_LIMIT,
       methods: ['GET', 'POST', 'DELETE'],
       statusCodes: [429],
+      errorCodes: [],
     };
     return this.limit(() => this.client[method](path, options));
   }
