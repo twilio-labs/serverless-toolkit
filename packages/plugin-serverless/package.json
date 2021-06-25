@@ -69,6 +69,9 @@
       },
       "serverless:deploy": {
         "description": "deploys your local serverless project"
+      },
+      "serverless:env": {
+        "description": "retrieve and modify the environment variables for your deployment"
       }
     }
   },

@@ -231,6 +231,21 @@ export const ALL_FLAGS = {
     describe:
       'The version of Node.js to deploy the build to. (node10 or node12)',
   } as Options,
+  key: {
+    type: 'string',
+    describe: 'Name of the environment variable',
+    demandOption: true,
+  } as Options,
+  value: {
+    type: 'string',
+    describe: 'Name of the environment variable',
+    demandOption: true,
+  } as Options,
+  'show-values': {
+    type: 'boolean',
+    describe: 'Show the values of your environment variables',
+    default: false,
+  } as Options,
 };
 
 export type AvailableFlags = typeof ALL_FLAGS;
@@ -297,4 +312,7 @@ export type AllAvailableFlagTypes = SharedFlagsWithCredentials & {
   legacyMode: boolean;
   forkProcess: boolean;
   runtime?: string;
+  key: string;
+  value?: string;
+  showValues: boolean;
 };

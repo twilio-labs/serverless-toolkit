@@ -1,15 +1,17 @@
 /** @module @twilio-labs/serverless-api/dist/api */
 
 import debug from 'debug';
+import { TwilioServerlessApiClient } from '../client';
 import {
   EnvironmentVariables,
+  Sid,
   Variable,
   VariableList,
   VariableResource,
 } from '../types';
-import { TwilioServerlessApiClient } from '../client';
-import { getPaginatedResource } from './utils/pagination';
 import { ClientApiError } from '../utils/error';
+import { getPaginatedResource } from './utils/pagination';
+import { isSid } from './utils/type-checks';
 
 const log = debug('twilio-serverless-api:variables');
 
@@ -181,4 +183,56 @@ export async function setEnvironmentVariables(
   });
 
   await Promise.all(variableResources);
+}
+
+export async function deleteEnvironmentVariable(
+  variableSid: string,
+  environmentSid: string,
+  serviceSid: string,
+  client: TwilioServerlessApiClient
+): Promise<boolean> {
+  try {
+    const resp = await client.request(
+      'delete',
+      `Services/${serviceSid}/Environments/${environmentSid}/Variables/${variableSid}`
+    );
+    return true;
+  } catch (err) {
+    log('%O', new ClientApiError(err));
+    throw err;
+  }
+}
+
+export async function removeEnvironmentVariables(
+  keys: string[],
+  environmentSid: string,
+  serviceSid: string,
+  client: TwilioServerlessApiClient
+): Promise<boolean> {
+  const existingVariables = await listVariablesForEnvironment(
+    environmentSid,
+    serviceSid,
+    client
+  );
+
+  const variableSidMap = new Map<string, Sid>();
+  existingVariables.forEach((variableResource) => {
+    variableSidMap.set(variableResource.key, variableResource.sid);
+  });
+
+  const requests: Promise<boolean>[] = keys.map((key) => {
+    const variableSid = variableSidMap.get(key);
+    if (isSid(variableSid)) {
+      return deleteEnvironmentVariable(
+        variableSid,
+        environmentSid,
+        serviceSid,
+        client
+      );
+    }
+    return Promise.resolve(true);
+  });
+
+  await Promise.all(requests);
+  return true;
 }

@@ -9,7 +9,14 @@ export type SpecializedConfigOptions = {
   environmentSuffix: string;
 };
 
-export const EXCLUDED_FLAGS = ['username', 'password', 'config'];
+export const EXCLUDED_FLAGS = [
+  'username',
+  'password',
+  'config',
+  'key',
+  'value',
+  'show-values',
+];
 
 export function readSpecializedConfig<T extends CommandConfigurationNames>(
   baseDir: string,
