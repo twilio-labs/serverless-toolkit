@@ -31,6 +31,8 @@ const {
   debugFlagMessage,
 } = require('./errorMessages');
 
+const pkgJson = require('../package.json');
+
 function getUtils(spinner, logger) {
   function debug(message) {
     const wasSpinning = spinner.isSpinning;
@@ -331,6 +333,7 @@ async function upload({
     const client = new TwilioServerlessApiClient({
       username: apiKey,
       password: apiSecret,
+      userAgentExtensions: [`@twilio-labs/plugin-assets/${pkgJson.version}`],
     });
     const environment = await getEnvironmentWithClient(
       client,

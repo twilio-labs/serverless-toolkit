@@ -18,6 +18,7 @@ import {
   readPackageJsonContent,
 } from './utils';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
+import { getUserAgentExtensions } from './utils/userAgentExtensions';
 
 export type DeployLocalProjectConfig = ApiDeployLocalProjectConfig & {
   username: string;
@@ -131,5 +132,6 @@ export async function getConfigFromFlags(
     region,
     edge,
     runtime,
+    userAgentExtensions: getUserAgentExtensions('deploy', externalCliOptions),
   };
 }

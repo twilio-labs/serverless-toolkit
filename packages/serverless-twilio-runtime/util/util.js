@@ -2,11 +2,12 @@
 
 const {
   TwilioServerlessApiClient,
-  utils
+  utils,
 } = require('@twilio-labs/serverless-api');
 const path = require('path');
 const { readFile } = utils;
 const { logMessage } = require('./log');
+const pkgJson = require('../package.json');
 
 /**
  * Initialize the Twilio client and attach serverless logging to it
@@ -19,10 +20,13 @@ function getTwilioClient(serverless) {
 
   const client = new TwilioServerlessApiClient({
     accountSid,
-    authToken
+    authToken,
+    userAgentExtensions: [
+      `@twilio-labs/serverless-twilio-runtime/${pkgJson.version}`,
+    ],
   });
 
-  client.on('status-update', evt => {
+  client.on('status-update', (evt) => {
     logMessage(serverless, evt.message);
   });
 
@@ -40,13 +44,13 @@ async function getTwilioDeployConfig(serverless, options = {}) {
   const config = {
     env: serverless.service.provider.environmentVars || {},
     pkgJson: {
-      dependencies: serverless.service.provider.dependencies
+      dependencies: serverless.service.provider.dependencies,
     },
     serviceName: serverless.service.service,
     functionsEnv: serverless.service.provider.environment || 'dev',
     assets: [],
     functions: [],
-    overrideExistingService: true
+    overrideExistingService: true,
   };
 
   if (serverless.service.functions) {
@@ -134,11 +138,11 @@ async function getEnvironment(
 ) {
   const { environments } = await twilioServerlessClient.list({
     types: ['environments'],
-    serviceName
+    serviceName,
   });
 
   const environment = environments.find(
-    env => env.domain_suffix === environmentName
+    (env) => env.domain_suffix === environmentName
   );
 
   if (!environment) {
@@ -154,5 +158,5 @@ module.exports = {
   getEnvironment,
   getTwilioClient,
   getTwilioDeployConfig,
-  readFile
+  readFile,
 };

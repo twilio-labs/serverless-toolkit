@@ -5,6 +5,7 @@ const {
 const { getBuild } = require('@twilio-labs/serverless-api/dist/api/builds');
 const { TwilioCliError } = require('@twilio/cli-core').services.error;
 const { couldNotGetEnvironment, couldNotGetBuild } = require('./errorMessages');
+const pkgJson = require('../package.json');
 
 async function list({ pluginConfig, apiKey, apiSecret, accountSid, logger }) {
   let environment;
@@ -18,6 +19,7 @@ async function list({ pluginConfig, apiKey, apiSecret, accountSid, logger }) {
     const client = new TwilioServerlessApiClient({
       username: apiKey,
       password: apiSecret,
+      userAgentExtensions: [`@twilio-labs/plugin-assets/${pkgJson.version}`],
     });
     try {
       logger.debug(
