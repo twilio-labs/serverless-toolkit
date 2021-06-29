@@ -3,9 +3,28 @@ import { Response } from '../../../src/dev-runtime/internal/response';
 
 test('has correct defaults', () => {
   const response = new Response();
-  expect(response['body']).toBeUndefined();
+  expect(response['body']).toBeNull();
   expect(response['statusCode']).toBe(200);
   expect(response['headers']).toEqual({});
+});
+
+test('sets status code, body and headers from constructor', () => {
+  const response = new Response({
+    headers: {
+      'Access-Control-Allow-Origin': 'example.com',
+      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+    body: 'Error',
+    statusCode: 400,
+  });
+  expect(response['statusCode']).toBe(400);
+  expect(response['body']).toBe('Error');
+  expect(response['headers']).toEqual({
+    'Access-Control-Allow-Origin': 'example.com',
+    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  });
 });
 
 test('sets status code', () => {
@@ -17,7 +36,7 @@ test('sets status code', () => {
 
 test('sets body correctly', () => {
   const response = new Response();
-  expect(response['body']).toBeUndefined();
+  expect(response['body']).toBeNull();
   response.setBody('Hello');
   expect(response['body']).toBe('Hello');
   response.setBody({ url: 'https://dkundel.com' });
@@ -66,6 +85,26 @@ test('appends a header correctly with no existing one', () => {
   expect(response['headers']).toEqual({
     'Access-Control-Allow-Origin': 'dkundel.com',
   });
+});
+
+test('setStatusCode returns the response', () => {
+  const response = new Response();
+  expect(response.setStatusCode(418)).toBe(response);
+});
+
+test('setBody returns the response', () => {
+  const response = new Response();
+  expect(response.setBody('Hello')).toBe(response);
+});
+
+test('setHeader returns the response', () => {
+  const response = new Response();
+  expect(response.setHeaders({ 'X-Test': 'Hello' })).toBe(response);
+});
+
+test('appendHeader returns the response', () => {
+  const response = new Response();
+  expect(response.appendHeader('X-Test', 'Hello')).toBe(response);
 });
 
 test('calls express response correctly', () => {
