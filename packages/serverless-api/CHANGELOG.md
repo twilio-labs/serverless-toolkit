@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.1](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-api@5.1.0...@twilio-labs/serverless-api@5.1.1) (2021-06-30)
+
+
+### Bug Fixes
+
+* **serverless-api:** do not retry for HTTP client request errors ([#285](https://github.com/twilio-labs/serverless-toolkit/issues/285)) ([ecbf4ab](https://github.com/twilio-labs/serverless-toolkit/commit/ecbf4ab4f5b691b017687663ba068d6f387e35d5))
+
+
+
+
+
 # [5.1.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-api@5.0.0...@twilio-labs/serverless-api@5.1.0) (2021-06-21)
 
 

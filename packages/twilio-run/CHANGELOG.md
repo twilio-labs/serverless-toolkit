@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.1](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.1.0...twilio-run@3.1.1) (2021-06-30)
+
+
+### Bug Fixes
+
+* **response:** brings Response object to parity with Functions ([#287](https://github.com/twilio-labs/serverless-toolkit/issues/287)) ([0c66d97](https://github.com/twilio-labs/serverless-toolkit/commit/0c66d97a344cf43b2e0c95a12e054fedecc1b027))
+
+
+
+
+
 # [3.1.0](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.0.1...twilio-run@3.1.0) (2021-06-21)
 
 
