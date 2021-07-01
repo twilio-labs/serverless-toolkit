@@ -10,8 +10,13 @@ export function outputVariables(
     writeOutput(JSON.stringify(result, null, '\t'));
   } else {
     const output = result.variables
-      .map((entry) => {
-        return chalk`{bold ${entry.key}} {dim ${entry.value}}`;
+      .map((entry: { [key: string]: string | undefined }) => {
+        const key = chalk`{bold ${entry.key}}`;
+        const value =
+          typeof entry.value !== 'undefined'
+            ? entry.value
+            : chalk`{dim Use --show-values to display value}`;
+        return `${key} ${value}`;
       })
       .join('\n');
     writeOutput(output);

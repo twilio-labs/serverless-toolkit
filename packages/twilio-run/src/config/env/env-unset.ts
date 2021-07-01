@@ -39,6 +39,10 @@ export async function getConfigFromFlags(
   let cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
   flags.cwd = cwd;
 
+  if (flags.production) {
+    flags.environment = '';
+  }
+
   const configFlags = readSpecializedConfig(cwd, flags.config, 'env', {
     username:
       flags.username ||

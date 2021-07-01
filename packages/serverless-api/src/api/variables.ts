@@ -139,13 +139,15 @@ function convertToVariableArray(env: EnvironmentVariables): Variable[] {
  * @param {string} environmentSid the environment the varibales should be set for
  * @param {string} serviceSid the service the environment belongs to
  * @param {TwilioServerlessApiClient} client API client
+ * @param {boolean} [removeRedundantOnes=false] whether to remove variables that are not passed but are currently set
  * @returns {Promise<void>}
  */
 export async function setEnvironmentVariables(
   envVariables: EnvironmentVariables,
   environmentSid: string,
   serviceSid: string,
-  client: TwilioServerlessApiClient
+  client: TwilioServerlessApiClient,
+  removeRedundantOnes: boolean = false
 ): Promise<void> {
   const existingVariables = await listVariablesForEnvironment(
     environmentSid,
@@ -183,8 +185,32 @@ export async function setEnvironmentVariables(
   });
 
   await Promise.all(variableResources);
+
+  if (removeRedundantOnes) {
+    const removeVariablePromises = existingVariables.map(async (variable) => {
+      if (typeof envVariables[variable.key] === 'undefined') {
+        return deleteEnvironmentVariable(
+          variable.sid,
+          environmentSid,
+          serviceSid,
+          client
+        );
+      }
+    });
+    await Promise.all(removeVariablePromises);
+  }
 }
 
+/**
+ * Deletes a given variable from a given environment
+ *
+ * @export
+ * @param {string} variableSid the SID of the variable to delete
+ * @param {string} environmentSid the environment the variable belongs to
+ * @param {string} serviceSid the service the environment belongs to
+ * @param {TwilioServerlessApiClient} client API client instance
+ * @returns {Promise<boolean>}
+ */
 export async function deleteEnvironmentVariable(
   variableSid: string,
   environmentSid: string,
@@ -203,6 +229,16 @@ export async function deleteEnvironmentVariable(
   }
 }
 
+/**
+ * Deletes all variables matching the passed keys from an environment
+ *
+ * @export
+ * @param {string[]} keys the keys of the variables to delete
+ * @param {string} environmentSid the environment the variables belong to
+ * @param {string} serviceSid the service the environment belongs to
+ * @param {TwilioServerlessApiClient} client API client instance
+ * @returns {Promise<boolean>}
+ */
 export async function removeEnvironmentVariables(
   keys: string[],
   environmentSid: string,

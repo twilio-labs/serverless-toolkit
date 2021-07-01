@@ -189,6 +189,15 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
       environmentSid = config.environment;
     }
 
+    const removeRedundantVariables = !config.append;
+    await setEnvironmentVariables(
+      config.env,
+      environmentSid,
+      serviceSid,
+      this,
+      removeRedundantVariables
+    );
+
     return { serviceSid, environmentSid };
   }
 

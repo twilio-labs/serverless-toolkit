@@ -1,4 +1,4 @@
-import { GetEnvironmentVariablesConfig as ApiEnvironmentConfig } from '@twilio-labs/serverless-api';
+import { SetEnvironmentVariablesConfig as ApiEnvironmentConfig } from '@twilio-labs/serverless-api';
 import path from 'path';
 import { Arguments } from 'yargs';
 import { cliInfo } from '../../commands/list';
@@ -8,15 +8,15 @@ import {
   SharedFlagsWithCredentialNames,
 } from '../../flags';
 import { getFunctionServiceSid } from '../../serverless-api/utils';
-import { readSpecializedConfig } from './../global';
+import { readSpecializedConfig } from '../global';
 import {
   getCredentialsFromFlags,
   getServiceNameFromFlags,
   readLocalEnvFile,
-} from './../utils';
-import { mergeFlagsAndConfig } from './../utils/mergeFlagsAndConfig';
+} from '../utils';
+import { mergeFlagsAndConfig } from '../utils/mergeFlagsAndConfig';
 
-export type EnvGetConfig = ApiEnvironmentConfig & {
+export type EnvSetConfig = ApiEnvironmentConfig & {
   username: string;
   password: string;
   cwd: string;
@@ -26,16 +26,17 @@ export type ConfigurableEnvGetCliFlags = Pick<
   AllAvailableFlagTypes,
   SharedFlagsWithCredentialNames | 'serviceSid' | 'environment' | 'production'
 >;
-export type EnvGetFlags = Arguments<
+export type EnvSetFlags = Arguments<
   ConfigurableEnvGetCliFlags & {
     key: string;
+    value: string;
   }
 >;
 
 export async function getConfigFromFlags(
-  flags: EnvGetFlags,
+  flags: EnvSetFlags,
   externalCliOptions?: ExternalCliOptions
-): Promise<EnvGetConfig> {
+): Promise<EnvSetConfig> {
   let cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
   flags.cwd = cwd;
 
@@ -51,7 +52,7 @@ export async function getConfigFromFlags(
     environmentSuffix: flags.environment,
   });
 
-  flags = mergeFlagsAndConfig<EnvGetFlags>(configFlags, flags, cliInfo);
+  flags = mergeFlagsAndConfig<EnvSetFlags>(configFlags, flags, cliInfo);
   cwd = flags.cwd || cwd;
 
   const { localEnv: envFileVars, envPath } = await readLocalEnvFile(flags);
@@ -82,7 +83,15 @@ export async function getConfigFromFlags(
     );
   }
 
-  const keys = [flags.key];
+  if (!flags.value) {
+    throw new Error(
+      'Missing --value argument. Please provide a key for your environment variable.'
+    );
+  }
+
+  const env = {
+    [flags.key]: flags.value,
+  };
 
   return {
     cwd,
@@ -93,7 +102,7 @@ export async function getConfigFromFlags(
     environment: flags.environment,
     region: flags.region,
     edge: flags.edge,
-    keys,
-    getValues: true,
+    env,
+    append: true,
   };
 }
