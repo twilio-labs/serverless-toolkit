@@ -77,12 +77,12 @@ export function constructHeaders(rawHeaders?: string[]): Headers {
 
 export function constructEvent<T extends {} = {}>(req: ExpressRequest): T {
   return {
-    ...req.query,
-    ...req.body,
     request: {
       headers: constructHeaders(req.rawHeaders),
       cookies: (req.cookies || {}) as Cookies,
     },
+    ...req.query,
+    ...req.body,
   };
 }
 

@@ -160,6 +160,23 @@ describe('constructEvent function', () => {
     });
   });
 
+  test('does not override request', () => {
+    const event = constructEvent(
+      asExpressRequest({
+        body: {
+          Body: 'Bye',
+        },
+        query: {
+          request: 'Hello',
+        },
+      })
+    );
+    expect(event).toEqual({
+      Body: 'Bye',
+      request: 'Hello',
+    });
+  });
+
   test('handles empty body', () => {
     const event = constructEvent(
       asExpressRequest({
