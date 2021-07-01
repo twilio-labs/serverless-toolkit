@@ -22,6 +22,7 @@ import { Response } from '../../src/dev-runtime/internal/response';
 import {
   constructContext,
   constructEvent,
+  constructHeaders,
   constructGlobalScope,
   handleError,
   handleSuccess,
@@ -37,16 +38,21 @@ import { cleanUpStackTrace } from '../../src/dev-runtime/utils/stack-trace/clean
 
 const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
 
-const mockResponse = (new MockResponse() as unknown) as ExpressResponse;
+const mockResponse = new MockResponse() as unknown as ExpressResponse;
 mockResponse.type = jest.fn(() => mockResponse);
 
-function asExpressRequest(req: { query?: {}; body?: {} }): ExpressRequest {
-  return (req as unknown) as ExpressRequest;
+function asExpressRequest(req: {
+  query?: {};
+  body?: {};
+  rawHeaders?: string[];
+  cookies?: {};
+}): ExpressRequest {
+  return req as unknown as ExpressRequest;
 }
 
 describe('handleError function', () => {
   test('returns string error', () => {
-    const mockRequest = (new MockRequest() as unknown) as ExpressRequest;
+    const mockRequest = new MockRequest() as unknown as ExpressRequest;
     mockRequest['useragent'] = {
       isDesktop: true,
       isMobile: false,
@@ -59,7 +65,7 @@ describe('handleError function', () => {
   });
 
   test('handles objects as error argument', () => {
-    const mockRequest = (new MockRequest() as unknown) as ExpressRequest;
+    const mockRequest = new MockRequest() as unknown as ExpressRequest;
     mockRequest['useragent'] = {
       isDesktop: true,
       isMobile: false,
@@ -72,7 +78,7 @@ describe('handleError function', () => {
   });
 
   test('wraps error object for desktop requests', () => {
-    const mockRequest = (new MockRequest() as unknown) as ExpressRequest;
+    const mockRequest = new MockRequest() as unknown as ExpressRequest;
     mockRequest['useragent'] = {
       isDesktop: true,
       isMobile: false,
@@ -85,7 +91,7 @@ describe('handleError function', () => {
   });
 
   test('wraps error object for mobile requests', () => {
-    const mockRequest = (new MockRequest() as unknown) as ExpressRequest;
+    const mockRequest = new MockRequest() as unknown as ExpressRequest;
     mockRequest['useragent'] = {
       isDesktop: false,
       isMobile: true,
@@ -98,7 +104,7 @@ describe('handleError function', () => {
   });
 
   test('returns string version of error for other requests', () => {
-    const mockRequest = (new MockRequest() as unknown) as ExpressRequest;
+    const mockRequest = new MockRequest() as unknown as ExpressRequest;
     mockRequest['useragent'] = {
       isDesktop: false,
       isMobile: false,
@@ -128,7 +134,11 @@ describe('constructEvent function', () => {
         },
       })
     );
-    expect(event).toEqual({ Body: 'Hello', index: 5 });
+    expect(event).toEqual({
+      Body: 'Hello',
+      index: 5,
+      request: { headers: {}, cookies: {} },
+    });
   });
 
   test('overrides query with body', () => {
@@ -143,7 +153,28 @@ describe('constructEvent function', () => {
         },
       })
     );
-    expect(event).toEqual({ Body: 'Bye', From: '+123456789' });
+    expect(event).toEqual({
+      Body: 'Bye',
+      From: '+123456789',
+      request: { headers: {}, cookies: {} },
+    });
+  });
+
+  test('does not override request', () => {
+    const event = constructEvent(
+      asExpressRequest({
+        body: {
+          Body: 'Bye',
+        },
+        query: {
+          request: 'Hello',
+        },
+      })
+    );
+    expect(event).toEqual({
+      Body: 'Bye',
+      request: 'Hello',
+    });
   });
 
   test('handles empty body', () => {
@@ -156,7 +187,11 @@ describe('constructEvent function', () => {
         },
       })
     );
-    expect(event).toEqual({ Body: 'Hello', From: '+123456789' });
+    expect(event).toEqual({
+      Body: 'Hello',
+      From: '+123456789',
+      request: { headers: {}, cookies: {} },
+    });
   });
 
   test('handles empty query', () => {
@@ -169,7 +204,11 @@ describe('constructEvent function', () => {
         query: {},
       })
     );
-    expect(event).toEqual({ Body: 'Hello', From: '+123456789' });
+    expect(event).toEqual({
+      Body: 'Hello',
+      From: '+123456789',
+      request: { headers: {}, cookies: {} },
+    });
   });
 
   test('handles both empty', () => {
@@ -179,7 +218,135 @@ describe('constructEvent function', () => {
         query: {},
       })
     );
-    expect(event).toEqual({});
+    expect(event).toEqual({ request: { headers: {}, cookies: {} } });
+  });
+
+  test('adds headers to request property', () => {
+    const event = constructEvent(
+      asExpressRequest({
+        body: {},
+        query: {},
+        rawHeaders: ['x-test', 'example'],
+      })
+    );
+    expect(event).toEqual({
+      request: { headers: { 'x-test': 'example' }, cookies: {} },
+    });
+  });
+
+  test('adds cookies to request property', () => {
+    const event = constructEvent(
+      asExpressRequest({
+        body: {},
+        query: {},
+        rawHeaders: [],
+        cookies: { flavour: 'choc chip' },
+      })
+    );
+    expect(event).toEqual({
+      request: { headers: {}, cookies: { flavour: 'choc chip' } },
+    });
+  });
+});
+
+describe('constructHeaders function', () => {
+  test('handles undefined', () => {
+    const headers = constructHeaders();
+    expect(headers).toEqual({});
+  });
+  test('handles an empty array', () => {
+    const headers = constructHeaders([]);
+    expect(headers).toEqual({});
+  });
+  test('it handles a single header value', () => {
+    const headers = constructHeaders(['x-test', 'hello, world']);
+    expect(headers).toEqual({ 'x-test': 'hello, world' });
+  });
+  test('it handles a duplicated header value', () => {
+    const headers = constructHeaders([
+      'x-test',
+      'hello, world',
+      'x-test',
+      'ahoy',
+    ]);
+    expect(headers).toEqual({ 'x-test': ['hello, world', 'ahoy'] });
+  });
+  test('it handles a duplicated header value multiple times', () => {
+    const headers = constructHeaders([
+      'x-test',
+      'hello, world',
+      'x-test',
+      'ahoy',
+      'x-test',
+      'third',
+    ]);
+    expect(headers).toEqual({ 'x-test': ['hello, world', 'ahoy', 'third'] });
+  });
+  test('it strips restricted headers', () => {
+    const headers = constructHeaders([
+      'x-test',
+      'hello, world',
+      'I-Twilio-Test',
+      'nope',
+    ]);
+    expect(headers).toEqual({ 'x-test': 'hello, world' });
+  });
+  test('it lowercases and combines header names', () => {
+    const headers = constructHeaders([
+      'X-Test',
+      'hello, world',
+      'X-test',
+      'ahoy',
+      'x-test',
+      'third',
+    ]);
+    expect(headers).toEqual({
+      'x-test': ['hello, world', 'ahoy', 'third'],
+    });
+  });
+
+  test("it doesn't pass on restricted headers", () => {
+    const headers = constructHeaders([
+      'I-Twilio-Example',
+      'example',
+      'I-T-Example',
+      'example',
+      'OT-Example',
+      'example',
+      'x-amz-example',
+      'example',
+      'via',
+      'example',
+      'Referer',
+      'example.com',
+      'transfer-encoding',
+      'example',
+      'proxy-authorization',
+      'example',
+      'proxy-authenticate',
+      'example',
+      'x-forwarded-example',
+      'example',
+      'x-real-ip',
+      'example',
+      'connection',
+      'example',
+      'proxy-connection',
+      'example',
+      'expect',
+      'example',
+      'trailer',
+      'example',
+      'upgrade',
+      'example',
+      'x-accel-example',
+      'example',
+      'x-actual-header',
+      'this works',
+    ]);
+    expect(headers).toEqual({
+      'x-actual-header': 'this works',
+    });
   });
 });
 

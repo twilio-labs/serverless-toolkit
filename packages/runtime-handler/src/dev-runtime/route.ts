@@ -25,6 +25,10 @@ import debug from './utils/debug';
 import { wrapErrorInHtml } from './utils/error-html';
 import { requireFromProject } from './utils/requireFromProject';
 import { cleanUpStackTrace } from './utils/stack-trace/clean-up';
+import {
+  restrictedHeaderPrefixes,
+  restrictedHeaderExactMatches,
+} from './checks/restricted-headers';
 
 const log = debug('twilio-runtime-handler:dev:route');
 
@@ -35,8 +39,51 @@ const RUNNER_PATH =
 
 let twilio: TwilioPackage;
 
+type Headers = {
+  [key: string]: string | string[];
+};
+type Cookies = {
+  [key: string]: string;
+};
+
+export function constructHeaders(rawHeaders?: string[]): Headers {
+  if (rawHeaders && rawHeaders.length > 0) {
+    const headers: Headers = {};
+    for (let i = 0, len = rawHeaders.length; i < len; i += 2) {
+      const headerName = rawHeaders[i].toLowerCase();
+      if (
+        restrictedHeaderExactMatches.some(
+          (headerType) => headerName === headerType
+        ) ||
+        restrictedHeaderPrefixes.some((headerType) =>
+          headerName.startsWith(headerType)
+        )
+      ) {
+        continue;
+      }
+      const currentHeader = headers[headerName];
+      if (!currentHeader) {
+        headers[headerName] = rawHeaders[i + 1];
+      } else if (typeof currentHeader === 'string') {
+        headers[headerName] = [currentHeader, rawHeaders[i + 1]];
+      } else {
+        headers[headerName] = [...currentHeader, rawHeaders[i + 1]];
+      }
+    }
+    return headers;
+  }
+  return {};
+}
+
 export function constructEvent<T extends {} = {}>(req: ExpressRequest): T {
-  return { ...req.query, ...req.body };
+  return {
+    request: {
+      headers: constructHeaders(req.rawHeaders),
+      cookies: (req.cookies || {}) as Cookies,
+    },
+    ...req.query,
+    ...req.body,
+  };
 }
 
 export function constructContext<T extends {} = {}>(
