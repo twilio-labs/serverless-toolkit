@@ -161,6 +161,14 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
     return this.client;
   }
 
+  /**
+   * Sets a set of environment variables for a given Twilio Serverless environment
+   * If append is false it will remove all existing environment variables.
+   *
+   * @param {SetEnvironmentVariablesConfig} config
+   * @returns {Promise<SetEnvironmentVariablesResult>}
+   * @memberof TwilioServerlessApiClient
+   */
   async setEnvironmentVariables(
     config: SetEnvironmentVariablesConfig
   ): Promise<SetEnvironmentVariablesResult> {
@@ -201,6 +209,14 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
     return { serviceSid, environmentSid };
   }
 
+  /**
+   * Retrieves a list of environment variables for a given Twilio Serverless environment.
+   * If config.getValues is false (default) the values will be all set to undefined.
+   *
+   * @param {GetEnvironmentVariablesConfig} config
+   * @returns {Promise<GetEnvironmentVariablesResult>}
+   * @memberof TwilioServerlessApiClient
+   */
   async getEnvironmentVariables(
     config: GetEnvironmentVariablesConfig
   ): Promise<GetEnvironmentVariablesResult> {
@@ -251,6 +267,13 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
     return { serviceSid, environmentSid, variables };
   }
 
+  /**
+   * Deletes a list of environment variables (by key) for a given Twilio Serverless environment.
+   *
+   * @param {RemoveEnvironmentVariablesConfig} config
+   * @returns {Promise<RemoveEnvironmentVariablesResult>}
+   * @memberof TwilioServerlessApiClient
+   */
   async removeEnvironmentVariables(
     config: RemoveEnvironmentVariablesConfig
   ): Promise<RemoveEnvironmentVariablesResult> {
