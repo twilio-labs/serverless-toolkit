@@ -525,6 +525,7 @@ describe('handleSuccess function', () => {
     expect(mockResponse.send).toHaveBeenCalledWith({ data: 'Something' });
     expect(mockResponse.set).toHaveBeenCalledWith({
       'Content-Type': 'application/json',
+      'Set-Cookie': [],
     });
     expect(mockResponse.type).not.toHaveBeenCalled();
   });
