@@ -87,6 +87,20 @@ test('appends a header correctly with no existing one', () => {
   });
 });
 
+test('appends multi value headers', () => {
+  const response = new Response();
+  expect(response['headers']).toEqual({});
+  response.appendHeader('Access-Control-Allow-Origin', 'dkundel.com');
+  response.appendHeader('Access-Control-Allow-Origin', 'philna.sh');
+  response.appendHeader('Access-Control-Allow-Methods', 'GET');
+  response.appendHeader('Access-Control-Allow-Methods', 'DELETE');
+  response.appendHeader('Access-Control-Allow-Methods', ['PUT', 'POST']);
+  expect(response['headers']).toEqual({
+    'Access-Control-Allow-Origin': ['dkundel.com', 'philna.sh'],
+    'Access-Control-Allow-Methods': ['GET', 'DELETE', 'PUT', 'POST'],
+  });
+});
+
 test('setStatusCode returns the response', () => {
   const response = new Response();
   expect(response.setStatusCode(418)).toBe(response);

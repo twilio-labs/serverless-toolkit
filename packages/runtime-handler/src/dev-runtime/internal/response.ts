@@ -1,4 +1,5 @@
 import { TwilioResponse } from '@twilio-labs/serverless-runtime-types/types';
+import { Headers, HeaderValue } from '../types';
 import { Response as ExpressResponse } from 'express';
 import debug from '../utils/debug';
 
@@ -8,11 +9,6 @@ type ResponseOptions = {
   headers?: Headers;
   statusCode?: number;
   body?: object | string;
-};
-
-type HeaderValue = number | string;
-type Headers = {
-  [key: string]: HeaderValue;
 };
 
 export class Response implements TwilioResponse {
@@ -60,7 +56,24 @@ export class Response implements TwilioResponse {
   appendHeader(key: string, value: HeaderValue): Response {
     log('Appending header for %s', key, value);
     this.headers = this.headers || {};
-    this.headers[key] = value;
+    const existingValue = this.headers[key];
+    let newHeaderValue: HeaderValue = [];
+    if (existingValue) {
+      if (Array.isArray(existingValue) && Array.isArray(value)) {
+        newHeaderValue = [...existingValue, ...value];
+      } else if (Array.isArray(existingValue) && !Array.isArray(value)) {
+        newHeaderValue = [...existingValue, value];
+      } else if (!Array.isArray(existingValue) && Array.isArray(value)) {
+        newHeaderValue = [existingValue, ...value];
+      } else if (!Array.isArray(existingValue) && !Array.isArray(value)) {
+        newHeaderValue = [existingValue, value];
+      }
+      if (newHeaderValue) {
+        this.headers[key] = newHeaderValue;
+      }
+    } else {
+      this.headers[key] = value;
+    }
     return this;
   }
 

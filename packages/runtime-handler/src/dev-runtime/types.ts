@@ -71,3 +71,8 @@ export type LoggerInstance = {
   error(msg: string, title?: string): void;
   log(msg: string, level: number): void;
 };
+
+export type HeaderValue = number | string | (string | number)[];
+export type Headers = {
+  [key: string]: HeaderValue;
+};
