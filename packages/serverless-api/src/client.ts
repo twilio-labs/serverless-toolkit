@@ -46,6 +46,7 @@ import { getApiUrl } from './api/utils/api-client';
 import { CONCURRENCY, RETRY_LIMIT } from './api/utils/http_config';
 import {
   listVariablesForEnvironment,
+  removeEnvironmentVariables,
   setEnvironmentVariables,
 } from './api/variables';
 import got from './got';
@@ -63,8 +64,18 @@ import {
   ListResult,
   LogApiResource,
   LogsConfig,
+  Sid,
 } from './types';
 import { DeployStatus } from './types/consts';
+import {
+  GetEnvironmentVariablesConfig,
+  GetEnvironmentVariablesResult,
+  KeyValue,
+  RemoveEnvironmentVariablesConfig,
+  RemoveEnvironmentVariablesResult,
+  SetEnvironmentVariablesConfig,
+  SetEnvironmentVariablesResult,
+} from './types/env';
 import { ClientApiError, convertApiErrorsAndThrow } from './utils/error';
 import { getListOfFunctionsAndAssets, SearchConfig } from './utils/fs';
 
@@ -148,6 +159,157 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
   getClient(): GotClient {
     debug.enable(process.env.DEBUG || '');
     return this.client;
+  }
+
+  /**
+   * Sets a set of environment variables for a given Twilio Serverless environment
+   * If append is false it will remove all existing environment variables.
+   *
+   * @param {SetEnvironmentVariablesConfig} config
+   * @returns {Promise<SetEnvironmentVariablesResult>}
+   * @memberof TwilioServerlessApiClient
+   */
+  async setEnvironmentVariables(
+    config: SetEnvironmentVariablesConfig
+  ): Promise<SetEnvironmentVariablesResult> {
+    let serviceSid: Sid | undefined = config.serviceSid;
+    if (
+      typeof serviceSid === 'undefined' &&
+      typeof config.serviceName !== 'undefined'
+    ) {
+      serviceSid = await findServiceSid(config.serviceName, this);
+    }
+
+    if (typeof serviceSid === 'undefined') {
+      throw new Error('Missing service SID argument');
+    }
+
+    let environmentSid;
+
+    if (!isEnvironmentSid(config.environment)) {
+      const environmentResource = await getEnvironmentFromSuffix(
+        config.environment,
+        serviceSid,
+        this
+      );
+      environmentSid = environmentResource.sid;
+    } else {
+      environmentSid = config.environment;
+    }
+
+    const removeRedundantVariables = !config.append;
+    await setEnvironmentVariables(
+      config.env,
+      environmentSid,
+      serviceSid,
+      this,
+      removeRedundantVariables
+    );
+
+    return { serviceSid, environmentSid };
+  }
+
+  /**
+   * Retrieves a list of environment variables for a given Twilio Serverless environment.
+   * If config.getValues is false (default) the values will be all set to undefined.
+   *
+   * @param {GetEnvironmentVariablesConfig} config
+   * @returns {Promise<GetEnvironmentVariablesResult>}
+   * @memberof TwilioServerlessApiClient
+   */
+  async getEnvironmentVariables(
+    config: GetEnvironmentVariablesConfig
+  ): Promise<GetEnvironmentVariablesResult> {
+    let serviceSid: Sid | undefined = config.serviceSid;
+    if (
+      typeof serviceSid === 'undefined' &&
+      typeof config.serviceName !== 'undefined'
+    ) {
+      serviceSid = await findServiceSid(config.serviceName, this);
+    }
+
+    if (typeof serviceSid === 'undefined') {
+      throw new Error('Missing service SID argument');
+    }
+
+    let environmentSid;
+
+    if (!isEnvironmentSid(config.environment)) {
+      const environmentResource = await getEnvironmentFromSuffix(
+        config.environment,
+        serviceSid,
+        this
+      );
+      environmentSid = environmentResource.sid;
+    } else {
+      environmentSid = config.environment;
+    }
+
+    const result = await listVariablesForEnvironment(
+      environmentSid,
+      serviceSid,
+      this
+    );
+
+    let variables: KeyValue[] = result.map((resource) => {
+      return {
+        key: resource.key,
+        value: config.getValues ? resource.value : undefined,
+      };
+    });
+
+    if (config.keys.length > 0) {
+      variables = variables.filter((entry) => {
+        return config.keys.includes(entry.key);
+      });
+    }
+
+    return { serviceSid, environmentSid, variables };
+  }
+
+  /**
+   * Deletes a list of environment variables (by key) for a given Twilio Serverless environment.
+   *
+   * @param {RemoveEnvironmentVariablesConfig} config
+   * @returns {Promise<RemoveEnvironmentVariablesResult>}
+   * @memberof TwilioServerlessApiClient
+   */
+  async removeEnvironmentVariables(
+    config: RemoveEnvironmentVariablesConfig
+  ): Promise<RemoveEnvironmentVariablesResult> {
+    let serviceSid: Sid | undefined = config.serviceSid;
+    if (
+      typeof serviceSid === 'undefined' &&
+      typeof config.serviceName !== 'undefined'
+    ) {
+      serviceSid = await findServiceSid(config.serviceName, this);
+    }
+
+    if (typeof serviceSid === 'undefined') {
+      throw new Error('Missing service SID argument');
+    }
+
+    let environmentSid;
+
+    if (!isEnvironmentSid(config.environment)) {
+      const environmentResource = await getEnvironmentFromSuffix(
+        config.environment,
+        serviceSid,
+        this
+      );
+      environmentSid = environmentResource.sid;
+    } else {
+      environmentSid = config.environment;
+    }
+
+    await removeEnvironmentVariables(
+      config.keys,
+      environmentSid,
+      serviceSid,
+      this
+    );
+
+    return { serviceSid, environmentSid };
   }
 
   /**

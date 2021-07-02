@@ -1,6 +1,7 @@
 import { Merge } from 'type-fest';
 import { ConfigurableNewCliFlags } from '../commands/new';
 import { ConfigurableDeployCliFlags } from '../config/deploy';
+import { ConfigurableEnvGetCliFlags } from '../config/env/env-get';
 import { ConfigurableListCliFlags } from '../config/list';
 import { ConfigurableLogsCliFlags } from '../config/logs';
 import { ConfigurablePromoteCliFlags } from '../config/promote';
@@ -24,6 +25,7 @@ export type CommandConfigurations = {
   promote?: Partial<ConfigurablePromoteCliFlags>;
   logs?: Partial<ConfigurableLogsCliFlags>;
   new?: Partial<ConfigurableNewCliFlags>;
+  env?: Partial<ConfigurableEnvGetCliFlags>;
 };
 
 export type ConfigurationFile = Merge<
