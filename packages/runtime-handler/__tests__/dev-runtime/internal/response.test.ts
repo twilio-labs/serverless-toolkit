@@ -5,7 +5,9 @@ test('has correct defaults', () => {
   const response = new Response();
   expect(response['body']).toBeNull();
   expect(response['statusCode']).toBe(200);
-  expect(response['headers']).toEqual({});
+  expect(response['headers']).toEqual({
+    'Set-Cookie': [],
+  });
 });
 
 test('sets status code, body and headers from constructor', () => {
@@ -24,6 +26,7 @@ test('sets status code, body and headers from constructor', () => {
     'Access-Control-Allow-Origin': 'example.com',
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
     'Access-Control-Allow-Headers': 'Content-Type',
+    'Set-Cookie': [],
   });
 });
 
@@ -45,7 +48,9 @@ test('sets body correctly', () => {
 
 test('sets headers correctly', () => {
   const response = new Response();
-  expect(response['headers']).toEqual({});
+  expect(response['headers']).toEqual({
+    'Set-Cookie': [],
+  });
   response.setHeaders({
     'Access-Control-Allow-Origin': 'example.com',
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
@@ -55,6 +60,7 @@ test('sets headers correctly', () => {
     'Access-Control-Allow-Origin': 'example.com',
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
     'Access-Control-Allow-Headers': 'Content-Type',
+    'Set-Cookie': [],
   };
   expect(response['headers']).toEqual(expected);
   // @ts-ignore
@@ -62,28 +68,128 @@ test('sets headers correctly', () => {
   expect(response['headers']).toEqual(expected);
 });
 
+test('sets headers with string cookies', () => {
+  const response = new Response();
+  expect(response['headers']).toEqual({
+    'Set-Cookie': [],
+  });
+  response.setHeaders({
+    'Access-Control-Allow-Origin': 'example.com',
+    'Set-Cookie': 'Hi=Bye',
+  });
+  const expected = {
+    'Access-Control-Allow-Origin': 'example.com',
+    'Set-Cookie': ['Hi=Bye'],
+  };
+  expect(response['headers']).toEqual(expected);
+});
+
+test('sets headers with an array of cookies', () => {
+  const response = new Response();
+  expect(response['headers']).toEqual({
+    'Set-Cookie': [],
+  });
+  response.setHeaders({
+    'Access-Control-Allow-Origin': 'example.com',
+    'Set-Cookie': ['Hi=Bye', 'Hello=World'],
+  });
+  const expected = {
+    'Access-Control-Allow-Origin': 'example.com',
+    'Set-Cookie': ['Hi=Bye', 'Hello=World'],
+  };
+  expect(response['headers']).toEqual(expected);
+});
+
 test('appends a new header correctly', () => {
   const response = new Response();
-  expect(response['headers']).toEqual({});
+  expect(response['headers']).toEqual({
+    'Set-Cookie': [],
+  });
   response.appendHeader('Access-Control-Allow-Origin', 'dkundel.com');
   expect(response['headers']).toEqual({
     'Access-Control-Allow-Origin': 'dkundel.com',
+    'Set-Cookie': [],
   });
   response.appendHeader('Content-Type', 'application/json');
   expect(response['headers']).toEqual({
     'Access-Control-Allow-Origin': 'dkundel.com',
     'Content-Type': 'application/json',
+    'Set-Cookie': [],
   });
 });
 
 test('appends a header correctly with no existing one', () => {
   const response = new Response();
-  expect(response['headers']).toEqual({});
+  expect(response['headers']).toEqual({
+    'Set-Cookie': [],
+  });
   // @ts-ignore
   response['headers'] = undefined;
   response.appendHeader('Access-Control-Allow-Origin', 'dkundel.com');
   expect(response['headers']).toEqual({
     'Access-Control-Allow-Origin': 'dkundel.com',
+    'Set-Cookie': [],
+  });
+});
+
+test('appends multi value headers', () => {
+  const response = new Response();
+  expect(response['headers']).toEqual({
+    'Set-Cookie': [],
+  });
+  response.appendHeader('Access-Control-Allow-Origin', 'dkundel.com');
+  response.appendHeader('Access-Control-Allow-Origin', 'philna.sh');
+  response.appendHeader('Access-Control-Allow-Methods', 'GET');
+  response.appendHeader('Access-Control-Allow-Methods', 'DELETE');
+  response.appendHeader('Access-Control-Allow-Methods', ['PUT', 'POST']);
+  expect(response['headers']).toEqual({
+    'Access-Control-Allow-Origin': ['dkundel.com', 'philna.sh'],
+    'Access-Control-Allow-Methods': ['GET', 'DELETE', 'PUT', 'POST'],
+    'Set-Cookie': [],
+  });
+});
+
+test('sets a single cookie correctly', () => {
+  const response = new Response();
+  expect(response['headers']).toEqual({
+    'Set-Cookie': [],
+  });
+  response.setCookie('name', 'value');
+  expect(response['headers']).toEqual({
+    'Set-Cookie': ['name=value'],
+  });
+});
+
+test('sets a cookie with attributes', () => {
+  const response = new Response();
+  expect(response['headers']).toEqual({
+    'Set-Cookie': [],
+  });
+  response.setCookie('Hello', 'World', [
+    'HttpOnly',
+    'Secure',
+    'SameSite=Strict',
+    'Max-Age=86400',
+  ]);
+  expect(response['headers']).toEqual({
+    'Set-Cookie': ['Hello=World;HttpOnly;Secure;SameSite=Strict;Max-Age=86400'],
+  });
+});
+
+test('removes a cookie', () => {
+  const response = new Response();
+  expect(response['headers']).toEqual({
+    'Set-Cookie': [],
+  });
+  response.setCookie('Hello', 'World', [
+    'HttpOnly',
+    'Secure',
+    'SameSite=Strict',
+    'Max-Age=86400',
+  ]);
+  response.removeCookie('Hello');
+  expect(response['headers']).toEqual({
+    'Set-Cookie': ['Hello=;Max-Age=0'],
   });
 });
 
@@ -107,6 +213,16 @@ test('appendHeader returns the response', () => {
   expect(response.appendHeader('X-Test', 'Hello')).toBe(response);
 });
 
+test('setCookie returns the response', () => {
+  const response = new Response();
+  expect(response.setCookie('name', 'value')).toBe(response);
+});
+
+test('removeCookie returns the response', () => {
+  const response = new Response();
+  expect(response.removeCookie('name')).toBe(response);
+});
+
 test('calls express response correctly', () => {
   const mockRes = {
     status: jest.fn(),
@@ -121,7 +237,10 @@ test('calls express response correctly', () => {
 
   expect(mockRes.send).toHaveBeenCalledWith(`I'm a teapot!`);
   expect(mockRes.status).toHaveBeenCalledWith(418);
-  expect(mockRes.set).toHaveBeenCalledWith({ 'Content-Type': 'text/plain' });
+  expect(mockRes.set).toHaveBeenCalledWith({
+    'Content-Type': 'text/plain',
+    'Set-Cookie': [],
+  });
 });
 
 test('serializes a response', () => {
@@ -134,7 +253,10 @@ test('serializes a response', () => {
 
   expect(serialized.body).toEqual("I'm a teapot!");
   expect(serialized.statusCode).toEqual(418);
-  expect(serialized.headers).toEqual({ 'Content-Type': 'text/plain' });
+  expect(serialized.headers).toEqual({
+    'Content-Type': 'text/plain',
+    'Set-Cookie': [],
+  });
 });
 
 test('serializes a response with content type set to application/json', () => {
@@ -149,5 +271,8 @@ test('serializes a response with content type set to application/json', () => {
     JSON.stringify({ url: 'https://dkundel.com' })
   );
   expect(serialized.statusCode).toEqual(200);
-  expect(serialized.headers).toEqual({ 'Content-Type': 'application/json' });
+  expect(serialized.headers).toEqual({
+    'Content-Type': 'application/json',
+    'Set-Cookie': [],
+  });
 });

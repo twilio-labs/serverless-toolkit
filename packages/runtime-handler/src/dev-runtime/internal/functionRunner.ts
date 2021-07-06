@@ -1,7 +1,7 @@
 import { ServerlessCallback } from '@twilio-labs/serverless-runtime-types/types';
 import { serializeError } from 'serialize-error';
 import { constructContext, constructGlobalScope, isTwiml } from '../route';
-import { ServerConfig } from '../types';
+import { ServerConfig, Headers } from '../types';
 import { Response } from './response';
 import { setRoutes } from './route-cache';
 
@@ -11,7 +11,7 @@ const sendDebugMessage = (debugMessage: string, ...debugArgs: any) => {
 
 export type Reply = {
   body?: string | number | boolean | object;
-  headers?: { [key: string]: number | string };
+  headers?: Headers;
   statusCode: number;
 };
 
