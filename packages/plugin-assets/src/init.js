@@ -9,7 +9,7 @@ const {
 const { TwilioCliError } = require('@twilio/cli-core').services.error;
 
 const { couldNotGetEnvironment } = require('./errorMessages');
-const pkgJson = require('../package.json');
+const { getTwilioClient } = require('./client');
 
 async function createServiceAndEnvironment(client, serviceName) {
   const serviceSid = await createService(serviceName, client);
@@ -37,11 +37,7 @@ async function init({
   serviceName,
 }) {
   logger.debug('Loading config');
-  const client = new TwilioServerlessApiClient({
-    username: apiKey,
-    password: apiSecret,
-    userAgentExtensions: [`@twilio-labs/plugin-assets/${pkgJson.version}`],
-  });
+  const client = getTwilioClient(apiKey, apiSecret);
   const config = await pluginConfig.getConfig();
   if (
     config[accountSid] &&
