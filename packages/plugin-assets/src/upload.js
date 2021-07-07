@@ -1,6 +1,5 @@
 const ora = require('ora');
 const inquirer = require('inquirer');
-const { TwilioServerlessApiClient } = require('@twilio-labs/serverless-api');
 const { TwilioCliError } = require('@twilio/cli-core').services.error;
 const {
   getEnvironment,

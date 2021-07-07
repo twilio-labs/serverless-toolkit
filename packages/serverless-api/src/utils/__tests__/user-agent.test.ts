@@ -14,10 +14,12 @@ jest.mock('os', () => {
   };
 });
 
+const nodeVersion = process.version;
+
 describe('getUserAgent', () => {
   test('should return the right base information', () => {
     expect(getUserAgent()).toEqual(
-      '@twilio-labs/serverless-api-test/1.0.0-test (darwin x64)'
+      `@twilio-labs/serverless-api-test/1.0.0-test (darwin x64) node/${nodeVersion}`
     );
   });
 
@@ -28,10 +30,10 @@ describe('getUserAgent', () => {
         '@twilio-labs/plugin-serverless/1.1.0-test',
       ])
     ).toEqual(
-      '@twilio-labs/serverless-api-test/1.0.0-test (darwin x64) twilio-run/2.0.0-test @twilio-labs/plugin-serverless/1.1.0-test'
+      `@twilio-labs/serverless-api-test/1.0.0-test (darwin x64) node/${nodeVersion} twilio-run/2.0.0-test @twilio-labs/plugin-serverless/1.1.0-test`
     );
     expect(getUserAgent()).toEqual(
-      '@twilio-labs/serverless-api-test/1.0.0-test (darwin x64)'
+      `@twilio-labs/serverless-api-test/1.0.0-test (darwin x64) node/${nodeVersion}`
     );
   });
 });

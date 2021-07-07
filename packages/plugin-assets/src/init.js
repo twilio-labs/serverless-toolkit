@@ -1,4 +1,3 @@
-const { TwilioServerlessApiClient } = require('@twilio-labs/serverless-api');
 const {
   createService,
 } = require('@twilio-labs/serverless-api/dist/api/services');

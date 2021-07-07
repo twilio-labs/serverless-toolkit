@@ -9,7 +9,7 @@ export function getUserAgent(extensions: string[] = []) {
   const nodeVersion = process.version || '0.0.0';
   const extensionString =
     extensions.length > 0 ? ' ' + extensions.join(' ') : '';
-  return `${name}/${version} (${osName} ${osArch}) node/${nodeVersion} ${extensionString}`;
+  return `${name}/${version} (${osName} ${osArch}) node/${nodeVersion}${extensionString}`;
 }
 
 export default getUserAgent;
