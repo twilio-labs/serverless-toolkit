@@ -1,8 +1,4 @@
-import {
-  getUserAgent,
-  _addCustomUserAgentExtension,
-  _resetUserAgentExtensions,
-} from '../user-agent';
+import { getUserAgent } from '../user-agent';
 
 jest.mock('../package-info', () => {
   return {
@@ -26,12 +22,14 @@ describe('getUserAgent', () => {
   });
 
   test('adds extensions and correctly resets extensions', () => {
-    _addCustomUserAgentExtension('twilio-run/2.0.0-test');
-    _addCustomUserAgentExtension('@twilio-labs/plugin-serverless/1.1.0-test');
-    expect(getUserAgent()).toEqual(
+    expect(
+      getUserAgent([
+        'twilio-run/2.0.0-test',
+        '@twilio-labs/plugin-serverless/1.1.0-test',
+      ])
+    ).toEqual(
       '@twilio-labs/serverless-api-test/1.0.0-test (darwin x64) twilio-run/2.0.0-test @twilio-labs/plugin-serverless/1.1.0-test'
     );
-    _resetUserAgentExtensions();
     expect(getUserAgent()).toEqual(
       '@twilio-labs/serverless-api-test/1.0.0-test (darwin x64)'
     );
