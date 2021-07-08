@@ -1,18 +1,8 @@
 import { getUserAgent } from '../user-agent';
 
-jest.mock('../package-info', () => {
-  return {
-    name: '@twilio-labs/serverless-api-test',
-    version: '1.0.0-test',
-  };
-});
+jest.mock('../package-info');
 
-jest.mock('os', () => {
-  return {
-    platform: () => 'darwin',
-    arch: () => 'x64',
-  };
-});
+jest.mock('os');
 
 const nodeVersion = process.version;
 
