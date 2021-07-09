@@ -8,14 +8,17 @@ import {
   AssetResource,
   ServerlessResourceConfig,
   Sid,
-  VersionResource,
+  AssetVersion,
   ClientConfig,
+  ResourcePathAndAccess,
 } from '../types';
 import { TwilioServerlessApiClient } from '../client';
 import { getContentType } from '../utils/content-type';
 import { ClientApiError } from '../utils/error';
 import { getApiUrl } from './utils/api-client';
 import { getPaginatedResource } from './utils/pagination';
+import { resolve, basename } from 'path';
+import { readFile } from '../utils/fs';
 
 const log = debug('twilio-serverless-api:assets');
 
@@ -38,7 +41,7 @@ export async function createAssetResource(
         FriendlyName: name,
       },
     });
-    return (resp.body as unknown) as AssetApiResource;
+    return resp.body as unknown as AssetApiResource;
   } catch (err) {
     log('%O', new ClientApiError(err));
     throw new Error(`Failed to create "${name}" asset`);
@@ -84,9 +87,9 @@ export async function getOrCreateAssetResources(
   const existingAssets = await listAssetResources(serviceSid, client);
   const assetsToCreate: ServerlessResourceConfig[] = [];
 
-  assets.forEach(asset => {
+  assets.forEach((asset) => {
     const existingAsset = existingAssets.find(
-      x => asset.name === x.friendly_name
+      (x) => asset.name === x.friendly_name
     );
     if (!existingAsset) {
       assetsToCreate.push(asset);
@@ -99,7 +102,7 @@ export async function getOrCreateAssetResources(
   });
 
   const createdAssets = await Promise.all(
-    assetsToCreate.map(async asset => {
+    assetsToCreate.map(async (asset) => {
       const newAsset = await createAssetResource(
         asset.name,
         serviceSid,
@@ -121,14 +124,14 @@ export async function getOrCreateAssetResources(
  * @param  {AssetResource} asset the one to create a new version for
  * @param  {string} serviceSid the service to create the asset version for
  * @param  {TwilioServerlessApiClient} client API client
- * @returns {Promise<VersionResource>}
+ * @returns {Promise<AssetVersion>}
  */
 export async function createAssetVersion(
   asset: AssetResource,
   serviceSid: string,
   client: TwilioServerlessApiClient,
   clientConfig: ClientConfig
-): Promise<VersionResource> {
+): Promise<AssetVersion> {
   try {
     const contentType = await getContentType(
       asset.content,
@@ -156,7 +159,7 @@ export async function createAssetVersion(
       }
     );
 
-    return JSON.parse(resp.body) as VersionResource;
+    return JSON.parse(resp.body) as AssetVersion;
   } catch (err) {
     log('%O', new ClientApiError(err));
     throw new Error(
@@ -187,4 +190,26 @@ export async function uploadAsset(
     clientConfig
   );
   return version.sid;
+}
+
+/**
+ * Takes an asset path and access option and returns the an object ready to
+ * upload, including the file content.
+ *
+ * @export
+ * @param {ResourcePathAndAccess} assetOptions The asset path and access
+ * @returns {Promise<ServerlessResourceConfig>}
+ */
+export async function prepareAsset(
+  assetOptions: ResourcePathAndAccess
+): Promise<ServerlessResourceConfig> {
+  const filePath = resolve(assetOptions.path);
+  const assetContent = await readFile(filePath);
+  const path = `${encodeURIComponent(basename(filePath))}`;
+  return {
+    content: assetContent,
+    name: path,
+    path,
+    access: assetOptions.access,
+  };
 }

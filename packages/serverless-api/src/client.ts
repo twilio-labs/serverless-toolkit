@@ -1,7 +1,7 @@
 /** @module @twilio-labs/serverless-api */
 
 import debug from 'debug';
-import events from 'events';
+import events, { EventEmitter } from 'events';
 import {
   HTTPAlias,
   Options,
@@ -12,7 +12,12 @@ import {
 import { HttpsProxyAgent } from 'hpagent';
 import pLimit, { Limit } from 'p-limit';
 import { deprecate } from 'util';
-import { getOrCreateAssetResources, uploadAsset } from './api/assets';
+import {
+  getOrCreateAssetResources,
+  listAssetResources,
+  prepareAsset,
+  uploadAsset,
+} from './api/assets';
 import {
   activateBuild,
   getBuild,
@@ -54,8 +59,10 @@ import { LogsStream } from './streams/logs';
 import {
   ActivateConfig,
   ActivateResult,
+  AssetVersion,
   BuildResource,
   ClientConfig,
+  Dependency,
   DeployLocalProjectConfig,
   DeployProjectConfig,
   DeployResult,
@@ -77,7 +84,13 @@ import {
   SetEnvironmentVariablesResult,
 } from './types/env';
 import { ClientApiError, convertApiErrorsAndThrow } from './utils/error';
-import { getListOfFunctionsAndAssets, SearchConfig } from './utils/fs';
+import {
+  getListOfFunctionsAndAssets,
+  readFile,
+  SearchConfig,
+} from './utils/fs';
+import { AssetDeployConfig } from './types/assets';
+import { createAssetResource, createAssetVersion } from './api/assets';
 
 const log = debug('twilio-serverless-api:client');
 
@@ -819,6 +832,112 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
     } catch (err) {
       convertApiErrorsAndThrow(err);
     }
+  }
+
+  /**
+   * Adds an asset to a service, creates a new build and deploys it.
+   *
+   */
+  async deployAsset(
+    options: AssetDeployConfig,
+    eventEmitter: events.EventEmitter
+  ): Promise<AssetVersion> {
+    eventEmitter.emit(
+      'status',
+      `Fetching environment with sid ${options.environmentSid} from service with sid ${options.serviceSid}`
+    );
+    const environment = await getEnvironment(
+      options.environmentSid,
+      options.serviceSid,
+      this
+    );
+    eventEmitter.emit('status', 'Preparing asset');
+    const newAsset = await prepareAsset(options.assetOptions);
+    if (options.newPath) {
+      newAsset.path = encodeURIComponent(options.newPath);
+      newAsset.name = options.newPath;
+    }
+    eventEmitter.emit('status', 'Finding existing asset resources');
+    const existingAssets = await listAssetResources(options.serviceSid, this);
+    const existingAsset = existingAssets.find(
+      (asset) => asset.friendly_name === newAsset.name
+    );
+    let asset;
+    if (existingAsset) {
+      if (options.force) {
+        asset = { ...newAsset, sid: existingAsset.sid };
+      } else {
+        throw new Error(
+          `There is already an asset called ${existingAsset.friendly_name}. Pass force: true to override this name.`
+        );
+      }
+    } else {
+      eventEmitter.emit(
+        'status',
+        `Creating new asset resource called ${newAsset.name}`
+      );
+      const assetResource = await createAssetResource(
+        newAsset.name,
+        options.serviceSid,
+        this
+      );
+      asset = { ...newAsset, sid: assetResource.sid };
+    }
+
+    eventEmitter.emit(
+      'status',
+      `Creating new asset version for asset with sid ${asset.sid}`
+    );
+    const assetVersion = await createAssetVersion(
+      asset,
+      options.serviceSid,
+      this,
+      this.config
+    );
+    const assetVersions = [assetVersion.sid];
+    let functionVersions = new Array<Sid>();
+    let dependencies = new Array<Dependency>();
+    let runtime = '';
+    if (environment.build_sid) {
+      eventEmitter.emit(
+        'status',
+        `Fetching existing assets, functions and dependencies from last build with sid ${environment.build_sid}`
+      );
+      const lastBuild = await getBuild(
+        environment.build_sid,
+        options.serviceSid,
+        this
+      );
+      lastBuild.asset_versions
+        .filter((av) => av.asset_sid !== assetVersion.asset_sid)
+        .forEach((assetVersion) => assetVersions.push(assetVersion.sid));
+      functionVersions = lastBuild.function_versions.map((fv) => fv.sid);
+      dependencies = lastBuild.dependencies;
+      runtime = lastBuild.runtime;
+    }
+    eventEmitter.emit(
+      'status',
+      `Triggering new build for ${assetVersions.length} asset versions, ${functionVersions.length} function versions and ${dependencies.length} dependencies`
+    );
+    const newBuild = await triggerBuild(
+      { assetVersions, functionVersions, dependencies, runtime },
+      options.serviceSid,
+      this
+    );
+    await waitForSuccessfulBuild(
+      newBuild.sid,
+      options.serviceSid,
+      this,
+      eventEmitter
+    );
+    eventEmitter.emit('status', `Activating build with sid ${newBuild.sid}`);
+    await activateBuild(
+      newBuild.sid,
+      environment.sid,
+      options.serviceSid,
+      this
+    );
+    return assetVersion;
   }
 
   // request json without options

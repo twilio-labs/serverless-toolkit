@@ -8,7 +8,6 @@ import {
   FunctionResource,
   ServerlessResourceConfig,
   Sid,
-  VersionResource,
   ClientConfig,
   FunctionContent,
   FunctionVersion,
@@ -44,7 +43,7 @@ export async function createFunctionResource(
         },
       }
     );
-    return (resp.body as unknown) as FunctionApiResource;
+    return resp.body as unknown as FunctionApiResource;
   } catch (err) {
     log('%O', new ClientApiError(err));
     throw new Error(`Failed to create "${name}" function`);
@@ -129,14 +128,14 @@ export async function getOrCreateFunctionResources(
  * @param {FunctionResource} fn the function the version should be created for
  * @param {string} serviceSid the service related to the function
  * @param {TwilioServerlessApiClient} client API client
- * @returns {Promise<VersionResource>}
+ * @returns {Promise<FunctionVersion>}
  */
 async function createFunctionVersion(
   fn: FunctionResource,
   serviceSid: string,
   client: TwilioServerlessApiClient,
   clientConfig: ClientConfig
-): Promise<VersionResource> {
+): Promise<FunctionVersion> {
   try {
     const contentType =
       (await getContentType(fn.content, fn.filePath || 'application/json')) ||
@@ -163,7 +162,7 @@ async function createFunctionVersion(
       }
     );
 
-    return JSON.parse(resp.body) as VersionResource;
+    return JSON.parse(resp.body) as FunctionVersion;
   } catch (err) {
     log('%O', new ClientApiError(err));
     throw new Error(`Failed to upload Function ${fn.name}`);
@@ -215,7 +214,7 @@ export async function listFunctionVersions(
     `Services/${serviceSid}/Functions/${functionSid}/Versions`
   );
 
-  return (resp.body as unknown) as FunctionVersion[];
+  return resp.body as unknown as FunctionVersion[];
 }
 
 export async function downloadFunctionVersion(
@@ -229,5 +228,5 @@ export async function downloadFunctionVersion(
     `Services/${serviceSid}/Functions/${functionSid}/Versions/${functionVersionSid}/Content`
   );
 
-  return (resp.body as unknown) as FunctionContent;
+  return resp.body as unknown as FunctionContent;
 }

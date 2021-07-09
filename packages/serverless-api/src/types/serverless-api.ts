@@ -65,13 +65,6 @@ export interface EnvironmentList extends BaseList<'environments'> {
   environments: EnvironmentResource[];
 }
 
-export interface VersionResource extends UpdateableResourceBase {
-  pre_signed_upload_url: {
-    url: string;
-    kmsARN: string;
-  };
-}
-
 export type FunctionContent = {
   sid: Sid;
   account_sid: Sid;
@@ -101,6 +94,7 @@ export interface BuildResource extends UpdateableResourceBase {
   status: BuildStatus;
   function_versions: FunctionVersion[];
   asset_versions: AssetVersion[];
+  dependencies: Dependency[];
   runtime: string;
 }
 
