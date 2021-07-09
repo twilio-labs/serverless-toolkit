@@ -90,9 +90,11 @@ export async function handler(
           resolve();
         } catch (error) {
           server.close(() => {
-            logger.info(
-              'ngrok could not be started because the module is not installed. Please install optional dependencies and try again.'
-            );
+            if (error.msg && error.details && error.details.err) {
+              logger.error(`${error.msg}\n\n${error.details.err}`);
+            } else {
+              logger.error(error.message);
+            }
             process.exit(1);
           });
         }
