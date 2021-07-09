@@ -1,6 +1,7 @@
 const path = require('path');
 const camelCase = require('lodash.camelcase');
 const { flags } = require('@oclif/command');
+const pkgJson = require('../package.json');
 
 function convertYargsOptionsToOclifFlags(options) {
   const aliasMap = new Map();
@@ -73,6 +74,10 @@ function normalizeFlags(flags, aliasMap, argv) {
 
 function createExternalCliOptions(flags, twilioClient) {
   const profile = flags.profile;
+  const pluginInfo = {
+    version: pkgJson.version,
+    name: pkgJson.name,
+  };
 
   if (
     (typeof flags.username === 'string' && flags.username.length > 0) ||
@@ -85,6 +90,7 @@ function createExternalCliOptions(flags, twilioClient) {
       profile: undefined,
       logLevel: undefined,
       outputFormat: undefined,
+      pluginInfo,
     };
   }
 
@@ -95,6 +101,7 @@ function createExternalCliOptions(flags, twilioClient) {
     profile,
     logLevel: undefined,
     outputFormat: undefined,
+    pluginInfo,
   };
 }
 

@@ -17,6 +17,7 @@ import {
   readLocalEnvFile,
 } from './utils';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
+import { getUserAgentExtensions } from './utils/userAgentExtensions';
 
 export type PromoteConfig = ApiActivateConfig & {
   cwd: string;
@@ -99,5 +100,6 @@ export async function getConfigFromFlags(
     region,
     edge,
     env,
+    userAgentExtensions: getUserAgentExtensions('promote', externalCliOptions),
   };
 }

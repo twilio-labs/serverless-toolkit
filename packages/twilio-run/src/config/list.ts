@@ -18,6 +18,7 @@ import {
   readLocalEnvFile,
 } from './utils';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
+import { getUserAgentExtensions } from './utils/userAgentExtensions';
 
 export type ListConfig = ApiListConfig & {
   username: string;
@@ -99,11 +100,12 @@ export async function getConfigFromFlags(
     serviceName,
     environment: flags.environment,
     properties: flags.properties
-      ? flags.properties.split(',').map(x => x.trim())
+      ? flags.properties.split(',').map((x) => x.trim())
       : undefined,
     extendedOutput: flags.extendedOutput,
     types,
     region,
     edge,
+    userAgentExtensions: getUserAgentExtensions('list', externalCliOptions),
   };
 }

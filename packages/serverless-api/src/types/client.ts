@@ -17,6 +17,10 @@ type BaseClientConfig = {
    * Number of retry attempts the client will make on a failure
    */
   retryLimit?: number;
+  /**
+   * Additional information to pass to the User-Agent. !!!Should not contain sensitive information
+   */
+  userAgentExtensions?: string[];
 };
 
 export type AccountSidConfig = BaseClientConfig & {

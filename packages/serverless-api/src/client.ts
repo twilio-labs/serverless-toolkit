@@ -78,6 +78,7 @@ import {
 } from './types/env';
 import { ClientApiError, convertApiErrorsAndThrow } from './utils/error';
 import { getListOfFunctionsAndAssets, SearchConfig } from './utils/fs';
+import getUserAgent from './utils/user-agent';
 
 const log = debug('twilio-serverless-api:client');
 
@@ -98,7 +99,7 @@ export function createGotClient(config: ClientConfig): GotClient {
     username: username,
     password: password,
     headers: {
-      'User-Agent': 'twilio-serverless-api',
+      'User-Agent': getUserAgent(config.userAgentExtensions),
     },
   }) as GotClient;
   if (process.env.HTTP_PROXY) {
@@ -148,6 +149,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
     debug.enable(process.env.DEBUG || '');
     super();
     this.config = config;
+
     this.client = createGotClient(config);
     this.limit = pLimit(config.concurrency || CONCURRENCY);
   }
@@ -505,8 +507,13 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
    */
   async activateBuild(activateConfig: ActivateConfig): Promise<ActivateResult> {
     try {
-      let { buildSid, targetEnvironment, serviceSid, sourceEnvironment, env } =
-        activateConfig;
+      let {
+        buildSid,
+        targetEnvironment,
+        serviceSid,
+        sourceEnvironment,
+        env,
+      } = activateConfig;
 
       if (!buildSid && !sourceEnvironment) {
         const error = new Error(
@@ -847,6 +854,7 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
       statusCodes: [429],
       errorCodes: [],
     };
+
     return this.limit(() => this.client[method](path, options));
   }
 }
