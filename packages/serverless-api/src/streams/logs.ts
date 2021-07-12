@@ -3,9 +3,21 @@ import { listOnePageLogResources } from '../api/logs';
 import { TwilioServerlessApiClient } from '../client';
 import { Sid } from '../types';
 import { LogsConfig } from '../types/logs';
+import debug from 'debug';
+
+const log = debug('twilio-serverless-api:client:logs');
+
+const pollsBeforeBackOff = 10;
+const defaultPollingFrequency = 1000;
+// This default max allows the command to get to polling once every 32 seconds
+const defaultMaxPollingFrequency = 30000;
+const defaultLogCacheSize = 1000;
 
 export class LogsStream extends Readable {
+  private _initialPollingFrequency: number;
   private _pollingFrequency: number;
+  private _maxPollingFrequency: number;
+  private _pollsWithoutResults: number;
   private _pollingCacheSize: number;
   private _interval: NodeJS.Timeout | undefined;
   private _viewedSids: Set<Sid>;
@@ -21,8 +33,12 @@ export class LogsStream extends Readable {
     this._interval = undefined;
     this._viewedSids = new Set();
     this._viewedLogs = [];
-    this._pollingFrequency = config.pollingFrequency || 1000;
-    this._pollingCacheSize = config.logCacheSize || 1000;
+    this._pollingFrequency = this._initialPollingFrequency =
+      config.pollingFrequency || defaultPollingFrequency;
+    this._maxPollingFrequency =
+      config.maxPollingFrequency || defaultMaxPollingFrequency;
+    this._pollsWithoutResults = 0;
+    this._pollingCacheSize = config.logCacheSize || defaultLogCacheSize;
   }
 
   set pollingFrequency(frequency: number) {
@@ -46,12 +62,33 @@ export class LogsStream extends Readable {
           pageSize: this.config.limit,
         }
       );
-      logs
-        .filter(log => !this._viewedSids.has(log.sid))
-        .reverse()
-        .forEach(log => {
+      const unviewedLogs = logs.filter((log) => !this._viewedSids.has(log.sid));
+      if (unviewedLogs.length > 0) {
+        this._pollsWithoutResults = 0;
+        this.pollingFrequency = this._initialPollingFrequency;
+        log(
+          `New log received. Now polling once every ${this._pollingFrequency} milliseconds.`
+        );
+        unviewedLogs.reverse().forEach((log) => {
           this.push(log);
         });
+      } else {
+        if (this._pollsWithoutResults < pollsBeforeBackOff) {
+          this._pollsWithoutResults++;
+        } else {
+          if (this._pollingFrequency < this._maxPollingFrequency) {
+            log(
+              `No new logs for ${
+                this._pollsWithoutResults * this._pollingFrequency
+              } milliseconds. Now polling once every ${
+                this._pollingFrequency * 2
+              } milliseconds.`
+            );
+            this.pollingFrequency = this._pollingFrequency * 2;
+            this._pollsWithoutResults = 0;
+          }
+        }
+      }
 
       // The logs endpoint is not reliably returning logs in the same order
       // Therefore we need to keep a set of all previously seen log entries
@@ -68,22 +105,22 @@ export class LogsStream extends Readable {
       // and new logs by stringifying the sid and the date together.
       const viewedLogsSet = new Set([
         ...this._viewedLogs.map(
-          log => `${log.sid}-${log.dateCreated.toISOString()}`
+          (log) => `${log.sid}-${log.dateCreated.toISOString()}`
         ),
-        ...logs.map(log => `${log.sid}-${log.date_created}`),
+        ...logs.map((log) => `${log.sid}-${log.date_created}`),
       ]);
       // Then we take that set, map over the logs and split them up into sid and
       // date again, sort them most to least recent and chop off the oldest if
       // they are beyond the polling cache size.
       this._viewedLogs = [...viewedLogsSet]
-        .map(logString => {
+        .map((logString) => {
           const [sid, dateCreated] = logString.split('-');
           return { sid, dateCreated: new Date(dateCreated) };
         })
         .sort((a, b) => b.dateCreated.valueOf() - a.dateCreated.valueOf())
         .slice(0, this._pollingCacheSize);
       // Finally we create a set of just SIDs to compare against.
-      this._viewedSids = new Set(this._viewedLogs.map(log => log.sid));
+      this._viewedSids = new Set(this._viewedLogs.map((log) => log.sid));
 
       if (!this.config.tail) {
         this.push(null);
