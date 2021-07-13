@@ -22,10 +22,12 @@ export type AssetResourceMap = {
 };
 
 export interface TwilioResponse {
-  setStatusCode(code: number): void;
-  setBody(body: string | object): void;
-  appendHeader(key: string, value: string): void;
-  setHeaders(headers: { [key: string]: string }): void;
+  setStatusCode(code: number): TwilioResponse;
+  setBody(body: string | object): TwilioResponse;
+  appendHeader(key: string, value: string): TwilioResponse;
+  setHeaders(headers: { [key: string]: string }): TwilioResponse;
+  setCookie(key: string, value: string, attributes?: string[]): TwilioResponse;
+  removeCookie(key: string): TwilioResponse;
 }
 
 export type RuntimeSyncClientOptions = TwilioClientOptions & {
@@ -53,9 +55,20 @@ export type ServerlessCallback = (
   payload?: object | string | number | boolean
 ) => void;
 
+export type ServerlessEventObject<
+  RequestBodyAndQuery = {},
+  Headers = {},
+  Cookies = {}
+> = {
+  request: {
+    cookies: Cookies;
+    headers: Headers;
+  };
+} & RequestBodyAndQuery;
+
 export type ServerlessFunctionSignature<
   T extends EnvironmentVariables = {},
-  U extends {} = {}
+  U extends ServerlessEventObject = { request: { cookies: {}; headers: {} } }
 > = (
   context: Context<T>,
   event: U,
