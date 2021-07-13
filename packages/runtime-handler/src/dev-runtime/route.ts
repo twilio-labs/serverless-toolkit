@@ -1,6 +1,7 @@
 import {
   Context,
   ServerlessCallback,
+  ServerlessEventObject,
   ServerlessFunctionSignature,
   TwilioClient,
   TwilioClientOptions,
@@ -17,6 +18,10 @@ import { join, resolve } from 'path';
 import { deserializeError } from 'serialize-error';
 import { checkForValidAccountSid } from './checks/check-account-sid';
 import { checkForValidAuthToken } from './checks/check-auth-token';
+import {
+  restrictedHeaderExactMatches,
+  restrictedHeaderPrefixes,
+} from './checks/restricted-headers';
 import { Reply } from './internal/functionRunner';
 import { Response } from './internal/response';
 import * as Runtime from './internal/runtime';
@@ -25,10 +30,6 @@ import debug from './utils/debug';
 import { wrapErrorInHtml } from './utils/error-html';
 import { requireFromProject } from './utils/requireFromProject';
 import { cleanUpStackTrace } from './utils/stack-trace/clean-up';
-import {
-  restrictedHeaderPrefixes,
-  restrictedHeaderExactMatches,
-} from './checks/restricted-headers';
 
 const log = debug('twilio-runtime-handler:dev:route');
 
@@ -75,7 +76,9 @@ export function constructHeaders(rawHeaders?: string[]): Headers {
   return {};
 }
 
-export function constructEvent<T extends {} = {}>(req: ExpressRequest): T {
+export function constructEvent<T extends ServerlessEventObject>(
+  req: ExpressRequest
+): T {
   return {
     request: {
       headers: constructHeaders(req.rawHeaders),
