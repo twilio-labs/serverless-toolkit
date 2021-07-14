@@ -19,7 +19,7 @@ import path from 'path';
 import { StartCliConfig } from '../config/start';
 import { printRouteInfo } from '../printers/start';
 import { wrapErrorInHtml } from '../utils/error-html';
-import { getDebugFunction, logger } from '../utils/logger';
+import { getDebugFunction, logger, LoggingLevel } from '../utils/logger';
 import { writeOutput } from '../utils/output';
 import { requireFromProject } from '../utils/requireFromProject';
 import { createLogger } from './internal/request-logger';
@@ -141,7 +141,7 @@ export async function createLocalDevelopmentServer(
       forkProcess: config.forkProcess,
       logger: logger,
       routes: routes,
-      enableDebugLogs: true,
+      enableDebugLogs: logger.config.level === LoggingLevel.debug,
     });
     server.on('request-log', (logMessage: string) => {
       writeOutput(logMessage);
