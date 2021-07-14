@@ -72,8 +72,15 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
     if (typeof cli.ngrok === 'string' && cli.ngrok.length > 0) {
       ngrokConfig.subdomain = cli.ngrok;
     }
-
-    url = await require('ngrok').connect(ngrokConfig);
+    let ngrok;
+    try {
+      ngrok = require('ngrok');
+    } catch (error) {
+      throw new Error(
+        'ngrok could not be started because the module is not installed. Please install optional dependencies and try again.'
+      );
+    }
+    url = await ngrok.connect(ngrokConfig);
     debug('ngrok tunnel URL: %s', url);
   }
 
