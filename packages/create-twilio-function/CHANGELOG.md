@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.2-rc.0](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.1.1...create-twilio-function@3.1.2-rc.0) (2021-07-14)
+
+**Note:** Version bump only for package create-twilio-function
+
+
+
+
+
 ## [3.1.1](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.1.0...create-twilio-function@3.1.1) (2021-06-30)
 
 **Note:** Version bump only for package create-twilio-function
