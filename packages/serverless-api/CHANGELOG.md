@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-api@5.1.1...@twilio-labs/serverless-api@5.2.0) (2021-07-14)
+
+
+### Features
+
+* add new env commands ([#290](https://github.com/twilio-labs/serverless-toolkit/issues/290)) ([7d11a03](https://github.com/twilio-labs/serverless-toolkit/commit/7d11a03aa5f02c6ac06147c2796f7e8c9964396e))
+
+
+
+
+
 ## [5.1.1](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-api@5.1.0...@twilio-labs/serverless-api@5.1.1) (2021-06-30)
 
 
