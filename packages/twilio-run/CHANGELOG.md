@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.1.1...twilio-run@3.2.0) (2021-07-14)
+
+
+### Bug Fixes
+
+* **twilio-run:** handles ngrok load error and actual ngrok errors ([#305](https://github.com/twilio-labs/serverless-toolkit/issues/305)) ([ec2230d](https://github.com/twilio-labs/serverless-toolkit/commit/ec2230dd7913a024b7d38f2c58066ba12165cc49)), closes [#275](https://github.com/twilio-labs/serverless-toolkit/issues/275)
+* **twilio-run:** stop debug logging in runtime-handler by default ([#315](https://github.com/twilio-labs/serverless-toolkit/issues/315)) ([b7a2035](https://github.com/twilio-labs/serverless-toolkit/commit/b7a2035e5d95e888aae45bf245331e64815007ff))
+
+
+### Features
+
+* add new env commands ([#290](https://github.com/twilio-labs/serverless-toolkit/issues/290)) ([7d11a03](https://github.com/twilio-labs/serverless-toolkit/commit/7d11a03aa5f02c6ac06147c2796f7e8c9964396e))
+
+
+
+
+
 ## [3.1.1](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.1.0...twilio-run@3.1.1) (2021-06-30)
 
 
