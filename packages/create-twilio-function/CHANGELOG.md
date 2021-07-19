@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.1.2...create-twilio-function@3.2.0) (2021-07-19)
+
+
+### Features
+
+* **create-twilio-function:** add deployinfo file to gitignore ([#320](https://github.com/twilio-labs/serverless-toolkit/issues/320)) ([5ca27b6](https://github.com/twilio-labs/serverless-toolkit/commit/5ca27b66f91249566893fd1816b03b421414d055))
+* **create-twilio-function:** add runtime-handler to js projects ([#321](https://github.com/twilio-labs/serverless-toolkit/issues/321)) ([6b5bcf4](https://github.com/twilio-labs/serverless-toolkit/commit/6b5bcf41a62f84b39bcdd6868eb34634fde8dda0))
+
+
+
+
+
 ## [3.1.2](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.1.1...create-twilio-function@3.1.2) (2021-07-14)
 
 **Note:** Version bump only for package create-twilio-function

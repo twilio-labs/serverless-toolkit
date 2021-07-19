@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.1](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.2.0...twilio-run@3.2.1) (2021-07-19)
+
+
+### Bug Fixes
+
+* **runtime-handler:** add warning for optional context vars ([#317](https://github.com/twilio-labs/serverless-toolkit/issues/317)) ([47051de](https://github.com/twilio-labs/serverless-toolkit/commit/47051dec50ce477d22bc6be0f87d58950c4a1919))
+
+
+
+
+
 # [3.2.0](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.1.1...twilio-run@3.2.0) (2021-07-14)
 
 
