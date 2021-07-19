@@ -61,7 +61,7 @@ Check out the [commands](#commands) for in depth usage, but here are some things
 
 ### Create a new project
 
-To create a new project with the Twilio Serverless Toolkit you can use [`create-twilio-function`](https://github.com/twilio-labs/create-twilio-function/) which will scaffold a new project that is ready to be used with `twilio-run`.
+To create a new project with the Twilio Serverless Toolkit you can use [`create-twilio-function`](https://github.com/twilio-labs/serverless-toolkit/tree/main/packages/create-twilio-function) which will scaffold a new project that is ready to be used with `twilio-run`.
 
 ```bash
 # Create a valid project, for example:
