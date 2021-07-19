@@ -1,25 +1,32 @@
-const fs = require('fs').promises;
 const { createWriteStream } = require('fs');
-const path = require('path');
-const { promisify } = require('util');
+const { join } = require('path');
+const gitignore = require('gitignore');
 
-const writeGitignore = promisify(require('gitignore').writeFile);
+const ADDITIONAL_CONTENT = '# Twilio Serverless\n.twiliodeployinfo\n\n';
 
-const ADDITIONAL_CONTENT = `
-# Twilio Serverless
-.twiliodeployinfo
-`;
-
-async function createGitignore(dirPath) {
-  const fullPath = path.join(dirPath, '.gitignore');
-  const fd = await fs.open(fullPath, 'wx');
-  const stream = createWriteStream(fullPath, { fd });
-  await writeGitignore({
-    type: 'Node',
-    file: stream,
+function createGitignore(dirPath) {
+  return new Promise((resolve, reject) => {
+    const fullPath = join(dirPath, '.gitignore');
+    const stream = createWriteStream(fullPath, { flags: 'wx' });
+    stream.on('error', reject);
+    stream.write(ADDITIONAL_CONTENT, 'utf-8', (error) => {
+      if (error) {
+        reject(error);
+      }
+      gitignore.writeFile(
+        {
+          type: 'Node',
+          file: stream,
+        },
+        (error) => {
+          if (error) {
+            reject(error);
+          }
+          resolve();
+        }
+      );
+    });
   });
-  await fd.close();
-  await fs.appendFile(fullPath, ADDITIONAL_CONTENT, 'utf8');
 }
 
 module.exports = createGitignore;
