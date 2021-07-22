@@ -27,7 +27,7 @@
   "license": "MIT",
   "devDependencies": {
     "@twilio/runtime-handler": "^1.1.2",
-    "jest": "^24.5.0",
+    "jest": "^26.6.3",
     "nock": "^11.3.4"
   },
   "dependencies": {
