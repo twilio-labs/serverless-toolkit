@@ -100,6 +100,22 @@ test('sets headers with an array of cookies', () => {
   expect(response['headers']).toEqual(expected);
 });
 
+test('sets cookies with lower case set-cookie', () => {
+  const response = new Response();
+  expect(response['headers']).toEqual({
+    'Set-Cookie': [],
+  });
+  response.setHeaders({
+    'Access-Control-Allow-Origin': 'example.com',
+    'set-cookie': ['Hi=Bye', 'Hello=World'],
+  });
+  const expected = {
+    'Access-Control-Allow-Origin': 'example.com',
+    'Set-Cookie': ['Hi=Bye', 'Hello=World'],
+  };
+  expect(response['headers']).toEqual(expected);
+});
+
 test('appends a new header correctly', () => {
   const response = new Response();
   expect(response['headers']).toEqual({

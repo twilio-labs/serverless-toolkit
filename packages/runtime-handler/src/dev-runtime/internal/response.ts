@@ -59,15 +59,10 @@ export class Response implements TwilioResponse {
     if (typeof headersObject !== 'object') {
       return this;
     }
-    if (!(COOKIE_HEADER in headersObject)) {
-      headersObject[COOKIE_HEADER] = [];
+    this.headers = {};
+    for (const header in headersObject) {
+      this.appendHeader(header, headersObject[header]);
     }
-
-    const cookieHeader = headersObject[COOKIE_HEADER];
-    if (!Array.isArray(cookieHeader)) {
-      headersObject[COOKIE_HEADER] = [cookieHeader];
-    }
-    this.headers = headersObject;
 
     return this;
   }
@@ -75,16 +70,24 @@ export class Response implements TwilioResponse {
   appendHeader(key: string, value: HeaderValue): Response {
     log('Appending header for %s', key, value);
     this.headers = this.headers || {};
-    const existingValue = this.headers[key];
     let newHeaderValue: HeaderValue = [];
-    if (existingValue) {
-      newHeaderValue = [existingValue, value].flat();
-      if (newHeaderValue) {
-        this.headers[key] = newHeaderValue;
+    if (key.toLowerCase() === COOKIE_HEADER.toLowerCase()) {
+      const existingValue = this.headers[COOKIE_HEADER];
+      if (existingValue) {
+        newHeaderValue = [existingValue, value].flat();
+        if (newHeaderValue) {
+          this.headers[COOKIE_HEADER] = newHeaderValue;
+        }
+      } else {
+        this.headers[COOKIE_HEADER] = Array.isArray(value) ? value: [value];
       }
     } else {
-      if (key === COOKIE_HEADER && !Array.isArray(value)) {
-        this.headers[key] = [value];
+      const existingValue = this.headers[key];
+      if (existingValue) {
+        newHeaderValue = [existingValue, value].flat();
+        if (newHeaderValue) {
+          this.headers[key] = newHeaderValue;
+        }
       } else {
         this.headers[key] = value;
       }
