@@ -1,6 +1,7 @@
 import { Server } from 'http';
 import inquirer from 'inquirer';
 import { Argv } from 'yargs';
+import { checkForValidRuntimeHandlerVersion } from '../checks/check-runtime-handler';
 import checkLegacyConfig from '../checks/legacy-config';
 import checkNodejsVersion from '../checks/nodejs-version';
 import checkProjectStructure from '../checks/project-structure';
@@ -47,6 +48,11 @@ export async function handler(
   await checkLegacyConfig(argv.cwd, false);
 
   const config = await getConfigFromCli(argv, cliInfo, externalCliOptions);
+
+  if (!checkForValidRuntimeHandlerVersion(config.pkgJson)) {
+    process.exitCode = 1;
+    return;
+  }
 
   const command = getFullCommand(argv);
   const directories = {
