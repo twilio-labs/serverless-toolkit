@@ -8,6 +8,8 @@ This plugin adds functionality to the [Twilio CLI](https://github.com/twilio/twi
 
 The plugin creates a new Runtime Service which it then uses as a bucket to which it upload assets. You can upload new files or list your available assets.
 
+For more information see the blog post [announcing the the Assets Plugin](https://www.twilio.com/blog/assets-plugin-twilio-cli) and an example of [how to upload audio files for your Studio IVR with the Assets Plugin](https://www.twilio.com/blog/upload-audio-files-studio-ivr-twilio-cli-assets-plugin).
+
 <!-- toc -->
 
 <!-- tocstop -->
