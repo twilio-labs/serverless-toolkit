@@ -4,6 +4,7 @@ import boxen from 'boxen';
 import chalk from 'chalk';
 import logSymbols from 'log-symbols';
 import wrapAnsi from 'wrap-ansi';
+import { ServerConfig } from '../../../runtime-handler/dist/dev-runtime/types';
 import { StartCliConfig } from '../config/start';
 import { getFunctionsAndAssets } from '../runtime/internal/runtime-paths';
 import { logger } from '../utils/logger';
@@ -11,7 +12,7 @@ import { shouldPrettyPrint, terminalLink, windowSize } from './utils';
 
 function printAsset(
   asset: ServerlessResourceConfig,
-  config: StartCliConfig
+  config: StartCliConfig | ServerConfig
 ): string {
   const prefix = config.legacyMode ? '/asset' : '';
   return chalk`{dim ${config.url}${prefix}}${asset.path}`;
@@ -19,7 +20,7 @@ function printAsset(
 
 function printFunction(
   fn: ServerlessResourceConfig,
-  config: StartCliConfig
+  config: StartCliConfig | ServerConfig
 ): string {
   return chalk`{dim ${config.url}}${fn.path}`;
 }
@@ -27,12 +28,12 @@ function printFunction(
 function printPlainRouteInfo(
   functions: ServerlessResourceConfig[],
   assets: ServerlessResourceConfig[],
-  config: StartCliConfig
+  config: StartCliConfig | ServerConfig
 ): string {
   const functionHeading = 'Functions';
   let functionInfo;
   if (functions.length > 0) {
-    functionInfo = functions.map(fn => printFunction(fn, config)).join('\n');
+    functionInfo = functions.map((fn) => printFunction(fn, config)).join('\n');
   } else {
     functionInfo = 'No functions found';
   }
@@ -40,7 +41,7 @@ function printPlainRouteInfo(
   const assetHeading = 'Assets';
   let assetInfo;
   if (assets.length > 0) {
-    assetInfo = assets.map(asset => printAsset(asset, config)).join('\n');
+    assetInfo = assets.map((asset) => printAsset(asset, config)).join('\n');
   } else {
     assetInfo = 'No assets found';
   }
@@ -67,7 +68,7 @@ function printPlainRouteInfo(
 
 function prettyPrintAsset(
   asset: ServerlessResourceConfig,
-  config: StartCliConfig
+  config: StartCliConfig | ServerConfig
 ): string {
   const prefix = config.legacyMode ? '/asset' : '';
   const assetPath = prefix + asset.path;
@@ -83,7 +84,7 @@ function prettyPrintAsset(
 
 function prettyPrintFunction(
   fn: ServerlessResourceConfig,
-  config: StartCliConfig
+  config: StartCliConfig | ServerConfig
 ) {
   const accessPrefix =
     fn.access === 'protected' ? chalk.cyan.bold('[protected] ') : '';
@@ -94,7 +95,7 @@ function prettyPrintFunction(
 function printPrettyRouteInfo(
   functions: ServerlessResourceConfig[],
   assets: ServerlessResourceConfig[],
-  config: StartCliConfig
+  config: StartCliConfig | ServerConfig
 ): string {
   const functionHeading = chalk`{green.bold Twilio functions available:}`;
   let functionInfo;
@@ -146,15 +147,34 @@ function printPrettyRouteInfo(
   return boxen(wrappedOutput, { padding: 1 });
 }
 
-export async function printRouteInfo(config: StartCliConfig): Promise<void> {
-  const searchConfig: SearchConfig = {
-    functionsFolderNames: config.functionsFolderName
-      ? [config.functionsFolderName]
-      : undefined,
-    assetsFolderNames: config.assetsFolderName
-      ? [config.assetsFolderName]
-      : undefined,
-  };
+// A magic function from https://fettblog.eu/typescript-hasownproperty/
+// This narrows down a type based on the property that an object has. It is used
+// below to distinguish between `StartCliConfig` and `ServerConfig` as the
+// `ServerConfig` does not have functionsFolderName or assetsFolderName
+// properties.
+function hasOwnProperty<X extends {}, Y extends PropertyKey>(
+  obj: X,
+  prop: Y
+): obj is X & Record<Y, unknown> {
+  return obj.hasOwnProperty(prop);
+}
+
+export async function printRouteInfo(
+  config: StartCliConfig | ServerConfig
+): Promise<void> {
+  const searchConfig: SearchConfig = {};
+  if (
+    hasOwnProperty(config, 'functionsFolderName') &&
+    typeof config.functionsFolderName === 'string'
+  ) {
+    searchConfig.functionsFolderNames = [config.functionsFolderName];
+  }
+  if (
+    hasOwnProperty(config, 'assetsFolderName') &&
+    typeof config.assetsFolderName === 'string'
+  ) {
+    searchConfig.assetsFolderNames = [config.assetsFolderName];
+  }
 
   const { functions, assets } = await getFunctionsAndAssets(
     config.baseDir,

@@ -49,7 +49,7 @@ export async function handler(
 
   const config = await getConfigFromCli(argv, cliInfo, externalCliOptions);
 
-  if (config.pkgJson && !checkForValidRuntimeHandlerVersion(config.pkgJson)) {
+  if (!checkForValidRuntimeHandlerVersion(config.pkgJson)) {
     process.exitCode = 1;
     return;
   }

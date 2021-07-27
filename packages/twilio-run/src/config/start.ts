@@ -40,7 +40,7 @@ export type StartCliConfig = {
   assetsFolderName?: string;
   functionsFolderName?: string;
   forkProcess: boolean;
-  pkgJson?: PackageJson;
+  pkgJson: PackageJson;
 };
 
 export type ConfigurableStartCliFlags = Pick<
