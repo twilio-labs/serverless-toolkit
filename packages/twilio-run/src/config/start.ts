@@ -163,19 +163,16 @@ export async function getConfigFromCli(
   cliInfo: CliInfo = { options: {} },
   externalCliOptions?: ExternalCliOptions
 ): Promise<StartCliConfig> {
-  const configFlags = readSpecializedConfig(
-    flags.cwd || process.cwd(),
-    flags.config,
-    'start',
-    {
-      username:
-        (externalCliOptions && externalCliOptions.accountSid) || undefined,
-    }
-  ) as StartCliFlags;
+  let cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
+  flags.cwd = cwd;
+  const configFlags = readSpecializedConfig(cwd, flags.config, 'start', {
+    username:
+      (externalCliOptions && externalCliOptions.accountSid) || undefined,
+  }) as StartCliFlags;
   const cli = mergeFlagsAndConfig<StartCliFlags>(configFlags, flags, cliInfo);
   const config = {} as StartCliConfig;
 
-  const pkgJson = await readPackageJsonContent(flags);
+  const pkgJson = await readPackageJsonContent(cli);
 
   config.inspect = getInspectInfo(cli);
   config.baseDir = getBaseDirectory(cli);
