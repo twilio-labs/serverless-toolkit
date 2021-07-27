@@ -22,15 +22,15 @@ async function createFile(fullPath, content) {
   return writeFile(fullPath, content, { flag: 'wx' });
 }
 
-const javaScriptDeps = { twilio: versions.twilio };
+const javaScriptDeps = {
+  twilio: versions.twilio,
+  '@twilio/runtime-handler': versions.twilioRuntimeHandler,
+};
 const typescriptDeps = {
   '@twilio-labs/serverless-runtime-types': versions.serverlessRuntimeTypes,
   ...javaScriptDeps,
 };
-const javaScriptDevDeps = {
-  '@twilio/runtime-handler': versions.twilioRuntimeHandler,
-  'twilio-run': versions.twilioRun,
-};
+const javaScriptDevDeps = { 'twilio-run': versions.twilioRun };
 const typescriptDevDeps = {
   ...javaScriptDevDeps,
   typescript: versions.typescript,

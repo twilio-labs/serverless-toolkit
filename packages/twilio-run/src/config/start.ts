@@ -9,8 +9,10 @@ import { AllAvailableFlagTypes, SharedFlagNames } from '../flags';
 import { EnvironmentVariablesWithAuth } from '../types/generic';
 import { fileExists } from '../utils/fs';
 import { getDebugFunction, logger } from '../utils/logger';
+import { readPackageJsonContent } from './utils';
 import { readSpecializedConfig } from './global';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
+import { PackageJson } from 'type-fest';
 
 const debug = getDebugFunction('twilio-run:cli:config');
 
@@ -38,6 +40,7 @@ export type StartCliConfig = {
   assetsFolderName?: string;
   functionsFolderName?: string;
   forkProcess: boolean;
+  pkgJson?: PackageJson;
 };
 
 export type ConfigurableStartCliFlags = Pick<
@@ -172,6 +175,8 @@ export async function getConfigFromCli(
   const cli = mergeFlagsAndConfig<StartCliFlags>(configFlags, flags, cliInfo);
   const config = {} as StartCliConfig;
 
+  const pkgJson = await readPackageJsonContent(flags);
+
   config.inspect = getInspectInfo(cli);
   config.baseDir = getBaseDirectory(cli);
   config.env = await getEnvironment(cli, config.baseDir);
@@ -184,6 +189,7 @@ export async function getConfigFromCli(
   config.assetsFolderName = cli.assetsFolder;
   config.functionsFolderName = cli.functionsFolder;
   config.forkProcess = cli.forkProcess;
+  config.pkgJson = pkgJson;
 
   return config;
 }
