@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0-rc.2](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio/runtime-handler@1.2.0-rc.1...@twilio/runtime-handler@1.2.0-rc.2) (2021-07-28)
+
+
+### Bug Fixes
+
+* **runtime-handler:** using set-cookie now sets cookie header ([#332](https://github.com/twilio-labs/serverless-toolkit/issues/332)) ([6f65bc3](https://github.com/twilio-labs/serverless-toolkit/commit/6f65bc3bb692b8bd0b21d932f66ae394000e51a9))
+
+
+
+
+
 # [1.2.0-rc.1](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio/runtime-handler@1.1.1...@twilio/runtime-handler@1.2.0-rc.1) (2021-07-14)
 
 
