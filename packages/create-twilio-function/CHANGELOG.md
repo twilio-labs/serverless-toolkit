@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.1](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.2.0...create-twilio-function@3.2.1) (2021-07-28)
+
+
+### Bug Fixes
+
+* **create-twilio-function:** place runtime-handler in dependencies ([#331](https://github.com/twilio-labs/serverless-toolkit/issues/331)) ([ba84396](https://github.com/twilio-labs/serverless-toolkit/commit/ba843964ba11a3cf5b687f6c1c40787b20d3b492))
+
+
+
+
+
 # [3.2.0](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.1.2...create-twilio-function@3.2.0) (2021-07-19)
 
 

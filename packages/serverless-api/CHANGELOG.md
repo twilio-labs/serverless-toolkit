@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.1](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-api@5.2.0...@twilio-labs/serverless-api@5.2.1) (2021-07-28)
+
+
+### Bug Fixes
+
+* packages/serverless-api/package.json to reduce vulnerabilities ([#326](https://github.com/twilio-labs/serverless-toolkit/issues/326)) ([38b8bf7](https://github.com/twilio-labs/serverless-toolkit/commit/38b8bf7529dbd13fc60f952feb8b94fa59f66fad))
+* packages/serverless-api/package.json to reduce vulnerabilities ([#328](https://github.com/twilio-labs/serverless-toolkit/issues/328)) ([e08f56d](https://github.com/twilio-labs/serverless-toolkit/commit/e08f56d887d0e8ea204e716bff369baaf4daea02))
+
+
+
+
+
 # [5.2.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-api@5.1.1...@twilio-labs/serverless-api@5.2.0) (2021-07-14)
 
 
