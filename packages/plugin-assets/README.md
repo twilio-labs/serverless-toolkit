@@ -66,7 +66,7 @@ OPTIONS
   --properties=properties          [default: service_sid, sid, domain_name] The asset service environment properties you
                                    would like to display (JSON output always shows all properties).
 
-  --service-name=service-name      [default: husky-dock] A unique name for your asset service. May only contain
+  --service-name=service-name      [default: vague-kettle] A unique name for your asset service. May only contain
                                    alphanumeric characters and hyphens.
 ```
 
