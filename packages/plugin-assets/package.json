@@ -1,7 +1,7 @@
 {
   "name": "@twilio-labs/plugin-assets",
   "description": "Easily upload assets to a Twilio Assets service",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "author": "Twilio Inc. <open-source@twilio.com> (https://www.twilio.com/labs)",
   "contributors": [
     "Phil Nash <philnash@twilio.com>"
