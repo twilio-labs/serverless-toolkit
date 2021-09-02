@@ -16,8 +16,9 @@ class InitCommand extends TwilioClientCommand {
         accountSid: this.currentProfile.accountSid,
         pluginConfig: pluginConfig,
         logger: this.logger,
-        serviceName:
-          this.flags['service-name'].trim() || generateProjectName().dashed,
+        serviceName: (
+          this.flags['service-name'] || generateProjectName().dashed
+        ).trim(),
       });
       this.output(result, this.flags.properties);
     } catch (error) {
