@@ -1,12 +1,14 @@
 import chalk from 'chalk';
-import { Arguments } from 'yargs';
-import { BaseFlags, BASE_CLI_FLAG_NAMES, getRelevantFlags } from '../flags';
+import { Arguments, Argv } from 'yargs';
+import { BaseFlags, getRelevantFlags } from '../flags';
 import { fetchListOfTemplates } from '../templating/actions';
 import { getOraSpinner, setLogLevelByName } from '../utils/logger';
-import { writeOutput } from '../utils/output';
+import { writeOutput, writeJSONOutput } from '../utils/output';
 import { CliInfo } from './types';
 
-export async function handler(flags: Arguments<BaseFlags>): Promise<void> {
+export async function handler(
+  flags: Arguments<BaseFlags & { outputFormat?: string }>
+): Promise<void> {
   setLogLevelByName(flags.logLevel);
   const spinner = getOraSpinner('Fetching available templates').start();
 
@@ -21,15 +23,29 @@ export async function handler(flags: Arguments<BaseFlags>): Promise<void> {
 
   spinner.stop();
 
-  templates.forEach(template => {
-    writeOutput(
-      chalk`‣ ${template.name} ({cyan ${template.id}})\n  {dim ${template.description}}`
-    );
-  });
+  if (flags.outputFormat === 'json') {
+    writeJSONOutput(templates);
+  } else {
+    templates.forEach((template) => {
+      writeOutput(
+        chalk`‣ ${template.name} ({cyan ${template.id}})\n  {dim ${template.description}}`
+      );
+    });
+  }
 }
 
 export const cliInfo: CliInfo = {
-  options: { ...getRelevantFlags([...BASE_CLI_FLAG_NAMES]) },
+  options: { ...getRelevantFlags(['output-format']) },
 };
+
+function optionBuilder(yargs: Argv<any>): Argv<Arguments<BaseFlags>> {
+  yargs = Object.keys(cliInfo.options).reduce((yargs, name) => {
+    return yargs.option(name, cliInfo.options[name]);
+  }, yargs);
+
+  return yargs;
+}
+
 export const command = ['list-templates'];
 export const describe = 'Lists the available Twilio Function templates';
+export const builder = optionBuilder;
