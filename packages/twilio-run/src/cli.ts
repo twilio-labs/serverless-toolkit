@@ -22,8 +22,10 @@ export async function run(rawArgs: string[]) {
       'Retrieve and modify the environment variables for your deployment',
       (yargs) => {
         yargs.command(EnvCommands.GetCommand);
+        yargs.command(EnvCommands.SetCommand);
         yargs.command(EnvCommands.ListCommand);
         yargs.command(EnvCommands.UnsetCommand);
+        yargs.command(EnvCommands.ImportCommand);
       }
     )
     .parse(rawArgs.slice(2));
