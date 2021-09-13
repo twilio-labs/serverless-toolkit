@@ -2,12 +2,20 @@ import { ActivateResult } from '@twilio-labs/serverless-api';
 import { stripIndent } from 'common-tags';
 import { PromoteConfig } from '../config/promote';
 import { logger } from '../utils/logger';
-import { writeOutput } from '../utils/output';
+import { writeJSONOutput, writeOutput } from '../utils/output';
 import { getTwilioConsoleDeploymentUrl, redactPartOfString } from './utils';
 import chalk = require('chalk');
 import terminalLink = require('terminal-link');
+import { ConfigurationContext } from 'twilio/lib/rest/conversations/v1/configuration';
+import { OutputFormat } from '../commands/shared';
 
-export function printActivateConfig(config: PromoteConfig) {
+export function printActivateConfig(
+  config: PromoteConfig,
+  outputFormat: OutputFormat
+) {
+  if (outputFormat === 'json') {
+    return;
+  }
   const message = chalk`
     {cyan.bold Username} ${config.username}
     {cyan.bold Password} ${redactPartOfString(config.password)}
@@ -15,7 +23,14 @@ export function printActivateConfig(config: PromoteConfig) {
   logger.info(stripIndent(message) + '\n');
 }
 
-export function printActivateResult(result: ActivateResult) {
+export function printActivateResult(
+  result: ActivateResult,
+  outputFormat: OutputFormat
+) {
+  if (outputFormat === 'json') {
+    writeJSONOutput(result);
+    return;
+  }
   logger.info(chalk.cyan.bold('\nActive build available at:'));
   writeOutput(result.domain);
 
