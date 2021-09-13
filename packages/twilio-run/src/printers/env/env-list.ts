@@ -1,13 +1,13 @@
 import { GetEnvironmentVariablesResult } from '@twilio-labs/serverless-api';
 import chalk from 'chalk';
-import { writeOutput } from '../../utils/output';
+import { writeJSONOutput, writeOutput } from '../../utils/output';
 
 export function outputVariables(
   result: GetEnvironmentVariablesResult,
   format?: 'json'
 ) {
   if (format === 'json') {
-    writeOutput(JSON.stringify(result, null, '\t'));
+    writeJSONOutput(result);
   } else {
     const output = result.variables
       .map((entry: { [key: string]: string | undefined }) => {
