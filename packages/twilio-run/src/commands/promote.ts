@@ -78,7 +78,7 @@ export async function handler(
 
   checkConfigForCredentials(config);
 
-  printActivateConfig(config);
+  printActivateConfig(config, config.outputFormat);
 
   const details = config.buildSid
     ? `(${config.buildSid})`
@@ -90,10 +90,11 @@ export async function handler(
     const client = new TwilioServerlessApiClient(config);
     const result = await client.activateBuild(config);
     spinner.succeed(
-      `Activated new build ${details} on ${config.targetEnvironment ||
-        'production'}`
+      `Activated new build ${details} on ${
+        config.targetEnvironment || 'production'
+      }`
     );
-    printActivateResult(result);
+    printActivateResult(result, config.outputFormat);
   } catch (err) {
     handleError(err, spinner);
   }
@@ -112,6 +113,7 @@ export const cliInfo: CliInfo = {
       'create-environment',
       'force',
       'env',
+      'output-format',
     ]),
   },
 };
