@@ -71,7 +71,7 @@ export async function handler(
   try {
     const client = new TwilioServerlessApiClient(config);
     const result = await client.list({ ...config });
-    printListResult(result, config);
+    printListResult(result, config, config.outputFormat);
   } catch (err) {
     handleError(err);
   }
@@ -89,6 +89,7 @@ export const cliInfo: CliInfo = {
       'properties',
       'extended-output',
       'service-sid',
+      'output-format',
     ]),
     environment: {
       ...ALL_FLAGS['environment'],

@@ -159,7 +159,7 @@ export const ALL_FLAGS = {
     type: 'string',
     alias: 'o',
     default: '',
-    describe: 'Output the log in a different format',
+    describe: 'Output the results in a different format',
     choices: ['', 'json'],
   } as Options,
   'log-cache-size': {
@@ -251,9 +251,9 @@ export const ALL_FLAGS = {
 export type AvailableFlags = typeof ALL_FLAGS;
 export type FlagNames = keyof AvailableFlags;
 
-export function getRelevantFlags(
-  flags: FlagNames[]
-): { [flagName: string]: Options } {
+export function getRelevantFlags(flags: FlagNames[]): {
+  [flagName: string]: Options;
+} {
   return flags.reduce((current: { [flagName: string]: Options }, flagName) => {
     return { ...current, [flagName]: { ...ALL_FLAGS[flagName] } };
   }, {});

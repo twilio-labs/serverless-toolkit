@@ -26,6 +26,7 @@ export type ListConfig = ApiListConfig & {
   cwd: string;
   properties?: string[];
   extendedOutput: boolean;
+  outputFormat?: string;
 };
 
 export type ConfigurableListCliFlags = Pick<
@@ -36,6 +37,7 @@ export type ConfigurableListCliFlags = Pick<
   | 'extendedOutput'
   | 'environment'
   | 'serviceSid'
+  | 'outputFormat'
 >;
 export type ListCliFlags = Arguments<
   ConfigurableListCliFlags & {
@@ -91,6 +93,7 @@ export async function getConfigFromFlags(
   const types = flags.types.split(',').map(trim) as ListOptions[];
   const region = flags.region;
   const edge = flags.edge;
+  const outputFormat = flags.outputFormat || externalCliOptions?.outputFormat;
 
   return {
     cwd,
@@ -106,6 +109,7 @@ export async function getConfigFromFlags(
     types,
     region,
     edge,
+    outputFormat,
     userAgentExtensions: getUserAgentExtensions('list', externalCliOptions),
   };
 }
