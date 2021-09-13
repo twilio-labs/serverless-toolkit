@@ -1,6 +1,6 @@
 import { ServerlessFunctionSignature } from '@twilio-labs/serverless-runtime-types/types';
 import bodyParser from 'body-parser';
-import EventEmitter from 'events';
+import { EventEmitter } from 'events';
 import express, {
   Express,
   NextFunction,
