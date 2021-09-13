@@ -11,3 +11,5 @@ export type ExternalCliOptions = {
     version: string;
   };
 };
+
+export type OutputFormat = string | undefined;

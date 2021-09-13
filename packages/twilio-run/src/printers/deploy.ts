@@ -8,9 +8,10 @@ import columnify from 'columnify';
 import { stripIndent } from 'common-tags';
 import terminalLink from 'terminal-link';
 import { MergeExclusive } from 'type-fest';
+import { OutputFormat } from '../commands/shared';
 import { DeployLocalProjectConfig } from '../config/deploy';
 import { logger } from '../utils/logger';
-import { writeOutput } from '../utils/output';
+import { writeJSONOutput, writeOutput } from '../utils/output';
 import {
   getTwilioConsoleDeploymentUrl,
   printObjectWithoutHeaders,
@@ -186,7 +187,13 @@ function prettyPrintDeployedResources(
   }
 }
 
-export function printConfigInfo(config: DeployLocalProjectConfig) {
+export function printConfigInfo(
+  config: DeployLocalProjectConfig,
+  outputFormat: OutputFormat
+) {
+  if (outputFormat === 'json') {
+    return;
+  }
   if (shouldPrettyPrint) {
     prettyPrintConfigInfo(config);
   } else {
@@ -196,8 +203,13 @@ export function printConfigInfo(config: DeployLocalProjectConfig) {
 
 export function printDeployedResources(
   config: DeployLocalProjectConfig,
-  result: DeployResult
+  result: DeployResult,
+  outputFormat: OutputFormat
 ) {
+  if (outputFormat === 'json') {
+    writeJSONOutput(result);
+    return;
+  }
   if (shouldPrettyPrint) {
     prettyPrintDeployedResources(config, result);
   } else {

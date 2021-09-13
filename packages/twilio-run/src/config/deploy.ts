@@ -23,6 +23,7 @@ import { getUserAgentExtensions } from './utils/userAgentExtensions';
 export type DeployLocalProjectConfig = ApiDeployLocalProjectConfig & {
   username: string;
   password: string;
+  outputFormat?: string;
 };
 
 export type ConfigurableDeployCliFlags = Pick<
@@ -39,6 +40,7 @@ export type ConfigurableDeployCliFlags = Pick<
   | 'assetsFolder'
   | 'functionsFolder'
   | 'runtime'
+  | 'outputFormat'
 >;
 export type DeployCliFlags = Arguments<
   ConfigurableDeployCliFlags & {
@@ -112,6 +114,7 @@ export async function getConfigFromFlags(
   }
 
   const { region, edge, runtime } = flags;
+  const outputFormat = flags.outputFormat || externalCliOptions?.outputFormat;
 
   return {
     cwd,
@@ -133,5 +136,6 @@ export async function getConfigFromFlags(
     edge,
     runtime,
     userAgentExtensions: getUserAgentExtensions('deploy', externalCliOptions),
+    outputFormat,
   };
 }
