@@ -1,10 +1,10 @@
 /** @module @twilio-labs/serverless-api/dist/api */
 
 import debug from 'debug';
-import { EnvironmentList, EnvironmentResource, Sid } from '../types';
-import { getPaginatedResource } from './utils/pagination';
-import { ClientApiError } from '../utils/error';
 import { TwilioServerlessApiClient } from '../client';
+import { EnvironmentList, EnvironmentResource, Sid } from '../types';
+import { ClientApiError } from '../utils/error';
+import { getPaginatedResource } from './utils/pagination';
 
 const log = debug('twilio-serverless-api:environments');
 
@@ -149,14 +149,22 @@ export async function getEnvironmentFromSuffix(
  * @returns
  */
 export async function createEnvironmentIfNotExists(
-  domainSuffix: string,
+  domainSuffixOrSid: string,
   serviceSid: string,
   client: TwilioServerlessApiClient
 ) {
-  return getEnvironmentFromSuffix(domainSuffix, serviceSid, client).catch(
+  if (isEnvironmentSid(domainSuffixOrSid)) {
+    return getEnvironment(domainSuffixOrSid, serviceSid, client);
+  }
+
+  return getEnvironmentFromSuffix(domainSuffixOrSid, serviceSid, client).catch(
     (err) => {
       try {
-        return createEnvironmentFromSuffix(domainSuffix, serviceSid, client);
+        return createEnvironmentFromSuffix(
+          domainSuffixOrSid,
+          serviceSid,
+          client
+        );
       } catch (err) {
         log('%O', new ClientApiError(err));
         throw err;
