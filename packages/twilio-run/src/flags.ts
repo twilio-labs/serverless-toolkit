@@ -87,7 +87,7 @@ export const ALL_FLAGS = {
     type: 'string',
     alias: 'to',
     describe:
-      'The environment name (domain suffix) you want to use for your deployment',
+      'The environment name (domain suffix) you want to use for your deployment. Alternatively you can specify an environment SID starting with ZE.',
     default: 'dev',
   } as Options,
   production: {
@@ -251,7 +251,9 @@ export const ALL_FLAGS = {
 export type AvailableFlags = typeof ALL_FLAGS;
 export type FlagNames = keyof AvailableFlags;
 
-export function getRelevantFlags(flags: FlagNames[]): {
+export function getRelevantFlags(
+  flags: FlagNames[]
+): {
   [flagName: string]: Options;
 } {
   return flags.reduce((current: { [flagName: string]: Options }, flagName) => {
