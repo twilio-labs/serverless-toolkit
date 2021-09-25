@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0-beta.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-api@5.2.1...@twilio-labs/serverless-api@5.3.0-beta.0) (2021-09-25)
+
+
+### Features
+
+* **serverless-api:** add support for env SIDs in deploy ([cf9ee17](https://github.com/twilio-labs/serverless-toolkit/commit/cf9ee1733a46260c29429435c5001804b21d1a0f)), closes [#340](https://github.com/twilio-labs/serverless-toolkit/issues/340)
+
+
+
+
+
 ## [5.2.1](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-api@5.2.0...@twilio-labs/serverless-api@5.2.1) (2021-07-28)
 
 
