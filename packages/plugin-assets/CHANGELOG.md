@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.5-beta.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-assets@1.2.4...@twilio-labs/plugin-assets@1.2.5-beta.0) (2021-09-25)
+
+
+### Bug Fixes
+
+* **assets:** fixes incorrect trim use of trim on undefined flag after removing default ([#337](https://github.com/twilio-labs/serverless-toolkit/issues/337)) ([b757bf3](https://github.com/twilio-labs/serverless-toolkit/commit/b757bf3aee1b30aad256d04b76f6051a5d10417c))
+
+
+
+
+
 ## [1.2.4](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-assets@1.2.3...@twilio-labs/plugin-assets@1.2.4) (2021-08-05)
 
 **Note:** Version bump only for package @twilio-labs/plugin-assets
