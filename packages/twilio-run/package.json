@@ -42,7 +42,7 @@
     "@types/is-ci": "^2.0.0",
     "@types/qs": "^6.9.4",
     "@types/semver": "^7.3.6",
-    "@types/wrap-ansi": "^3.0.0",
+    "@types/wrap-ansi": "^8.0.1",
     "body-parser": "^1.18.3",
     "boxen": "^5.1.2",
     "chalk": "^2.4.2",
@@ -80,7 +80,7 @@
     "twilio": "^3.60.0",
     "type-fest": "^0.15.1",
     "window-size": "^1.1.1",
-    "wrap-ansi": "^5.1.0",
+    "wrap-ansi": "^7.0.0",
     "yargs": "^13.2.2"
   },
   "optionalDependencies": {
