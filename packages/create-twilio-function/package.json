@@ -31,7 +31,7 @@
     "nock": "^11.3.4"
   },
   "dependencies": {
-    "boxen": "^3.0.0",
+    "boxen": "^5.1.2",
     "chalk": "^2.4.2",
     "gitignore": "^0.7.0",
     "inquirer": "^6.2.2",
