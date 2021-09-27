@@ -6,7 +6,7 @@ import { DEFAULT_TEST_CLIENT_CONFIG_USERNAME_PASSWORD } from '../__fixtures__/ba
 
 jest.mock('os', () => {
   const originalOS = jest.requireActual('os');
-  const osMock = jest.requireActual('../../__mocks__/os');
+  const osMock = jest.requireActual('../../__mocks__/os').default;
   return {
     ...originalOS,
     ...osMock,
@@ -14,7 +14,7 @@ jest.mock('os', () => {
 });
 jest.mock('../utils/package-info');
 
-const DEFAULT_USER_AGENT = `@twilio-labs/serverless-api-test/1.0.0-test (darwin x64) node/${process.version}`;
+const DEFAULT_USER_AGENT = `@twilio-labs/serverless-api-test/1.0.0-test (darwin-mock x64-mock) node/${process.version}`;
 const DEFAULT_CREDENTIALS = {
   user: DEFAULT_TEST_CLIENT_CONFIG_USERNAME_PASSWORD.username,
   pass: DEFAULT_TEST_CLIENT_CONFIG_USERNAME_PASSWORD.password,
