@@ -1,10 +1,17 @@
 import nock from 'nock';
-import { UsernameConfig } from '../../dist';
+import { UsernameConfig } from '../../';
 import { getPaginatedResource } from '../api/utils/pagination';
 import TwilioServerlessApiClient from '../client';
 import { DEFAULT_TEST_CLIENT_CONFIG_USERNAME_PASSWORD } from '../__fixtures__/base-fixtures';
 
-jest.mock('os');
+jest.mock('os', () => {
+  const originalOS = jest.requireActual('os');
+  const osMock = jest.requireActual('../../__mocks__/os');
+  return {
+    ...originalOS,
+    ...osMock,
+  };
+});
 jest.mock('../utils/package-info');
 
 const DEFAULT_USER_AGENT = `@twilio-labs/serverless-api-test/1.0.0-test (darwin x64) node/${process.version}`;

@@ -94,7 +94,7 @@
     "@types/dotenv": "^6.1.1",
     "@types/express-useragent": "^0.2.21",
     "@types/got": "^9.6.0",
-    "@types/jest": "^24.0.15",
+    "@types/jest": "^26.0.24",
     "@types/json5": "0.0.30",
     "@types/listr": "^0.14.0",
     "@types/lodash.camelcase": "^4.3.6",
