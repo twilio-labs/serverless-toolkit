@@ -130,6 +130,7 @@ function createTsconfigFile(pathName) {
           module: 'commonjs',
           strict: true,
           esModuleInterop: true,
+          rootDir: 'src',
           outDir: 'dist',
           skipLibCheck: true,
           sourceMap: true,
