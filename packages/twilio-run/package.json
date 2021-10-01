@@ -80,7 +80,7 @@
     "twilio": "^3.60.0",
     "type-fest": "^0.15.1",
     "window-size": "^1.1.1",
-    "wrap-ansi": "^5.1.0",
+    "wrap-ansi": "^6.2.0",
     "yargs": "^13.2.2"
   },
   "optionalDependencies": {
