@@ -6,7 +6,7 @@
   "types": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "sh bundler.sh",
+    "build": "./bundler.sh",
     "prepare": "npm run-script build"
   },
   "keywords": [
