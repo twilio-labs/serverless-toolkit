@@ -1,4 +1,4 @@
 export default {
-  platform: () => 'darwin',
-  arch: () => 'x64',
+  platform: () => 'darwin-mock',
+  arch: () => 'x64-mock',
 };

@@ -4,7 +4,6 @@ declare module 'columnify' {
 }
 
 declare module 'log-symbols';
-declare module 'boxen';
 declare module 'fast-redact' {
   function createRedactor(options: {}): <T>(val: T) => string;
 
@@ -49,7 +48,7 @@ declare module 'chalk' {
     interface Options {
       /**
       Enable or disable Chalk.
-  
+
       @default true
       */
       enabled?: boolean;
@@ -96,9 +95,9 @@ declare module 'chalk' {
     interface ChalkFunction {
       /**
       Use a template string.
-  
+
       @remarks Template literals are unsupported for nested calls (see [issue #341](https://github.com/chalk/chalk/issues/341))
-  
+
       @example
       ```
       log(chalk`
@@ -121,7 +120,7 @@ declare module 'chalk' {
 
       /**
       Enable or disable Chalk.
-  
+
       @default true
       */
       enabled: boolean;
@@ -134,13 +133,13 @@ declare module 'chalk' {
 
       /**
       Use HEX value to set text color.
-  
+
       @param color - Hexadecimal value representing the desired color.
-  
+
       @example
       ```
       import chalk = require('chalk');
-  
+
       chalk.hex('#DEADED');
       ```
       */
@@ -148,13 +147,13 @@ declare module 'chalk' {
 
       /**
       Use keyword color value to set text color.
-  
+
       @param color - Keyword value representing the desired color.
-  
+
       @example
       ```
       import chalk = require('chalk');
-  
+
       chalk.keyword('orange');
       ```
       */
@@ -182,13 +181,13 @@ declare module 'chalk' {
 
       /**
       Use HEX value to set background color.
-  
+
       @param color - Hexadecimal value representing the desired color.
-  
+
       @example
       ```
       import chalk = require('chalk');
-  
+
       chalk.bgHex('#DEADED');
       ```
       */
@@ -196,13 +195,13 @@ declare module 'chalk' {
 
       /**
       Use keyword color value to set background color.
-  
+
       @param color - Keyword value representing the desired color.
-  
+
       @example
       ```
       import chalk = require('chalk');
-  
+
       chalk.bgKeyword('orange');
       ```
       */
