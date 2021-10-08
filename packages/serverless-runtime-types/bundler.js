@@ -6,8 +6,7 @@ const fs = require('fs')
 
 const indexFile = fs.readFileSync('index.d.ts', 'utf8');
 // remove all import statements from index.d.ts
-const indexFileNoImports = indexFile.replace(/import .*([\S\s]*?);/g, "");
+const indexFileNoImports = indexFile.replace(/import .*?;/gs, '');
 const typesFile = fs.readFileSync('types.d.ts', 'utf8');
 
-fs.writeFileSync('bundle.d.ts', typesFile.trim());
-fs.appendFileSync('bundle.d.ts', indexFileNoImports);
+fs.writeFileSync('bundle.d.ts', typesFile + '\n' + indexFileNoImports.trim());
