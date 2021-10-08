@@ -1,7 +1,7 @@
 {
   "name": "@twilio-labs/plugin-serverless",
   "description": "Develop and deploy Twilio Serverless Functions",
-  "version": "2.2.2",
+  "version": "2.2.3-beta.0",
   "author": "Twilio Inc. <open-source@twilio.com> (https://www.twilio.com/labs)",
   "contributors": [
     "Dominik Kundel <dkundel@twilio.com>"
@@ -10,10 +10,10 @@
     "@oclif/command": "^1.5.19",
     "@oclif/config": "^1.13.3",
     "@twilio/cli-core": "^5.29.0",
-    "create-twilio-function": "^3.2.1",
+    "create-twilio-function": "3.2.2-beta.0",
     "lodash.camelcase": "^4.3.0",
     "lodash.kebabcase": "^4.1.1",
-    "twilio-run": "^3.2.2"
+    "twilio-run": "3.3.0-beta.0"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.2",
@@ -90,5 +90,5 @@
     "prepack": "oclif-dev manifest && oclif-dev readme",
     "version": "oclif-dev readme && git add README.md"
   },
-  "gitHead": "9382ba7f1c23cdf18ac8bb6cada92340d63491dd"
+  "gitHead": "6db273648ed19474f4125042556b10c051529912"
 }

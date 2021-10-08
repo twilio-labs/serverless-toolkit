@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0-beta.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio/runtime-handler@1.1.3...@twilio/runtime-handler@1.2.0-beta.0) (2021-09-25)
+
+
+### Features
+
+* **twilio-run:** adds json output to twilio-run deploy ([9ae1478](https://github.com/twilio-labs/serverless-toolkit/commit/9ae147816af85a671ed37639e83d0fa105f8ecb2))
+
+
+
+
+
 ## [1.1.3](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio/runtime-handler@1.1.2...@twilio/runtime-handler@1.1.3) (2021-07-28)
 
 **Note:** Version bump only for package @twilio/runtime-handler
