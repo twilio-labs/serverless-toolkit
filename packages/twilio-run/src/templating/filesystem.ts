@@ -5,6 +5,8 @@ import got from 'got';
 import Listr, { ListrTask } from 'listr';
 import path from 'path';
 import { install, InstallResult } from 'pkg-install';
+import semver from 'semver';
+import { PackageJson } from 'type-fest';
 import {
   downloadFile,
   fileExists,
@@ -35,12 +37,12 @@ async function writeEnvFile(
   const newFlags = dotenv.parse(newContent);
 
   const functionKeys = Object.keys(newFlags);
-  const existingKeys = functionKeys.filter(key =>
+  const existingKeys = functionKeys.filter((key) =>
     currentFlags.hasOwnProperty(key)
   );
   const updatedContent = newContent
     .split('\n')
-    .map(line => {
+    .map((line) => {
       const name = line.substr(0, line.indexOf('='));
       if (existingKeys.includes(name)) {
         return '# ' + line;
@@ -65,7 +67,24 @@ async function installDependencies(
   targetDir: string
 ): Promise<InstallResult | undefined> {
   const pkgContent = await got(contentUrl, { json: true });
-  const dependencies = pkgContent.body.dependencies;
+
+  const dependencies: PackageJson.Dependency = {};
+  const exactDependencies: PackageJson.Dependency = {};
+  Object.entries<string>(pkgContent.body.dependencies).forEach(
+    ([name, version]) => {
+      if (Boolean(semver.parse(version))) {
+        exactDependencies[name] = version;
+      } else {
+        dependencies[name] = version;
+      }
+    }
+  );
+  if (exactDependencies && Object.keys(exactDependencies).length > 0) {
+    await install(exactDependencies, {
+      cwd: targetDir,
+      exact: true,
+    });
+  }
   if (dependencies && Object.keys(dependencies).length > 0) {
     return install(dependencies, {
       cwd: targetDir,
@@ -135,7 +154,7 @@ export async function writeFiles(
   }
 
   const tasks = files
-    .map(file => {
+    .map((file) => {
       if (file.type === 'functions') {
         return {
           title: `Creating function: ${path.join(file.directory, file.name)}`,
