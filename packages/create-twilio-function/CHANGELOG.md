@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.2](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.2.1...create-twilio-function@3.2.2) (2021-10-08)
+
+
+### Bug Fixes
+
+* **create-twilio-function:** adds rootDir to generated tsconfig.json ([#362](https://github.com/twilio-labs/serverless-toolkit/issues/362)) ([86de2ae](https://github.com/twilio-labs/serverless-toolkit/commit/86de2ae8f4b9718a9eb59fc0f8afe347d6552ba4))
+
+
+
+
+
 ## [3.2.2-beta.0](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.2.1...create-twilio-function@3.2.2-beta.0) (2021-09-25)
 
 **Note:** Version bump only for package create-twilio-function

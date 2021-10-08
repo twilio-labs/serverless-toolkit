@@ -1,6 +1,6 @@
 {
   "name": "@twilio/runtime-handler",
-  "version": "1.2.0-beta.0",
+  "version": "1.2.0",
   "description": "Stub runtime for Twilio Functions",
   "keywords": [
     "twilio",
@@ -60,7 +60,7 @@
     "url": "https://github.com/twilio-labs/serverless-toolkit/issues"
   },
   "dependencies": {
-    "@twilio-labs/serverless-runtime-types": "^2.1.1",
+    "@twilio-labs/serverless-runtime-types": "^2.2.0",
     "@types/express": "4.17.7",
     "chalk": "^4.1.1",
     "common-tags": "^1.8.0",

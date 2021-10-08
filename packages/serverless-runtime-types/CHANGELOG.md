@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-runtime-types@2.1.1...@twilio-labs/serverless-runtime-types@2.2.0) (2021-10-08)
+
+
+### Features
+
+* **serverless-runtime-types:** provide bundled type files ([#369](https://github.com/twilio-labs/serverless-toolkit/issues/369)) ([7a24b87](https://github.com/twilio-labs/serverless-toolkit/commit/7a24b87ff4335648a8530ac7e9a7070aeb09cd25))
+
+
+
+
+
 ## [2.1.1](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-runtime-types@2.1.0...@twilio-labs/serverless-runtime-types@2.1.1) (2021-07-19)
 
 

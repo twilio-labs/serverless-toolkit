@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.3.0](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.2.2...twilio-run@3.3.0) (2021-10-08)
+
+
+### Bug Fixes
+
+* **twilio-run:** expose env set and import commands ([#341](https://github.com/twilio-labs/serverless-toolkit/issues/341)) ([da33cfb](https://github.com/twilio-labs/serverless-toolkit/commit/da33cfbd6bd2b8a165785fb277be10b291112910)), closes [#339](https://github.com/twilio-labs/serverless-toolkit/issues/339)
+* **twilio-run:** limit json output in deploy command ([67a8fd8](https://github.com/twilio-labs/serverless-toolkit/commit/67a8fd82aecdc38b58415ab5631051ee2440ebbb))
+
+
+### Features
+
+* **twilio-run:** add environment sid support ([5a24ed8](https://github.com/twilio-labs/serverless-toolkit/commit/5a24ed8ef5e81a8597d067545b37978358ad5308)), closes [#340](https://github.com/twilio-labs/serverless-toolkit/issues/340)
+* **twilio-run:** adds json output to twilio-run deploy ([9ae1478](https://github.com/twilio-labs/serverless-toolkit/commit/9ae147816af85a671ed37639e83d0fa105f8ecb2))
+* **twilio-run:** adds json output to twilio-run list ([0342f53](https://github.com/twilio-labs/serverless-toolkit/commit/0342f53fd9a8951598d92b2c8901b3548093d0dc))
+* **twilio-run:** adds json output to twilio-run list-templates ([d49d7e0](https://github.com/twilio-labs/serverless-toolkit/commit/d49d7e023f27cd7f008ddccba42b3434dc4d04e9))
+* **twilio-run:** adds json output to twilio-run promote ([691513b](https://github.com/twilio-labs/serverless-toolkit/commit/691513b64a18c637861c233a12b821152394bb34))
+* **twilio-run:** updates env list command to use writeJsonOutput function ([75067a9](https://github.com/twilio-labs/serverless-toolkit/commit/75067a927aca13fc5ea85cdf48d7171c21fd357b))
+
+
+
+
+
 # [3.3.0-beta.0](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.2.2...twilio-run@3.3.0-beta.0) (2021-09-25)
 
 
