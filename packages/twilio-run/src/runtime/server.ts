@@ -246,12 +246,15 @@ export async function createServer(
   app.all(
     '/*',
     (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
-      if (!routeMap.has(req.path)) {
-        res.status(404).send('Could not find request resource');
-        return;
+      let routeInfo = routeMap.get(req.path);
+
+      if (!routeInfo && req.path === '/') {
+        // In production we automatically fall back to the contents of /assets/index.html
+        debug('Falling back to /assets/index.html');
+        routeInfo = routeMap.get('/assets/index.html');
       }
 
-      if (req.method === 'OPTIONS') {
+      if (req.method === 'OPTIONS' && routeInfo) {
         res.set({
           'access-control-allow-origin': '*',
           'access-control-allow-headers':
@@ -267,8 +270,6 @@ export async function createServer(
 
         return;
       }
-
-      const routeInfo = routeMap.get(req.path);
 
       if (routeInfo && routeInfo.type === 'function') {
         const functionPath = routeInfo.filePath;
