@@ -1,6 +1,7 @@
 import {
   Context,
   ServerlessCallback,
+  ServerlessEventObject,
   ServerlessFunctionSignature,
   TwilioClient,
   TwilioClientOptions,
@@ -18,6 +19,10 @@ import { join, resolve } from 'path';
 import { deserializeError } from 'serialize-error';
 import { checkForValidAccountSid } from './checks/check-account-sid';
 import { checkForValidAuthToken } from './checks/check-auth-token';
+import {
+  restrictedHeaderExactMatches,
+  restrictedHeaderPrefixes,
+} from './checks/restricted-headers';
 import { Reply } from './internal/functionRunner';
 import { Response } from './internal/response';
 import * as Runtime from './internal/runtime';
@@ -37,8 +42,53 @@ const RUNNER_PATH =
 
 let twilio: TwilioPackage;
 
-export function constructEvent<T extends {} = {}>(req: ExpressRequest): T {
-  return { ...req.query, ...req.body };
+type Headers = {
+  [key: string]: string | string[];
+};
+type Cookies = {
+  [key: string]: string;
+};
+
+export function constructHeaders(rawHeaders?: string[]): Headers {
+  if (rawHeaders && rawHeaders.length > 0) {
+    const headers: Headers = {};
+    for (let i = 0, len = rawHeaders.length; i < len; i += 2) {
+      const headerName = rawHeaders[i].toLowerCase();
+      if (
+        restrictedHeaderExactMatches.some(
+          (headerType) => headerName === headerType
+        ) ||
+        restrictedHeaderPrefixes.some((headerType) =>
+          headerName.startsWith(headerType)
+        )
+      ) {
+        continue;
+      }
+      const currentHeader = headers[headerName];
+      if (!currentHeader) {
+        headers[headerName] = rawHeaders[i + 1];
+      } else if (typeof currentHeader === 'string') {
+        headers[headerName] = [currentHeader, rawHeaders[i + 1]];
+      } else {
+        headers[headerName] = [...currentHeader, rawHeaders[i + 1]];
+      }
+    }
+    return headers;
+  }
+  return {};
+}
+
+export function constructEvent<T extends ServerlessEventObject>(
+  req: ExpressRequest
+): T {
+  return {
+    request: {
+      headers: constructHeaders(req.rawHeaders),
+      cookies: (req.cookies || {}) as Cookies,
+    },
+    ...req.query,
+    ...req.body,
+  };
 }
 
 export function augmentContextWithOptionals(

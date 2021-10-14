@@ -8,6 +8,7 @@ import express, {
   Response as ExpressResponse,
 } from 'express';
 import userAgentMiddleware from 'express-useragent';
+import cookieParser from 'cookie-parser';
 import nocache from 'nocache';
 import { createLogger } from './internal/request-logger';
 import { setRoutes } from './internal/route-cache';
@@ -109,6 +110,7 @@ export class LocalDevelopmentServer extends EventEmitter {
       })
     );
     app.use(bodyParser.json({ limit: DEFAULT_BODY_SIZE_LAMBDA }));
+    app.use(cookieParser());
     app.get('/favicon.ico', (req, res) => {
       res.redirect(
         'https://www.twilio.com/marketing/bundles/marketing/img/favicons/favicon.ico'

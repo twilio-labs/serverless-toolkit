@@ -1,18 +1,15 @@
 import { TwilioResponse } from '@twilio-labs/serverless-runtime-types/types';
+import { Headers, HeaderValue } from '../types';
 import { Response as ExpressResponse } from 'express';
 import debug from '../utils/debug';
 
 const log = debug('twilio-runtime-handler:dev:response');
+const COOKIE_HEADER = 'Set-Cookie';
 
 type ResponseOptions = {
   headers?: Headers;
   statusCode?: number;
   body?: object | string;
-};
-
-type HeaderValue = number | string;
-type Headers = {
-  [key: string]: HeaderValue;
 };
 
 export class Response implements TwilioResponse {
@@ -34,6 +31,15 @@ export class Response implements TwilioResponse {
     if (options && options.headers) {
       this.headers = options.headers;
     }
+
+    // if Set-Cookie is not already in the headers, then add it as an empty list
+    const cookieHeader = this.headers[COOKIE_HEADER];
+    if (!(COOKIE_HEADER in this.headers)) {
+      this.headers[COOKIE_HEADER] = [];
+    }
+    if (!Array.isArray(cookieHeader) && typeof cookieHeader !== 'undefined') {
+      this.headers[COOKIE_HEADER] = [cookieHeader];
+    }
   }
 
   setStatusCode(statusCode: number): Response {
@@ -53,14 +59,65 @@ export class Response implements TwilioResponse {
     if (typeof headersObject !== 'object') {
       return this;
     }
-    this.headers = headersObject;
+    this.headers = {};
+    for (const header in headersObject) {
+      this.appendHeader(header, headersObject[header]);
+    }
+
     return this;
   }
 
   appendHeader(key: string, value: HeaderValue): Response {
     log('Appending header for %s', key, value);
     this.headers = this.headers || {};
-    this.headers[key] = value;
+    let newHeaderValue: HeaderValue = [];
+    if (key.toLowerCase() === COOKIE_HEADER.toLowerCase()) {
+      const existingValue = this.headers[COOKIE_HEADER];
+      if (existingValue) {
+        newHeaderValue = [existingValue, value].flat();
+        if (newHeaderValue) {
+          this.headers[COOKIE_HEADER] = newHeaderValue;
+        }
+      } else {
+        this.headers[COOKIE_HEADER] = Array.isArray(value) ? value: [value];
+      }
+    } else {
+      const existingValue = this.headers[key];
+      if (existingValue) {
+        newHeaderValue = [existingValue, value].flat();
+        if (newHeaderValue) {
+          this.headers[key] = newHeaderValue;
+        }
+      } else {
+        this.headers[key] = value;
+      }
+    }
+    if (!(COOKIE_HEADER in this.headers)) {
+      this.headers[COOKIE_HEADER] = [];
+    }
+    return this;
+  }
+
+  setCookie(key: string, value: string, attributes: string[] = []): Response {
+    log('Setting cookie %s=%s', key, value);
+    const cookie =
+      `${key}=${value}` +
+      (attributes.length > 0 ? `;${attributes.join(';')}` : '');
+    this.appendHeader(COOKIE_HEADER, cookie);
+    return this;
+  }
+
+  removeCookie(key: string): Response {
+    log('Removing cookie %s', key);
+    let cookieHeader = this.headers[COOKIE_HEADER];
+    if (!Array.isArray(cookieHeader)) {
+      cookieHeader = [cookieHeader];
+    }
+    const newCookies = cookieHeader.filter(
+      (cookie) => typeof cookie === 'string' && !cookie.startsWith(`${key}=`)
+    );
+    newCookies.push(`${key}=;Max-Age=0`);
+    this.headers[COOKIE_HEADER] = newCookies;
     return this;
   }
 

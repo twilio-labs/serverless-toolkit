@@ -3,7 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [3.3.0-beta.0](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.2.2...twilio-run@3.3.0-beta.0) (2021-09-25)
+## [3.1.2-rc.0](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.1.1...twilio-run@3.1.2-rc.0) (2021-07-14)
+
+**Note:** Version bump only for package twilio-run
+
+
+## [3.3.0-beta.0](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.2.2...twilio-run@3.3.0-beta.0) (2021-09-25)
 
 
 ### Bug Fixes

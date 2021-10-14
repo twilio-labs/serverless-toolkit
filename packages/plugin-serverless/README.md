@@ -357,6 +357,7 @@ OPTIONS
   --typescript                   Initialize your Serverless project with TypeScript
 ```
 
+
 _See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.2.3-beta.0/src/commands/serverless/init.js)_
 
 ## `twilio serverless:list [TYPES]`
@@ -406,6 +407,7 @@ OPTIONS
 
   --to=to                            [Alias for "environment"]
 ```
+
 
 _See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.2.3-beta.0/src/commands/serverless/list.js)_
 

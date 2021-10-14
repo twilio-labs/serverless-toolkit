@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0-rc.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-runtime-types@2.1.0...@twilio-labs/serverless-runtime-types@2.2.0-rc.0) (2021-07-14)
+
+
+### Features
+
+* **runtime-types:** add cookie/header support for types ([#297](https://github.com/twilio-labs/serverless-toolkit/issues/297)) ([e04fbcb](https://github.com/twilio-labs/serverless-toolkit/commit/e04fbcbd89fdda2fe3c55928df5c630cd9989fa9))
+
+
 ## [2.1.1](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-runtime-types@2.1.0...@twilio-labs/serverless-runtime-types@2.1.1) (2021-07-19)
 
 
