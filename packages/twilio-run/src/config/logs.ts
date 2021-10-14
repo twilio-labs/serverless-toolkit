@@ -16,6 +16,7 @@ import { getFunctionServiceSid } from '../serverless-api/utils';
 import { readSpecializedConfig } from './global';
 import { getCredentialsFromFlags, readLocalEnvFile } from './utils';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
+import { getUserAgentExtensions } from './utils/userAgentExtensions';
 
 export type LogsConfig = ClientConfig &
   ApiLogsConfig & {
@@ -104,5 +105,6 @@ export async function getConfigFromFlags(
     region,
     edge,
     logCacheSize: flags.logCacheSize,
+    userAgentExtensions: getUserAgentExtensions('logs', externalCliOptions),
   };
 }

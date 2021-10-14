@@ -8,6 +8,64 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 **Note:** Version bump only for package twilio-run
 
 
+## [3.3.0-beta.0](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.2.2...twilio-run@3.3.0-beta.0) (2021-09-25)
+
+
+### Bug Fixes
+
+* **twilio-run:** expose env set and import commands ([#341](https://github.com/twilio-labs/serverless-toolkit/issues/341)) ([da33cfb](https://github.com/twilio-labs/serverless-toolkit/commit/da33cfbd6bd2b8a165785fb277be10b291112910)), closes [#339](https://github.com/twilio-labs/serverless-toolkit/issues/339)
+* **twilio-run:** limit json output in deploy command ([c1184df](https://github.com/twilio-labs/serverless-toolkit/commit/c1184dfdd6b9e23094e187959b51cfdf6db0c6f5))
+
+
+### Features
+
+* **twilio-run:** add environment sid support ([47fbd1c](https://github.com/twilio-labs/serverless-toolkit/commit/47fbd1c3a9d6c3da61dde544f0ef24b8559c233a)), closes [#340](https://github.com/twilio-labs/serverless-toolkit/issues/340)
+* **twilio-run:** adds json output to twilio-run deploy ([9ae1478](https://github.com/twilio-labs/serverless-toolkit/commit/9ae147816af85a671ed37639e83d0fa105f8ecb2))
+* **twilio-run:** adds json output to twilio-run list ([0342f53](https://github.com/twilio-labs/serverless-toolkit/commit/0342f53fd9a8951598d92b2c8901b3548093d0dc))
+* **twilio-run:** adds json output to twilio-run list-templates ([d49d7e0](https://github.com/twilio-labs/serverless-toolkit/commit/d49d7e023f27cd7f008ddccba42b3434dc4d04e9))
+* **twilio-run:** adds json output to twilio-run promote ([691513b](https://github.com/twilio-labs/serverless-toolkit/commit/691513b64a18c637861c233a12b821152394bb34))
+* **twilio-run:** updates env list command to use writeJsonOutput function ([75067a9](https://github.com/twilio-labs/serverless-toolkit/commit/75067a927aca13fc5ea85cdf48d7171c21fd357b))
+
+
+
+
+
+## [3.2.2](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.2.1...twilio-run@3.2.2) (2021-07-28)
+
+
+### Bug Fixes
+
+* **create-twilio-function:** place runtime-handler in dependencies ([#331](https://github.com/twilio-labs/serverless-toolkit/issues/331)) ([ba84396](https://github.com/twilio-labs/serverless-toolkit/commit/ba843964ba11a3cf5b687f6c1c40787b20d3b492))
+
+
+
+
+
+## [3.2.1](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.2.0...twilio-run@3.2.1) (2021-07-19)
+
+
+### Bug Fixes
+
+* **runtime-handler:** add warning for optional context vars ([#317](https://github.com/twilio-labs/serverless-toolkit/issues/317)) ([47051de](https://github.com/twilio-labs/serverless-toolkit/commit/47051dec50ce477d22bc6be0f87d58950c4a1919))
+
+
+
+
+
+# [3.2.0](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.1.1...twilio-run@3.2.0) (2021-07-14)
+
+
+### Bug Fixes
+
+* **twilio-run:** handles ngrok load error and actual ngrok errors ([#305](https://github.com/twilio-labs/serverless-toolkit/issues/305)) ([ec2230d](https://github.com/twilio-labs/serverless-toolkit/commit/ec2230dd7913a024b7d38f2c58066ba12165cc49)), closes [#275](https://github.com/twilio-labs/serverless-toolkit/issues/275)
+* **twilio-run:** stop debug logging in runtime-handler by default ([#315](https://github.com/twilio-labs/serverless-toolkit/issues/315)) ([b7a2035](https://github.com/twilio-labs/serverless-toolkit/commit/b7a2035e5d95e888aae45bf245331e64815007ff))
+
+
+### Features
+
+* add new env commands ([#290](https://github.com/twilio-labs/serverless-toolkit/issues/290)) ([7d11a03](https://github.com/twilio-labs/serverless-toolkit/commit/7d11a03aa5f02c6ac06147c2796f7e8c9964396e))
+
+
 
 
 

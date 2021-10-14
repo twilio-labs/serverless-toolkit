@@ -1,10 +1,10 @@
-const { TwilioServerlessApiClient } = require('@twilio-labs/serverless-api');
 const {
   getEnvironment,
 } = require('@twilio-labs/serverless-api/dist/api/environments');
 const { getBuild } = require('@twilio-labs/serverless-api/dist/api/builds');
 const { TwilioCliError } = require('@twilio/cli-core').services.error;
 const { couldNotGetEnvironment, couldNotGetBuild } = require('./errorMessages');
+const { getTwilioClient } = require('./client');
 
 async function list({ pluginConfig, apiKey, apiSecret, accountSid, logger }) {
   let environment;
@@ -15,10 +15,7 @@ async function list({ pluginConfig, apiKey, apiSecret, accountSid, logger }) {
     config[accountSid].environmentSid
   ) {
     const { serviceSid, environmentSid } = config[accountSid];
-    const client = new TwilioServerlessApiClient({
-      username: apiKey,
-      password: apiSecret,
-    });
+    const client = getTwilioClient(apiKey, apiSecret);
     try {
       logger.debug(
         `Fetching environment with sid ${environmentSid} from service with sid ${serviceSid}`

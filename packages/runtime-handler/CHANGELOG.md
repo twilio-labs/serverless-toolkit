@@ -19,6 +19,21 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 * **runtime-handler:** using set-cookie now sets cookie header ([#332](https://github.com/twilio-labs/serverless-toolkit/issues/332)) ([6f65bc3](https://github.com/twilio-labs/serverless-toolkit/commit/6f65bc3bb692b8bd0b21d932f66ae394000e51a9))
 
 
+# [1.2.0-beta.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio/runtime-handler@1.1.3...@twilio/runtime-handler@1.2.0-beta.0) (2021-09-25)
+
+
+### Features
+
+* **twilio-run:** adds json output to twilio-run deploy ([9ae1478](https://github.com/twilio-labs/serverless-toolkit/commit/9ae147816af85a671ed37639e83d0fa105f8ecb2))
+
+
+
+
+
+## [1.1.3](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio/runtime-handler@1.1.2...@twilio/runtime-handler@1.1.3) (2021-07-28)
+
+**Note:** Version bump only for package @twilio/runtime-handler
+
 
 
 
@@ -29,6 +44,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 * **handler:** update header and cookie support for Response ([#296](https://github.com/twilio-labs/serverless-toolkit/issues/296)) ([e9ef02e](https://github.com/twilio-labs/serverless-toolkit/commit/e9ef02ed9e10635623f462db6f53de3669ffaf0b))
 * **runtime-handler:** handle incoming headers and cookies ([#293](https://github.com/twilio-labs/serverless-toolkit/issues/293)) ([62ff180](https://github.com/twilio-labs/serverless-toolkit/commit/62ff1801db6a121122fcd944a855ad7f038cafe4))
+
+
+## [1.1.2](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio/runtime-handler@1.1.1...@twilio/runtime-handler@1.1.2) (2021-07-19)
+
+
+### Bug Fixes
+
+* **runtime-handler:** add warning for optional context vars ([#317](https://github.com/twilio-labs/serverless-toolkit/issues/317)) ([47051de](https://github.com/twilio-labs/serverless-toolkit/commit/47051dec50ce477d22bc6be0f87d58950c4a1919))
 
 
 

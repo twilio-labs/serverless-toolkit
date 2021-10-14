@@ -1,6 +1,6 @@
 import { ServerlessFunctionSignature } from '@twilio-labs/serverless-runtime-types/types';
 import bodyParser from 'body-parser';
-import EventEmitter from 'events';
+import { EventEmitter } from 'events';
 import express, {
   Express,
   NextFunction,
@@ -143,12 +143,15 @@ export class LocalDevelopmentServer extends EventEmitter {
     app.all(
       '/*',
       (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
-        if (!this.routeMap.has(req.path)) {
-          res.status(404).send('Could not find request resource');
-          return;
+        let routeInfo = this.routeMap.get(req.path);
+
+        if (!routeInfo && req.path === '/') {
+          log('Falling back to /assets/index.html');
+          // In production we automatically fall back to the contents of /assets/index.html
+          routeInfo = this.routeMap.get('/assets/index.html');
         }
 
-        if (req.method === 'OPTIONS') {
+        if (req.method === 'OPTIONS' && routeInfo) {
           res.set({
             'access-control-allow-origin': '*',
             'access-control-allow-headers':
@@ -164,8 +167,6 @@ export class LocalDevelopmentServer extends EventEmitter {
 
           return;
         }
-
-        const routeInfo = this.routeMap.get(req.path);
 
         if (routeInfo && routeInfo.type === 'function') {
           const functionPath = routeInfo.filePath;

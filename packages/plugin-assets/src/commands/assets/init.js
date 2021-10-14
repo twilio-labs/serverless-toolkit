@@ -16,7 +16,9 @@ class InitCommand extends TwilioClientCommand {
         accountSid: this.currentProfile.accountSid,
         pluginConfig: pluginConfig,
         logger: this.logger,
-        serviceName: this.flags['service-name'],
+        serviceName: (
+          this.flags['service-name'] || generateProjectName().dashed
+        ).trim(),
       });
       this.output(result, this.flags.properties);
     } catch (error) {
@@ -29,7 +31,6 @@ InitCommand.flags = {
   'service-name': flags.string({
     description:
       'A unique name for your asset service. May only contain alphanumeric characters and hyphens.',
-    default: () => generateProjectName().dashed,
   }),
   properties: flags.string({
     default: 'service_sid, sid, domain_name',

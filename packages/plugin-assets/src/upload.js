@@ -1,6 +1,5 @@
 const ora = require('ora');
 const inquirer = require('inquirer');
-const { TwilioServerlessApiClient } = require('@twilio-labs/serverless-api');
 const { TwilioCliError } = require('@twilio/cli-core').services.error;
 const {
   getEnvironment,
@@ -30,6 +29,8 @@ const {
   couldNotGetBuild,
   debugFlagMessage,
 } = require('./errorMessages');
+
+const { getTwilioClient } = require('./client');
 
 function getUtils(spinner, logger) {
   function debug(message) {
@@ -328,10 +329,7 @@ async function upload({
     config[accountSid].environmentSid
   ) {
     const { serviceSid, environmentSid } = config[accountSid];
-    const client = new TwilioServerlessApiClient({
-      username: apiKey,
-      password: apiSecret,
-    });
+    const client = getTwilioClient(apiKey, apiSecret);
     const environment = await getEnvironmentWithClient(
       client,
       environmentSid,

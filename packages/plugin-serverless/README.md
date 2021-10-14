@@ -53,6 +53,11 @@ export TWILIO_SERVERLESS_API_RETRY_LIMIT=0
 
 <!-- commands -->
 * [`twilio serverless:deploy`](#twilio-serverlessdeploy)
+* [`twilio serverless:env:get`](#twilio-serverlessenvget)
+* [`twilio serverless:env:import`](#twilio-serverlessenvimport)
+* [`twilio serverless:env:list`](#twilio-serverlessenvlist)
+* [`twilio serverless:env:set`](#twilio-serverlessenvset)
+* [`twilio serverless:env:unset`](#twilio-serverlessenvunset)
 * [`twilio serverless:init NAME`](#twilio-serverlessinit-name)
 * [`twilio serverless:list [TYPES]`](#twilio-serverlesslist-types)
 * [`twilio serverless:list-templates`](#twilio-serverlesslist-templates)
@@ -80,6 +85,8 @@ OPTIONS
   -n, --service-name=service-name      Overrides the name of the Serverless project. Default: the name field in your
                                        package.json
 
+  -o, --output-format=output-format    Output the results in a different format
+
   -p, --profile=profile                Shorthand identifier for your profile.
 
   -u, --username=username              A specific API key or account SID to be used for deployment. Uses fields in .env
@@ -95,7 +102,7 @@ OPTIONS
   --env=env                            Path to .env file for environment variables that should be installed
 
   --environment=environment            [default: dev] The environment name (domain suffix) you want to use for your
-                                       deployment
+                                       deployment. Alternatively you can specify an environment SID starting with ZE.
 
   --force                              Will run deployment in force mode. Can be dangerous.
 
@@ -122,7 +129,203 @@ OPTIONS
   --to=to                              [Alias for "environment"]
 ```
 
-_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.1.2-rc.0/src/commands/serverless/deploy.js)_
+_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.2.3-beta.0/src/commands/serverless/deploy.js)_
+
+## `twilio serverless:env:get`
+
+Retrieves the value of a specific environment variable
+
+```
+Retrieves the value of a specific environment variable
+
+USAGE
+  $ twilio serverless:env:get
+
+OPTIONS
+  -c, --config=config        Location of the config file. Absolute path or relative to current working directory (cwd)
+  -l, --log-level=log-level  [default: info] Level of logging messages.
+  -p, --profile=profile      Shorthand identifier for your profile.
+  -u, --username=username    A specific API key or account SID to be used for deployment. Uses fields in .env otherwise
+  --cwd=cwd                  Sets the directory of your existing Serverless project. Defaults to current directory
+  --env=env                  Path to .env file for environment variables that should be installed
+
+  --environment=environment  [default: dev] The environment name (domain suffix) you want to use for your deployment.
+                             Alternatively you can specify an environment SID starting with ZE.
+
+  --key=key                  Name of the environment variable
+
+  --load-system-env          Uses system environment variables as fallback for variables specified in your .env file.
+                             Needs to be used with --env explicitly specified.
+
+  --password=password        A specific API secret or auth token for deployment. Uses fields from .env otherwise
+
+  --production               Promote build to the production environment (no domain suffix). Overrides environment flag
+
+  --service-sid=service-sid  SID of the Twilio Serverless Service to deploy to
+
+  --to=to                    [Alias for "environment"]
+```
+
+_See code: [src/commands/serverless/env/get.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.2.3-beta.0/src/commands/serverless/env/get.js)_
+
+## `twilio serverless:env:import`
+
+Takes a .env file and uploads all environment variables to a given environment
+
+```
+Takes a .env file and uploads all environment variables to a given environment
+
+USAGE
+  $ twilio serverless:env:import
+
+OPTIONS
+  -c, --config=config        Location of the config file. Absolute path or relative to current working directory (cwd)
+  -l, --log-level=log-level  [default: info] Level of logging messages.
+  -p, --profile=profile      Shorthand identifier for your profile.
+  -u, --username=username    A specific API key or account SID to be used for deployment. Uses fields in .env otherwise
+  --cwd=cwd                  Sets the directory of your existing Serverless project. Defaults to current directory
+  --env=env                  Path to .env file for environment variables that should be installed
+
+  --environment=environment  [default: dev] The environment name (domain suffix) you want to use for your deployment.
+                             Alternatively you can specify an environment SID starting with ZE.
+
+  --load-system-env          Uses system environment variables as fallback for variables specified in your .env file.
+                             Needs to be used with --env explicitly specified.
+
+  --password=password        A specific API secret or auth token for deployment. Uses fields from .env otherwise
+
+  --production               Promote build to the production environment (no domain suffix). Overrides environment flag
+
+  --service-sid=service-sid  SID of the Twilio Serverless Service to deploy to
+
+  --to=to                    [Alias for "environment"]
+```
+
+_See code: [src/commands/serverless/env/import.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.2.3-beta.0/src/commands/serverless/env/import.js)_
+
+## `twilio serverless:env:list`
+
+Lists all environment variables for a given environment
+
+```
+Lists all environment variables for a given environment
+
+USAGE
+  $ twilio serverless:env:list
+
+OPTIONS
+  -c, --config=config                Location of the config file. Absolute path or relative to current working directory
+                                     (cwd)
+
+  -l, --log-level=log-level          [default: info] Level of logging messages.
+
+  -o, --output-format=output-format  Output the results in a different format
+
+  -p, --profile=profile              Shorthand identifier for your profile.
+
+  -u, --username=username            A specific API key or account SID to be used for deployment. Uses fields in .env
+                                     otherwise
+
+  --cwd=cwd                          Sets the directory of your existing Serverless project. Defaults to current
+                                     directory
+
+  --env=env                          Path to .env file for environment variables that should be installed
+
+  --environment=environment          [default: dev] The environment name (domain suffix) you want to use for your
+                                     deployment. Alternatively you can specify an environment SID starting with ZE.
+
+  --load-system-env                  Uses system environment variables as fallback for variables specified in your .env
+                                     file. Needs to be used with --env explicitly specified.
+
+  --password=password                A specific API secret or auth token for deployment. Uses fields from .env otherwise
+
+  --production                       Promote build to the production environment (no domain suffix). Overrides
+                                     environment flag
+
+  --service-sid=service-sid          SID of the Twilio Serverless Service to deploy to
+
+  --show-values                      Show the values of your environment variables
+
+  --to=to                            [Alias for "environment"]
+```
+
+_See code: [src/commands/serverless/env/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.2.3-beta.0/src/commands/serverless/env/list.js)_
+
+## `twilio serverless:env:set`
+
+Sets an environment variable with a given key and value
+
+```
+Sets an environment variable with a given key and value
+
+USAGE
+  $ twilio serverless:env:set
+
+OPTIONS
+  -c, --config=config        Location of the config file. Absolute path or relative to current working directory (cwd)
+  -l, --log-level=log-level  [default: info] Level of logging messages.
+  -p, --profile=profile      Shorthand identifier for your profile.
+  -u, --username=username    A specific API key or account SID to be used for deployment. Uses fields in .env otherwise
+  --cwd=cwd                  Sets the directory of your existing Serverless project. Defaults to current directory
+  --env=env                  Path to .env file for environment variables that should be installed
+
+  --environment=environment  [default: dev] The environment name (domain suffix) you want to use for your deployment.
+                             Alternatively you can specify an environment SID starting with ZE.
+
+  --key=key                  Name of the environment variable
+
+  --load-system-env          Uses system environment variables as fallback for variables specified in your .env file.
+                             Needs to be used with --env explicitly specified.
+
+  --password=password        A specific API secret or auth token for deployment. Uses fields from .env otherwise
+
+  --production               Promote build to the production environment (no domain suffix). Overrides environment flag
+
+  --service-sid=service-sid  SID of the Twilio Serverless Service to deploy to
+
+  --to=to                    [Alias for "environment"]
+
+  --value=value              Name of the environment variable
+```
+
+_See code: [src/commands/serverless/env/set.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.2.3-beta.0/src/commands/serverless/env/set.js)_
+
+## `twilio serverless:env:unset`
+
+Removes an environment variable for a given key
+
+```
+Removes an environment variable for a given key
+
+USAGE
+  $ twilio serverless:env:unset
+
+OPTIONS
+  -c, --config=config        Location of the config file. Absolute path or relative to current working directory (cwd)
+  -l, --log-level=log-level  [default: info] Level of logging messages.
+  -p, --profile=profile      Shorthand identifier for your profile.
+  -u, --username=username    A specific API key or account SID to be used for deployment. Uses fields in .env otherwise
+  --cwd=cwd                  Sets the directory of your existing Serverless project. Defaults to current directory
+  --env=env                  Path to .env file for environment variables that should be installed
+
+  --environment=environment  [default: dev] The environment name (domain suffix) you want to use for your deployment.
+                             Alternatively you can specify an environment SID starting with ZE.
+
+  --key=key                  Name of the environment variable
+
+  --load-system-env          Uses system environment variables as fallback for variables specified in your .env file.
+                             Needs to be used with --env explicitly specified.
+
+  --password=password        A specific API secret or auth token for deployment. Uses fields from .env otherwise
+
+  --production               Promote build to the production environment (no domain suffix). Overrides environment flag
+
+  --service-sid=service-sid  SID of the Twilio Serverless Service to deploy to
+
+  --to=to                    [Alias for "environment"]
+```
+
+_See code: [src/commands/serverless/env/unset.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.2.3-beta.0/src/commands/serverless/env/unset.js)_
 
 ## `twilio serverless:init NAME`
 
@@ -154,7 +357,8 @@ OPTIONS
   --typescript                   Initialize your Serverless project with TypeScript
 ```
 
-_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.1.2-rc.0/src/commands/serverless/init.js)_
+
+_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.2.3-beta.0/src/commands/serverless/init.js)_
 
 ## `twilio serverless:list [TYPES]`
 
@@ -170,38 +374,42 @@ ARGUMENTS
   TYPES  [default: services] Comma separated list of things to list (services,environments,functions,assets,variables)
 
 OPTIONS
-  -c, --config=config              Location of the config file. Absolute path or relative to current working directory
-                                   (cwd)
+  -c, --config=config                Location of the config file. Absolute path or relative to current working directory
+                                     (cwd)
 
-  -l, --log-level=log-level        [default: info] Level of logging messages.
+  -l, --log-level=log-level          [default: info] Level of logging messages.
 
-  -n, --service-name=service-name  Overrides the name of the Serverless project. Default: the name field in your
-                                   package.json
+  -n, --service-name=service-name    Overrides the name of the Serverless project. Default: the name field in your
+                                     package.json
 
-  -p, --profile=profile            Shorthand identifier for your profile.
+  -o, --output-format=output-format  Output the results in a different format
 
-  -u, --username=username          A specific API key or account SID to be used for deployment. Uses fields in .env
-                                   otherwise
+  -p, --profile=profile              Shorthand identifier for your profile.
 
-  --cwd=cwd                        Sets the directory of your existing Serverless project. Defaults to current directory
+  -u, --username=username            A specific API key or account SID to be used for deployment. Uses fields in .env
+                                     otherwise
 
-  --env=env                        Path to .env file for environment variables that should be installed
+  --cwd=cwd                          Sets the directory of your existing Serverless project. Defaults to current
+                                     directory
 
-  --environment=environment        [default: dev] The environment to list variables for
+  --env=env                          Path to .env file for environment variables that should be installed
 
-  --extended-output                Show an extended set of properties on the output
+  --environment=environment          [default: dev] The environment to list variables for
 
-  --load-system-env                Uses system environment variables as fallback for variables specified in your .env
-                                   file. Needs to be used with --env explicitly specified.
+  --extended-output                  Show an extended set of properties on the output
 
-  --password=password              A specific API secret or auth token for deployment. Uses fields from .env otherwise
+  --load-system-env                  Uses system environment variables as fallback for variables specified in your .env
+                                     file. Needs to be used with --env explicitly specified.
 
-  --service-sid=service-sid        SID of the Twilio Serverless Service to deploy to
+  --password=password                A specific API secret or auth token for deployment. Uses fields from .env otherwise
 
-  --to=to                          [Alias for "environment"]
+  --service-sid=service-sid          SID of the Twilio Serverless Service to deploy to
+
+  --to=to                            [Alias for "environment"]
 ```
 
-_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.1.2-rc.0/src/commands/serverless/list.js)_
+
+_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.2.3-beta.0/src/commands/serverless/list.js)_
 
 ## `twilio serverless:list-templates`
 
@@ -214,13 +422,10 @@ USAGE
   $ twilio serverless:list-templates
 
 OPTIONS
-  -c, --config=config        Location of the config file. Absolute path or relative to current working directory (cwd)
-  -l, --log-level=log-level  [default: info] Level of logging messages.
-  --cwd=cwd                  Sets the directory of your existing Serverless project. Defaults to current directory
-  --env=env                  Path to .env file for environment variables that should be installed
+  -o, --output-format=output-format  Output the results in a different format
 ```
 
-_See code: [src/commands/serverless/list-templates.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.1.2-rc.0/src/commands/serverless/list-templates.js)_
+_See code: [src/commands/serverless/list-templates.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.2.3-beta.0/src/commands/serverless/list-templates.js)_
 
 ## `twilio serverless:logs`
 
@@ -238,7 +443,7 @@ OPTIONS
 
   -l, --log-level=log-level          [default: info] Level of logging messages.
 
-  -o, --output-format=output-format  Output the log in a different format
+  -o, --output-format=output-format  Output the results in a different format
 
   -p, --profile=profile              Shorthand identifier for your profile.
 
@@ -268,7 +473,7 @@ OPTIONS
   --to=to                            [Alias for "environment"]
 ```
 
-_See code: [src/commands/serverless/logs.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.1.2-rc.0/src/commands/serverless/logs.js)_
+_See code: [src/commands/serverless/logs.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.2.3-beta.0/src/commands/serverless/logs.js)_
 
 ## `twilio serverless:new [NAMESPACE]`
 
@@ -291,7 +496,7 @@ OPTIONS
   --template=template
 ```
 
-_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.1.2-rc.0/src/commands/serverless/new.js)_
+_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.2.3-beta.0/src/commands/serverless/new.js)_
 
 ## `twilio serverless:promote`
 
@@ -309,6 +514,8 @@ OPTIONS
 
   -l, --log-level=log-level                [default: info] Level of logging messages.
 
+  -o, --output-format=output-format        Output the results in a different format
+
   -p, --profile=profile                    Shorthand identifier for your profile.
 
   -u, --username=username                  A specific API key or account SID to be used for deployment. Uses fields in
@@ -324,7 +531,8 @@ OPTIONS
   --env=env                                Path to .env file for environment variables that should be installed
 
   --environment=environment                [default: dev] The environment name (domain suffix) you want to use for your
-                                           deployment
+                                           deployment. Alternatively you can specify an environment SID starting with
+                                           ZE.
 
   --force                                  Will run deployment in force mode. Can be dangerous.
 
@@ -351,7 +559,7 @@ ALIASES
   $ twilio serverless:activate
 ```
 
-_See code: [src/commands/serverless/promote.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.1.2-rc.0/src/commands/serverless/promote.js)_
+_See code: [src/commands/serverless/promote.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.2.3-beta.0/src/commands/serverless/promote.js)_
 
 ## `twilio serverless:start [DIR]`
 
@@ -407,7 +615,7 @@ ALIASES
   $ twilio serverless:run
 ```
 
-_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.1.2-rc.0/src/commands/serverless/start.js)_
+_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.2.3-beta.0/src/commands/serverless/start.js)_
 <!-- commandsstop -->
 
 ## Contributing

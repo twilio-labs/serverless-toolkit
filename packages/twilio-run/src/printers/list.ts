@@ -14,9 +14,10 @@ import { stripIndent } from 'common-tags';
 import startCase from 'lodash.startcase';
 import logSymbols from 'log-symbols';
 import title from 'title';
+import { OutputFormat } from '../commands/shared';
 import { ListConfig } from '../config/list';
 import { logger } from '../utils/logger';
-import { writeOutput } from '../utils/output';
+import { writeJSONOutput, writeOutput } from '../utils/output';
 import { redactPartOfString, shouldPrettyPrint, windowSize } from './utils';
 
 type KeyMaps = {
@@ -292,7 +293,7 @@ function prettyPrintSection<T extends ListOptions>(
 function printListResultTerminal(result: ListResult, config: ListConfig): void {
   const sections = Object.keys(result) as ListOptions[];
   const output = sections
-    .map(section => prettyPrintSection(section, result[section]))
+    .map((section) => prettyPrintSection(section, result[section]))
     .join(`\n\n${chalk.dim(LONG_LINE)}\n\n`);
 
   let metaInfo = stripIndent(chalk`
@@ -301,8 +302,9 @@ function printListResultTerminal(result: ListResult, config: ListConfig): void {
   `);
 
   if (config.serviceSid || config.serviceName) {
-    metaInfo += chalk`\n{cyan.bold Service}      ${config.serviceSid ||
-      config.serviceName}`;
+    metaInfo += chalk`\n{cyan.bold Service}      ${
+      config.serviceSid || config.serviceName
+    }`;
   }
 
   if (config.environment) {
@@ -313,7 +315,15 @@ function printListResultTerminal(result: ListResult, config: ListConfig): void {
   writeOutput(output);
 }
 
-export function printListResult(result: ListResult, config: ListConfig): void {
+export function printListResult(
+  result: ListResult,
+  config: ListConfig,
+  outputFormat: OutputFormat
+): void {
+  if (outputFormat === 'json') {
+    writeJSONOutput(result);
+    return;
+  }
   if (shouldPrettyPrint && !config.properties && !config.extendedOutput) {
     printListResultTerminal(result, config);
   } else {

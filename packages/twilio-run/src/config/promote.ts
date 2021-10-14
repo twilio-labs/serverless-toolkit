@@ -17,11 +17,13 @@ import {
   readLocalEnvFile,
 } from './utils';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
+import { getUserAgentExtensions } from './utils/userAgentExtensions';
 
 export type PromoteConfig = ApiActivateConfig & {
   cwd: string;
   username: string;
   password: string;
+  outputFormat?: string;
 };
 
 export type ConfigurablePromoteCliFlags = Pick<
@@ -34,6 +36,7 @@ export type ConfigurablePromoteCliFlags = Pick<
   | 'production'
   | 'createEnvironment'
   | 'force'
+  | 'outputFormat'
 >;
 export type PromoteCliFlags = Arguments<ConfigurablePromoteCliFlags>;
 
@@ -85,6 +88,7 @@ export async function getConfigFromFlags(
   const serviceSid = checkForValidServiceSid(command, potentialServiceSid);
   const region = flags.region;
   const edge = flags.edge;
+  const outputFormat = flags.outputFormat || externalCliOptions?.outputFormat;
 
   return {
     cwd,
@@ -99,5 +103,7 @@ export async function getConfigFromFlags(
     region,
     edge,
     env,
+    userAgentExtensions: getUserAgentExtensions('promote', externalCliOptions),
+    outputFormat,
   };
 }

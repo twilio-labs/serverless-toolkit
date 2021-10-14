@@ -19,7 +19,7 @@ import path from 'path';
 import { StartCliConfig } from '../config/start';
 import { printRouteInfo } from '../printers/start';
 import { wrapErrorInHtml } from '../utils/error-html';
-import { getDebugFunction, logger } from '../utils/logger';
+import { getDebugFunction, logger, LoggingLevel } from '../utils/logger';
 import { writeOutput } from '../utils/output';
 import { requireFromProject } from '../utils/requireFromProject';
 import { createLogger } from './internal/request-logger';
@@ -141,7 +141,7 @@ export async function createLocalDevelopmentServer(
       forkProcess: config.forkProcess,
       logger: logger,
       routes: routes,
-      enableDebugLogs: true,
+      enableDebugLogs: logger.config.level === LoggingLevel.debug,
     });
     server.on('request-log', (logMessage: string) => {
       writeOutput(logMessage);
@@ -246,12 +246,15 @@ export async function createServer(
   app.all(
     '/*',
     (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
-      if (!routeMap.has(req.path)) {
-        res.status(404).send('Could not find request resource');
-        return;
+      let routeInfo = routeMap.get(req.path);
+
+      if (!routeInfo && req.path === '/') {
+        // In production we automatically fall back to the contents of /assets/index.html
+        debug('Falling back to /assets/index.html');
+        routeInfo = routeMap.get('/assets/index.html');
       }
 
-      if (req.method === 'OPTIONS') {
+      if (req.method === 'OPTIONS' && routeInfo) {
         res.set({
           'access-control-allow-origin': '*',
           'access-control-allow-headers':
@@ -267,8 +270,6 @@ export async function createServer(
 
         return;
       }
-
-      const routeInfo = routeMap.get(req.path);
 
       if (routeInfo && routeInfo.type === 'function') {
         const functionPath = routeInfo.filePath;

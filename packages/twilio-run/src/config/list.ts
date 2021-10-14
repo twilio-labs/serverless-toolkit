@@ -18,6 +18,7 @@ import {
   readLocalEnvFile,
 } from './utils';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
+import { getUserAgentExtensions } from './utils/userAgentExtensions';
 
 export type ListConfig = ApiListConfig & {
   username: string;
@@ -25,6 +26,7 @@ export type ListConfig = ApiListConfig & {
   cwd: string;
   properties?: string[];
   extendedOutput: boolean;
+  outputFormat?: string;
 };
 
 export type ConfigurableListCliFlags = Pick<
@@ -35,6 +37,7 @@ export type ConfigurableListCliFlags = Pick<
   | 'extendedOutput'
   | 'environment'
   | 'serviceSid'
+  | 'outputFormat'
 >;
 export type ListCliFlags = Arguments<
   ConfigurableListCliFlags & {
@@ -90,6 +93,7 @@ export async function getConfigFromFlags(
   const types = flags.types.split(',').map(trim) as ListOptions[];
   const region = flags.region;
   const edge = flags.edge;
+  const outputFormat = flags.outputFormat || externalCliOptions?.outputFormat;
 
   return {
     cwd,
@@ -99,11 +103,13 @@ export async function getConfigFromFlags(
     serviceName,
     environment: flags.environment,
     properties: flags.properties
-      ? flags.properties.split(',').map(x => x.trim())
+      ? flags.properties.split(',').map((x) => x.trim())
       : undefined,
     extendedOutput: flags.extendedOutput,
     types,
     region,
     edge,
+    outputFormat,
+    userAgentExtensions: getUserAgentExtensions('list', externalCliOptions),
   };
 }

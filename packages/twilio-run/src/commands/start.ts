@@ -1,6 +1,7 @@
 import { Server } from 'http';
 import inquirer from 'inquirer';
 import { Argv } from 'yargs';
+import { checkForValidRuntimeHandlerVersion } from '../checks/check-runtime-handler';
 import checkLegacyConfig from '../checks/legacy-config';
 import checkNodejsVersion from '../checks/nodejs-version';
 import checkProjectStructure from '../checks/project-structure';
@@ -48,6 +49,11 @@ export async function handler(
 
   const config = await getConfigFromCli(argv, cliInfo, externalCliOptions);
 
+  if (!checkForValidRuntimeHandlerVersion(config.pkgJson)) {
+    process.exitCode = 1;
+    return;
+  }
+
   const command = getFullCommand(argv);
   const directories = {
     assetsDirectories: config.assetsFolderName
@@ -90,9 +96,11 @@ export async function handler(
           resolve();
         } catch (error) {
           server.close(() => {
-            logger.info(
-              'ngrok could not be started because the module is not installed. Please install optional dependencies and try again.'
-            );
+            if (error.msg && error.details && error.details.err) {
+              logger.error(`${error.msg}\n\n${error.details.err}`);
+            } else {
+              logger.error(error.message);
+            }
             process.exit(1);
           });
         }

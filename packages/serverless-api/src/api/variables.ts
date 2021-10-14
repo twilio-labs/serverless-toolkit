@@ -1,15 +1,17 @@
 /** @module @twilio-labs/serverless-api/dist/api */
 
 import debug from 'debug';
+import { TwilioServerlessApiClient } from '../client';
 import {
   EnvironmentVariables,
+  Sid,
   Variable,
   VariableList,
   VariableResource,
 } from '../types';
-import { TwilioServerlessApiClient } from '../client';
-import { getPaginatedResource } from './utils/pagination';
 import { ClientApiError } from '../utils/error';
+import { getPaginatedResource } from './utils/pagination';
+import { isSid } from './utils/type-checks';
 
 const log = debug('twilio-serverless-api:variables');
 
@@ -137,13 +139,15 @@ function convertToVariableArray(env: EnvironmentVariables): Variable[] {
  * @param {string} environmentSid the environment the varibales should be set for
  * @param {string} serviceSid the service the environment belongs to
  * @param {TwilioServerlessApiClient} client API client
+ * @param {boolean} [removeRedundantOnes=false] whether to remove variables that are not passed but are currently set
  * @returns {Promise<void>}
  */
 export async function setEnvironmentVariables(
   envVariables: EnvironmentVariables,
   environmentSid: string,
   serviceSid: string,
-  client: TwilioServerlessApiClient
+  client: TwilioServerlessApiClient,
+  removeRedundantOnes: boolean = false
 ): Promise<void> {
   const existingVariables = await listVariablesForEnvironment(
     environmentSid,
@@ -181,4 +185,90 @@ export async function setEnvironmentVariables(
   });
 
   await Promise.all(variableResources);
+
+  if (removeRedundantOnes) {
+    const removeVariablePromises = existingVariables.map(async (variable) => {
+      if (typeof envVariables[variable.key] === 'undefined') {
+        return deleteEnvironmentVariable(
+          variable.sid,
+          environmentSid,
+          serviceSid,
+          client
+        );
+      }
+    });
+    await Promise.all(removeVariablePromises);
+  }
+}
+
+/**
+ * Deletes a given variable from a given environment
+ *
+ * @export
+ * @param {string} variableSid the SID of the variable to delete
+ * @param {string} environmentSid the environment the variable belongs to
+ * @param {string} serviceSid the service the environment belongs to
+ * @param {TwilioServerlessApiClient} client API client instance
+ * @returns {Promise<boolean>}
+ */
+export async function deleteEnvironmentVariable(
+  variableSid: string,
+  environmentSid: string,
+  serviceSid: string,
+  client: TwilioServerlessApiClient
+): Promise<boolean> {
+  try {
+    const resp = await client.request(
+      'delete',
+      `Services/${serviceSid}/Environments/${environmentSid}/Variables/${variableSid}`
+    );
+    return true;
+  } catch (err) {
+    log('%O', new ClientApiError(err));
+    throw err;
+  }
+}
+
+/**
+ * Deletes all variables matching the passed keys from an environment
+ *
+ * @export
+ * @param {string[]} keys the keys of the variables to delete
+ * @param {string} environmentSid the environment the variables belong to
+ * @param {string} serviceSid the service the environment belongs to
+ * @param {TwilioServerlessApiClient} client API client instance
+ * @returns {Promise<boolean>}
+ */
+export async function removeEnvironmentVariables(
+  keys: string[],
+  environmentSid: string,
+  serviceSid: string,
+  client: TwilioServerlessApiClient
+): Promise<boolean> {
+  const existingVariables = await listVariablesForEnvironment(
+    environmentSid,
+    serviceSid,
+    client
+  );
+
+  const variableSidMap = new Map<string, Sid>();
+  existingVariables.forEach((variableResource) => {
+    variableSidMap.set(variableResource.key, variableResource.sid);
+  });
+
+  const requests: Promise<boolean>[] = keys.map((key) => {
+    const variableSid = variableSidMap.get(key);
+    if (isSid(variableSid)) {
+      return deleteEnvironmentVariable(
+        variableSid,
+        environmentSid,
+        serviceSid,
+        client
+      );
+    }
+    return Promise.resolve(true);
+  });
+
+  await Promise.all(requests);
+  return true;
 }

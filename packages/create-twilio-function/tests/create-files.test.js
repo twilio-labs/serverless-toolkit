@@ -79,6 +79,9 @@ describe('create-files', () => {
       expect(packageJSON.devDependencies['twilio-run']).toEqual(
         versions.twilioRun
       );
+      expect(packageJSON.dependencies['@twilio/runtime-handler']).toEqual(
+        versions.twilioRuntimeHandler
+      );
       expect(packageJSON.dependencies['twilio']).toEqual(versions.twilio);
       cleanUp();
     });
@@ -101,6 +104,9 @@ describe('create-files', () => {
       );
       expect(packageJSON.devDependencies.typescript).toEqual(
         versions.typescript
+      );
+      expect(packageJSON.dependencies['@twilio/runtime-handler']).toEqual(
+        versions.twilioRuntimeHandler
       );
       expect(
         packageJSON.dependencies['@twilio-labs/serverless-runtime-types']

@@ -376,6 +376,129 @@ test('installation with a dependency file', async () => {
   );
 });
 
+test('installation with a dependency file with exact dependencies', async () => {
+  // The typing of `got` is not exactly correct for this - it expects a
+  // buffer but depending on inputs `got` can actually return an object.
+  // @ts-ignore
+  mocked(got).mockImplementation(() =>
+    // @ts-ignore
+    Promise.resolve({
+      body: { dependencies: { foo: '1.0.0', got: '6.9.0' } },
+    })
+  );
+
+  // For this test, getFirstMatchingDirectory never errors.
+  mocked(
+    fsHelpers.getFirstMatchingDirectory
+  ).mockImplementation((basePath: string, directories: Array<string>): string =>
+    path.join(basePath, directories[0])
+  );
+
+  await writeFiles(
+    [
+      {
+        name: 'package.json',
+        type: 'package.json',
+        content: 'https://example.com/package.json',
+        directory: '',
+      },
+      {
+        name: '.env',
+        type: '.env',
+        content: 'https://example.com/.env',
+        directory: '',
+      },
+    ],
+    './testing/',
+    'example',
+    'hello'
+  );
+
+  expect(downloadFile).toHaveBeenCalledTimes(1);
+  expect(downloadFile).toHaveBeenCalledWith(
+    'https://example.com/.env',
+    join('testing', '.env')
+  );
+
+  expect(got).toHaveBeenCalledTimes(1);
+  expect(got).toHaveBeenCalledWith('https://example.com/package.json', {
+    json: true,
+  });
+
+  expect(install).toHaveBeenCalledTimes(1);
+  expect(install).toHaveBeenCalledWith(
+    { foo: '1.0.0', got: '6.9.0' },
+    { cwd: './testing/', exact: true }
+  );
+});
+
+test('installation with a dependency file with mixed dependencies', async () => {
+  // The typing of `got` is not exactly correct for this - it expects a
+  // buffer but depending on inputs `got` can actually return an object.
+  // @ts-ignore
+  mocked(got).mockImplementation(() =>
+    // @ts-ignore
+    Promise.resolve({
+      body: {
+        dependencies: {
+          foo: '^1.0.0',
+          got: '6.9.0',
+          twilio: '^3',
+          '@twilio/runtime-handler': '1.2.0-rc.3',
+        },
+      },
+    })
+  );
+
+  // For this test, getFirstMatchingDirectory never errors.
+  mocked(
+    fsHelpers.getFirstMatchingDirectory
+  ).mockImplementation((basePath: string, directories: Array<string>): string =>
+    path.join(basePath, directories[0])
+  );
+
+  await writeFiles(
+    [
+      {
+        name: 'package.json',
+        type: 'package.json',
+        content: 'https://example.com/package.json',
+        directory: '',
+      },
+      {
+        name: '.env',
+        type: '.env',
+        content: 'https://example.com/.env',
+        directory: '',
+      },
+    ],
+    './testing/',
+    'example',
+    'hello'
+  );
+
+  expect(downloadFile).toHaveBeenCalledTimes(1);
+  expect(downloadFile).toHaveBeenCalledWith(
+    'https://example.com/.env',
+    join('testing', '.env')
+  );
+
+  expect(got).toHaveBeenCalledTimes(1);
+  expect(got).toHaveBeenCalledWith('https://example.com/package.json', {
+    json: true,
+  });
+
+  expect(install).toHaveBeenCalledTimes(2);
+  expect(install).toHaveBeenCalledWith(
+    { foo: '^1.0.0', twilio: '^3' },
+    { cwd: './testing/' }
+  );
+  expect(install).toHaveBeenCalledWith(
+    { got: '6.9.0', '@twilio/runtime-handler': '1.2.0-rc.3' },
+    { cwd: './testing/', exact: true }
+  );
+});
+
 test('installation with an existing dot-env file', async () => {
   mocked(fileExists).mockReturnValue(Promise.resolve(true));
   mocked(readFile).mockReturnValue(Promise.resolve('# Comment\nFOO=BAR\n'));
@@ -431,7 +554,7 @@ test('installation with overlapping function files throws errors before writing'
     path.join(basePath, directories[0])
   );
 
-  mocked(fileExists).mockImplementation(p =>
+  mocked(fileExists).mockImplementation((p) =>
     Promise.resolve(p == join('functions', 'example', 'hello.js'))
   );
 
@@ -470,7 +593,7 @@ test('installation with overlapping asset files throws errors before writing', a
     path.join(basePath, directories[0])
   );
 
-  mocked(fileExists).mockImplementation(p =>
+  mocked(fileExists).mockImplementation((p) =>
     Promise.resolve(p == join('assets', 'example', 'hello.wav'))
   );
 

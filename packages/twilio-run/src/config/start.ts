@@ -9,8 +9,10 @@ import { AllAvailableFlagTypes, SharedFlagNames } from '../flags';
 import { EnvironmentVariablesWithAuth } from '../types/generic';
 import { fileExists } from '../utils/fs';
 import { getDebugFunction, logger } from '../utils/logger';
+import { readPackageJsonContent } from './utils';
 import { readSpecializedConfig } from './global';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
+import { PackageJson } from 'type-fest';
 
 const debug = getDebugFunction('twilio-run:cli:config');
 
@@ -38,6 +40,7 @@ export type StartCliConfig = {
   assetsFolderName?: string;
   functionsFolderName?: string;
   forkProcess: boolean;
+  pkgJson: PackageJson;
 };
 
 export type ConfigurableStartCliFlags = Pick<
@@ -72,8 +75,15 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
     if (typeof cli.ngrok === 'string' && cli.ngrok.length > 0) {
       ngrokConfig.subdomain = cli.ngrok;
     }
-
-    url = await require('ngrok').connect(ngrokConfig);
+    let ngrok;
+    try {
+      ngrok = require('ngrok');
+    } catch (error) {
+      throw new Error(
+        'ngrok could not be started because the module is not installed. Please install optional dependencies and try again.'
+      );
+    }
+    url = await ngrok.connect(ngrokConfig);
     debug('ngrok tunnel URL: %s', url);
   }
 
@@ -153,17 +163,16 @@ export async function getConfigFromCli(
   cliInfo: CliInfo = { options: {} },
   externalCliOptions?: ExternalCliOptions
 ): Promise<StartCliConfig> {
-  const configFlags = readSpecializedConfig(
-    flags.cwd || process.cwd(),
-    flags.config,
-    'start',
-    {
-      username:
-        (externalCliOptions && externalCliOptions.accountSid) || undefined,
-    }
-  ) as StartCliFlags;
+  let cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
+  flags.cwd = cwd;
+  const configFlags = readSpecializedConfig(cwd, flags.config, 'start', {
+    username:
+      (externalCliOptions && externalCliOptions.accountSid) || undefined,
+  }) as StartCliFlags;
   const cli = mergeFlagsAndConfig<StartCliFlags>(configFlags, flags, cliInfo);
   const config = {} as StartCliConfig;
+
+  const pkgJson = await readPackageJsonContent(cli);
 
   config.inspect = getInspectInfo(cli);
   config.baseDir = getBaseDirectory(cli);
@@ -177,6 +186,7 @@ export async function getConfigFromCli(
   config.assetsFolderName = cli.assetsFolder;
   config.functionsFolderName = cli.functionsFolder;
   config.forkProcess = cli.forkProcess;
+  config.pkgJson = pkgJson;
 
   return config;
 }

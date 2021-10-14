@@ -115,7 +115,7 @@ export async function handler(
 
   checkConfigForCredentials(config);
 
-  printConfigInfo(config);
+  printConfigInfo(config, config.outputFormat);
 
   const spinner = getOraSpinner('Deploying Function').start();
   try {
@@ -126,7 +126,7 @@ export async function handler(
     const result = await client.deployLocalProject(config);
     spinner.text = 'Serverless project successfully deployed\n';
     spinner.succeed();
-    printDeployedResources(config, result);
+    printDeployedResources(config, result, config.outputFormat);
     const { serviceSid, buildSid } = result;
     await saveLatestDeploymentData(
       config.cwd,
@@ -156,6 +156,7 @@ export const cliInfo: CliInfo = {
       'assets-folder',
       'functions-folder',
       'runtime',
+      'output-format',
     ]),
     production: {
       ...ALL_FLAGS['production'],

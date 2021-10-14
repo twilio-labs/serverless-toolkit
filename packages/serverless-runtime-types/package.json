@@ -5,7 +5,9 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node bundler.js",
+    "prepack": "npm run build"
   },
   "keywords": [
     "twilio",
@@ -41,7 +43,8 @@
     "README.md",
     "index.js",
     "index.d.ts",
-    "types.d.ts"
+    "types.d.ts",
+    "bundle.d.ts"
   ],
   "gitHead": "9382ba7f1c23cdf18ac8bb6cada92340d63491dd"
 }

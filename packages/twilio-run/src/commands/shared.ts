@@ -6,4 +6,10 @@ export type ExternalCliOptions = {
   project?: string;
   logLevel?: string;
   outputFormat?: string;
+  pluginInfo?: {
+    name: string;
+    version: string;
+  };
 };
+
+export type OutputFormat = string | undefined;

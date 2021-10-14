@@ -87,7 +87,7 @@ export const ALL_FLAGS = {
     type: 'string',
     alias: 'to',
     describe:
-      'The environment name (domain suffix) you want to use for your deployment',
+      'The environment name (domain suffix) you want to use for your deployment. Alternatively you can specify an environment SID starting with ZE.',
     default: 'dev',
   } as Options,
   production: {
@@ -159,7 +159,7 @@ export const ALL_FLAGS = {
     type: 'string',
     alias: 'o',
     default: '',
-    describe: 'Output the log in a different format',
+    describe: 'Output the results in a different format',
     choices: ['', 'json'],
   } as Options,
   'log-cache-size': {
@@ -231,6 +231,21 @@ export const ALL_FLAGS = {
     describe:
       'The version of Node.js to deploy the build to. (node10 or node12)',
   } as Options,
+  key: {
+    type: 'string',
+    describe: 'Name of the environment variable',
+    demandOption: true,
+  } as Options,
+  value: {
+    type: 'string',
+    describe: 'Name of the environment variable',
+    demandOption: true,
+  } as Options,
+  'show-values': {
+    type: 'boolean',
+    describe: 'Show the values of your environment variables',
+    default: false,
+  } as Options,
 };
 
 export type AvailableFlags = typeof ALL_FLAGS;
@@ -238,7 +253,9 @@ export type FlagNames = keyof AvailableFlags;
 
 export function getRelevantFlags(
   flags: FlagNames[]
-): { [flagName: string]: Options } {
+): {
+  [flagName: string]: Options;
+} {
   return flags.reduce((current: { [flagName: string]: Options }, flagName) => {
     return { ...current, [flagName]: { ...ALL_FLAGS[flagName] } };
   }, {});
@@ -297,4 +314,7 @@ export type AllAvailableFlagTypes = SharedFlagsWithCredentials & {
   legacyMode: boolean;
   forkProcess: boolean;
   runtime?: string;
+  key: string;
+  value?: string;
+  showValues: boolean;
 };

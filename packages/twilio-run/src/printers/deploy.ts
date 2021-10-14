@@ -8,9 +8,10 @@ import columnify from 'columnify';
 import { stripIndent } from 'common-tags';
 import terminalLink from 'terminal-link';
 import { MergeExclusive } from 'type-fest';
+import { OutputFormat } from '../commands/shared';
 import { DeployLocalProjectConfig } from '../config/deploy';
 import { logger } from '../utils/logger';
-import { writeOutput } from '../utils/output';
+import { writeJSONOutput, writeOutput } from '../utils/output';
 import {
   getTwilioConsoleDeploymentUrl,
   printObjectWithoutHeaders,
@@ -186,7 +187,13 @@ function prettyPrintDeployedResources(
   }
 }
 
-export function printConfigInfo(config: DeployLocalProjectConfig) {
+export function printConfigInfo(
+  config: DeployLocalProjectConfig,
+  outputFormat: OutputFormat
+) {
+  if (outputFormat === 'json') {
+    return;
+  }
   if (shouldPrettyPrint) {
     prettyPrintConfigInfo(config);
   } else {
@@ -194,10 +201,46 @@ export function printConfigInfo(config: DeployLocalProjectConfig) {
   }
 }
 
-export function printDeployedResources(
+export function printJsonDeployedResources(
   config: DeployLocalProjectConfig,
   result: DeployResult
 ) {
+  function formatResource(resource: FunctionResource | AssetResource) {
+    return {
+      access: resource.access,
+      path: resource.path,
+      url: `https://${result.domain}${resource.path}`,
+    };
+  }
+
+  const data = {
+    domain: result.domain,
+    serviceName: result.serviceName,
+    serviceSid: result.serviceSid,
+    environmentSuffix: config.functionsEnv,
+    environmentSid: result.environmentSid,
+    buildSid: result.buildSid,
+    runtime: result.runtime,
+    viewLiveLogs: getTwilioConsoleDeploymentUrl(
+      result.serviceSid,
+      result.environmentSid
+    ),
+    functions: result.functionResources.sort(sortByAccess).map(formatResource),
+    assets: result.assetResources.sort(sortByAccess).map(formatResource),
+  };
+
+  writeJSONOutput(data);
+}
+
+export function printDeployedResources(
+  config: DeployLocalProjectConfig,
+  result: DeployResult,
+  outputFormat: OutputFormat
+) {
+  if (outputFormat === 'json') {
+    printJsonDeployedResources(config, result);
+    return;
+  }
   if (shouldPrettyPrint) {
     prettyPrintDeployedResources(config, result);
   } else {

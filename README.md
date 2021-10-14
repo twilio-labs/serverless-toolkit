@@ -12,16 +12,22 @@ Throughout the [docs](https://www.twilio.com/docs/labs/serverless-toolkit), you 
 
 ## Let's work together
 
-Everything in this toolkit is released under [Twilio Labs](https://www.twilio.com/docs/labs) and fully open-source. If you find any problems with this, [please file an issue](https://github.com/twilio-labs/twilio-run/issues) or even create a pull request to work together with us on the toolkit. We would love to hear your ideas and feedback!
+Everything in this toolkit is released under [Twilio Labs](https://www.twilio.com/docs/labs) and fully open-source. If you find any problems with this, [please file an issue](https://github.com/twilio-labs/serverless-toolkit/issues) or even create a pull request to work together with us on the toolkit. We would love to hear your ideas and feedback!
 
 ## Project Structure & Contributing
 
 This project is a monorepo, meaning it contains multiple packages in one repository. It consists out of the following packages:
 
 - [`twilio-run`](packages/twilio-run) - The underlying CLI tool
-- [`plugin-serverless`](https://github.com/twilio-labs/plugin-serverless) - Exposes the `twilio-run` CLI into the [Twilio CLI](https://www.twilio.com/docs/twilio-cli)
-- [`create-twilio-function`](https://github.com/twilio-labs/create-twilio-function) - Handles templating and bootstrapping of new projects and Functions
-- [`serverless-api`](https://github.com/twilio-labs/serverless-api) - The module used to interact with the actual [Serverless API](https://github.com/twilio-labs/serverless-api)
+- [`plugin-serverless`](packages/plugin-serverless) - Exposes the `twilio-run` CLI into the [Twilio CLI](https://www.twilio.com/docs/twilio-cli)
+- [`create-twilio-function`](packages/create-twilio-function) - Handles templating and bootstrapping of new projects and Functions
+- [`serverless-api`](packages/serverless-api) - The module used to interact with the actual [Twilio Functions and Assets API](https://www.twilio.com/docs/runtime/functions-assets-api)
+- [`runtime-handler`](packages/runtime-handler) - A version of the [Twilio Functions Runtime Handler](https://www.twilio.com/docs/runtime/runtime-handler) to be used in local development
+- [`plugin-assets`](packages/plugin-assets) - A plugin for the Twilio CLI to easily upload assets to a Twilio Assets service
+- [`serverless-runtime-types`](packages/serverless-runtime-types) - TypeScript definitions to define globals for the Twilio Serverless runtime
+
+Also part of the Serverless toolkit, but in another repository:
+
 - [`function-templates`](https://github.com/twilio-labs/function-templates) - The templates used by the toolkit to create new Functions
 
 To understand more about the structure and the design of the Toolkit check out the [design documentation](docs/DESIGN.md).
@@ -31,7 +37,7 @@ To understand more about the structure and the design of the Toolkit check out t
 This project uses [`lerna`](https://npm.im/lerna) as a tool to manage the monorepo. If you are unfamiliar with the tool, start by checking out the the [lerna docs](https://lerna.js.org/).
 
 ```bash
-git clone git@github.com:twilio-labs/twilio-run.git serverless-toolkit
+git clone git@github.com:twilio-labs/serverless-toolkit.git
 cd serverless-toolkit
 npm install
 npm run bootstrap

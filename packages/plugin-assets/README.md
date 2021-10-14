@@ -8,6 +8,8 @@ This plugin adds functionality to the [Twilio CLI](https://github.com/twilio/twi
 
 The plugin creates a new Runtime Service which it then uses as a bucket to which it upload assets. You can upload new files or list your available assets.
 
+For more information see the blog post [announcing the the Assets Plugin](https://www.twilio.com/blog/assets-plugin-twilio-cli) and an example of [how to upload audio files for your Studio IVR with the Assets Plugin](https://www.twilio.com/blog/upload-audio-files-studio-ivr-twilio-cli-assets-plugin).
+
 <!-- toc -->
 
 <!-- tocstop -->
@@ -58,17 +60,19 @@ USAGE
 
 OPTIONS
   -l=(debug|info|warn|error|none)  [default: info] Level of logging messages.
-  -o=(columns|json|tsv)            [default: columns] Format of command output.
+  -o=(columns|json|tsv|none)       [default: columns] Format of command output.
   -p, --profile=profile            Shorthand identifier for your profile.
 
   --properties=properties          [default: service_sid, sid, domain_name] The asset service environment properties you
                                    would like to display (JSON output always shows all properties).
 
-  --service-name=service-name      [default: simplistic-jail] A unique name for your asset service. May only contain
-                                   alphanumeric characters and hyphens.
+  --service-name=service-name      A unique name for your asset service. May only contain alphanumeric characters and
+                                   hyphens.
+
+  --silent                         Suppress output and logs. This is a shorthand for "-l none -o none".
 ```
 
-_See code: [src/commands/assets/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v1.2.0/src/commands/assets/init.js)_
+_See code: [src/commands/assets/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v1.2.5-beta.0/src/commands/assets/init.js)_
 
 ## `twilio assets:list`
 
@@ -82,14 +86,16 @@ USAGE
 
 OPTIONS
   -l=(debug|info|warn|error|none)  [default: info] Level of logging messages.
-  -o=(columns|json|tsv)            [default: columns] Format of command output.
+  -o=(columns|json|tsv|none)       [default: columns] Format of command output.
   -p, --profile=profile            Shorthand identifier for your profile.
 
   --properties=properties          [default: sid, path, url, visibility] The asset properties you would like to display
                                    (JSON output always shows all properties).
+
+  --silent                         Suppress output and logs. This is a shorthand for "-l none -o none".
 ```
 
-_See code: [src/commands/assets/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v1.2.0/src/commands/assets/list.js)_
+_See code: [src/commands/assets/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v1.2.5-beta.0/src/commands/assets/list.js)_
 
 ## `twilio assets:upload FILE`
 
@@ -106,16 +112,18 @@ ARGUMENTS
 
 OPTIONS
   -l=(debug|info|warn|error|none)  [default: info] Level of logging messages.
-  -o=(columns|json|tsv)            [default: columns] Format of command output.
+  -o=(columns|json|tsv|none)       [default: columns] Format of command output.
   -p, --profile=profile            Shorthand identifier for your profile.
 
   --properties=properties          [default: sid, path, url, visibility] The asset properties you would like to display
                                    (JSON output always shows all properties).
 
   --protected                      Sets the uploaded asset's visibility to 'protected'
+
+  --silent                         Suppress output and logs. This is a shorthand for "-l none -o none".
 ```
 
-_See code: [src/commands/assets/upload.js](https://github.com/twilio-labs/serverless-toolkit/blob/v1.2.0/src/commands/assets/upload.js)_
+_See code: [src/commands/assets/upload.js](https://github.com/twilio-labs/serverless-toolkit/blob/v1.2.5-beta.0/src/commands/assets/upload.js)_
 <!-- commandsstop -->
 
 ## Contributing

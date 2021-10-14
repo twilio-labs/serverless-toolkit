@@ -21,7 +21,7 @@ export type ApiErrorResponse = {
 export async function getFunctionServiceSid(
   cwd: string,
   configName: string,
-  commandConfig: 'deploy' | 'list' | 'logs' | 'promote',
+  commandConfig: 'deploy' | 'list' | 'logs' | 'promote' | 'env',
   username?: string
 ): Promise<string | undefined> {
   const twilioConfig = readSpecializedConfig(cwd, configName, commandConfig, {
