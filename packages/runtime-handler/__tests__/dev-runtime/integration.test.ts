@@ -161,6 +161,69 @@ describe('with an express app', () => {
     });
   });
 
+  describe('asset fallback', () => {
+    test('serves /assets/index.html if no root exists', async () => {
+      const app = new LocalDevelopmentServer(9000, {
+        ...BASE_CONFIG,
+        routes: {
+          assets: [
+            {
+              name: '/assets/index.html',
+              path: '/assets/index.html',
+              filePath: resolve(TEST_ASSETS_DIR, 'index.html'),
+              content: '',
+              access: 'public',
+            },
+          ],
+          functions: [],
+        },
+        forkProcess: false,
+      } as ServerConfig).getApp();
+
+      const response = await request(app).get('/');
+      expect(response.statusCode).toEqual(200);
+      expect(response.text).toEqual('<html><body>Hi there!</body></html>');
+    });
+
+    test('returns 404 if no /assets/index.html & no root exists', async () => {
+      const app = new LocalDevelopmentServer(9000, {
+        ...BASE_CONFIG,
+        routes: {
+          assets: [],
+          functions: [],
+        },
+        forkProcess: false,
+      } as ServerConfig).getApp();
+
+      const response = await request(app).get('/');
+      expect(response.statusCode).toEqual(404);
+      expect(response.text).toEqual('Could not find requested resource');
+    });
+
+    test('returns root if it exists', async () => {
+      const app = new LocalDevelopmentServer(9000, {
+        ...BASE_CONFIG,
+        routes: {
+          assets: [
+            {
+              name: '/',
+              path: '/',
+              filePath: resolve(TEST_ASSETS_DIR, 'index.html'),
+              content: '',
+              access: 'public',
+            },
+          ],
+          functions: [],
+        },
+        forkProcess: false,
+      } as ServerConfig).getApp();
+
+      const response = await request(app).get('/');
+      expect(response.statusCode).toEqual(200);
+      expect(response.text).toEqual('<html><body>Hi there!</body></html>');
+    });
+  });
+
   describe('with forked process function handling', () => {
     beforeAll(async () => {
       app = new LocalDevelopmentServer(9000, {

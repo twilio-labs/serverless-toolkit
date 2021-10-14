@@ -38,6 +38,25 @@ Object {
 }
 `;
 
+exports[`with an express app with inline function handling Assets integration tests index.html should match snapshot 1`] = `
+Object {
+  "body": Object {},
+  "headers": Object {
+    "accept-ranges": "bytes",
+    "cache-control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+    "connection": "close",
+    "content-type": "text/html; charset=UTF-8",
+    "expires": "0",
+    "pragma": "no-cache",
+    "surrogate-control": "no-store",
+    "x-powered-by": "Express",
+  },
+  "statusCode": 200,
+  "text": "<html><body>Hi there!</body></html>",
+  "type": "text/html",
+}
+`;
+
 exports[`with an express app with inline function handling Function integration tests basic-twiml.js should match snapshot 1`] = `
 Object {
   "body": Object {},
