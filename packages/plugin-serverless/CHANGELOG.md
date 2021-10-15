@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.2.2...@twilio-labs/plugin-serverless@2.3.0) (2021-10-15)
+
+
+### Features
+
+* add support for request headers & cookies ([#373](https://github.com/twilio-labs/serverless-toolkit/issues/373)) ([989307d](https://github.com/twilio-labs/serverless-toolkit/commit/989307d0e73b06056ecb571958fbab39b38bfea2)), closes [#293](https://github.com/twilio-labs/serverless-toolkit/issues/293) [#296](https://github.com/twilio-labs/serverless-toolkit/issues/296) [#297](https://github.com/twilio-labs/serverless-toolkit/issues/297) [#314](https://github.com/twilio-labs/serverless-toolkit/issues/314) [#332](https://github.com/twilio-labs/serverless-toolkit/issues/332)
+
+
+
+
+
 ## [2.2.3-beta.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.2.2...@twilio-labs/plugin-serverless@2.2.3-beta.0) (2021-09-25)
 
 **Note:** Version bump only for package @twilio-labs/plugin-serverless

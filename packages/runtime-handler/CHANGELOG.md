@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio/runtime-handler@1.1.3...@twilio/runtime-handler@1.2.0) (2021-10-15)
+
+
+### Bug Fixes
+
+* **runtime-handler:** fall back to assets/index.html for root path ([54bfeda](https://github.com/twilio-labs/serverless-toolkit/commit/54bfeda7a8bf3b196888f8d2b75c89a8c362afcb)), closes [#371](https://github.com/twilio-labs/serverless-toolkit/issues/371)
+
+
+### Features
+
+* add support for request headers & cookies ([#373](https://github.com/twilio-labs/serverless-toolkit/issues/373)) ([989307d](https://github.com/twilio-labs/serverless-toolkit/commit/989307d0e73b06056ecb571958fbab39b38bfea2)), closes [#293](https://github.com/twilio-labs/serverless-toolkit/issues/293) [#296](https://github.com/twilio-labs/serverless-toolkit/issues/296) [#297](https://github.com/twilio-labs/serverless-toolkit/issues/297) [#314](https://github.com/twilio-labs/serverless-toolkit/issues/314) [#332](https://github.com/twilio-labs/serverless-toolkit/issues/332)
+* **twilio-run:** adds json output to twilio-run deploy ([9ae1478](https://github.com/twilio-labs/serverless-toolkit/commit/9ae147816af85a671ed37639e83d0fa105f8ecb2))
+
+
+
+
+
 # [1.2.0-rc.3](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio/runtime-handler@1.2.0-rc.2...@twilio/runtime-handler@1.2.0-rc.3) (2021-08-03)
 
 **Note:** Version bump only for package @twilio/runtime-handler
