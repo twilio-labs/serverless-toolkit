@@ -13,7 +13,7 @@
     "create-twilio-function": "3.2.2-beta.0",
     "lodash.camelcase": "^4.3.0",
     "lodash.kebabcase": "^4.1.1",
-    "twilio-run": "3.3.0-beta.0"
+    "twilio-run": "3.3.0"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.2",
