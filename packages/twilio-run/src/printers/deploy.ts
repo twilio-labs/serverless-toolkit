@@ -98,7 +98,7 @@ ${serviceInfo}
 {bold.cyan Root Directory}\t${config.cwd}
 {bold.cyan Dependencies}\t${dependencyString}
 {bold.cyan Env Variables}\t${Object.keys(config.env).join(', ')}
-{bold.cyan Runtime}\t\t${config.runtime}
+{bold.cyan Runtime}\t\t${config.runtime || 'default'}
 `
   );
 }
