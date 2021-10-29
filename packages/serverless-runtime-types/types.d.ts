@@ -137,7 +137,8 @@ export interface TwilioResponse {
    */
   setHeaders(headers: { [key: string]: string }): TwilioResponse;
   /**
-   * Add a cookie to the HTTP response. Accepts the name of the cookie, its value, and any optional attributes to be assigned to the cookie
+   * Add a cookie to the HTTP response.
+   * Accepts the name of the cookie, its value, and any optional attributes to be assigned to the cookie.
    *
    * @param key - The name of the cookie to be set
    * @param value - The value of the cookie
@@ -191,7 +192,17 @@ export type RuntimeSyncClientOptions = TwilioClientOptions & {
 };
 
 export type RuntimeSyncServiceContext = ServiceContext & {
+  /**
+   * Alias for `syncMaps`
+   *
+   * @see https://www.twilio.com/docs/sync/api/list-resource
+   */
   maps: SyncMapListInstance;
+  /**
+   * Alias for `syncLists`
+   *
+   * @see https://www.twilio.com/docs/sync/api/map-resource
+   */
   lists: SyncListListInstance;
 };
 
@@ -264,7 +275,7 @@ export type RuntimeInstance = {
    */
   getFunctions(): ResourceMap;
   /**
-   * Returns a Sync Service Context object that has been configured to work with your default Sync Service
+   * Returns a Sync Service Context object that has been configured to work with your default Sync Service.
    *
    * @param options - Optional object to configure the Sync Context, such as the name of a different Sync Service
    * @returns A Sync Context object for interacting with Twilio Sync
