@@ -229,7 +229,7 @@ export const ALL_FLAGS = {
   runtime: {
     type: 'string',
     describe:
-      'The version of Node.js to deploy the build to. (node10 or node12)',
+      'The version of Node.js to deploy the build to. (node12 or node14)',
   } as Options,
   key: {
     type: 'string',
@@ -251,9 +251,7 @@ export const ALL_FLAGS = {
 export type AvailableFlags = typeof ALL_FLAGS;
 export type FlagNames = keyof AvailableFlags;
 
-export function getRelevantFlags(
-  flags: FlagNames[]
-): {
+export function getRelevantFlags(flags: FlagNames[]): {
   [flagName: string]: Options;
 } {
   return flags.reduce((current: { [flagName: string]: Options }, flagName) => {
