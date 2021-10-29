@@ -24,6 +24,7 @@ export type AssetResourceMap = {
 export interface TwilioResponse {
   /**
    * Set the status code of the response.
+   *
    * @param code - Integer value of the status code
    * @returns This Response object to enable method chaining
    *
@@ -39,11 +40,11 @@ export interface TwilioResponse {
    *   return callback(null, response);
    * };
    * ```
-   *
    */
   setStatusCode(code: number): TwilioResponse;
   /**
    * Set the body of the response. Takes either a string or an object.
+   *
    * @param body - The body of the response
    * @returns This Response object to enable method chaining
    *
@@ -108,7 +109,9 @@ export interface TwilioResponse {
    */
   appendHeader(key: string, value: string): TwilioResponse;
   /**
-   * Set multiple headers on the HTTP response in one method call. Accepts an object of key-value pairs of headers and their corresponding values. You may also set multi-value headers by making the intended header an array.
+   * Set multiple headers on the HTTP response in one method call.
+   * Accepts an object of key-value pairs of headers and their corresponding values.
+   * You may also set multi-value headers by making the intended header an array.
    *
    * @param headers - An object of headers to append to the response. Can include set-cookie
    * @returns This Response object to enable method chaining
@@ -162,7 +165,8 @@ export interface TwilioResponse {
    */
   setCookie(key: string, value: string, attributes?: string[]): TwilioResponse;
   /**
-   * Effectively remove a specific cookie from the HTTP response. Accepts the name of the cookie to be removed, and sets the Max-Age attribute of the cookie equal to 0 so that clients and browsers will remove the cookie upon receiving the response.
+   * Effectively remove a specific cookie from the HTTP response.
+   * Accepts the name of the cookie to be removed, and sets the Max-Age attribute of the cookie equal to 0 so that clients and browsers will remove the cookie upon receiving the response.
    *
    * @param key - The name of the cookie to be removed
    * @returns This Response object to enable method chaining
@@ -192,8 +196,124 @@ export type RuntimeSyncServiceContext = ServiceContext & {
 };
 
 export type RuntimeInstance = {
+  /**
+   * Returns an object containing the names each private Asset in the same Service as this Function.
+   * Each Asset name serves as the key to an Asset object that contains the path to that Asset, as well as an open method that can be used to access its contents.
+   *
+   * @returns Key-value pairs of Asset names and Asset objects
+   *
+   * @see https://www.twilio.com/docs/runtime/client#runtimegetassets
+   *
+   * Usage of Runtime.getAssets() to read the file contents of an Asset
+   * ```ts
+   * exports.handler = function (context, event, callback) {
+   *   const openFile = Runtime.getAssets()['/my_file.txt'].open;
+   *   // Calling open is equivalent to using fs.readFileSync(asset.filePath, 'utf8')
+   *   const text = openFile();
+   *   console.log('Your file contents: ' + text);
+   *   return callback();
+   * };
+   * ```
+   *
+   * Usage of Runtime.getAssets() to load a JavaScript module from an Asset
+   * ```ts
+   * exports.handler = function (context, event, callback) {
+   *   // First, get the path for the Asset
+   *   const path = Runtime.getAssets()['/answer-generator.js'].path;
+   *   // Next, you can use require() to import the library
+   *   const module = require(path);
+   *   // Finally, use the module as you would any other
+   *   console.log('The answer to your riddle is: ' + module.getAnswer());
+   *   return callback();
+   * };
+   * ```
+   */
   getAssets(): AssetResourceMap;
+  /**
+   * Returns an object that contains the names of every Function in the Service.
+   * Each Function name serves as the key to a Function object that contains the path to that Function.
+   * These paths can be used to import code from other Functions and to compose code hosted on Twilio Functions.
+   *
+   * @returns Key-value pairs of Asset names and Asset objects
+   *
+   * @see https://www.twilio.com/docs/runtime/client#runtimegetfunctions
+   *
+   * Usage of Runtime.getFunctions() to import code from another Function.
+   * Suppose we define a Function titled zoltar:
+   * ```ts
+   * exports.ask = () => {
+   *   const fortunes = [...];
+   *   // Generate a random index and return the given fortune
+   *   return fortunes[Math.floor(Math.random() * fortunes.length)];
+   * };
+   * ```
+   *
+   * You could then use the ask function in another Function:
+   * ```ts
+   * exports.handler = function (context, event, callback) {
+   *   // First, get the path for the Function. Note that the key of the function
+   *   // is not preceded by a "/" as is the case with Assets
+   *   const zoltarPath = Runtime.getFunctions()['zoltar'].path;
+   *   // Next, use require() to import the library
+   *   const zoltar = require(zoltarPath);
+   *   // Finally, use the module as you would any other!
+   *   console.log('The answer to your riddle is: ' + zoltar.ask());
+   *   return callback();
+   * }
+   * ```
+   */
   getFunctions(): ResourceMap;
+  /**
+   * Returns a Sync Service object that has been configured to work with your default Sync Service
+   *
+   * @param options - Optional options object to configure the Sync Client, such as the name of a different Sync Service
+   * @returns A Sync Client
+   *
+   * @see https://www.twilio.com/docs/runtime/client#runtimegetsyncoptions
+   *
+   * Usage of Runtime.getSync() to get information about the default Sync instance.
+   * ```ts
+   * exports.handler = (context, event, callback) => {
+   *   // Use the getSync method with no arguments to get a reference to the default
+   *   // Sync document for your account. Fetch returns a Promise, which will
+   *   // eventually resolve to metadata about the Sync Service, such as its SID
+   *   Runtime.getSync()
+   *     .fetch()
+   *     .then((defaultSyncService) => {
+   *       console.log('Sync Service SID: ', defaultSyncService.sid);
+   *       return callback(null, defaultSyncService.sid);
+   *     })
+   *     .catch((error) => {
+   *       console.log('Sync Error: ', error);
+   *       return callback(error);
+   *     });
+   * };
+   * ```
+   *
+   * You can use the Sync Client for many other operations, such as appending item(s) to a Sync List.
+   * ```ts
+   * exports.handler = (context, event, callback) => {
+   *   // Given an existing Sync List with the uniqueName of spaceShips, you can use
+   *   // syncListItems.create to append a new data entry which will be accessible
+   *   // to any other Function or product with access to the Sync List
+   *   Runtime.getSync()
+   *     .lists('spaceShips')
+   *     .syncListItems.create({
+   *       data: {
+   *         text: 'Millennium Falcon',
+   *       },
+   *     })
+   *     .then((response) => {
+   *       console.log(response);
+   *       return callback(null, response);
+   *     })
+   *     .catch((error) => {
+   *       console.log('Sync Error: ', error);
+   *       return callback(error);
+   *     });
+   * };
+   * ```
+   */
   getSync(options?: RuntimeSyncClientOptions): RuntimeSyncServiceContext;
 };
 
