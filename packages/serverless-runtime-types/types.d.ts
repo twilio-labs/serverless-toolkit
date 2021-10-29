@@ -26,7 +26,7 @@ export interface TwilioResponse {
    * Set the status code of the response.
    *
    * @param code - Integer value of the status code
-   * @returns This Response object to enable method chaining
+   * @returns This `TwilioResponse` object to enable method chaining
    *
    * @see https://www.twilio.com/docs/runtime/functions/invocation#twilio-response-methods
    *
@@ -46,7 +46,7 @@ export interface TwilioResponse {
    * Set the body of the response. Takes either a string or an object.
    *
    * @param body - The body of the response
-   * @returns This Response object to enable method chaining
+   * @returns This `TwilioResponse` object to enable method chaining
    *
    * @see https://www.twilio.com/docs/runtime/functions/invocation#twilio-response-methods
    *
@@ -74,13 +74,13 @@ export interface TwilioResponse {
    */
   setBody(body: string | object): TwilioResponse;
   /**
-   * Adds a header to the HTTP response. The first argument specifies the header name and the second argument the header value.
+   * Add a header to the HTTP response. The first argument specifies the header name and the second argument the header value.
    *
    * If Response.appendHeader is called with the name of a header that already exists on this Response object, that header will be converted from a string to an array, and the provided value will be concatenated to that array of values.
    *
    * @param key - The name of the header
    * @param value - The value of the header
-   * @returns This Response object to enable method chaining
+   * @returns This `TwilioResponse` object to enable method chaining
    *
    * @see https://www.twilio.com/docs/runtime/functions/headers-and-cookies/setting-and-modifying#responseappendheaderkey-value
    *
@@ -114,7 +114,7 @@ export interface TwilioResponse {
    * You may also set multi-value headers by making the intended header an array.
    *
    * @param headers - An object of headers to append to the response. Can include set-cookie
-   * @returns This Response object to enable method chaining
+   * @returns This `TwilioResponse` object to enable method chaining
    *
    * @see https://www.twilio.com/docs/runtime/functions/headers-and-cookies/setting-and-modifying#responsesetheadersheaders
    *
@@ -142,7 +142,7 @@ export interface TwilioResponse {
    * @param key - The name of the cookie to be set
    * @param value - The value of the cookie
    * @param attributes - Optional attributes to assign to the cookie
-   * @returns This Response object to enable method chaining
+   * @returns This `TwilioResponse` object to enable method chaining
    *
    * @see https://www.twilio.com/docs/runtime/functions/headers-and-cookies/setting-and-modifying#responsesetcookiekey-value-attributes
    *
@@ -169,7 +169,7 @@ export interface TwilioResponse {
    * Accepts the name of the cookie to be removed, and sets the Max-Age attribute of the cookie equal to 0 so that clients and browsers will remove the cookie upon receiving the response.
    *
    * @param key - The name of the cookie to be removed
-   * @returns This Response object to enable method chaining
+   * @returns This `TwilioResponse` object to enable method chaining
    *
    * @see https://www.twilio.com/docs/runtime/functions/headers-and-cookies/setting-and-modifying#responseremovecookiekey
    *
@@ -234,7 +234,7 @@ export type RuntimeInstance = {
    * Each Function name serves as the key to a Function object that contains the path to that Function.
    * These paths can be used to import code from other Functions and to compose code hosted on Twilio Functions.
    *
-   * @returns Key-value pairs of Asset names and Asset objects
+   * @returns Key-value pairs of Function names and Function objects
    *
    * @see https://www.twilio.com/docs/runtime/client#runtimegetfunctions
    *
@@ -264,10 +264,10 @@ export type RuntimeInstance = {
    */
   getFunctions(): ResourceMap;
   /**
-   * Returns a Sync Service object that has been configured to work with your default Sync Service
+   * Returns a Sync Service Context object that has been configured to work with your default Sync Service
    *
-   * @param options - Optional options object to configure the Sync Client, such as the name of a different Sync Service
-   * @returns A Sync Client
+   * @param options - Optional object to configure the Sync Context, such as the name of a different Sync Service
+   * @returns A Sync Context object for interacting with Twilio Sync
    *
    * @see https://www.twilio.com/docs/runtime/client#runtimegetsyncoptions
    *
@@ -318,10 +318,53 @@ export type RuntimeInstance = {
 };
 
 export type Context<T = {}> = {
+  /**
+   * If you have enabled the inclusion of your account credentials in your Function, this will return an initialized Twilio REST Helper Library. If you have not included account credentials in your Function, calling this method will result in an error.
+   *
+   * @param options - Optional object to configure the Twilio Client, such as enabling lazy loading
+   * @returns An initialized Twilio Client
+   *
+   * @see https://www.twilio.com/docs/runtime/functions/invocation#helper-methods
+   *
+   * Usage of context.getTwilioClient() to get an initialized Twilio Client and send a SMS.
+   * ```ts
+   * exports.handler = function (context, event, callback) {
+   *   // Fetch already initialized Twilio REST client
+   *   const twilioClient = context.getTwilioClient();
+   *   // Determine message details from the incoming event, with fallback values
+   *   const from = event.From || '+15095550100';
+   *   const to = event.To || '+15105550101';
+   *   const body = event.Body || 'Ahoy, World!';
+   *
+   *   twilioClient.messages
+   *     .create({ to, from, body })
+   *     .then((result) => {
+   *       console.log('Created message using callback: ', result.sid);
+   *       return callback();
+   *     })
+   *     .catch((error) => {
+   *       console.error(error);
+   *       return callback(error);
+   *     });
+   * };
+   * ```
+   */
   getTwilioClient(options?: TwilioClientOptions): twilio.Twilio;
+  /**
+   * The domain name for the Service that contains this Function.
+   */
   DOMAIN_NAME: string;
+  /**
+   * The path of this Function
+   */
   PATH: string;
+  /**
+   * The unique SID of the Service that contains this Function
+   */
   SERVICE_SID: string | undefined;
+  /**
+   * The unique SID of the Environment that this Function has been deployed to
+   */
   ENVIRONMENT_SID: string | undefined;
 } & T;
 
