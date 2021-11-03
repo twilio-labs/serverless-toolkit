@@ -9,6 +9,8 @@ import { getDebugFunction } from '../utils/logger';
 
 const debug = getDebugFunction('twilio-run:templating:defaultConfig');
 
+const DEFAULT_RUNTIME = 'node12';
+
 function renderDefault(config: Options): string {
   if (config.type === 'boolean') {
     if (typeof config.default === 'boolean') {
@@ -26,6 +28,13 @@ function renderDefault(config: Options): string {
 }
 
 function templateFlagAsConfig([flag, config]: [string, Options]) {
+  if (flag === 'runtime' && typeof config.default !== 'string') {
+    // special case for runtime with a hard coded default for a better Node.js transition
+    return `\t"${camelCase(flag)}": "${DEFAULT_RUNTIME}" \t/* ${
+      config.describe
+    } */,`;
+  }
+
   return `\t// "${camelCase(flag)}": ${renderDefault(config)} \t/* ${
     config.describe
   } */,`;
