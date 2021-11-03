@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.4.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.3.0...@twilio-labs/plugin-serverless@2.4.0) (2021-11-03)
+
+
+### Bug Fixes
+
+* update node runtime versions available ([#376](https://github.com/twilio-labs/serverless-toolkit/issues/376)) ([e1602db](https://github.com/twilio-labs/serverless-toolkit/commit/e1602db826b5668fb4675036814c2b060680ac50))
+
+
+### Features
+
+* **twilio-run:** add default runtime for config file ([#379](https://github.com/twilio-labs/serverless-toolkit/issues/379))  ([77551cd](https://github.com/twilio-labs/serverless-toolkit/commit/77551cdb1931f13e2b9f847b8fa2787fb6d9a247))
+
+
+
+
+
 # [2.3.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.2.2...@twilio-labs/plugin-serverless@2.3.0) (2021-10-15)
 
 

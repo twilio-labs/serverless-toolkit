@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.1](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-runtime-types@2.2.0...@twilio-labs/serverless-runtime-types@2.2.1) (2021-11-03)
+
+
+### Documentation
+
+* **runtime-types** add sync alias comments, punctuation nitpicks ([41b3e15](https://github.com/twilio-labs/serverless-toolkit/commit/41b3e1584400db9039f6f941690e935dff26a9a6))
+* **runtime-types** adds TSDoc comments to the Context object ([ceee356](https://github.com/twilio-labs/serverless-toolkit/commit/ceee356224d305ba2f7b45d05da0fb30d48fdf7b))
+* **runtime-types** adds TSDoc comments to RuntimeInstance methods ([9b0fdb7](https://github.com/twilio-labs/serverless-toolkit/commit/9b0fdb7fd291b68a0792ddaff4f4a2c265645277))
+* **runtime-types** adds TSDoc comments to TwilioResponse methods ([c5b3263](https://github.com/twilio-labs/serverless-toolkit/commit/c5b3263b6b86b8d66a67d73980388dad001fc2e4))
+
+
+
+
+
 # [2.2.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-runtime-types@2.1.2...@twilio-labs/serverless-runtime-types@2.2.0) (2021-10-15)
 
 

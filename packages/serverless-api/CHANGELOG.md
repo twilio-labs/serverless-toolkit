@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.4.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-api@5.3.0...@twilio-labs/serverless-api@5.4.0) (2021-11-03)
+
+
+### Features
+
+* update node runtime versions available ([#376](https://github.com/twilio-labs/serverless-toolkit/issues/376)) ([e1602db](https://github.com/twilio-labs/serverless-toolkit/commit/e1602db826b5668fb4675036814c2b060680ac50))
+
+
+
+
+
 # [5.3.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-api@5.2.1...@twilio-labs/serverless-api@5.3.0) (2021-10-15)
 
 
