@@ -9,7 +9,7 @@
   "dependencies": {
     "@oclif/command": "^1.5.19",
     "@oclif/config": "^1.13.3",
-    "@twilio/cli-core": "^5.29.0",
+    "@twilio/cli-core": "^6.0.0",
     "create-twilio-function": "^3.3.1",
     "lodash.camelcase": "^4.3.0",
     "lodash.kebabcase": "^4.1.1",
