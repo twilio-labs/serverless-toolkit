@@ -7,6 +7,8 @@
 This plugin adds functionality to the [Twilio CLI](https://github.com/twilio/twilio-cli) to locally develop,
 debug and deploy to Twilio Serverless. It's a part of the [Serverless Toolkit](https://github.com/twilio-labs/serverless-toolkit) and wraps [twilio-run](https://github.com/twilio-labs/twilio-run) and [create-twilio-function](https://github.com/philnash/create-twilio-function).
 
+> **Important**: This version requires Twilio CLI version 3.0 or newer. For Twilio CLI version 2.x you have to use plugin-serverless version 2.4.
+
 <!-- toc -->
 
 <!-- tocstop -->

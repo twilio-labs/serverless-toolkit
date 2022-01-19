@@ -10,6 +10,8 @@ The plugin creates a new Runtime Service which it then uses as a bucket to which
 
 For more information see the blog post [announcing the the Assets Plugin](https://www.twilio.com/blog/assets-plugin-twilio-cli) and an example of [how to upload audio files for your Studio IVR with the Assets Plugin](https://www.twilio.com/blog/upload-audio-files-studio-ivr-twilio-cli-assets-plugin).
 
+> **Important**: This version requires Twilio CLI version 3.0 or newer. For Twilio CLI version 2.x you have to use plugin-assets version 1.2.6.
+
 <!-- toc -->
 
 <!-- tocstop -->
