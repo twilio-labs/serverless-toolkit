@@ -51,7 +51,7 @@ For example to release a new pre-release version containing `beta` and releasing
 ```bash
 npm run release -- --conventional-prerelease --exact --preid beta
 git push origin main --follow-tags
-npm run publish -- --otp=<OTP> --dist-tag next
+npm run npm:publish -- --otp=<OTP> --dist-tag next
 ```
 
 If you want to turn a prerelease into a permanent version you can use:
@@ -59,7 +59,7 @@ If you want to turn a prerelease into a permanent version you can use:
 ```bash
 npm run release -- --conventional-commits --conventional-graduate
 git push origin main --follow-tags
-npm run publish -- --otp=<OTP>
+npm run npm:publish -- --otp=<OTP>
 ```
 
 ### Normal release (from `main` branch):
@@ -69,7 +69,7 @@ For a normal release `standard-version` will detect the version increment automa
 ```bash
 npm run release
 git push origin main --follow-tags
-npm run publish -- --otp=<OTP>
+npm run npm:publish -- --otp=<OTP>
 ```
 
 To ship a specific version instead (like a forced minor bump) you can run:
@@ -77,7 +77,7 @@ To ship a specific version instead (like a forced minor bump) you can run:
 ```bash
 npm run release -- minor
 git push origin main --follow-tags
-npm run publish -- --otp=<OTP>
+npm run npm:publish -- --otp=<OTP>
 ```
 
 ## Working with Lerna
