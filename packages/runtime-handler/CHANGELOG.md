@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.2](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio/runtime-handler@1.2.1...@twilio/runtime-handler@1.2.2) (2022-01-19)
+
+
+### Bug Fixes
+
+* **runtime-handler:** corrects types ([024cad1](https://github.com/twilio-labs/serverless-toolkit/commit/024cad10481a08768cbfcfeddb826bb8954d1d28))
+
+
+
+
+
 
 
 # [1.2.1](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio/runtime-handler@1.2.0...@twilio/runtime-handler@1.2.1) (2021-11-03)

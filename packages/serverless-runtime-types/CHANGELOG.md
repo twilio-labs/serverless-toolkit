@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.2](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-runtime-types@2.2.1...@twilio-labs/serverless-runtime-types@2.2.2) (2022-01-19)
+
+**Note:** Version bump only for package @twilio-labs/serverless-runtime-types
+
+
+
+
+
 # [2.2.1](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-runtime-types@2.2.0...@twilio-labs/serverless-runtime-types@2.2.1) (2021-11-03)
 
 

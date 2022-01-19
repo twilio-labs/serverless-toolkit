@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.4.0...@twilio-labs/plugin-serverless@3.0.0) (2022-01-19)
+
+
+### chore
+
+* highlight breaking Twilio CLI change ([dd38dcf](https://github.com/twilio-labs/serverless-toolkit/commit/dd38dcf10812e6ace39e37559437abaa5987ae09))
+
+
+### BREAKING CHANGES
+
+* New version requires Twilio CLI 3.0 or newer
+
+
+
+
+
 # [2.4.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@2.3.0...@twilio-labs/plugin-serverless@2.4.0) (2021-11-03)
 
 

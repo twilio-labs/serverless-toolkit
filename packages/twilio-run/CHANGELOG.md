@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.4.1](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.4.0...twilio-run@3.4.1) (2022-01-19)
+
+
+### Bug Fixes
+
+* **twilio-run:** corrects types ([38edf42](https://github.com/twilio-labs/serverless-toolkit/commit/38edf42a4a38a402108014e2a603a0ac61cba429))
+
+
+
+
+
 # [3.4.0](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.3.0...twilio-run@3.4.0) (2021-11-03)
 
 

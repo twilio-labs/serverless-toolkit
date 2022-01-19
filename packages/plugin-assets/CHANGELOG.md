@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-assets@1.2.6...@twilio-labs/plugin-assets@2.0.0) (2022-01-19)
+
+
+### chore
+
+* highlight breaking Twilio CLI change ([dd38dcf](https://github.com/twilio-labs/serverless-toolkit/commit/dd38dcf10812e6ace39e37559437abaa5987ae09))
+
+
+### BREAKING CHANGES
+
+* New version requires Twilio CLI 3.0 or newer
+
+
+
+
+
 ## [1.2.6](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-assets@1.2.5...@twilio-labs/plugin-assets@1.2.6) (2021-11-03)
 
 **Note:** Version bump only for package @twilio-labs/plugin-assets
