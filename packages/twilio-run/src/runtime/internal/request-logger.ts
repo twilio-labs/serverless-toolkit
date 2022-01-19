@@ -54,7 +54,7 @@ function detailedLogs(req: Request, res: Response): string {
     }
   }
 
-  return msgLines.filter(x => !!x).join('\n');
+  return msgLines.filter((x) => !!x).join('\n');
 }
 
 export function createLogger(config: StartCliConfig): RequestHandler {
@@ -65,7 +65,7 @@ export function createLogger(config: StartCliConfig): RequestHandler {
         ? detailedLogs(req, res)
         : simpleLogs(req, res);
       writeOutput(msg);
-      resEnd(...args);
+      return resEnd(...args);
     };
     next();
   };
