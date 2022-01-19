@@ -52,7 +52,7 @@ function detailedLogs(req: Request, res: Response): string {
     }
   }
 
-  return msgLines.filter(x => !!x).join('\n');
+  return msgLines.filter((x) => !!x).join('\n');
 }
 
 export function createLogger(
@@ -66,7 +66,7 @@ export function createLogger(
         ? detailedLogs(req, res)
         : simpleLogs(req, res);
       logFunction(msg);
-      resEnd(...args);
+      return resEnd(...args);
     };
     next();
   };
