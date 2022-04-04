@@ -122,7 +122,7 @@ OPTIONS
   --production                         Please prefer the "activate" command! Deploys to the production environment (no
                                        domain suffix). Overrides the value passed via the environment flag.
 
-  --runtime=runtime                    The version of Node.js to deploy the build to. (node12 or node14)
+  --runtime=runtime                    The version of Node.js to deploy the build to. (node14)
 
   --service-sid=service-sid            SID of the Twilio Serverless Service to deploy to
 
