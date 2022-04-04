@@ -6,7 +6,7 @@ module.exports = {
     '@twilio/runtime-handler'
   ].replace(/[\^~]/, ''),
   twilioRun: pkgJson.dependencies['twilio-run'],
-  node: '12',
+  node: '14',
   typescript: '^3.8',
   serverlessRuntimeTypes: '^1.1',
   copyfiles: '^2.2.0',
