@@ -73,7 +73,7 @@
     "nocache": "^2.1.0",
     "normalize.css": "^8.0.1",
     "serialize-error": "^7.0.1",
-    "twilio": "3.29.2"
+    "twilio": "^3.71.2"
   },
   "gitHead": "6db273648ed19474f4125042556b10c051529912"
 }
