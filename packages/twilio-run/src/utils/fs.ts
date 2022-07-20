@@ -13,7 +13,7 @@ const open = promisify(fs.open);
 
 export async function fileExists(filePath: string): Promise<boolean> {
   try {
-    await access(filePath, fs.constants.R_OK | fs.constants.W_OK);
+    await access(filePath, fs.constants.R_OK);
     return true;
   } catch (err) {
     return false;
@@ -22,7 +22,7 @@ export async function fileExists(filePath: string): Promise<boolean> {
 
 export function fileExistsSync(filePath: string): boolean {
   try {
-    fs.accessSync(filePath, fs.constants.R_OK | fs.constants.W_OK);
+    fs.accessSync(filePath, fs.constants.R_OK);
     return true;
   } catch (err) {
     return false;
