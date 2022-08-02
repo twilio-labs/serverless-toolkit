@@ -103,12 +103,23 @@ ${serviceInfo}
   );
 }
 
+type PrintObject = {
+  account: string;
+  serviceName?: string;
+  serviceSid?: string;
+  environment: string;
+  rootDirectory: string;
+  dependencies: string;
+  environmentVariables: string;
+  runtime?: string;
+};
+
 function plainPrintConfigInfo(config: DeployLocalProjectConfig) {
   let dependencyString = '';
   if (config.pkgJson && config.pkgJson.dependencies) {
     dependencyString = Object.keys(config.pkgJson.dependencies).join(',');
   }
-  const printObj = {
+  const printObj: PrintObject = {
     account: config.username,
     serviceName: config.serviceName,
     serviceSid: config.serviceSid,

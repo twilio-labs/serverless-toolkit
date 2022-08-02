@@ -55,7 +55,7 @@
     "rimraf": "^2.6.3",
     "supertest": "^3.1.0",
     "ts-jest": "^26.5.0",
-    "typescript": "^3.8.3"
+    "typescript": "^4.2.4"
   },
   "bugs": {
     "url": "https://github.com/twilio-labs/serverless-toolkit/issues"
