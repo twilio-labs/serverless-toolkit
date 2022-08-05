@@ -2,7 +2,7 @@ import { fsHelpers } from '@twilio-labs/serverless-api';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
 import got from 'got';
-import Listr, { ListrTask } from 'listr';
+import { Listr, ListrTask } from 'listr2';
 import path from 'path';
 import { install, InstallResult } from 'pkg-install';
 import semver from 'semver';
@@ -66,11 +66,13 @@ async function installDependencies(
   contentUrl: string,
   targetDir: string
 ): Promise<InstallResult | undefined> {
-  const pkgContent = await got(contentUrl, { json: true });
+  const pkgContent = await got(contentUrl, { responseType: 'json' });
 
   const dependencies: PackageJson.Dependency = {};
   const exactDependencies: PackageJson.Dependency = {};
-  Object.entries<string>(pkgContent.body.dependencies).forEach(
+  const pkgContentBody = pkgContent.body as PackageJson;
+
+  Object.entries<string>(pkgContentBody.dependencies || []).forEach(
     ([name, version]) => {
       if (Boolean(semver.parse(version))) {
         exactDependencies[name] = version;
