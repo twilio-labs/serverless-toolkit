@@ -37,6 +37,9 @@
     "ts-jest": "^26.5.0",
     "typescript": "^3.9.7"
   },
+  "overrides": {
+    "@types/prettier": "2.6.0"
+  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "prettier --write",
