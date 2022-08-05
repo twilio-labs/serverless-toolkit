@@ -10,7 +10,7 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "build:noemit": "tsc --noEmit",
-    "docs": "typedoc --options typedoc.json",
+    "docs": "echo 'fix typedoc --options typedoc.json'; exit 1;",
     "clean": "rimraf ./dist",
     "prepack": "run-s clean build"
   },
@@ -52,8 +52,7 @@
     "npm-run-all": "^4.1.5",
     "rimraf": "^2.6.3",
     "ts-jest": "^26.5.0",
-    "typedoc": "^0.19.2",
-    "typedoc-plugin-external-module-name": "^4.0.6",
+    "typedoc": "^0.23.10",
     "typescript": "^4.7.4"
   },
   "dependencies": {
