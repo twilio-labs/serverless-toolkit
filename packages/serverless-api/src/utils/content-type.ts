@@ -1,6 +1,6 @@
 /** @module @twilio-labs/serverless-api/dist/utils */
 
-import { fromBuffer } from 'file-type';
+import { fileTypeFromBuffer as fromBuffer } from 'file-type';
 import mime from 'mime-types';
 import path from 'path';
 
