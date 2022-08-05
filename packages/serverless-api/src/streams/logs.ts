@@ -47,9 +47,9 @@ export class LogsStream extends Readable {
         }
       );
       logs
-        .filter(log => !this._viewedSids.has(log.sid))
+        .filter((log) => !this._viewedSids.has(log.sid))
         .reverse()
-        .forEach(log => {
+        .forEach((log) => {
           this.push(log);
         });
 
@@ -68,28 +68,30 @@ export class LogsStream extends Readable {
       // and new logs by stringifying the sid and the date together.
       const viewedLogsSet = new Set([
         ...this._viewedLogs.map(
-          log => `${log.sid}-${log.dateCreated.toISOString()}`
+          (log) => `${log.sid}-${log.dateCreated.toISOString()}`
         ),
-        ...logs.map(log => `${log.sid}-${log.date_created}`),
+        ...logs.map((log) => `${log.sid}-${log.date_created}`),
       ]);
       // Then we take that set, map over the logs and split them up into sid and
       // date again, sort them most to least recent and chop off the oldest if
       // they are beyond the polling cache size.
       this._viewedLogs = [...viewedLogsSet]
-        .map(logString => {
+        .map((logString) => {
           const [sid, dateCreated] = logString.split('-');
           return { sid, dateCreated: new Date(dateCreated) };
         })
         .sort((a, b) => b.dateCreated.valueOf() - a.dateCreated.valueOf())
         .slice(0, this._pollingCacheSize);
       // Finally we create a set of just SIDs to compare against.
-      this._viewedSids = new Set(this._viewedLogs.map(log => log.sid));
+      this._viewedSids = new Set(this._viewedLogs.map((log) => log.sid));
 
       if (!this.config.tail) {
         this.push(null);
       }
     } catch (err) {
-      this.destroy(err);
+      if (err instanceof Error) {
+        this.destroy(err);
+      }
     }
   }
 
