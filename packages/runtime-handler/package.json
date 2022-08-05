@@ -73,7 +73,7 @@
     "nocache": "^2.1.0",
     "normalize.css": "^8.0.1",
     "serialize-error": "^7.0.1",
-    "twilio": "3.29.2"
+    "twilio": "3.80.0"
   },
   "overrides": {
     "@types/prettier": "2.6.0"
