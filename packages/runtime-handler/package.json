@@ -75,5 +75,8 @@
     "serialize-error": "^7.0.1",
     "twilio": "3.29.2"
   },
+  "overrides": {
+    "@types/prettier": "2.6.0"
+  },
   "gitHead": "6db273648ed19474f4125042556b10c051529912"
 }
