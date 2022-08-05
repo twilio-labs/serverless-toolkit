@@ -53,21 +53,23 @@ export class ClientApiError extends Error {
   public code?: number | string;
   public url?: string;
 
-  constructor(requestError: RequestError) {
-    const twilioApiErrorInfo = toTwilioApiError(requestError.response?.body);
-    const message = twilioApiErrorInfo?.message || requestError.message;
-    super(message);
-    Error.captureStackTrace(this, this.constructor);
-    this.name = requestError.name;
-    this.message = message;
-    this.code = twilioApiErrorInfo?.code || requestError.response?.statusCode;
-    this.url = filterUrl(requestError.response?.requestUrl);
+  constructor(requestError: unknown) {
+    super('Unknown Error');
+    if (requestError instanceof RequestError) {
+      const twilioApiErrorInfo = toTwilioApiError(requestError.response?.body);
+      const message = twilioApiErrorInfo?.message || requestError.message;
+      Error.captureStackTrace(this, this.constructor);
+      this.name = requestError.name;
+      this.message = message;
+      this.code = twilioApiErrorInfo?.code || requestError.response?.statusCode;
+      this.url = filterUrl(requestError.response?.requestUrl);
 
-    if (requestError.name === 'HTTPError' && twilioApiErrorInfo) {
-      this.name = 'TwilioApiError';
-      this.details = {
-        ...twilioApiErrorInfo,
-      };
+      if (requestError.name === 'HTTPError' && twilioApiErrorInfo) {
+        this.name = 'TwilioApiError';
+        this.details = {
+          ...twilioApiErrorInfo,
+        };
+      }
     }
   }
 }

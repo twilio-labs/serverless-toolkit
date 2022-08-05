@@ -112,7 +112,7 @@ describe('pagination', () => {
         '/Services'
       );
     } catch (e) {
-      expect(e.message).toBe('Test Error');
+      expect((e as Error).message).toBe('Test Error');
     }
   });
 
