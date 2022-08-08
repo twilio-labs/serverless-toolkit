@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.4.3](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.4.2...twilio-run@3.4.3) (2022-08-08)
+
+
+### Bug Fixes
+
+* **twilio-run:** replace listr and fix got usage ([58cebe3](https://github.com/twilio-labs/serverless-toolkit/commit/58cebe340598891836ab0fa270cb72891efca4c1))
+
+
+
+
+
 ## [3.4.2](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.4.2-beta.0...twilio-run@3.4.2) (2022-04-27)
 
 **Note:** Version bump only for package twilio-run

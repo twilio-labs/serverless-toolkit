@@ -129,7 +129,7 @@ OPTIONS
   --to=to                              [Alias for "environment"]
 ```
 
-_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.1/src/commands/serverless/deploy.js)_
+_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.2/src/commands/serverless/deploy.js)_
 
 ## `twilio serverless:env:get`
 
@@ -164,7 +164,7 @@ OPTIONS
   --to=to                    [Alias for "environment"]
 ```
 
-_See code: [src/commands/serverless/env/get.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.1/src/commands/serverless/env/get.js)_
+_See code: [src/commands/serverless/env/get.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.2/src/commands/serverless/env/get.js)_
 
 ## `twilio serverless:env:import`
 
@@ -197,7 +197,7 @@ OPTIONS
   --to=to                    [Alias for "environment"]
 ```
 
-_See code: [src/commands/serverless/env/import.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.1/src/commands/serverless/env/import.js)_
+_See code: [src/commands/serverless/env/import.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.2/src/commands/serverless/env/import.js)_
 
 ## `twilio serverless:env:list`
 
@@ -243,7 +243,7 @@ OPTIONS
   --to=to                            [Alias for "environment"]
 ```
 
-_See code: [src/commands/serverless/env/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.1/src/commands/serverless/env/list.js)_
+_See code: [src/commands/serverless/env/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.2/src/commands/serverless/env/list.js)_
 
 ## `twilio serverless:env:set`
 
@@ -280,7 +280,7 @@ OPTIONS
   --value=value              Name of the environment variable
 ```
 
-_See code: [src/commands/serverless/env/set.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.1/src/commands/serverless/env/set.js)_
+_See code: [src/commands/serverless/env/set.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.2/src/commands/serverless/env/set.js)_
 
 ## `twilio serverless:env:unset`
 
@@ -315,7 +315,7 @@ OPTIONS
   --to=to                    [Alias for "environment"]
 ```
 
-_See code: [src/commands/serverless/env/unset.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.1/src/commands/serverless/env/unset.js)_
+_See code: [src/commands/serverless/env/unset.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.2/src/commands/serverless/env/unset.js)_
 
 ## `twilio serverless:init NAME`
 
@@ -345,7 +345,7 @@ OPTIONS
   --typescript                   Initialize your Serverless project with TypeScript
 ```
 
-_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.1/src/commands/serverless/init.js)_
+_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.2/src/commands/serverless/init.js)_
 
 ## `twilio serverless:list [TYPES]`
 
@@ -393,7 +393,7 @@ OPTIONS
   --to=to                            [Alias for "environment"]
 ```
 
-_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.1/src/commands/serverless/list.js)_
+_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.2/src/commands/serverless/list.js)_
 
 ## `twilio serverless:list-templates`
 
@@ -407,7 +407,7 @@ OPTIONS
   -o, --output-format=output-format  Output the results in a different format
 ```
 
-_See code: [src/commands/serverless/list-templates.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.1/src/commands/serverless/list-templates.js)_
+_See code: [src/commands/serverless/list-templates.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.2/src/commands/serverless/list-templates.js)_
 
 ## `twilio serverless:logs`
 
@@ -453,7 +453,7 @@ OPTIONS
   --to=to                            [Alias for "environment"]
 ```
 
-_See code: [src/commands/serverless/logs.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.1/src/commands/serverless/logs.js)_
+_See code: [src/commands/serverless/logs.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.2/src/commands/serverless/logs.js)_
 
 ## `twilio serverless:new [NAMESPACE]`
 
@@ -474,7 +474,7 @@ OPTIONS
   --template=template
 ```
 
-_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.1/src/commands/serverless/new.js)_
+_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.2/src/commands/serverless/new.js)_
 
 ## `twilio serverless:promote`
 
@@ -535,7 +535,7 @@ ALIASES
   $ twilio serverless:activate
 ```
 
-_See code: [src/commands/serverless/promote.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.1/src/commands/serverless/promote.js)_
+_See code: [src/commands/serverless/promote.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.2/src/commands/serverless/promote.js)_
 
 ## `twilio serverless:start [DIR]`
 
@@ -589,7 +589,7 @@ ALIASES
   $ twilio serverless:run
 ```
 
-_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.1/src/commands/serverless/start.js)_
+_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.2/src/commands/serverless/start.js)_
 <!-- commandsstop -->
 
 ## Contributing

@@ -72,7 +72,7 @@ OPTIONS
   --silent                         Suppress output and logs. This is a shorthand for "-l none -o none".
 ```
 
-_See code: [src/commands/assets/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.1/src/commands/assets/init.js)_
+_See code: [src/commands/assets/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.2/src/commands/assets/init.js)_
 
 ## `twilio assets:list`
 
@@ -93,7 +93,7 @@ OPTIONS
   --silent                         Suppress output and logs. This is a shorthand for "-l none -o none".
 ```
 
-_See code: [src/commands/assets/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.1/src/commands/assets/list.js)_
+_See code: [src/commands/assets/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.2/src/commands/assets/list.js)_
 
 ## `twilio assets:upload FILE`
 
@@ -119,7 +119,7 @@ OPTIONS
   --silent                         Suppress output and logs. This is a shorthand for "-l none -o none".
 ```
 
-_See code: [src/commands/assets/upload.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.1/src/commands/assets/upload.js)_
+_See code: [src/commands/assets/upload.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.2/src/commands/assets/upload.js)_
 <!-- commandsstop -->
 
 ## Contributing
