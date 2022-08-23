@@ -18,8 +18,7 @@ class FunctionsDeploy extends TwilioClientCommand {
   async run() {
     await super.run();
 
-    let { flags, args } = this.parse(FunctionsDeploy);
-    flags = normalizeFlags(flags, aliasMap, process.argv);
+    const flags = normalizeFlags(this.flags, aliasMap, process.argv);
 
     const externalOptions = createExternalCliOptions(flags, this.twilioClient);
 
@@ -27,7 +26,7 @@ class FunctionsDeploy extends TwilioClientCommand {
     flags.region = region;
     flags.edge = edge;
 
-    const opts = Object.assign({}, flags, args);
+    const opts = Object.assign({}, flags, this.args);
     return handler(opts, externalOptions);
   }
 }
