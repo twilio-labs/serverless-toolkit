@@ -1,4 +1,4 @@
-const { flags } = require('@oclif/command');
+const { Flags } = require('@oclif/core');
 const { TwilioClientCommand } = require('@twilio/cli-core').baseCommands;
 const { getPluginConfig } = require('../../pluginConfig');
 const { upload } = require('../../upload');
@@ -37,11 +37,11 @@ UploadCommand.args = [
 ];
 
 UploadCommand.flags = {
-  protected: flags.boolean({
+  protected: Flags.boolean({
     default: false,
     description: "Sets the uploaded asset's visibility to 'protected'",
   }),
-  properties: flags.string({
+  properties: Flags.string({
     default: 'sid, path, url, visibility',
     description:
       'The asset properties you would like to display (JSON output always shows all properties).',

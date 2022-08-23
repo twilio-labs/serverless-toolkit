@@ -7,24 +7,22 @@
     "Phil Nash <philnash@twilio.com>"
   ],
   "dependencies": {
-    "@oclif/command": "^1.5.19",
-    "@oclif/config": "^1.13.3",
+    "@oclif/core": "^1.14.2",
     "@twilio-labs/serverless-api": "^5.4.3",
-    "@twilio/cli-core": "^6.0.0",
+    "@twilio/cli-core": "^7.0.0",
     "inquirer": "^8.0.0",
     "ora": "^5.4.0",
     "project-name-generator": "^2.1.9"
   },
   "devDependencies": {
-    "@oclif/dev-cli": "^1.22.2",
-    "@oclif/plugin-help": "^2.2.1",
+    "@oclif/plugin-help": "^5.1.12",
     "@oclif/test": "^1.2.5",
     "@twilio/cli-test": "^2.1.1",
     "jest": "^26.6.3",
     "rimraf": "^3.0.2"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=14"
   },
   "files": [
     "/oclif.manifest.json",
