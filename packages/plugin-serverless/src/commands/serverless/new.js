@@ -1,4 +1,4 @@
-const { Command } = require('@oclif/command');
+const { Command } = require('@oclif/core');
 
 const { handler, cliInfo, describe } = require('twilio-run/dist/commands/new');
 const {
@@ -10,7 +10,7 @@ const { flags, aliasMap } = convertYargsOptionsToOclifFlags(cliInfo.options);
 
 class FunctionsNew extends Command {
   async run() {
-    let { flags, args } = this.parse(FunctionsNew);
+    let { flags, args } = await this.parse(FunctionsNew);
     flags = normalizeFlags(flags, aliasMap, process.argv);
 
     const opts = Object.assign({}, flags, args);
