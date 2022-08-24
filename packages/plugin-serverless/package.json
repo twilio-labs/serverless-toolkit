@@ -6,6 +6,7 @@
   "contributors": [
     "Dominik Kundel <dkundel@twilio.com>"
   ],
+  "main": "src/index.js",
   "dependencies": {
     "@oclif/core": "^1.14.2",
     "@twilio/cli-core": "^7.0.0",
