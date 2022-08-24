@@ -6,6 +6,7 @@
   "contributors": [
     "Phil Nash <philnash@twilio.com>"
   ],
+  "main": "src/index.js",
   "dependencies": {
     "@oclif/core": "^1.14.2",
     "@twilio-labs/serverless-api": "^5.4.3",
