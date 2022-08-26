@@ -38,7 +38,7 @@ export function getDeployInfoCache(
   deployInfoCacheFileName: string = '.twiliodeployinfo'
 ): DeployInfoCache {
   const fullPath = path.resolve(baseDir, deployInfoCacheFileName);
-  const deployCacheInfoExists = fileExistsSync(fullPath);
+  const deployCacheInfoExists = fileExistsSync(fullPath, true);
 
   if (deployCacheInfoExists) {
     debug('Found deploy info cache at "%s"', fullPath);

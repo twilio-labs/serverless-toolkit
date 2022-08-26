@@ -11,18 +11,27 @@ export const mkdir = promisify(fs.mkdir);
 const stat = promisify(fs.stat);
 const open = promisify(fs.open);
 
-export async function fileExists(filePath: string): Promise<boolean> {
+const READ_ONLY = fs.constants.R_OK;
+const READ_WRITE = fs.constants.R_OK | fs.constants.W_OK;
+
+export async function fileExists(
+  filePath: string,
+  hasWriteAccess: boolean = false
+): Promise<boolean> {
   try {
-    await access(filePath, fs.constants.R_OK);
+    await access(filePath, hasWriteAccess ? READ_WRITE : READ_ONLY);
     return true;
   } catch (err) {
     return false;
   }
 }
 
-export function fileExistsSync(filePath: string): boolean {
+export function fileExistsSync(
+  filePath: string,
+  hasWriteAccess: boolean = false
+): boolean {
   try {
-    fs.accessSync(filePath, fs.constants.R_OK);
+    fs.accessSync(filePath, hasWriteAccess ? READ_WRITE : READ_ONLY);
     return true;
   } catch (err) {
     return false;
@@ -36,7 +45,7 @@ export function downloadFile(
   return new Promise((resolve, reject) => {
     return mkdir(path.dirname(targetPath), { recursive: true })
       .then(() => open(targetPath, 'wx'))
-      .then(fd => {
+      .then((fd) => {
         const writeStream = fs.createWriteStream('', { fd });
         got
           .stream(contentUrl)
@@ -44,7 +53,7 @@ export function downloadFile(
           .on('error', reject)
           .pipe(writeStream);
       })
-      .catch(err => reject(err));
+      .catch((err) => reject(err));
   });
 }
 
