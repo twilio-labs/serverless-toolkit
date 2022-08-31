@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.4.4](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.4.3...twilio-run@3.4.4) (2022-08-31)
+
+
+### Bug Fixes
+
+* fileExists should not require write access by default ([#407](https://github.com/twilio-labs/serverless-toolkit/issues/407)) ([e95e726](https://github.com/twilio-labs/serverless-toolkit/commit/e95e7264f91fe56e7bede89c8c628efb2013e60b))
+* **twilio-run:** passing a dir doesn't get overriden by cwd ([#381](https://github.com/twilio-labs/serverless-toolkit/issues/381)) ([9f02b32](https://github.com/twilio-labs/serverless-toolkit/commit/9f02b320250647034dd8163b20600a4b9d7fee6b)), closes [#335](https://github.com/twilio-labs/serverless-toolkit/issues/335)
+
+
+
+
+
 ## [3.4.3](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.4.2...twilio-run@3.4.3) (2022-08-08)
 
 
