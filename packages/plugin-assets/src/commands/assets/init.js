@@ -1,4 +1,4 @@
-const { flags } = require('@oclif/command');
+const { Flags } = require('@oclif/core');
 const { TwilioClientCommand } = require('@twilio/cli-core').baseCommands;
 const { getPluginConfig } = require('../../pluginConfig');
 const generateProjectName = require('project-name-generator');
@@ -28,11 +28,11 @@ class InitCommand extends TwilioClientCommand {
 }
 
 InitCommand.flags = {
-  'service-name': flags.string({
+  'service-name': Flags.string({
     description:
       'A unique name for your asset service. May only contain alphanumeric characters and hyphens.',
   }),
-  properties: flags.string({
+  properties: Flags.string({
     default: 'service_sid, sid, domain_name',
     description:
       'The asset service environment properties you would like to display (JSON output always shows all properties).',

@@ -1,4 +1,4 @@
-const { flags } = require('@oclif/command');
+const { Flags } = require('@oclif/core');
 const { TwilioClientCommand } = require('@twilio/cli-core').baseCommands;
 const { getPluginConfig } = require('../../pluginConfig');
 const { list } = require('../../list');
@@ -25,7 +25,7 @@ class ListCommand extends TwilioClientCommand {
 ListCommand.description = 'List all the assets in the service';
 
 ListCommand.flags = {
-  properties: flags.string({
+  properties: Flags.string({
     default: 'sid, path, url, visibility',
     description:
       'The asset properties you would like to display (JSON output always shows all properties).',
