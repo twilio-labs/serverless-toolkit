@@ -19,7 +19,8 @@
     "@oclif/dev-cli": "^1.22.2",
     "@oclif/plugin-help": "^3.2.3",
     "@oclif/test": "^1.2.5",
-    "@twilio/cli-test": "^2.0.2"
+    "@twilio/cli-test": "^2.0.2",
+    "oclif": "^3"
   },
   "engines": {
     "node": ">=12.22.1"
@@ -87,8 +88,8 @@
   },
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
-    "prepack": "oclif-dev manifest && oclif-dev readme",
-    "version": "oclif-dev readme && git add README.md"
+    "prepack": "oclif manifest && oclif readme",
+    "version": "oclif readme && git add README.md"
   },
   "gitHead": "6db273648ed19474f4125042556b10c051529912"
 }
