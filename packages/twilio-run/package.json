@@ -1,6 +1,6 @@
 {
   "name": "twilio-run",
-  "version": "3.4.3",
+  "version": "3.4.4",
   "bin": {
     "twilio-functions": "./bin/twilio-run.js",
     "twilio-run": "./bin/twilio-run.js",
@@ -35,7 +35,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@twilio-labs/serverless-api": "^5.4.3",
+    "@twilio-labs/serverless-api": "^5.4.4",
     "@twilio-labs/serverless-runtime-types": "2.1.0-rc.0",
     "@types/express": "4.17.7",
     "@types/inquirer": "^6.0.3",

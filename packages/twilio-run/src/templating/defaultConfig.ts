@@ -63,7 +63,7 @@ export async function writeDefaultConfigFile(
 ): Promise<boolean> {
   const fullConfigFilePath = path.resolve(baseDir, fileName);
 
-  const configFileExists = await fileExists(fullConfigFilePath);
+  const configFileExists = await fileExists(fullConfigFilePath, true);
 
   if (configFileExists && !overrideExisting) {
     return false;

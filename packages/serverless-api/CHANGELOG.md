@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.4.4](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-api@5.4.3...@twilio-labs/serverless-api@5.4.4) (2022-08-31)
+
+
+### Bug Fixes
+
+* fileExists should not require write access by default ([#407](https://github.com/twilio-labs/serverless-toolkit/issues/407)) ([e95e726](https://github.com/twilio-labs/serverless-toolkit/commit/e95e7264f91fe56e7bede89c8c628efb2013e60b))
+
+
+
+
+
 ## [5.4.3](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-api@5.4.2...@twilio-labs/serverless-api@5.4.3) (2022-08-08)
 
 

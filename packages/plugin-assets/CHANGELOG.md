@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.3](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-assets@2.0.2...@twilio-labs/plugin-assets@2.0.3) (2022-08-31)
+
+**Note:** Version bump only for package @twilio-labs/plugin-assets
+
+
+
+
+
 ## [2.0.2](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-assets@2.0.1...@twilio-labs/plugin-assets@2.0.2) (2022-08-08)
 
 **Note:** Version bump only for package @twilio-labs/plugin-assets
