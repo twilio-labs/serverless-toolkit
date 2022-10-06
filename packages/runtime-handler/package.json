@@ -76,7 +76,8 @@
     "twilio": "3.80.0"
   },
   "overrides": {
-    "@types/prettier": "2.6.0"
+    "@types/prettier": "2.6.0",
+    "@types/express-serve-static-core": "ts3.9"
   },
   "gitHead": "6db273648ed19474f4125042556b10c051529912"
 }
