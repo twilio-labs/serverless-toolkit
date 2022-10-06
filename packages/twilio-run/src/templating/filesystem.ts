@@ -25,7 +25,7 @@ async function writeEnvFile(
   newEnvironmentVariableKeys: string[];
 }> {
   const envFilePath = path.join(targetDir, '.env');
-  const envFileExists = await fileExists(envFilePath);
+  const envFileExists = await fileExists(envFilePath, true);
   if (!envFileExists) {
     await downloadFile(contentUrl, envFilePath);
     return { newEnvironmentVariableKeys: [] };

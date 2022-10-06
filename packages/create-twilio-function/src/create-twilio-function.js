@@ -31,9 +31,16 @@ const successMessage = require('./create-twilio-function/success-message');
 async function cleanUpAndExit(projectDir, spinner, errorMessage) {
   spinner.fail(errorMessage);
   spinner.start('Cleaning up project directories and files');
-  await rimraf(projectDir);
-  spinner.stop().clear();
-  process.exitCode = 1;
+  try {
+    await rimraf(projectDir);
+  } catch (error) {
+    spinner.fail(
+      `There was an error cleaning up the project. Some files may still be present in ${projectDir}`
+    );
+  } finally {
+    spinner.stop().clear();
+    process.exitCode = 1;
+  }
 }
 
 async function performTaskWithSpinner(spinner, message, task) {

@@ -22,6 +22,9 @@ export const writeFile = promisify(fs.writeFile);
 export const readDir = promisify(recursiveReadDir);
 export const stat = promisify(fs.stat);
 
+const READ_ONLY = fs.constants.R_OK;
+const READ_WRITE = fs.constants.R_OK | fs.constants.W_OK;
+
 /**
  * Checks if a given file exists by checking if we have read & write access
  *
@@ -29,9 +32,12 @@ export const stat = promisify(fs.stat);
  * @param {string} filePath full path of the file to check
  * @returns
  */
-export async function fileExists(filePath: string) {
+export async function fileExists(
+  filePath: string,
+  hasWriteAccess: boolean = false
+) {
   try {
-    await access(filePath, fs.constants.R_OK | fs.constants.W_OK);
+    await access(filePath, hasWriteAccess ? READ_WRITE : READ_ONLY);
     return true;
   } catch (err) {
     return false;
@@ -168,7 +174,7 @@ export async function getDirContent(
   );
 
   return unfilteredFiles.filter(
-    entry => typeof entry !== 'undefined'
+    (entry) => typeof entry !== 'undefined'
   ) as FileInfo[];
 }
 
@@ -283,7 +289,7 @@ async function getServerlessConfigs(
   ignoreExtension?: string
 ): Promise<ServerlessResourceConfigWithFilePath[]> {
   return Promise.all(
-    dirContent.map(async file => {
+    dirContent.map(async (file) => {
       const { path, access } = getPathAndAccessFromFileInfo(
         file,
         ignoreExtension

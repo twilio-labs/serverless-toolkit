@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.3.5](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.3.4...create-twilio-function@3.3.5) (2022-08-31)
+
+
+### Bug Fixes
+
+* **create-twilio-function:** handle rimraf failing ([#400](https://github.com/twilio-labs/serverless-toolkit/issues/400)) ([b15a1cb](https://github.com/twilio-labs/serverless-toolkit/commit/b15a1cb3c11d3b24e241aaa96b26681e4a689bd6))
+
+
+
+
+
 ## [3.3.4](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.3.3...create-twilio-function@3.3.4) (2022-08-08)
 
 **Note:** Version bump only for package create-twilio-function

@@ -69,10 +69,10 @@ OPTIONS
   --service-name=service-name      A unique name for your asset service. May only contain alphanumeric characters and
                                    hyphens.
 
-  --silent                         Suppress output and logs. This is a shorthand for "-l none -o none".
+  --silent                         Suppress  output and logs. This is a shorthand for "-l none -o none".
 ```
 
-_See code: [src/commands/assets/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.2/src/commands/assets/init.js)_
+_See code: [src/commands/assets/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.3/src/commands/assets/init.js)_
 
 ## `twilio assets:list`
 
@@ -90,10 +90,10 @@ OPTIONS
   --properties=properties          [default: sid, path, url, visibility] The asset properties you would like to display
                                    (JSON output always shows all properties).
 
-  --silent                         Suppress output and logs. This is a shorthand for "-l none -o none".
+  --silent                         Suppress  output and logs. This is a shorthand for "-l none -o none".
 ```
 
-_See code: [src/commands/assets/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.2/src/commands/assets/list.js)_
+_See code: [src/commands/assets/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.3/src/commands/assets/list.js)_
 
 ## `twilio assets:upload FILE`
 
@@ -116,10 +116,10 @@ OPTIONS
 
   --protected                      Sets the uploaded asset's visibility to 'protected'
 
-  --silent                         Suppress output and logs. This is a shorthand for "-l none -o none".
+  --silent                         Suppress  output and logs. This is a shorthand for "-l none -o none".
 ```
 
-_See code: [src/commands/assets/upload.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.2/src/commands/assets/upload.js)_
+_See code: [src/commands/assets/upload.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.3/src/commands/assets/upload.js)_
 <!-- commandsstop -->
 
 ## Contributing
