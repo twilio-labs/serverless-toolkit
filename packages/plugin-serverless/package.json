@@ -6,23 +6,22 @@
   "contributors": [
     "Dominik Kundel <dkundel@twilio.com>"
   ],
+  "main": "src/index.js",
   "dependencies": {
-    "@oclif/command": "^1.5.19",
-    "@oclif/config": "^1.13.3",
-    "@twilio/cli-core": "^6.0.0",
+    "@oclif/core": "^1.14.2",
+    "@twilio/cli-core": "^7.0.0",
     "create-twilio-function": "^3.3.5",
     "lodash.camelcase": "^4.3.0",
     "lodash.kebabcase": "^4.1.1",
     "twilio-run": "^3.4.4"
   },
   "devDependencies": {
-    "@oclif/dev-cli": "^1.22.2",
-    "@oclif/plugin-help": "^3.2.3",
+    "@oclif/plugin-help": "^5.1.12",
     "@oclif/test": "^1.2.5",
     "@twilio/cli-test": "^2.0.2"
   },
   "engines": {
-    "node": ">=12.22.1"
+    "node": ">=14.0.0"
   },
   "files": [
     "/oclif.manifest.json",
