@@ -22,7 +22,8 @@ export async function getFunctionServiceSid(
   cwd: string,
   configName: string,
   commandConfig: 'deploy' | 'list' | 'logs' | 'promote' | 'env',
-  username?: string
+  username?: string,
+  region?: string
 ): Promise<string | undefined> {
   const twilioConfig = readSpecializedConfig(cwd, configName, commandConfig, {
     username,
@@ -37,6 +38,18 @@ export async function getFunctionServiceSid(
     const deployInfoCache = getDeployInfoCache(cwd);
     if (
       deployInfoCache &&
+      deployInfoCache[`${username}:${region}`] &&
+      deployInfoCache[username].serviceSid
+    ) {
+      debug(
+        'Found service sid by region from deploy info, "%s"',
+        deployInfoCache[`${username}:${region}`].serviceSid
+      );
+      return deployInfoCache[`${username}:${region}`].serviceSid;
+    }
+
+    if (
+      deployInfoCache &&
       deployInfoCache[username] &&
       deployInfoCache[username].serviceSid
     ) {
@@ -49,6 +62,7 @@ export async function getFunctionServiceSid(
   }
 
   debug('Could not determine existing serviceSid');
+  debug(`${username}:${region}`);
   return undefined;
 }
 
@@ -56,13 +70,14 @@ export async function saveLatestDeploymentData(
   cwd: string,
   serviceSid: string,
   buildSid: string,
-  username?: string
+  username?: string,
+  region?: string
 ): Promise<void> {
   if (!username) {
     return;
   }
 
-  return updateDeployInfoCache(cwd, username, {
+  return updateDeployInfoCache(cwd, username, region, {
     serviceSid,
     latestBuild: buildSid,
   });
