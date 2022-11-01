@@ -27,6 +27,7 @@ export async function getFunctionServiceSid(
 ): Promise<string | undefined> {
   const twilioConfig = readSpecializedConfig(cwd, configName, commandConfig, {
     username,
+    region,
   });
   if (twilioConfig.serviceSid) {
     debug('Found serviceSid in config, "%s"', twilioConfig.serviceSid);
@@ -39,7 +40,7 @@ export async function getFunctionServiceSid(
     if (
       deployInfoCache &&
       deployInfoCache[`${username}:${region}`] &&
-      deployInfoCache[username].serviceSid
+      deployInfoCache[`${username}:${region}`].serviceSid
     ) {
       debug(
         'Found service sid by region from deploy info, "%s"',

@@ -56,6 +56,7 @@ export async function getConfigFromFlags(
       (externalCliOptions && externalCliOptions.accountSid) ||
       undefined,
     environmentSuffix: environment,
+    region: flags.region,
   });
 
   flags = mergeFlagsAndConfig<LogsCliFlags>(configFlags, flags, cliInfo);
