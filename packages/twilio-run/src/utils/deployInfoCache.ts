@@ -72,7 +72,7 @@ export function updateDeployInfoCache(
     deployInfoCacheFileName
   );
 
-  if (username in currentDeployInfoCache) {
+  if (currentDeployInfoCache.hasOwnProperty(username) && region === 'us1') {
     debug('Invalid format for deploy info key. Overriding with region us1');
     debug(`${username}:${region}`);
     delete currentDeployInfoCache[username];
