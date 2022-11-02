@@ -39,7 +39,8 @@
   },
   "overrides": {
     "@types/prettier": "2.6.0",
-    "@types/express-serve-static-core": "ts3.9"
+    "@types/express-serve-static-core": "ts3.9",
+    "@types/lodash": "ts3.9"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

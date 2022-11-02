@@ -72,7 +72,8 @@
     "upath": "^1.1.2"
   },
   "overrides": {
-    "@types/prettier": "2.6.0"
+    "@types/prettier": "2.6.0",
+    "@types/lodash": "ts3.9"
   },
   "gitHead": "6db273648ed19474f4125042556b10c051529912"
 }
