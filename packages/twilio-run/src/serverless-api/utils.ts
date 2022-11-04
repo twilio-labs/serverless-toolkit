@@ -37,11 +37,7 @@ export async function getFunctionServiceSid(
   if (username) {
     debug('Attempting to read serviceSid from a deployinfo file');
     const deployInfoCache = getDeployInfoCache(cwd);
-    if (
-      deployInfoCache &&
-      deployInfoCache[`${username}:${region}`] &&
-      deployInfoCache[`${username}:${region}`].serviceSid
-    ) {
+    if (deployInfoCache[`${username}:${region}`]?.serviceSid) {
       debug(
         'Found service sid by region from deploy info, "%s"',
         deployInfoCache[`${username}:${region}`].serviceSid
@@ -49,11 +45,7 @@ export async function getFunctionServiceSid(
       return deployInfoCache[`${username}:${region}`].serviceSid;
     }
 
-    if (
-      deployInfoCache &&
-      deployInfoCache[username] &&
-      deployInfoCache[username].serviceSid
-    ) {
+    if (deployInfoCache[username]?.serviceSid) {
       debug(
         'Found service sid from deploy info, "%s"',
         deployInfoCache[username].serviceSid
