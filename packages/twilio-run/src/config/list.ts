@@ -86,7 +86,8 @@ export async function getConfigFromFlags(
         ? flags.username
         : username.startsWith('AC')
         ? username
-        : externalCliOptions?.accountSid
+        : externalCliOptions?.accountSid,
+      flags.region
     ));
 
   let serviceName = await getServiceNameFromFlags(flags);

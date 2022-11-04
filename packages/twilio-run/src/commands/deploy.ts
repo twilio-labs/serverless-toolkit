@@ -134,7 +134,8 @@ export async function handler(
       buildSid,
       config.username.startsWith('AC')
         ? config.username
-        : externalCliOptions && externalCliOptions.accountSid
+        : externalCliOptions && externalCliOptions.accountSid,
+      config.region
     );
   } catch (err) {
     handleError(err, spinner, flags, config);
