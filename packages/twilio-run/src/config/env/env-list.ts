@@ -53,6 +53,7 @@ export async function getConfigFromFlags(
       (externalCliOptions && externalCliOptions.accountSid) ||
       undefined,
     environmentSuffix: flags.environment,
+    region: flags.region,
   });
 
   flags = mergeFlagsAndConfig<EnvListFlags>(configFlags, flags, cliInfo);
@@ -75,7 +76,8 @@ export async function getConfigFromFlags(
         ? flags.username
         : username.startsWith('AC')
         ? username
-        : externalCliOptions?.accountSid
+        : externalCliOptions?.accountSid,
+      flags.region
     ));
 
   let serviceName = await getServiceNameFromFlags(flags);

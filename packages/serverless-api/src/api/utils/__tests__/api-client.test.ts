@@ -62,4 +62,18 @@ describe('getApiUrl', () => {
     const url = getApiUrl(DEFAULT_TEST_CLIENT_CONFIG);
     expect(url).toBe('https://serverless.sydney.au2.twilio.com/v1');
   });
+
+  test('handles edge with only eligible region with variable', () => {
+    process.env.TWILIO_REGION = 'au1';
+    const url = getApiUrl(DEFAULT_TEST_CLIENT_CONFIG);
+    expect(url).toBe('https://serverless.sydney.au1.twilio.com/v1');
+  });
+
+  test('handles edge with only eligible region with params', () => {
+    const url = getApiUrl({
+      ...DEFAULT_TEST_CLIENT_CONFIG,
+      region: 'us1',
+    });
+    expect(url).toBe('https://serverless.ashburn.us1.twilio.com/v1');
+  });
 });

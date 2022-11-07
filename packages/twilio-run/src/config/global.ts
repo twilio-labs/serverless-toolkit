@@ -7,6 +7,7 @@ import { getConfig } from './utils/configLoader';
 export type SpecializedConfigOptions = {
   username: string;
   environmentSuffix: string;
+  region: string;
 };
 
 export const EXCLUDED_FLAGS = [
@@ -68,12 +69,20 @@ export function readSpecializedConfig<T extends CommandConfigurationNames>(
     opts &&
     opts.username &&
     projectsConfig &&
-    projectsConfig[opts.username]
+    (projectsConfig[opts.username] ||
+      projectsConfig[`${opts.username}:${opts.region}`])
   ) {
-    result = {
-      ...result,
-      ...projectsConfig[opts.username],
-    };
+    if (projectsConfig[`${opts.username}:${opts.region}`]) {
+      result = {
+        ...result,
+        ...projectsConfig[`${opts.username}:${opts.region}`],
+      };
+    } else if (opts.region === 'us1' || opts.region === undefined) {
+      result = {
+        ...result,
+        ...projectsConfig[opts.username],
+      };
+    }
   }
 
   EXCLUDED_FLAGS.forEach((key) => {

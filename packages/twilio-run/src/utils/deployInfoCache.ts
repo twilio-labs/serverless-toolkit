@@ -61,6 +61,7 @@ export function getDeployInfoCache(
 export function updateDeployInfoCache(
   baseDir: string,
   username: string,
+  region: string = 'us1',
   deployInfo: DeployInfo,
   deployInfoCacheFileName: string = '.twiliodeployinfo'
 ): void {
@@ -71,9 +72,15 @@ export function updateDeployInfoCache(
     deployInfoCacheFileName
   );
 
+  if (currentDeployInfoCache.hasOwnProperty(username) && region === 'us1') {
+    debug('Invalid format for deploy info key. Overriding with region us1');
+    debug(`${username}:${region}`);
+    delete currentDeployInfoCache[username];
+  }
+
   const newDeployInfoCache = {
     ...currentDeployInfoCache,
-    [username]: deployInfo,
+    [`${username}:${region}`]: deployInfo,
   };
 
   if (!validDeployInfoCache(newDeployInfoCache)) {
