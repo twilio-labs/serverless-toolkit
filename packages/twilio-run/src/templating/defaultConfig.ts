@@ -9,7 +9,7 @@ import { getDebugFunction } from '../utils/logger';
 
 const debug = getDebugFunction('twilio-run:templating:defaultConfig');
 
-const DEFAULT_RUNTIME = 'node14';
+const DEFAULT_RUNTIME = 'node16';
 
 function renderDefault(config: Options): string {
   if (config.type === 'boolean') {
