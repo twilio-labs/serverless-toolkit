@@ -157,7 +157,7 @@ FLAGS
   --password=<value>               A specific API secret or auth token for deployment. Uses fields from .env otherwise
   --production                     Please prefer the "activate" command! Deploys to the production environment (no
                                    domain suffix). Overrides the value passed via the environment flag.
-  --runtime=<value>                The version of Node.js to deploy the build to. (node14)
+  --runtime=<value>                The version of Node.js to deploy the build to. (node16)
   --service-sid=<value>            SID of the Twilio Serverless Service to deploy to
   --silent                         Suppress  output and logs. This is a shorthand for "-l none -o none".
   --to=<value>                     [Alias for "environment"]

@@ -228,7 +228,7 @@ export const ALL_FLAGS = {
   } as Options,
   runtime: {
     type: 'string',
-    describe: 'The version of Node.js to deploy the build to. (node14)',
+    describe: 'The version of Node.js to deploy the build to. (node16)',
   } as Options,
   key: {
     type: 'string',

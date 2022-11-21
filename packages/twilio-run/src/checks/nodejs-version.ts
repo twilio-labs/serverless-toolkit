@@ -1,11 +1,11 @@
 import { stripIndent } from 'common-tags';
 import { logger } from '../utils/logger';
 
-const SERVERLESS_NODE_JS_VERSION = '14.';
+const SERVERLESS_NODE_JS_VERSION = ['14.', '16.'];
 
 export function printVersionWarning(
   nodeVersion: string,
-  expectedVersion: string
+  expectedVersion: string[]
 ): void {
   const title = 'Different Node.js Version Found';
   const msg = stripIndent`
@@ -22,7 +22,11 @@ export function printVersionWarning(
 
 export default function checkNodejsVersion() {
   const nodeVersion = process.versions.node;
-  if (!nodeVersion.startsWith(SERVERLESS_NODE_JS_VERSION)) {
+  if (
+    !SERVERLESS_NODE_JS_VERSION.some((nodeJsVersion) =>
+      nodeVersion.startsWith(nodeJsVersion)
+    )
+  ) {
     printVersionWarning(nodeVersion, SERVERLESS_NODE_JS_VERSION);
   }
 }
