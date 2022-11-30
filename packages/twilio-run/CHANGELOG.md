@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.5.1](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.5.0...twilio-run@3.5.1) (2022-11-30)
+
+
+### Bug Fixes
+
+* **twilio-run:** lookup of deployinfo if no region is specified ([e1a2b44](https://github.com/twilio-labs/serverless-toolkit/commit/e1a2b4445183de312058a4f384f3546a5d304817))
+
+
+
+
+
 # [3.5.0](https://github.com/twilio-labs/serverless-toolkit/compare/twilio-run@3.4.5...twilio-run@3.5.0) (2022-11-30)
 
 
