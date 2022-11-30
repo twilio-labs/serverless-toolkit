@@ -1,7 +1,7 @@
 {
   "name": "@twilio-labs/plugin-assets",
   "description": "Easily upload assets to a Twilio Assets service",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "author": "Twilio Inc. <open-source@twilio.com> (https://www.twilio.com/labs)",
   "contributors": [
     "Phil Nash <philnash@twilio.com>"
@@ -9,7 +9,7 @@
   "main": "src/index.js",
   "dependencies": {
     "@oclif/core": "^1.14.2",
-    "@twilio-labs/serverless-api": "^5.4.4",
+    "@twilio-labs/serverless-api": "^5.5.0",
     "@twilio/cli-core": "^7.0.0",
     "inquirer": "^8.0.0",
     "ora": "^5.4.0",

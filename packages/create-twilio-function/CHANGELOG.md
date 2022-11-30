@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.4.0](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.3.6...create-twilio-function@3.4.0) (2022-11-30)
+
+
+### Features
+
+* Add Node16 support as default ([#435](https://github.com/twilio-labs/serverless-toolkit/issues/435)) ([b95f16b](https://github.com/twilio-labs/serverless-toolkit/commit/b95f16bcdac3909b5ee74e5e24f447761f2b9894))
+
+
+
+
+
 ## [3.3.6](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.3.5...create-twilio-function@3.3.6) (2022-10-11)
 
 **Note:** Version bump only for package create-twilio-function

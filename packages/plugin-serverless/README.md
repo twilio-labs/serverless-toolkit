@@ -166,7 +166,7 @@ DESCRIPTION
   Deploys existing functions and assets to Twilio
 ```
 
-_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.4/src/commands/serverless/deploy.js)_
+_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.1.0/src/commands/serverless/deploy.js)_
 
 ## `twilio serverless:dev [DIR]`
 
@@ -246,7 +246,7 @@ DESCRIPTION
   Retrieves the value of a specific environment variable
 ```
 
-_See code: [src/commands/serverless/env/get.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.4/src/commands/serverless/env/get.js)_
+_See code: [src/commands/serverless/env/get.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.1.0/src/commands/serverless/env/get.js)_
 
 ## `twilio serverless:env:import`
 
@@ -284,7 +284,7 @@ DESCRIPTION
   Takes a .env file and uploads all environment variables to a given environment
 ```
 
-_See code: [src/commands/serverless/env/import.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.4/src/commands/serverless/env/import.js)_
+_See code: [src/commands/serverless/env/import.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.1.0/src/commands/serverless/env/import.js)_
 
 ## `twilio serverless:env:list`
 
@@ -324,7 +324,7 @@ DESCRIPTION
   Lists all environment variables for a given environment
 ```
 
-_See code: [src/commands/serverless/env/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.4/src/commands/serverless/env/list.js)_
+_See code: [src/commands/serverless/env/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.1.0/src/commands/serverless/env/list.js)_
 
 ## `twilio serverless:env:set`
 
@@ -364,7 +364,7 @@ DESCRIPTION
   Sets an environment variable with a given key and value
 ```
 
-_See code: [src/commands/serverless/env/set.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.4/src/commands/serverless/env/set.js)_
+_See code: [src/commands/serverless/env/set.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.1.0/src/commands/serverless/env/set.js)_
 
 ## `twilio serverless:env:unset`
 
@@ -403,7 +403,7 @@ DESCRIPTION
   Removes an environment variable for a given key
 ```
 
-_See code: [src/commands/serverless/env/unset.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.4/src/commands/serverless/env/unset.js)_
+_See code: [src/commands/serverless/env/unset.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.1.0/src/commands/serverless/env/unset.js)_
 
 ## `twilio serverless:init NAME`
 
@@ -436,7 +436,7 @@ DESCRIPTION
   Creates a new Twilio Function project
 ```
 
-_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.4/src/commands/serverless/init.js)_
+_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.1.0/src/commands/serverless/init.js)_
 
 ## `twilio serverless:list [TYPES]`
 
@@ -478,7 +478,7 @@ DESCRIPTION
   List existing services, environments, variables, deployments for your Twilio Serverless Account
 ```
 
-_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.4/src/commands/serverless/list.js)_
+_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.1.0/src/commands/serverless/list.js)_
 
 ## `twilio serverless:list-templates`
 
@@ -495,7 +495,7 @@ DESCRIPTION
   Lists the available Twilio Function templates
 ```
 
-_See code: [src/commands/serverless/list-templates.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.4/src/commands/serverless/list-templates.js)_
+_See code: [src/commands/serverless/list-templates.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.1.0/src/commands/serverless/list-templates.js)_
 
 ## `twilio serverless:logs`
 
@@ -535,7 +535,7 @@ DESCRIPTION
   Print logs from your Twilio Serverless project
 ```
 
-_See code: [src/commands/serverless/logs.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.4/src/commands/serverless/logs.js)_
+_See code: [src/commands/serverless/logs.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.1.0/src/commands/serverless/logs.js)_
 
 ## `twilio serverless:new [NAMESPACE]`
 
@@ -559,7 +559,7 @@ DESCRIPTION
   Creates a new Twilio Function based on an existing template
 ```
 
-_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.4/src/commands/serverless/new.js)_
+_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.1.0/src/commands/serverless/new.js)_
 
 ## `twilio serverless:promote`
 
@@ -608,7 +608,7 @@ ALIASES
   $ twilio serverless:activate
 ```
 
-_See code: [src/commands/serverless/promote.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.4/src/commands/serverless/promote.js)_
+_See code: [src/commands/serverless/promote.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.1.0/src/commands/serverless/promote.js)_
 
 ## `twilio serverless:run [DIR]`
 
@@ -692,7 +692,7 @@ ALIASES
   $ twilio serverless:run
 ```
 
-_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.4/src/commands/serverless/start.js)_
+_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.1.0/src/commands/serverless/start.js)_
 <!-- commandsstop -->
 
 ## Contributing

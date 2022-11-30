@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.5.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-api@5.4.4...@twilio-labs/serverless-api@5.5.0) (2022-11-30)
+
+
+### Features
+
+* Add Node16 support as default ([#435](https://github.com/twilio-labs/serverless-toolkit/issues/435)) ([b95f16b](https://github.com/twilio-labs/serverless-toolkit/commit/b95f16bcdac3909b5ee74e5e24f447761f2b9894))
+* **packages/twilio-run:** regionalize toolkit config and api ([#433](https://github.com/twilio-labs/serverless-toolkit/issues/433)) ([30d5bdb](https://github.com/twilio-labs/serverless-toolkit/commit/30d5bdbe0e8a08b62406af3500ae8bd2d215df1e))
+
+
+
+
+
 ## [5.4.4](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/serverless-api@5.4.3...@twilio-labs/serverless-api@5.4.4) (2022-08-31)
 
 

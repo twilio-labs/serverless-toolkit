@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio/runtime-handler@1.2.5...@twilio/runtime-handler@1.3.0) (2022-11-30)
+
+
+### Features
+
+* **packages/twilio-run:** regionalize toolkit config and api ([#433](https://github.com/twilio-labs/serverless-toolkit/issues/433)) ([30d5bdb](https://github.com/twilio-labs/serverless-toolkit/commit/30d5bdbe0e8a08b62406af3500ae8bd2d215df1e))
+
+
+
+
+
 ## [1.2.5](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio/runtime-handler@1.2.4...@twilio/runtime-handler@1.2.5) (2022-10-11)
 
 **Note:** Version bump only for package @twilio/runtime-handler
