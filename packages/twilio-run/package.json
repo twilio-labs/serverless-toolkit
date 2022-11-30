@@ -127,7 +127,8 @@
   },
   "overrides": {
     "@types/express-serve-static-core": "ts3.9",
-    "@types/lodash": "ts3.9"
+    "@types/lodash": "ts3.9",
+    "@types/babel__traverse": "ts3.9"
   },
   "gitHead": "6db273648ed19474f4125042556b10c051529912"
 }
