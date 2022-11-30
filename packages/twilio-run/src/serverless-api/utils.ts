@@ -23,7 +23,7 @@ export async function getFunctionServiceSid(
   configName: string,
   commandConfig: 'deploy' | 'list' | 'logs' | 'promote' | 'env',
   username?: string,
-  region?: string
+  region: string = 'us1'
 ): Promise<string | undefined> {
   const twilioConfig = readSpecializedConfig(cwd, configName, commandConfig, {
     username,
