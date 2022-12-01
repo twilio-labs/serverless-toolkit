@@ -65,41 +65,6 @@ describe('normalizeFlags', () => {
       environment: 'prod',
     });
   });
-
-  test('overrides log-level with cli-log-level if present', () => {
-    const input = {
-      'log-level': 'info',
-      'cli-log-level': 'debug',
-      environment: 'prod',
-    };
-    const aliasMap = new Map();
-
-    const output = normalizeFlags(input, aliasMap, baseArgv);
-    expect(output).toEqual({
-      ...baseOutput,
-      'log-level': 'info',
-      'cli-log-level': 'debug',
-      cliLogLevel: 'debug',
-      logLevel: 'debug',
-      environment: 'prod',
-    });
-  });
-
-  test('uses regular log-level if no cli-log-level is present', () => {
-    const input = {
-      'log-level': 'debug',
-      environment: 'prod',
-    };
-    const aliasMap = new Map();
-
-    const output = normalizeFlags(input, aliasMap, baseArgv);
-    expect(output).toEqual({
-      ...baseOutput,
-      'log-level': 'debug',
-      logLevel: 'debug',
-      environment: 'prod',
-    });
-  });
 });
 
 describe('convertYargsOptionsToOclifFlags', () => {

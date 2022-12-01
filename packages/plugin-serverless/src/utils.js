@@ -68,9 +68,7 @@ function normalizeFlags(flags, aliasMap, argv) {
   const [, command, ...args] = argv;
   result.$0 = path.basename(command);
   result._ = args;
-  if (result['cli-log-level']) {
-    result.logLevel = result['cli-log-level'];
-  }
+  result.logLevel = result['cli-log-level'];
 
   return result;
 }
