@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.2](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@3.1.0...@twilio-labs/plugin-serverless@3.1.2) (2022-12-01)
+
+
+### Bug Fixes
+
+* **plugin-serverless:** fix output issue with start command ([#443](https://github.com/twilio-labs/serverless-toolkit/issues/443)) ([811a7ce](https://github.com/twilio-labs/serverless-toolkit/commit/811a7ce721384b98a3d686b760ba6123ce105e96))
+* **plugin-serverless:** re-enable debug logging ([a9f09ad](https://github.com/twilio-labs/serverless-toolkit/commit/a9f09ad8f322c47287f04d5c347245653d900c33))
+
+
+
+
+
 ## [3.1.1](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-serverless@3.1.0...@twilio-labs/plugin-serverless@3.1.1) (2022-11-30)
 
 
