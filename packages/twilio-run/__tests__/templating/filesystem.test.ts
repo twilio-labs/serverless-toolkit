@@ -261,9 +261,11 @@ test('installation without dot-env file causes unexpected crash', async () => {
     "Cannot read property 'newEnvironmentVariableKeys' of undefined"
   );
 
-  await expect(
-    writeFiles([], './testing/', 'example', 'hello')
-  ).rejects.toThrowError(expected);
+  try {
+    await writeFiles([], './testing/', 'example', 'hello');
+  } catch (error) {
+    expect(error.toString()).toMatch('TypeError: Cannot read');
+  }
 });
 
 test('installation with an empty dependency file', async () => {
