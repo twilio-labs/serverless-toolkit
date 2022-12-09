@@ -10,7 +10,7 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "build:noemit": "tsc --noEmit",
-    "docs": "echo 'fix typedoc --options typedoc.json'; exit 1;",
+    "docs": "typedoc --options typedoc.json",
     "clean": "rimraf ./dist",
     "prepack": "run-s clean build"
   },
