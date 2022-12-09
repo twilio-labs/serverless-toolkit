@@ -79,18 +79,6 @@ export async function getConfigFromFlags(
 
   let serviceName = await getServiceNameFromFlags(flags);
 
-  if (!flags.key) {
-    throw new Error(
-      'Missing --key argument. Please provide a key for your environment variable.'
-    );
-  }
-
-  if (!flags.value) {
-    throw new Error(
-      'Missing --value argument. Please provide a key for your environment variable.'
-    );
-  }
-
   const env = filterEnvVariablesForDeploy(envFileVars);
 
   return {
