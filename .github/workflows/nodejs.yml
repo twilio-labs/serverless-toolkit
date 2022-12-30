@@ -1,11 +1,13 @@
 name: Node CI
 
 on:
-  push:
-    branches:
-      - main
-      - master
-      - 'features/*'
+  workflow_call:
+  # This gets run by on-merge-main.yml automatically
+  # push:
+  #   branches:
+  #     - main
+  #     - master
+  #     - 'features/*'
   pull_request:
     branches:
       - main
@@ -19,10 +21,10 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
-        node-version: [14, 16]
+        node-version: [14, 16, 18]
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -33,8 +35,7 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
-          npm run bootstrap
-          npm run build --if-present
+          npm run build
           npm run test
         env:
           CI: true

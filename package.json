@@ -5,6 +5,7 @@
     "bootstrap": "npm run build",
     "build": "npm run build --workspaces --if-present",
     "changeset": "changeset",
+    "version-packages": "npm run create-version && npm run version-package --workspaces --if-present",
     "create-version": "changeset version",
     "npm:publish": "changeset publish",
     "cm": "git-cz",
