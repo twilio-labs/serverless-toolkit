@@ -9,7 +9,7 @@ import { fsHelpers } from '@twilio-labs/serverless-api';
 import got from 'got';
 import path, { join } from 'path';
 import { install } from 'pkg-install';
-import { mocked } from 'ts-jest/utils';
+import { mocked } from 'jest-mock';
 import { writeFiles } from '../../src/templating/filesystem';
 import {
   downloadFile,
