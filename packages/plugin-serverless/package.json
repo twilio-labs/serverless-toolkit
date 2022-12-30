@@ -88,7 +88,7 @@
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "oclif manifest && oclif readme",
-    "version": "oclif readme && git add README.md"
+    "version-package": "oclif readme && git add README.md && git commit -m \"chore(@twilio-labs/plugin-serverless): version update in readme\""
   },
   "gitHead": "6db273648ed19474f4125042556b10c051529912"
 }
