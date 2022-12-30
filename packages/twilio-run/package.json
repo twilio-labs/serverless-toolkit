@@ -114,7 +114,7 @@
     "mock-fs": "^5.2.0",
     "nock": "^12.0.2",
     "supertest": "^3.1.0",
-    "typescript": "^3.9.2"
+    "typescript": "^4.9.4"
   },
   "files": [
     "bin/",
@@ -124,11 +124,6 @@
   ],
   "engines": {
     "node": ">=12.22.1"
-  },
-  "overrides": {
-    "@types/express-serve-static-core": "ts3.9",
-    "@types/lodash": "ts3.9",
-    "@types/babel__traverse": "ts3.9"
   },
   "gitHead": "6db273648ed19474f4125042556b10c051529912"
 }

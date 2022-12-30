@@ -5,7 +5,6 @@
   "bin": "./bin/create-twilio-function",
   "main": "./src/create-twilio-function.js",
   "scripts": {
-    "jest": "jest"
   },
   "keywords": [
     "twilio",
@@ -27,7 +26,6 @@
   "license": "MIT",
   "devDependencies": {
     "@twilio/runtime-handler": "^1.3.0",
-    "jest": "^26.6.3",
     "nock": "^11.3.4"
   },
   "dependencies": {

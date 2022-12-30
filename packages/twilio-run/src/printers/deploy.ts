@@ -110,7 +110,7 @@ function plainPrintConfigInfo(config: DeployLocalProjectConfig) {
   }
   const printObj = {
     account: config.username,
-    serviceName: config.serviceName,
+    serviceName: config.serviceName || undefined,
     serviceSid: config.serviceSid,
     environment: config.functionsEnv,
     rootDirectory: config.cwd,
