@@ -1,6 +1,6 @@
 # Packages Overview
 
-This repository is structured as a monorepo using [Lerna](https://lerna.js.org) and contains multiple packages:
+This repository is structured as a monorepo using [`npm` workspaces](https://docs.npmjs.com/cli/v8/using-npm/workspaces) and contains multiple packages:
 
 | Package                                                               | Description                                                                                                                 | Changelog                                                        |                                                                                                                                                                                                                                                          |
 | :-------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

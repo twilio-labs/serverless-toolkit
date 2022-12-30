@@ -34,13 +34,13 @@ To understand more about the structure and the design of the Toolkit check out t
 
 ## Setup & Development
 
-This project uses [`lerna`](https://npm.im/lerna) as a tool to manage the monorepo. If you are unfamiliar with the tool, start by checking out the the [lerna docs](https://lerna.js.org/).
+This project uses [`npm` workspaces](https://docs.npmjs.com/cli/v8/using-npm/workspaces) as a tool to manage the monorepo. If you are unfamiliar with the tool, start by checking out the the [`npm` docs](https://docs.npmjs.com/cli/v7/using-npm/workspaces) and make sure you use at least npm version 8 or newer (`npm install -g npm@8`).
 
 ```bash
 git clone git@github.com:twilio-labs/serverless-toolkit.git
 cd serverless-toolkit
 npm install
-npm run bootstrap
+npm run build
 ```
 
 ## License
