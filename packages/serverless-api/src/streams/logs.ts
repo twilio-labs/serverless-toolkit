@@ -7,7 +7,9 @@ import { LogsConfig } from '../types/logs';
 export class LogsStream extends Readable {
   private _pollingFrequency: number;
   private _pollingCacheSize: number;
-  private _interval: NodeJS.Timeout | undefined;
+  // The builds become flaky if this is set to NodeJS.Timer or number as type because TypeScript sometimes infers the wrong one of the two. This solves this problem:
+  // https://stackoverflow.com/questions/55550096/ts2322-type-timeout-is-not-assignable-to-type-number-when-running-unit-te
+  private _interval: ReturnType<typeof setTimeout> | undefined;
   private _viewedSids: Set<Sid>;
   private _viewedLogs: Array<{ sid: Sid; dateCreated: Date }>;
 
