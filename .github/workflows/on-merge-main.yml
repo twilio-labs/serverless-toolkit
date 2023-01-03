@@ -17,14 +17,14 @@ jobs:
 
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup Node.js 16
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: Update npm to 8.x
+      - name: Update npm to 9.x
         run: |
-          npm i -g npm@8
+          npm i -g npm@9
       - name: Install Dependencies
         run: npm install
       - name: Setup CI Git User

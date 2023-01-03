@@ -24,14 +24,14 @@ jobs:
         node-version: [ lts/-2, lts/-1, lts/*]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Update npm to 8.x
+      - name: Update npm to 9.x
         run: |
-          npm i -g npm@8
+          npm i -g npm@9
       - name: npm install, build, and test
         run: |
           npm install
