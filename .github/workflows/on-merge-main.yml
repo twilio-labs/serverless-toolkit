@@ -22,9 +22,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: Update npm to 9.x
+      - name: Update npm to 8.x
         run: |
-          npm i -g npm@9
+          npm i -g npm@8
       - name: Install Dependencies
         run: npm install
       - name: Setup CI Git User
