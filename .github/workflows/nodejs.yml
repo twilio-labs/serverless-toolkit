@@ -3,11 +3,6 @@ name: Node CI
 on:
   workflow_call:
   # This gets run by on-merge-main.yml automatically
-  # push:
-  #   branches:
-  #     - main
-  #     - master
-  #     - 'features/*'
   pull_request:
     branches:
       - main
