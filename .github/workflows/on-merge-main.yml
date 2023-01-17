@@ -27,6 +27,8 @@ jobs:
           npm i -g npm@8
       - name: Install Dependencies
         run: npm install
+      - name: Run basic build
+        run: npm run bootstrap
       - name: Setup CI Git User
         run: |
           git config user.name twilio-labs-ci
