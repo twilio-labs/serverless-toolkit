@@ -12,8 +12,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "build": "tsc",
-    "build:noemit": "tsc --noEmit",
-    "prepack": "run-s clean build"
+    "build:noemit": "tsc --noEmit"
   },
   "keywords": [
     "twilio",

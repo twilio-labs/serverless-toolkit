@@ -27,12 +27,14 @@ jobs:
           npm i -g npm@8
       - name: Install Dependencies
         run: npm install
-      - name: Run basic build
-        run: npm run bootstrap
       - name: Setup CI Git User
         run: |
           git config user.name twilio-labs-ci
           git config user.email 65686990+twilio-labs-ci@users.noreply.github.com
+      - name: Create new build
+        run: |
+          npm run clean
+          npm run build
       - name: "Create Pull Request or Publish to npm"
         uses: changesets/action@v1
         with:

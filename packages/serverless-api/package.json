@@ -10,8 +10,7 @@
     "watch": "tsc --watch",
     "build:noemit": "tsc --noEmit",
     "docs": "typedoc --options typedoc.json",
-    "clean": "rimraf ./dist",
-    "prepack": "run-s clean build"
+    "clean": "rimraf ./dist"
   },
   "publishConfig": {
     "access": "public"

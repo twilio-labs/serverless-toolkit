@@ -36,8 +36,7 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "build:noemit": "tsc --noEmit",
-    "clean": "rimraf ./dist",
-    "prepack": "run-s clean build"
+    "clean": "rimraf ./dist"
   },
   "devDependencies": {
     "@types/common-tags": "^1.8.0",
