@@ -285,4 +285,18 @@ describe('getConfigFromCli', () => {
       expect(startConfig.baseDir).toEqual(path.resolve(config.cwd));
     }
   });
+
+  test('turns of fork process if inspect is enabled', async () => {
+    require('../../src/config/utils/package-json').__setPackageJson({});
+    const config = {
+      dir: './other_dir',
+      inspect: '',
+    } as unknown as StartCliFlags;
+    if (config.dir) {
+      const startConfig = await getConfigFromCli(config);
+      expect(startConfig.baseDir).toEqual(path.resolve(config.dir));
+      expect(startConfig.forkProcess).toEqual(false);
+      expect(startConfig.inspect).not.toEqual(undefined);
+    }
+  });
 });
