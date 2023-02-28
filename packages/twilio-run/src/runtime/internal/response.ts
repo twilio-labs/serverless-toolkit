@@ -57,6 +57,18 @@ export class Response implements TwilioResponse {
     return this;
   }
 
+  setCookie(
+    key: string,
+    value: string,
+    attributes?: string[] | undefined
+  ): Response {
+    return this;
+  }
+
+  removeCookie(key: string): Response {
+    return this;
+  }
+
   appendHeader(key: string, value: HeaderValue): Response {
     debug('Appending header for %s', key, value);
     this.headers = this.headers || {};
