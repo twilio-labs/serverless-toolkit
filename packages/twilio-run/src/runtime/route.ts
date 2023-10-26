@@ -1,6 +1,7 @@
 import {
   Context,
   ServerlessCallback,
+  ServerlessEventObject,
   ServerlessFunctionSignature,
 } from '@twilio-labs/serverless-runtime-types/types';
 import { fork } from 'child_process';
@@ -62,7 +63,14 @@ export function constructContext<T extends {} = {}>(
   }
   const DOMAIN_NAME = url.replace(/^https?:\/\//, '');
   const PATH = functionPath;
-  return { PATH, DOMAIN_NAME, ...env, getTwilioClient };
+  return {
+    PATH,
+    DOMAIN_NAME,
+    ...env,
+    getTwilioClient,
+    SERVICE_SID: env.SERVICE_SID,
+    ENVIRONMENT_SID: env.ENVIRONMENT_SID,
+  };
 }
 
 export function constructGlobalScope(config: StartCliConfig): void {
@@ -205,7 +213,7 @@ export function functionToRoute(
     res: ExpressResponse,
     next: NextFunction
   ) {
-    const event = constructEvent(req);
+    const event = constructEvent<ServerlessEventObject>(req);
     debug('Event for %s: %o', req.path, event);
     const context = constructContext(config, req.path);
     debug('Context for %s: %p', req.path, context);

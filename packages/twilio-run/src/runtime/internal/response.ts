@@ -15,15 +15,25 @@ type Headers = {
   [key: string]: HeaderValue;
 };
 
+type CookieValue = {
+  value: string;
+  attributes?: string[] | undefined;
+};
+type Cookies = {
+  [key: string]: CookieValue;
+};
+
 export class Response implements TwilioResponse {
   private body: null | any;
   private statusCode: number;
   private headers: Headers;
+  private cookies: Cookies;
 
   constructor(options?: ResponseOptions) {
     this.body = null;
     this.statusCode = 200;
     this.headers = {};
+    this.cookies = {};
 
     if (options && options.statusCode) {
       this.statusCode = options.statusCode;
@@ -54,6 +64,22 @@ export class Response implements TwilioResponse {
       return this;
     }
     this.headers = headersObject;
+    return this;
+  }
+
+  setCookie(
+    key: string,
+    value: string,
+    attributes?: string[] | undefined
+  ): Response {
+    debug('Setting cookie %s', key, value, attributes);
+    this.cookies[key] = { value, attributes };
+    return this;
+  }
+
+  removeCookie(key: string): Response {
+    debug('Deleting cookie %s', key);
+    delete this.cookies[key];
     return this;
   }
 
