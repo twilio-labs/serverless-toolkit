@@ -44,7 +44,7 @@ type DeployProjectConfigBase = {
    */
   overrideExistingService?: boolean;
   /**
-   * Version of Node.js to deploy with in Twilio Runtime. Can be "node16"
+   * Version of Node.js to deploy with in Twilio Runtime. Can be "node18"
    */
   runtime?: string;
 };
