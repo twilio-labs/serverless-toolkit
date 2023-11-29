@@ -1,3 +1,5 @@
+declare module 'wrap-ansi';
+
 declare module 'columnify' {
   function columnify(obj: any, config: any): string;
   export = columnify;
@@ -64,7 +66,7 @@ declare module 'chalk' {
       /**
       Return a new Chalk instance.
       */
-      new (options?: Options): Chalk;
+      new(options?: Options): Chalk;
     }
 
     /**
