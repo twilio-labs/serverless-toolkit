@@ -41,7 +41,6 @@
     "@types/is-ci": "^2.0.0",
     "@types/qs": "^6.9.4",
     "@types/semver": "^7.3.6",
-    "@types/wrap-ansi": "^8.0.1",
     "body-parser": "^1.18.3",
     "boxen": "^5.1.2",
     "chalk": "^2.4.2",
