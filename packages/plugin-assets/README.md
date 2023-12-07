@@ -104,7 +104,7 @@ Upload a new asset to the Assets service
 
 ```
 USAGE
-  $ twilio assets:upload [FILE] [-l debug|info|warn|error|none] [-o columns|json|tsv|none] [--silent] [-p <value>]
+  $ twilio assets:upload FILE [-l debug|info|warn|error|none] [-o columns|json|tsv|none] [--silent] [-p <value>]
     [--protected] [--properties <value>]
 
 ARGUMENTS
