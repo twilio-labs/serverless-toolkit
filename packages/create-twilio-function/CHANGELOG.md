@@ -1,5 +1,16 @@
 # Change Log
 
+## 3.4.3
+
+### Patch Changes
+
+- [#486](https://github.com/twilio-labs/serverless-toolkit/pull/486) [`37877857d9bb192715dc06eb14a1514c2b8baf47`](https://github.com/twilio-labs/serverless-toolkit/commit/37877857d9bb192715dc06eb14a1514c2b8baf47) Thanks [@colossal-toby](https://github.com/colossal-toby)! - FRIDGE-9: Update toolkit to default to node18
+
+  Fix CI and twilio-run build
+
+- Updated dependencies [[`37877857d9bb192715dc06eb14a1514c2b8baf47`](https://github.com/twilio-labs/serverless-toolkit/commit/37877857d9bb192715dc06eb14a1514c2b8baf47)]:
+  - twilio-run@3.5.4
+
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
@@ -7,276 +18,153 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 **Note:** Version bump only for package create-twilio-function
 
-
-
-
-
 ## [3.4.1](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.4.0...create-twilio-function@3.4.1) (2022-11-30)
 
 **Note:** Version bump only for package create-twilio-function
 
-
-
-
-
 # [3.4.0](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.3.6...create-twilio-function@3.4.0) (2022-11-30)
-
 
 ### Features
 
-* Add Node16 support as default ([#435](https://github.com/twilio-labs/serverless-toolkit/issues/435)) ([b95f16b](https://github.com/twilio-labs/serverless-toolkit/commit/b95f16bcdac3909b5ee74e5e24f447761f2b9894))
-
-
-
-
+- Add Node16 support as default ([#435](https://github.com/twilio-labs/serverless-toolkit/issues/435)) ([b95f16b](https://github.com/twilio-labs/serverless-toolkit/commit/b95f16bcdac3909b5ee74e5e24f447761f2b9894))
 
 ## [3.3.6](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.3.5...create-twilio-function@3.3.6) (2022-10-11)
 
 **Note:** Version bump only for package create-twilio-function
 
-
-
-
-
 ## [3.3.5](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.3.4...create-twilio-function@3.3.5) (2022-08-31)
-
 
 ### Bug Fixes
 
-* **create-twilio-function:** handle rimraf failing ([#400](https://github.com/twilio-labs/serverless-toolkit/issues/400)) ([b15a1cb](https://github.com/twilio-labs/serverless-toolkit/commit/b15a1cb3c11d3b24e241aaa96b26681e4a689bd6))
-
-
-
-
+- **create-twilio-function:** handle rimraf failing ([#400](https://github.com/twilio-labs/serverless-toolkit/issues/400)) ([b15a1cb](https://github.com/twilio-labs/serverless-toolkit/commit/b15a1cb3c11d3b24e241aaa96b26681e4a689bd6))
 
 ## [3.3.4](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.3.3...create-twilio-function@3.3.4) (2022-08-08)
 
 **Note:** Version bump only for package create-twilio-function
 
-
-
-
-
 ## [3.3.3](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.3.3-beta.0...create-twilio-function@3.3.3) (2022-04-27)
 
 **Note:** Version bump only for package create-twilio-function
-
-
-
-
 
 ## [3.3.3-beta.0](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.3.2...create-twilio-function@3.3.3-beta.0) (2022-04-27)
 
 **Note:** Version bump only for package create-twilio-function
 
-
-
-
-
 ## [3.3.2](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.3.1...create-twilio-function@3.3.2) (2022-01-19)
 
 **Note:** Version bump only for package create-twilio-function
-
-
-
-
 
 # [3.3.1](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.3.0...create-twilio-function@3.3.1) (2021-11-03)
 
 **Note:** Version bump only for package create-twilio-function
 
-
-
 # [3.3.0](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.2.1...create-twilio-function@3.3.0) (2021-10-15)
-
 
 ### Bug Fixes
 
-* **create-twilio-function:** adds rootDir to generated tsconfig.json ([#362](https://github.com/twilio-labs/serverless-toolkit/issues/362)) ([86de2ae](https://github.com/twilio-labs/serverless-toolkit/commit/86de2ae8f4b9718a9eb59fc0f8afe347d6552ba4))
-
+- **create-twilio-function:** adds rootDir to generated tsconfig.json ([#362](https://github.com/twilio-labs/serverless-toolkit/issues/362)) ([86de2ae](https://github.com/twilio-labs/serverless-toolkit/commit/86de2ae8f4b9718a9eb59fc0f8afe347d6552ba4))
 
 ### Features
 
-* add support for request headers & cookies ([#373](https://github.com/twilio-labs/serverless-toolkit/issues/373)) ([989307d](https://github.com/twilio-labs/serverless-toolkit/commit/989307d0e73b06056ecb571958fbab39b38bfea2)), closes [#293](https://github.com/twilio-labs/serverless-toolkit/issues/293) [#296](https://github.com/twilio-labs/serverless-toolkit/issues/296) [#297](https://github.com/twilio-labs/serverless-toolkit/issues/297) [#314](https://github.com/twilio-labs/serverless-toolkit/issues/314) [#332](https://github.com/twilio-labs/serverless-toolkit/issues/332)
-
-
-
-
-
-
+- add support for request headers & cookies ([#373](https://github.com/twilio-labs/serverless-toolkit/issues/373)) ([989307d](https://github.com/twilio-labs/serverless-toolkit/commit/989307d0e73b06056ecb571958fbab39b38bfea2)), closes [#293](https://github.com/twilio-labs/serverless-toolkit/issues/293) [#296](https://github.com/twilio-labs/serverless-toolkit/issues/296) [#297](https://github.com/twilio-labs/serverless-toolkit/issues/297) [#314](https://github.com/twilio-labs/serverless-toolkit/issues/314) [#332](https://github.com/twilio-labs/serverless-toolkit/issues/332)
 
 ## [3.2.2-beta.0](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.2.1...create-twilio-function@3.2.2-beta.0) (2021-09-25)
 
 **Note:** Version bump only for package create-twilio-function
 
-
-
 ## [3.2.1](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.2.0...create-twilio-function@3.2.1) (2021-07-28)
-
 
 ### Bug Fixes
 
-* **create-twilio-function:** place runtime-handler in dependencies ([#331](https://github.com/twilio-labs/serverless-toolkit/issues/331)) ([ba84396](https://github.com/twilio-labs/serverless-toolkit/commit/ba843964ba11a3cf5b687f6c1c40787b20d3b492))
-
-
-
-
+- **create-twilio-function:** place runtime-handler in dependencies ([#331](https://github.com/twilio-labs/serverless-toolkit/issues/331)) ([ba84396](https://github.com/twilio-labs/serverless-toolkit/commit/ba843964ba11a3cf5b687f6c1c40787b20d3b492))
 
 # [3.2.0](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.1.2...create-twilio-function@3.2.0) (2021-07-19)
 
-
 ### Features
 
-* **create-twilio-function:** add deployinfo file to gitignore ([#320](https://github.com/twilio-labs/serverless-toolkit/issues/320)) ([5ca27b6](https://github.com/twilio-labs/serverless-toolkit/commit/5ca27b66f91249566893fd1816b03b421414d055))
-* **create-twilio-function:** add runtime-handler to js projects ([#321](https://github.com/twilio-labs/serverless-toolkit/issues/321)) ([6b5bcf4](https://github.com/twilio-labs/serverless-toolkit/commit/6b5bcf41a62f84b39bcdd6868eb34634fde8dda0))
-
-
-
-
+- **create-twilio-function:** add deployinfo file to gitignore ([#320](https://github.com/twilio-labs/serverless-toolkit/issues/320)) ([5ca27b6](https://github.com/twilio-labs/serverless-toolkit/commit/5ca27b66f91249566893fd1816b03b421414d055))
+- **create-twilio-function:** add runtime-handler to js projects ([#321](https://github.com/twilio-labs/serverless-toolkit/issues/321)) ([6b5bcf4](https://github.com/twilio-labs/serverless-toolkit/commit/6b5bcf41a62f84b39bcdd6868eb34634fde8dda0))
 
 ## [3.1.2](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.1.1...create-twilio-function@3.1.2) (2021-07-14)
 
-
 **Note:** Version bump only for package create-twilio-function
 
-
 ## [3.1.2-rc.0](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.1.1...create-twilio-function@3.1.2-rc.0) (2021-07-14)
-
 
 ## [3.1.1](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.1.0...create-twilio-function@3.1.1) (2021-06-30)
 
 **Note:** Version bump only for package create-twilio-function
 
-
-
-
-
 # [3.1.0](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.0.1...create-twilio-function@3.1.0) (2021-06-21)
-
 
 ### Features
 
-* extract runtime-handler and lazyLoading ([#252](https://github.com/twilio-labs/serverless-toolkit/issues/252)) ([#271](https://github.com/twilio-labs/serverless-toolkit/issues/271)) ([0dde2a5](https://github.com/twilio-labs/serverless-toolkit/commit/0dde2a5a74035700e4ef6cf4b1c1189c78e2ff59))
-
-
-
-
+- extract runtime-handler and lazyLoading ([#252](https://github.com/twilio-labs/serverless-toolkit/issues/252)) ([#271](https://github.com/twilio-labs/serverless-toolkit/issues/271)) ([0dde2a5](https://github.com/twilio-labs/serverless-toolkit/commit/0dde2a5a74035700e4ef6cf4b1c1189c78e2ff59))
 
 ## [3.0.2-rc.0](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.0.1...create-twilio-function@3.0.2-rc.0) (2021-05-24)
 
 **Note:** Version bump only for package create-twilio-function
 
-
-
-
-
 ## [3.0.1](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.0.0...create-twilio-function@3.0.1) (2021-05-20)
 
 **Note:** Version bump only for package create-twilio-function
-
-
-
-
 
 # [3.0.0](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.0.0-beta.7...create-twilio-function@3.0.0) (2021-05-19)
 
 **Note:** Version bump only for package create-twilio-function
 
-
-
-
-
 # [3.0.0-beta.7](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.0.0-beta.6...create-twilio-function@3.0.0-beta.7) (2021-05-17)
-
 
 ### Bug Fixes
 
-* **create-twilio-function:** use latest twilio-run version ([#263](https://github.com/twilio-labs/serverless-toolkit/issues/263)) ([1c91668](https://github.com/twilio-labs/serverless-toolkit/commit/1c9166858ea2a2bab978dc37528f4f476f21a677)), closes [#259](https://github.com/twilio-labs/serverless-toolkit/issues/259)
-
+- **create-twilio-function:** use latest twilio-run version ([#263](https://github.com/twilio-labs/serverless-toolkit/issues/263)) ([1c91668](https://github.com/twilio-labs/serverless-toolkit/commit/1c9166858ea2a2bab978dc37528f4f476f21a677)), closes [#259](https://github.com/twilio-labs/serverless-toolkit/issues/259)
 
 ### Features
 
-* **create-twilio-function:** generate default config file ([a8b5d1e](https://github.com/twilio-labs/serverless-toolkit/commit/a8b5d1ee0d4111521698c39537892c106212d68b)), closes [#244](https://github.com/twilio-labs/serverless-toolkit/issues/244)
-
-
-
-
+- **create-twilio-function:** generate default config file ([a8b5d1e](https://github.com/twilio-labs/serverless-toolkit/commit/a8b5d1ee0d4111521698c39537892c106212d68b)), closes [#244](https://github.com/twilio-labs/serverless-toolkit/issues/244)
 
 # [3.0.0-beta.6](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.0.0-beta.5...create-twilio-function@3.0.0-beta.6) (2021-05-13)
 
 **Note:** Version bump only for package create-twilio-function
 
-
-
-
-
 # [3.0.0-beta.5](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.0.0-beta.4...create-twilio-function@3.0.0-beta.5) (2021-05-01)
 
 **Note:** Version bump only for package create-twilio-function
 
-
-
-
-
 # [3.0.0-beta.4](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.0.0-beta.3...create-twilio-function@3.0.0-beta.4) (2021-04-30)
-
 
 ### chore
 
-* remove Node.js 10 support ([#253](https://github.com/twilio-labs/serverless-toolkit/issues/253)) ([f6192fa](https://github.com/twilio-labs/serverless-toolkit/commit/f6192fad188a787dfbb7d1ed6a32f5d2baa4570c))
-
+- remove Node.js 10 support ([#253](https://github.com/twilio-labs/serverless-toolkit/issues/253)) ([f6192fa](https://github.com/twilio-labs/serverless-toolkit/commit/f6192fad188a787dfbb7d1ed6a32f5d2baa4570c))
 
 ### BREAKING CHANGES
 
-* Installing the new version on Node.js 10 will result in an error
-
-
-
-
+- Installing the new version on Node.js 10 will result in an error
 
 # [3.0.0-beta.3](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.0.0-beta.2...create-twilio-function@3.0.0-beta.3) (2021-04-21)
 
 **Note:** Version bump only for package create-twilio-function
 
-
-
-
-
 # [3.0.0-beta.2](https://github.com/twilio-labs/serverless-toolkit/compare/create-twilio-function@3.0.0-beta.1...create-twilio-function@3.0.0-beta.2) (2021-04-21)
 
 **Note:** Version bump only for package create-twilio-function
 
-
-
-
-
 # 3.0.0-beta.1 (2021-04-21)
-
 
 ### Bug Fixes
 
-* **create-twilio-function:** add early exit for invalid options ([3338e3d](https://github.com/twilio-labs/serverless-toolkit/commit/3338e3daff2b6d7a0931da5064d5088deb92d76d))
-
+- **create-twilio-function:** add early exit for invalid options ([3338e3d](https://github.com/twilio-labs/serverless-toolkit/commit/3338e3daff2b6d7a0931da5064d5088deb92d76d))
 
 ### Features
 
-* **create-twilio-function:** adds twilio to default package.json ([#217](https://github.com/twilio-labs/serverless-toolkit/issues/217)) ([6ff8225](https://github.com/twilio-labs/serverless-toolkit/commit/6ff822586abd5c7cb486d03f482733a1a5b36039))
-* **create-twilio-function:** update default Node.js version ([#231](https://github.com/twilio-labs/serverless-toolkit/issues/231)) ([064f8a5](https://github.com/twilio-labs/serverless-toolkit/commit/064f8a50e1bed0521f7845898ec604d7ad47837a))
-
-
-
-
+- **create-twilio-function:** adds twilio to default package.json ([#217](https://github.com/twilio-labs/serverless-toolkit/issues/217)) ([6ff8225](https://github.com/twilio-labs/serverless-toolkit/commit/6ff822586abd5c7cb486d03f482733a1a5b36039))
+- **create-twilio-function:** update default Node.js version ([#231](https://github.com/twilio-labs/serverless-toolkit/issues/231)) ([064f8a5](https://github.com/twilio-labs/serverless-toolkit/commit/064f8a50e1bed0521f7845898ec604d7ad47837a))
 
 # 3.0.0-beta.0 (2020-08-27)
 
-
 ### Bug Fixes
 
-* **create-twilio-function:** add early exit for invalid options ([3338e3d](https://github.com/twilio-labs/serverless-toolkit/commit/3338e3daff2b6d7a0931da5064d5088deb92d76d))
-
-
-
-
+- **create-twilio-function:** add early exit for invalid options ([3338e3d](https://github.com/twilio-labs/serverless-toolkit/commit/3338e3daff2b6d7a0931da5064d5088deb92d76d))
 
 # Changelog for `create-twilio-function`
 
