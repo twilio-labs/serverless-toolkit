@@ -1,11 +1,10 @@
 {
   "name": "create-twilio-function",
-  "version": "3.4.2",
+  "version": "3.4.3",
   "description": "A CLI tool to generate a new Twilio Function using that can be run locally with twilio-run.",
   "bin": "./bin/create-twilio-function",
   "main": "./src/create-twilio-function.js",
-  "scripts": {
-  },
+  "scripts": {},
   "keywords": [
     "twilio",
     "twilio-functions",
@@ -37,7 +36,7 @@
     "pkg-install": "^1.0.0",
     "rimraf": "^2.6.3",
     "terminal-link": "^2.0.0",
-    "twilio-run": "^3.5.2",
+    "twilio-run": "^3.5.4",
     "window-size": "^1.1.1",
     "wrap-ansi": "^7.0.0",
     "yargs": "^17.2.1"
