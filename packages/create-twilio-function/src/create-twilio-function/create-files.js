@@ -134,6 +134,7 @@ function createTsconfigFile(pathName) {
           outDir: 'dist',
           skipLibCheck: true,
           sourceMap: true,
+          types: ['node'],
         },
       },
       null,
