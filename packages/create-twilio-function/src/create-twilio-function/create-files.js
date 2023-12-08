@@ -126,7 +126,7 @@ function createTsconfigFile(pathName) {
     JSON.stringify(
       {
         compilerOptions: {
-          target: 'es5',
+          target: 'es2018',
           module: 'commonjs',
           strict: true,
           esModuleInterop: true,
@@ -136,6 +136,7 @@ function createTsconfigFile(pathName) {
           sourceMap: true,
           types: ['node'],
         },
+        exclude: ['node_modules'],
       },
       null,
       2
