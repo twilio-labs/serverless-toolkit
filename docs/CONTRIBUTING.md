@@ -33,6 +33,7 @@ npm run bootstrap
 ## Contributing
 
 1. Perform changes. Check out [Working with Workspaces](#working-with-workspaces) for more info
+2. If you changed packages/plugins, run `twilio plugins:link <PATH_TO_THE_CHANGED_PACKAGE>` and then test the plugin locally by running `twilio <PLUGIN_NAME> <COMMAND>`
 2. Make sure tests pass by running `npm test`
 3. Stage the files you changed by running `git add` with the files you changed.
 4. If you have a customer facing change make sure to run `npm run changeset` at the root of the project, select what type of version change it is and which packages are impacted and describe the change. Check out ["How we version"](#how-we-version) for more details.
