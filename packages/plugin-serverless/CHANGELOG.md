@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.1.5
+
+### Patch Changes
+
+- [#496](https://github.com/twilio-labs/serverless-toolkit/pull/496) [`b4acf3c67d8152d5b27987984acd34da26a6996a`](https://github.com/twilio-labs/serverless-toolkit/commit/b4acf3c67d8152d5b27987984acd34da26a6996a) Thanks [@makserik](https://github.com/makserik)! - chore(@twilio-labs/plugin-serverless): bump create-twilio-function from 3.4.3 to 3.4.4
+
 ## 3.1.4
 
 ### Patch Changes
