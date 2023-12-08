@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.4.4
+
+### Patch Changes
+
+- [#493](https://github.com/twilio-labs/serverless-toolkit/pull/493) [`d8db7681a4833ef48ef0366ad9ab32272a98b7fc`](https://github.com/twilio-labs/serverless-toolkit/commit/d8db7681a4833ef48ef0366ad9ab32272a98b7fc) Thanks [@makserik](https://github.com/makserik)! - FRIDGE-734 make serverless-toolkit work with node v18
+
 ## 3.4.3
 
 ### Patch Changes
