@@ -18,13 +18,13 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
-      - name: Setup Node.js 16
+      - name: Setup Node.js 20
         uses: actions/setup-node@v3
         with:
-          node-version: 16
-      - name: Update npm to 8.x
+          node-version: 20
+      - name: Update npm to 10.x
         run: |
-          npm i -g npm@8
+          npm i -g npm@10
       - name: Install Dependencies
         run: npm install
       - name: Setup CI Git User
@@ -35,7 +35,7 @@ jobs:
         run: |
           npm run clean
           npm run build
-          npm login
+          npm whoami
       - name: "Create Pull Request or Publish to npm"
         uses: changesets/action@v1
         with:
