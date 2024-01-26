@@ -46,7 +46,7 @@ npm run bootstrap
 
 Version bumps are handled automatically by [this GitHub Action](../.github/workflows/on-merge-main.yml) whenever changes have been merged to `main`. If the automation will detect any changeset files inside the `.changeset` directory it will either open a new Pull Request to bump the version or force-push to the currently open Pull Request. In order to release to `npm` you'll have to merge that Pull Request which will automatically kick off the release.
 
-If the release fails, the issue might be in the NPM token expiring for twilio-labs-ci account. Current expiration is set for January 2026. #help-oss can help with the renewal.
+If the release fails, the issue might be in the NPM token expiring for twilio-labs-ci account. (For example a generic 404 not found response from NPM is usually token expiring) Current expiration is set for January 2026. Internal Slack channel for OSS support can help with the renewal.
 
 ## How we version
 
