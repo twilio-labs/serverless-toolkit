@@ -318,9 +318,10 @@ export function functionPathToRoute(
           handleError(error, req, res, functionPath);
         }
         if (reply) {
+          const body = reply.body?.type === 'Buffer' && reply.body.data ? Buffer.from(reply.body, 'binary') : reply.body;
           res.status(reply.statusCode);
           res.set(reply.headers);
-          res.send(reply.body);
+          res.send(body);
         }
         forked.kill();
       }
