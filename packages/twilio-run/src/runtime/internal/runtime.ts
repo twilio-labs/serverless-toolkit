@@ -58,7 +58,7 @@ export type ExtendedSyncServiceContext = ServiceContext & {
 
 export function create({ env }: StartCliConfig): RuntimeInstance {
   function getSync(
-    options?: RuntimeSyncClientOptions
+    options?: ClientOpts
   ): RuntimeSyncServiceContext {
     options = { serviceName: 'default', ...options };
     const { serviceName } = options;
