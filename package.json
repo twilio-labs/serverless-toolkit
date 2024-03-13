@@ -24,8 +24,8 @@
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.26.0",
-    "@commitlint/cli": "^9.1.2",
-    "@commitlint/config-conventional": "^10.0.0",
+    "@commitlint/cli": "^19.1.0",
+    "@commitlint/config-conventional": "^19.1.0",
     "@twilio/test-dep": "npm:twilio@3.84.0",
     "@types/jest": "^29.2.4",
     "all-contributors-cli": "^6.1.2",
