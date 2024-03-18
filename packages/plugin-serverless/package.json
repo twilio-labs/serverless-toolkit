@@ -19,7 +19,7 @@
     "@oclif/plugin-help": "^5.1.12",
     "@oclif/test": "^1.2.5",
     "@twilio/cli-test": "^2.0.2",
-    "oclif": "^4.5.7"
+    "oclif": "^4.0.0"
   },
   "engines": {
     "node": ">=14.0.0"
