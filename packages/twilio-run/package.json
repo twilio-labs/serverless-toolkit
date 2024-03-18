@@ -113,7 +113,7 @@
     "nock": "^12.0.2",
     "supertest": "^3.1.0",
     "typescript": "^4.9.4",
-    "@twilio/test-dep": "npm:twilio@4.23.0"
+    "@twilio/test-dep": "npm:twilio@4.22.0"
   },
   "files": [
     "bin/",
