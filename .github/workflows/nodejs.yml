@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
-        node-version: [ lts/-2, lts/-1, lts/*]
+        node-version: [ lts/-1, lts/*]
 
     steps:
       - uses: actions/checkout@v3
@@ -24,9 +24,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Update npm to 8.x
+      - name: Update npm to 10.x
         run: |
-          npm i -g npm@8
+          npm i -g npm@10
       - name: npm install, build, and test
         run: |
           npm install
