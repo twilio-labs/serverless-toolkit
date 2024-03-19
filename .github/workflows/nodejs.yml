@@ -27,6 +27,9 @@ jobs:
       - name: Update npm to 8.x
         run: |
           npm i -g npm@8
+      - name: Clear npm cache
+        run: |
+          npm cache clean --force
       - name: npm install, build, and test
         run: |
           npm install
