@@ -27,6 +27,9 @@ jobs:
       - name: Update npm to 10.x
         run: |
           npm i -g npm@10
+      - name: Install Typescript
+        run: |
+          npm i -g typescript
       - name: npm install, build, and test
         run: |
           npm install
