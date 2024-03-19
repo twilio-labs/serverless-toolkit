@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "run-s build:noemit jest",
+    "test": "npm run build:noemit && npx jest",
     "build": "tsc",
     "watch": "tsc --watch",
     "build:noemit": "tsc --noEmit",
@@ -46,7 +46,6 @@
     "commitizen": "^4.2.4",
     "moq.ts": "^6.3.3",
     "nock": "^12.0.3",
-    "npm-run-all2": "^6.1.2",
     "rimraf": "^2.6.3",
     "typedoc": "^0.23.10",
     "typescript": "^4.9.4"
