@@ -24,9 +24,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Update npm to 10.x
+      - name: Update npm to latest
         run: |
-          npm i -g npm@10
+          npm i -g npm@latest
       - name: npm install, build, and test
         run: |
           npm install
