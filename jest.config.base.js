@@ -11,10 +11,13 @@ module.exports = {
   coverageDirectory: 'coverage',
 
   // A set of global variables that need to be available in all test environments
-  globals: {
-    'ts-jest': {
-      tsconfig: 'tsconfig.test.json',
-    },
+  transform: {
+    '^.+\\.ts?$': [
+      'ts-jest',
+      {
+        tsconfig: 'tsconfig.test.json',
+      },
+    ],
   },
   // The test environment that will be used for testing
   testEnvironment: 'node',
