@@ -14,8 +14,8 @@ If you are planning to contribute something that does not have an open issue yet
 
 ## Requirements
 
-Make sure you have Node.js 14 or newer installed. Due to compatibility with Twilio
-Functions this project has to support at least Node.js 14.0.0.
+Make sure you have Node.js 18 or newer installed. Due to compatibility with Twilio
+Functions this project has to support at least Node.js 18.0.0.
 
 We are using the npm CLI to manage our project. You'll need at least `npm` version 8 or newer.
 

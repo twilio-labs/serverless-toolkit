@@ -1,6 +1,7 @@
 import {
   Context,
   ServerlessCallback,
+  ServerlessEventObject,
   ServerlessFunctionSignature,
 } from '@twilio-labs/serverless-runtime-types/types';
 import { fork } from 'child_process';
@@ -22,6 +23,7 @@ import { cleanUpStackTrace } from '../utils/stack-trace/clean-up';
 import { Reply } from './internal/functionRunner';
 import { Response } from './internal/response';
 import * as Runtime from './internal/runtime';
+import * as PATH from 'path';
 
 const RUNNER_PATH =
   process.env.NODE_ENV === 'test'
@@ -32,7 +34,9 @@ const { VoiceResponse, MessagingResponse, FaxResponse } = twiml;
 
 const debug = getDebugFunction('twilio-run:route');
 
-export function constructEvent<T extends {} = {}>(req: ExpressRequest): T {
+export function constructEvent<T extends ServerlessEventObject>(
+  req: ExpressRequest
+): T {
   return { ...req.query, ...req.body };
 }
 
@@ -62,7 +66,14 @@ export function constructContext<T extends {} = {}>(
   }
   const DOMAIN_NAME = url.replace(/^https?:\/\//, '');
   const PATH = functionPath;
-  return { PATH, DOMAIN_NAME, ...env, getTwilioClient };
+  return {
+    ENVIRONMENT_SID: undefined,
+    SERVICE_SID: undefined,
+    PATH,
+    DOMAIN_NAME,
+    ...env,
+    getTwilioClient,
+  };
 }
 
 export function constructGlobalScope(config: StartCliConfig): void {
