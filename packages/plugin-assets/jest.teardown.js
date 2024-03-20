@@ -1,7 +1,7 @@
 const { join } = require('path');
 const { tmpdir } = require('os');
-const { sync } = require('rimraf');
+const rimraf = require('rimraf');
 
 module.exports = () => {
-  sync(join(tmpdir(), 'scratch'));
+  rimraf.sync(join(tmpdir(), 'scratch'));
 };
