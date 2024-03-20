@@ -43,7 +43,7 @@
     "@types/semver": "^7.3.6",
     "body-parser": "^1.18.3",
     "boxen": "^5.1.2",
-    "chalk": "^2.4.2",
+    "chalk": "^4.1.1",
     "chokidar": "^3.2.3",
     "columnify": "^1.5.4",
     "common-tags": "^1.8.0",
