@@ -2,7 +2,7 @@ import { join } from 'path';
 import { requireFromProject } from '../../../src/dev-runtime/utils/requireFromProject';
 
 const PROJECT_DIR = join(__dirname, '../../../../twilio-run');
-
+// only works if test-dep version is different from root package version
 jest.mock('../../../../twilio-run/node_modules/@twilio/test-dep', () => {
   const x = jest.genMockFromModule('@twilio/test-dep');
   (x as any)['__TYPE__'] = 'PROJECT_BASED';

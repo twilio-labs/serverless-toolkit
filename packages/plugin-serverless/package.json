@@ -19,10 +19,10 @@
     "@oclif/plugin-help": "^5.1.12",
     "@oclif/test": "^1.2.5",
     "@twilio/cli-test": "^2.0.2",
-    "oclif": "^3"
+    "oclif": "^4.0.0"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   },
   "files": [
     "/oclif.manifest.json",
