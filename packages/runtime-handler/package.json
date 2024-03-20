@@ -36,7 +36,7 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "build:noemit": "tsc --noEmit",
-    "clean": "rimraf ./dist ./node_modules"
+    "clean": "rimraf ./dist"
   },
   "devDependencies": {
     "@twilio/test-dep": "npm:twilio@4.22.0",
