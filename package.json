@@ -26,7 +26,7 @@
     "@changesets/cli": "^2.26.0",
     "@commitlint/cli": "^19.1.0",
     "@commitlint/config-conventional": "^19.1.0",
-    "@twilio/test-dep": "npm:twilio@4.23.0",
+    "@twilio/test-dep": "npm:twilio@4.22.0",
     "@types/jest": "^29.2.4",
     "all-contributors-cli": "^6.1.2",
     "commitizen": "^4.2.4",
