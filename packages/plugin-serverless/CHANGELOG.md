@@ -1,5 +1,13 @@
 # Change Log
 
+## 3.1.6
+
+### Patch Changes
+
+- Updated dependencies [[`feb9686fa6bfa5b49e634e414ff56a61c61cbe89`](https://github.com/twilio-labs/serverless-toolkit/commit/feb9686fa6bfa5b49e634e414ff56a61c61cbe89), [`6d65bea828338a6dd44cb357c324d9b63e74e081`](https://github.com/twilio-labs/serverless-toolkit/commit/6d65bea828338a6dd44cb357c324d9b63e74e081)]:
+  - twilio-run@4.0.0
+  - create-twilio-function@3.4.5
+
 ## 3.1.5
 
 ### Patch Changes

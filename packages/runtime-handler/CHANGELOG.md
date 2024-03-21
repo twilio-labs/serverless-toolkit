@@ -1,5 +1,16 @@
 # Change Log
 
+## 2.0.0
+
+### Major Changes
+
+- [#509](https://github.com/twilio-labs/serverless-toolkit/pull/509) [`6d65bea828338a6dd44cb357c324d9b63e74e081`](https://github.com/twilio-labs/serverless-toolkit/commit/6d65bea828338a6dd44cb357c324d9b63e74e081) Thanks [@makserik](https://github.com/makserik)! - Twilio SDK from 3.x to 4.23.0. Required Node version bumped to 18 min.
+
+### Patch Changes
+
+- Updated dependencies [[`6d65bea828338a6dd44cb357c324d9b63e74e081`](https://github.com/twilio-labs/serverless-toolkit/commit/6d65bea828338a6dd44cb357c324d9b63e74e081)]:
+  - @twilio-labs/serverless-runtime-types@4.0.0
+
 ## 1.3.1
 
 ### Patch Changes

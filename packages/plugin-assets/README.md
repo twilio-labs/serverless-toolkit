@@ -63,11 +63,11 @@ FLAGS
   -l=(debug|info|warn|error|none)  [default: info] Level of logging messages.
   -o=(columns|json|tsv|none)       [default: columns] Format of command output.
   -p, --profile=<value>            Shorthand identifier for your profile.
-  --properties=<value>             [default: service_sid, sid, domain_name] The asset service environment properties you
+      --properties=<value>         [default: service_sid, sid, domain_name] The asset service environment properties you
                                    would like to display (JSON output always shows all properties).
-  --service-name=<value>           A unique name for your asset service. May only contain alphanumeric characters and
+      --service-name=<value>       A unique name for your asset service. May only contain alphanumeric characters and
                                    hyphens.
-  --silent                         Suppress  output and logs. This is a shorthand for "-l none -o none".
+      --silent                     Suppress  output and logs. This is a shorthand for "-l none -o none".
 
 DESCRIPTION
   Create a new assets service to use as a bucket
@@ -88,9 +88,9 @@ FLAGS
   -l=(debug|info|warn|error|none)  [default: info] Level of logging messages.
   -o=(columns|json|tsv|none)       [default: columns] Format of command output.
   -p, --profile=<value>            Shorthand identifier for your profile.
-  --properties=<value>             [default: sid, path, url, visibility] The asset properties you would like to display
+      --properties=<value>         [default: sid, path, url, visibility] The asset properties you would like to display
                                    (JSON output always shows all properties).
-  --silent                         Suppress  output and logs. This is a shorthand for "-l none -o none".
+      --silent                     Suppress  output and logs. This is a shorthand for "-l none -o none".
 
 DESCRIPTION
   List all the assets in the service
@@ -114,10 +114,10 @@ FLAGS
   -l=(debug|info|warn|error|none)  [default: info] Level of logging messages.
   -o=(columns|json|tsv|none)       [default: columns] Format of command output.
   -p, --profile=<value>            Shorthand identifier for your profile.
-  --properties=<value>             [default: sid, path, url, visibility] The asset properties you would like to display
+      --properties=<value>         [default: sid, path, url, visibility] The asset properties you would like to display
                                    (JSON output always shows all properties).
-  --protected                      Sets the uploaded asset's visibility to 'protected'
-  --silent                         Suppress  output and logs. This is a shorthand for "-l none -o none".
+      --protected                  Sets the uploaded asset's visibility to 'protected'
+      --silent                     Suppress  output and logs. This is a shorthand for "-l none -o none".
 
 DESCRIPTION
   Upload a new asset to the Assets service
