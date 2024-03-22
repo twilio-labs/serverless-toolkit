@@ -1,5 +1,29 @@
 # Change Log
 
+## 4.0.0
+
+### Major Changes
+
+- [#509](https://github.com/twilio-labs/serverless-toolkit/pull/509) [`6d65bea828338a6dd44cb357c324d9b63e74e081`](https://github.com/twilio-labs/serverless-toolkit/commit/6d65bea828338a6dd44cb357c324d9b63e74e081) Thanks [@makserik](https://github.com/makserik)! - Twilio SDK from 3.x to 4.23.0. Required Node version bumped to 18 min.
+
+### Patch Changes
+
+- [#510](https://github.com/twilio-labs/serverless-toolkit/pull/510) [`feb9686fa6bfa5b49e634e414ff56a61c61cbe89`](https://github.com/twilio-labs/serverless-toolkit/commit/feb9686fa6bfa5b49e634e414ff56a61c61cbe89) Thanks [@makserik](https://github.com/makserik)! - FRIDGE-814 fix chalk
+
+- Updated dependencies [[`6d65bea828338a6dd44cb357c324d9b63e74e081`](https://github.com/twilio-labs/serverless-toolkit/commit/6d65bea828338a6dd44cb357c324d9b63e74e081)]:
+  - @twilio-labs/serverless-runtime-types@4.0.0
+
+## 3.5.4
+
+### Patch Changes
+
+- [#486](https://github.com/twilio-labs/serverless-toolkit/pull/486) [`37877857d9bb192715dc06eb14a1514c2b8baf47`](https://github.com/twilio-labs/serverless-toolkit/commit/37877857d9bb192715dc06eb14a1514c2b8baf47) Thanks [@colossal-toby](https://github.com/colossal-toby)! - FRIDGE-9: Update toolkit to default to node18
+
+  Fix CI and twilio-run build
+
+- Updated dependencies [[`37877857d9bb192715dc06eb14a1514c2b8baf47`](https://github.com/twilio-labs/serverless-toolkit/commit/37877857d9bb192715dc06eb14a1514c2b8baf47)]:
+  - @twilio-labs/serverless-api@5.5.1
+
 ## 3.5.3
 
 ### Patch Changes

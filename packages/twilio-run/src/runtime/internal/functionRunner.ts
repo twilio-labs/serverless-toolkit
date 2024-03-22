@@ -3,6 +3,7 @@ import { serializeError } from 'serialize-error';
 import { getRouteMap } from '../internal/route-cache';
 import { constructContext, constructGlobalScope, isTwiml } from '../route';
 import { Response } from './response';
+import { Headers } from '@twilio/runtime-handler/dist/dev-runtime/types';
 
 const sendDebugMessage = (debugMessage: string, ...debugArgs: any) => {
   process.send && process.send({ debugMessage, debugArgs });
@@ -10,7 +11,7 @@ const sendDebugMessage = (debugMessage: string, ...debugArgs: any) => {
 
 export type Reply = {
   body?: string | number | boolean | object;
-  headers?: { [key: string]: number | string };
+  headers?: Headers;
   statusCode: number;
 };
 

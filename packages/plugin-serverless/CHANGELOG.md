@@ -1,5 +1,31 @@
 # Change Log
 
+## 3.1.6
+
+### Patch Changes
+
+- Updated dependencies [[`feb9686fa6bfa5b49e634e414ff56a61c61cbe89`](https://github.com/twilio-labs/serverless-toolkit/commit/feb9686fa6bfa5b49e634e414ff56a61c61cbe89), [`6d65bea828338a6dd44cb357c324d9b63e74e081`](https://github.com/twilio-labs/serverless-toolkit/commit/6d65bea828338a6dd44cb357c324d9b63e74e081)]:
+  - twilio-run@4.0.0
+  - create-twilio-function@3.4.5
+
+## 3.1.5
+
+### Patch Changes
+
+- [#496](https://github.com/twilio-labs/serverless-toolkit/pull/496) [`b4acf3c67d8152d5b27987984acd34da26a6996a`](https://github.com/twilio-labs/serverless-toolkit/commit/b4acf3c67d8152d5b27987984acd34da26a6996a) Thanks [@makserik](https://github.com/makserik)! - chore(@twilio-labs/plugin-serverless): bump create-twilio-function from 3.4.3 to 3.4.4
+
+## 3.1.4
+
+### Patch Changes
+
+- [#486](https://github.com/twilio-labs/serverless-toolkit/pull/486) [`37877857d9bb192715dc06eb14a1514c2b8baf47`](https://github.com/twilio-labs/serverless-toolkit/commit/37877857d9bb192715dc06eb14a1514c2b8baf47) Thanks [@colossal-toby](https://github.com/colossal-toby)! - FRIDGE-9: Update toolkit to default to node18
+
+  Fix CI and twilio-run build
+
+- Updated dependencies [[`37877857d9bb192715dc06eb14a1514c2b8baf47`](https://github.com/twilio-labs/serverless-toolkit/commit/37877857d9bb192715dc06eb14a1514c2b8baf47)]:
+  - twilio-run@3.5.4
+  - create-twilio-function@3.4.3
+
 ## 3.1.3
 
 ### Patch Changes
