@@ -286,7 +286,7 @@ describe('getConfigFromCli', () => {
     }
   });
 
-  test('turns of fork process if inspect is enabled', async () => {
+  test('turns off fork process if inspect is enabled', async () => {
     require('../../src/config/utils/package-json').__setPackageJson({});
     const config = {
       dir: './other_dir',
