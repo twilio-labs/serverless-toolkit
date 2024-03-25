@@ -1,6 +1,6 @@
 {
   "name": "@twilio-labs/serverless-api",
-  "version": "5.5.0",
+  "version": "5.5.1",
   "description": "API-wrapper for the Twilio Serverless API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -53,7 +53,7 @@
   },
   "dependencies": {
     "@types/mime-types": "^2.1.0",
-    "@types/node": "^14.17.19",
+    "@types/node": "^18.0.0",
     "@types/recursive-readdir": "^2.2.0",
     "debug": "^4.1.1",
     "fast-redact": "^1.5.0",

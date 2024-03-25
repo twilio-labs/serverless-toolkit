@@ -1,10 +1,10 @@
+jest.mock('pkg-install');
+jest.mock('window-size', () => ({ get: () => ({ width: 80 }) }));
+
 const pkgInstall = require('pkg-install');
 const chalk = require('chalk');
 
 const successMessage = require('../src/create-twilio-function/success-message');
-
-jest.mock('pkg-install');
-jest.mock('window-size', () => ({ get: () => ({ width: 80 }) }));
 
 describe('successMessage', () => {
   test('creates a success message based on the package manager', async () => {
@@ -15,6 +15,10 @@ describe('successMessage', () => {
     };
     const message = await successMessage(config);
     expect(message).toEqual(expect.stringContaining('yarn start'));
-    expect(message).toEqual(expect.stringContaining(chalk`Created {bold ${config.name}} at {bold ${config.path}}`));
+    expect(message).toEqual(
+      expect.stringContaining(
+        chalk`Created {bold ${config.name}} at {bold ${config.path}}`
+      )
+    );
   });
 });
