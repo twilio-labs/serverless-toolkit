@@ -1,6 +1,6 @@
 {
   "name": "twilio-run",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "bin": {
     "twilio-functions": "./bin/twilio-run.js",
     "twilio-run": "./bin/twilio-run.js",
@@ -86,7 +86,7 @@
     "ngrok": "^3.3.0"
   },
   "devDependencies": {
-    "@twilio/runtime-handler": "^2.0.0",
+    "@twilio/runtime-handler": "^2.0.1",
     "@types/cheerio": "^0.22.12",
     "@types/common-tags": "^1.8.0",
     "@types/debug": "^4.1.4",
