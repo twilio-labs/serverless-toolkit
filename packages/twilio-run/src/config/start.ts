@@ -186,6 +186,12 @@ export async function getConfigFromCli(
   config.assetsFolderName = cli.assetsFolder;
   config.functionsFolderName = cli.functionsFolder;
   config.forkProcess = cli.forkProcess;
+
+  if (typeof config.inspect !== 'undefined') {
+    debug('Disabling fork-process in inspect mode.');
+    config.forkProcess = false;
+  }
+
   config.pkgJson = pkgJson;
 
   return config;
