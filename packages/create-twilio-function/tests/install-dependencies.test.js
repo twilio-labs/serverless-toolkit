@@ -1,12 +1,13 @@
 const path = require('path');
+jest.mock('pkg-install');
 
 const pkgInstall = require('pkg-install');
 
-const { installDependencies } = require('../src/create-twilio-function/install-dependencies');
+const {
+  installDependencies,
+} = require('../src/create-twilio-function/install-dependencies');
 
 const scratchDir = path.join(process.cwd(), 'scratch');
-
-jest.mock('pkg-install');
 
 describe('installDependencies', () => {
   test('it calls `npm install` in the target directory', async () => {

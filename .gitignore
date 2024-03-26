@@ -72,3 +72,7 @@ dist/
 *.twiliodeployinfo
 
 packages/serverless-api/docs/
+
+.idea
+
+**/.DS_Store

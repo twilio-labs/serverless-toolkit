@@ -14,8 +14,8 @@ If you are planning to contribute something that does not have an open issue yet
 
 ## Requirements
 
-Make sure you have Node.js 14 or newer installed. Due to compatibility with Twilio
-Functions this project has to support at least Node.js 14.0.0.
+Make sure you have Node.js 18 or newer installed. Due to compatibility with Twilio
+Functions this project has to support at least Node.js 18.0.0.
 
 We are using the npm CLI to manage our project. You'll need at least `npm` version 8 or newer.
 
@@ -33,6 +33,7 @@ npm run bootstrap
 ## Contributing
 
 1. Perform changes. Check out [Working with Workspaces](#working-with-workspaces) for more info
+2. If you changed packages/plugins, run `twilio plugins:link <PATH_TO_THE_CHANGED_PACKAGE>` and then test the plugin locally by running `twilio <PLUGIN_NAME> <COMMAND>`
 2. Make sure tests pass by running `npm test`
 3. Stage the files you changed by running `git add` with the files you changed.
 4. If you have a customer facing change make sure to run `npm run changeset` at the root of the project, select what type of version change it is and which packages are impacted and describe the change. Check out ["How we version"](#how-we-version) for more details.
@@ -44,6 +45,8 @@ npm run bootstrap
 ## For Maintainers: Releasing
 
 Version bumps are handled automatically by [this GitHub Action](../.github/workflows/on-merge-main.yml) whenever changes have been merged to `main`. If the automation will detect any changeset files inside the `.changeset` directory it will either open a new Pull Request to bump the version or force-push to the currently open Pull Request. In order to release to `npm` you'll have to merge that Pull Request which will automatically kick off the release.
+
+If the release fails, the issue might be in the NPM token expiring for twilio-labs-ci account. (For example a generic 404 not found response from NPM is usually token expiring) Current expiration is set for January 2026. Internal Slack channel for OSS support can help with the renewal.
 
 ## How we version
 

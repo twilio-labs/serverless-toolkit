@@ -1,16 +1,3 @@
-const { init } = require('../src/init');
-const path = require('path');
-const fs = require('fs').promises;
-const { tmpdir } = require('os');
-
-const {
-  createService,
-} = require('@twilio-labs/serverless-api/dist/api/services');
-const {
-  createEnvironmentFromSuffix,
-  getEnvironment,
-} = require('@twilio-labs/serverless-api/dist/api/environments');
-
 jest.mock('@twilio-labs/serverless-api/dist/api/services', () => {
   return { createService: jest.fn().mockResolvedValue('new-service-sid') };
 });
@@ -24,6 +11,19 @@ jest.mock('@twilio-labs/serverless-api/dist/api/environments', () => {
       .mockResolvedValue({ domain_name: 'foobar-1234-stage.twil.io' }),
   };
 });
+
+const { init } = require('../src/init');
+const path = require('path');
+const fs = require('fs').promises;
+const { tmpdir } = require('os');
+
+const {
+  createService,
+} = require('@twilio-labs/serverless-api/dist/api/services');
+const {
+  createEnvironmentFromSuffix,
+  getEnvironment,
+} = require('@twilio-labs/serverless-api/dist/api/environments');
 
 const mockLogger = {
   error: jest.fn(),

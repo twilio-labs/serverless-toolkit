@@ -1,5 +1,3 @@
-const getWindowSize = require('../src/create-twilio-function/window-size');
-
 jest.mock('window-size', () => ({
   get: jest
     .fn()
@@ -15,6 +13,8 @@ jest.mock('window-size', () => ({
       height: 300,
     }),
 }));
+
+const getWindowSize = require('../src/create-twilio-function/window-size');
 
 describe('getWindowSize', () => {
   it('gets a valid windowSize', () => {
