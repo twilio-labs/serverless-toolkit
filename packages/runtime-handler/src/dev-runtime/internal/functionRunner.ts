@@ -7,6 +7,7 @@ import {
   isTwiml,
 } from '../route';
 import { ServerConfig, Headers } from '../types';
+import { CrossForkLogger } from './crossForkLogger';
 import { Response } from './response';
 import { setRoutes } from './route-cache';
 
@@ -61,12 +62,19 @@ const handleSuccess = (responseObject?: string | number | boolean | object) => {
   }
 };
 
+process.on('uncaughtException', (err, origin) => {
+  if (process.send) {
+    process.send({ err: serializeError(err) });
+  }
+});
+
 process.on(
   'message',
   ({ functionPath, event, config, path }: FunctionRunnerOptions) => {
     try {
       setRoutes(config.routes);
       constructGlobalScope(config);
+      config.logger = new CrossForkLogger();
       let context = constructContext(config, path);
       sendDebugMessage('Context for %s: %p', path, context);
       context = augmentContextWithOptionals(config, context);

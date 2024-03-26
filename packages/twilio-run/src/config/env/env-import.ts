@@ -50,6 +50,7 @@ export async function getConfigFromFlags(
       (externalCliOptions && externalCliOptions.accountSid) ||
       undefined,
     environmentSuffix: flags.environment,
+    region: flags.region,
   });
 
   flags = mergeFlagsAndConfig<EnvImportFlags>(configFlags, flags, cliInfo);
@@ -72,22 +73,11 @@ export async function getConfigFromFlags(
         ? flags.username
         : username.startsWith('AC')
         ? username
-        : externalCliOptions?.accountSid
+        : externalCliOptions?.accountSid,
+      flags.region
     ));
 
   let serviceName = await getServiceNameFromFlags(flags);
-
-  if (!flags.key) {
-    throw new Error(
-      'Missing --key argument. Please provide a key for your environment variable.'
-    );
-  }
-
-  if (!flags.value) {
-    throw new Error(
-      'Missing --value argument. Please provide a key for your environment variable.'
-    );
-  }
 
   const env = filterEnvVariablesForDeploy(envFileVars);
 

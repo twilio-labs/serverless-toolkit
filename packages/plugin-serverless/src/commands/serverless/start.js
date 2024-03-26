@@ -1,4 +1,4 @@
-const { Command } = require('@oclif/command');
+const { Command } = require('@oclif/core');
 
 const {
   handler,
@@ -14,7 +14,7 @@ const { flags, aliasMap } = convertYargsOptionsToOclifFlags(cliInfo.options);
 
 class FunctionsStart extends Command {
   async run() {
-    let { flags, args } = this.parse(FunctionsStart);
+    let { flags, args } = await this.parse(FunctionsStart);
 
     flags = normalizeFlags(flags, aliasMap, process.argv);
 

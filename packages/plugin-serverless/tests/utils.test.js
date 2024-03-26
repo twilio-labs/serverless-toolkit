@@ -1,4 +1,4 @@
-const { flags } = require('@oclif/command');
+const { Flags } = require('@oclif/core');
 const {
   normalizeFlags,
   convertYargsOptionsToOclifFlags,
@@ -65,6 +65,41 @@ describe('normalizeFlags', () => {
       environment: 'prod',
     });
   });
+
+  test('overrides log-level with cli-log-level if present', () => {
+    const input = {
+      'log-level': 'info',
+      'cli-log-level': 'debug',
+      environment: 'prod',
+    };
+    const aliasMap = new Map();
+
+    const output = normalizeFlags(input, aliasMap, baseArgv);
+    expect(output).toEqual({
+      ...baseOutput,
+      'log-level': 'info',
+      'cli-log-level': 'debug',
+      cliLogLevel: 'debug',
+      logLevel: 'debug',
+      environment: 'prod',
+    });
+  });
+
+  test('uses regular log-level if no cli-log-level is present', () => {
+    const input = {
+      'log-level': 'debug',
+      environment: 'prod',
+    };
+    const aliasMap = new Map();
+
+    const output = normalizeFlags(input, aliasMap, baseArgv);
+    expect(output).toEqual({
+      ...baseOutput,
+      'log-level': 'debug',
+      logLevel: 'debug',
+      environment: 'prod',
+    });
+  });
 });
 
 describe('convertYargsOptionsToOclifFlags', () => {
@@ -86,12 +121,12 @@ describe('convertYargsOptionsToOclifFlags', () => {
     expect(result.aliasMap.size).toEqual(0);
     expect(result.flags.toString()).toEqual(
       {
-        production: flags.boolean({
+        production: Flags.boolean({
           description: yargsFlags.production.describe,
           default: yargsFlags.production.default,
           hidden: undefined,
         }),
-        'service-sid': flags.string({
+        'service-sid': Flags.string({
           description: yargsFlags['service-sid'].describe,
           default: yargsFlags['service-sid'].default,
           hidden: undefined,
@@ -119,12 +154,12 @@ describe('convertYargsOptionsToOclifFlags', () => {
     expect(result.aliasMap.size).toEqual(0);
     expect(result.flags.toString()).toEqual(
       {
-        production: flags.boolean({
+        production: Flags.boolean({
           description: yargsFlags.production.describe,
           default: yargsFlags.production.default,
           hidden: undefined,
         }),
-        'service-sid': flags.string({
+        'service-sid': Flags.string({
           description: yargsFlags['service-sid'].describe,
           default: yargsFlags['service-sid'].default,
           hidden: undefined,
@@ -152,12 +187,12 @@ describe('convertYargsOptionsToOclifFlags', () => {
     expect(result.aliasMap.size).toEqual(0);
     expect(result.flags.toString()).toEqual(
       {
-        production: flags.boolean({
+        production: Flags.boolean({
           description: yargsFlags.production.describe,
           default: yargsFlags.production.default,
           hidden: undefined,
         }),
-        port: flags.string({
+        port: Flags.string({
           description: yargsFlags.port.describe,
           default: yargsFlags.port.default,
           hidden: undefined,
@@ -191,17 +226,17 @@ describe('convertYargsOptionsToOclifFlags', () => {
     expect(result.aliasMap.size).toEqual(0);
     expect(result.flags.toString()).toEqual(
       {
-        production: flags.boolean({
+        production: Flags.boolean({
           description: yargsFlags.production.describe,
           default: yargsFlags.production.default,
           hidden: undefined,
         }),
-        'service-sid': flags.string({
+        'service-sid': Flags.string({
           description: yargsFlags['service-sid'].describe,
           default: yargsFlags['service-sid'].default,
           hidden: undefined,
         }),
-        username: flags.string({
+        username: Flags.string({
           description: yargsFlags['username'].describe,
           default: yargsFlags['username'].default,
           hidden: undefined,
@@ -245,32 +280,32 @@ describe('convertYargsOptionsToOclifFlags', () => {
     ]);
     expect(result.flags.toString()).toEqual(
       {
-        production: flags.boolean({
+        production: Flags.boolean({
           description: yargsFlags.production.describe,
           default: yargsFlags.production.default,
           hidden: undefined,
         }),
-        'service-sid': flags.string({
+        'service-sid': Flags.string({
           description: yargsFlags['service-sid'].describe,
           default: yargsFlags['service-sid'].default,
           hidden: undefined,
         }),
-        'source-environment': flags.string({
+        'source-environment': Flags.string({
           description: yargsFlags['source-environment'].describe,
           default: yargsFlags['source-environment'].default,
           hidden: undefined,
         }),
-        from: flags.string({
+        from: Flags.string({
           description: '[Alias for "source-environment"]',
           default: undefined,
           hidden: undefined,
         }),
-        environment: flags.string({
+        environment: Flags.string({
           description: yargsFlags['environment'].describe,
           default: yargsFlags['environment'].default,
           hidden: undefined,
         }),
-        to: flags.string({
+        to: Flags.string({
           description: '[Alias for "environment"]',
           default: undefined,
           hidden: undefined,

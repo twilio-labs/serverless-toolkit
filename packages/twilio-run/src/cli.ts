@@ -7,6 +7,11 @@ import * as LogsCommand from './commands/logs';
 import * as NewCommand from './commands/new';
 import * as ActivateCommand from './commands/promote';
 import * as StartCommand from './commands/start';
+import { EnvGetFlags } from './config/env/env-get';
+import { EnvImportFlags } from './config/env/env-import';
+import { EnvListFlags } from './config/env/env-list';
+import { EnvSetFlags } from './config/env/env-set';
+import { EnvUnsetFlags } from './config/env/env-unset';
 
 export async function run(rawArgs: string[]) {
   yargs
@@ -21,11 +26,11 @@ export async function run(rawArgs: string[]) {
       'env',
       'Retrieve and modify the environment variables for your deployment',
       (yargs) => {
-        yargs.command(EnvCommands.GetCommand);
-        yargs.command(EnvCommands.SetCommand);
-        yargs.command(EnvCommands.ListCommand);
-        yargs.command(EnvCommands.UnsetCommand);
-        yargs.command(EnvCommands.ImportCommand);
+        yargs.command<EnvGetFlags>(EnvCommands.GetCommand);
+        yargs.command<EnvSetFlags>(EnvCommands.SetCommand);
+        yargs.command<EnvListFlags>(EnvCommands.ListCommand);
+        yargs.command<EnvUnsetFlags>(EnvCommands.UnsetCommand);
+        yargs.command<EnvImportFlags>(EnvCommands.ImportCommand);
       }
     )
     .parse(rawArgs.slice(2));

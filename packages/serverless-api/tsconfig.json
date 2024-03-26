@@ -2,7 +2,13 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "declaration": true,
-    "outDir": "./dist" /* Redirect output structure to the directory. */
+    "outDir": "./dist" /* Redirect output structure to the directory. */,
+    "module": "NodeNext"
   },
-  "exclude": ["node_modules", "**/*.test.ts", "dist", "**/__mocks__/*.ts"]
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts",
+    "dist",
+    "**/__mocks__/*.ts"
+  ]
 }

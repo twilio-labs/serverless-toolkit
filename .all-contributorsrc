@@ -3,9 +3,7 @@
   "projectOwner": "dkundel",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "files": [
-    "README.md"
-  ],
+  "files": ["README.md"],
   "imageSize": 100,
   "commit": true,
   "contributors": [
@@ -14,79 +12,65 @@
       "name": "Dominik Kundel",
       "avatar_url": "https://avatars3.githubusercontent.com/u/1505101?v=4",
       "profile": "https://dkundel.com",
-      "contributions": [
-        "code"
-      ]
+      "contributions": ["code"]
     },
     {
       "login": "dbbidclips",
       "name": "dbbidclips",
       "avatar_url": "https://avatars1.githubusercontent.com/u/41997517?v=4",
       "profile": "https://github.com/dbbidclips",
-      "contributions": [
-        "code",
-        "bug"
-      ]
+      "contributions": ["code", "bug"]
     },
     {
       "login": "ShelbyZ",
       "name": "Shelby Hagman",
       "avatar_url": "https://avatars0.githubusercontent.com/u/1033099?v=4",
       "profile": "https://shagman.codes",
-      "contributions": [
-        "bug",
-        "code"
-      ]
+      "contributions": ["bug", "code"]
     },
     {
       "login": "jsjoeio",
       "name": "JavaScript Joe",
       "avatar_url": "https://avatars3.githubusercontent.com/u/3806031?v=4",
       "profile": "https://joeprevite.com/",
-      "contributions": [
-        "bug"
-      ]
+      "contributions": ["bug"]
     },
     {
       "login": "stefanjudis",
       "name": "Stefan Judis",
       "avatar_url": "https://avatars3.githubusercontent.com/u/962099?v=4",
       "profile": "https://www.stefanjudis.com/",
-      "contributions": [
-        "bug",
-        "code"
-      ]
+      "contributions": ["bug", "code"]
     },
     {
       "login": "philnash",
       "name": "Phil Nash",
       "avatar_url": "https://avatars3.githubusercontent.com/u/31462?v=4",
       "profile": "https://philna.sh",
-      "contributions": [
-        "bug",
-        "code",
-        "review"
-      ]
+      "contributions": ["bug", "code", "review"]
     },
     {
       "login": "childish-sambino",
       "name": "childish-sambino",
       "avatar_url": "https://avatars0.githubusercontent.com/u/47228322?v=4",
       "profile": "https://github.com/childish-sambino",
-      "contributions": [
-        "code",
-        "bug"
-      ]
+      "contributions": ["code", "bug"]
     },
     {
       "login": "thinkingserious",
       "name": "Elmer Thomas",
       "avatar_url": "https://avatars0.githubusercontent.com/u/146695?v=4",
       "profile": "http://www.ThinkingSerious.com",
-      "contributions": [
-        "bug",
-        "doc"
-      ]
+      "contributions": ["bug", "doc"]
+    },
+    {
+      "login": "makserik",
+      "name": "makserik",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15821542?v=4",
+      "profile": "https://github.com/makserik",
+      "contributions": ["code", "doc"]
     }
-  ]
+  ],
+  "commitConvention": "angular"
 }
+

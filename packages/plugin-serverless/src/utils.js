@@ -1,6 +1,6 @@
 const path = require('path');
 const camelCase = require('lodash.camelcase');
-const { flags } = require('@oclif/command');
+const { Flags } = require('@oclif/core');
 const pkgJson = require('../package.json');
 
 function convertYargsOptionsToOclifFlags(options) {
@@ -36,10 +36,10 @@ function convertYargsOptionsToOclifFlags(options) {
       flag.required = opt.requiresArg;
     }
 
-    result[name] = flags[opt.type](flag);
+    result[name] = Flags[opt.type](flag);
 
     if (opt.alias && opt.alias.length > 1) {
-      result[opt.alias] = flags[opt.type]({
+      result[opt.alias] = Flags[opt.type]({
         ...flag,
         default: undefined,
         description: `[Alias for "${name}"]`,
@@ -68,6 +68,9 @@ function normalizeFlags(flags, aliasMap, argv) {
   const [, command, ...args] = argv;
   result.$0 = path.basename(command);
   result._ = args;
+  if (result['cli-log-level']) {
+    result.logLevel = result['cli-log-level'];
+  }
 
   return result;
 }

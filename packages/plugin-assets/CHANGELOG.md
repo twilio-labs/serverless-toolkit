@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-assets@2.0.4...@twilio-labs/plugin-assets@2.0.5) (2022-11-30)
+
+**Note:** Version bump only for package @twilio-labs/plugin-assets
+
+
+
+
+
+## [2.0.4](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-assets@2.0.3...@twilio-labs/plugin-assets@2.0.4) (2022-10-11)
+
+
+### Bug Fixes
+
+* updated oclif-dev to oclif cmd ([#426](https://github.com/twilio-labs/serverless-toolkit/issues/426)) ([67d83bf](https://github.com/twilio-labs/serverless-toolkit/commit/67d83bfb6707b5c03142174946b7b8fa4d0cc1d9))
+
+
+
+
+
+## [2.0.3](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-assets@2.0.2...@twilio-labs/plugin-assets@2.0.3) (2022-08-31)
+
+**Note:** Version bump only for package @twilio-labs/plugin-assets
+
+
+
+
+
+## [2.0.2](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-assets@2.0.1...@twilio-labs/plugin-assets@2.0.2) (2022-08-08)
+
+**Note:** Version bump only for package @twilio-labs/plugin-assets
+
+
+
+
+
+## [2.0.1](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-assets@2.0.1-beta.0...@twilio-labs/plugin-assets@2.0.1) (2022-04-27)
+
+**Note:** Version bump only for package @twilio-labs/plugin-assets
+
+
+
+
+
+## [2.0.1-beta.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-assets@2.0.0...@twilio-labs/plugin-assets@2.0.1-beta.0) (2022-04-27)
+
+**Note:** Version bump only for package @twilio-labs/plugin-assets
+
+
+
+
+
 # [2.0.0](https://github.com/twilio-labs/serverless-toolkit/compare/@twilio-labs/plugin-assets@1.2.6...@twilio-labs/plugin-assets@2.0.0) (2022-01-19)
 
 

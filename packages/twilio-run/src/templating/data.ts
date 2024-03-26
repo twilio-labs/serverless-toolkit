@@ -1,6 +1,5 @@
 import { stripIndent } from 'common-tags';
-import got from 'got';
-import { OutgoingHttpHeaders } from 'http';
+import got, { Headers, RequestError } from 'got';
 import flatten from 'lodash.flatten';
 import path from 'path';
 import { getDebugFunction } from '../utils/logger';
@@ -26,7 +25,7 @@ export type TemplatesPayload = {
 };
 
 export async function fetchListOfTemplates(): Promise<Template[]> {
-  const response = await got(TEMPLATES_URL, { json: true });
+  const response = await got(TEMPLATES_URL, { responseType: 'json' });
   const { templates } = response.body as TemplatesPayload;
   return templates;
 }
@@ -63,7 +62,7 @@ type GitHubError = {
 function getFromUrl(url: string) {
   const headers = buildHeader();
   return got(url, {
-    json: true,
+    responseType: 'json',
     headers,
   });
 }
@@ -77,7 +76,7 @@ async function getNestedRepoContents(
   const repoContents = response.body as RawContentsPayload;
   return flatten(
     await Promise.all(
-      repoContents.map(async file => {
+      repoContents.map(async (file) => {
         if (file.type === 'dir') {
           return await getNestedRepoContents(
             file.url,
@@ -107,7 +106,7 @@ export async function getFiles(
   const repoContents = response.body as RawContentsPayload;
   return flatten(
     await Promise.all(
-      repoContents.map(async file => {
+      repoContents.map(async (file) => {
         if (file.type === 'dir') {
           return await getNestedRepoContents(file.url, file.name, directory);
         } else {
@@ -131,21 +130,21 @@ export async function getTemplateFiles(
     const response = await got(
       CONTENT_BASE_URL + `/${templateId}?ref=${TEMPLATE_BASE_BRANCH}`,
       {
-        json: true,
+        responseType: 'json',
         headers,
       }
     );
     const repoContents = response.body as RawContentsPayload;
 
-    const assets = repoContents.find(file => file.name === 'assets')
+    const assets = repoContents.find((file) => file.name === 'assets')
       ? getFiles(templateId, 'assets')
       : [];
-    const functions = repoContents.find(file => file.name === 'functions')
+    const functions = repoContents.find((file) => file.name === 'functions')
       ? getFiles(templateId, 'functions')
       : [];
 
     const otherFiles = repoContents
-      .filter(file => {
+      .filter((file) => {
         return (
           file.name === 'package.json' ||
           file.name === '.env' ||
@@ -153,7 +152,7 @@ export async function getTemplateFiles(
           file.name === 'README.md'
         );
       })
-      .map(file => {
+      .map((file) => {
         return {
           name: file.name,
           type: file.name,
@@ -166,29 +165,33 @@ export async function getTemplateFiles(
     );
     return files;
   } catch (err) {
-    debug(err.message);
+    if (err instanceof Error || err instanceof RequestError) {
+      debug(err.message);
+    }
 
-    if (err.response) {
-      if (err.response.statusCode === 403) {
-        throw new Error(
-          stripIndent`
-          We are sorry but we failed fetching the requested template from GitHub because your IP address has been rate limited. Please try the following to resolve the issue:
-
-          - Change your WiFi or make sure you are not connected to a VPN that might cause the rate limiting
-
-
-          If the issue persists you can try one of the two options:
-
-          - Get a GitHub developer token following https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line (no permissions needed) and add it as TWILIO_SERVERLESS_GITHUB_TOKEN to your environment variables
-
-          - Wait for a few minutes up to an hour and try again.
-          `
-        );
-      } else {
-        const bodyMessage = err.response.body as GitHubError;
-        throw new Error(
-          bodyMessage ? `${err.message}\n${bodyMessage.message}` : err.message
-        );
+    if (err instanceof RequestError) {
+      if (err.response) {
+        if (err.response.statusCode === 403) {
+          throw new Error(
+            stripIndent`
+            We are sorry but we failed fetching the requested template from GitHub because your IP address has been rate limited. Please try the following to resolve the issue:
+  
+            - Change your WiFi or make sure you are not connected to a VPN that might cause the rate limiting
+  
+  
+            If the issue persists you can try one of the two options:
+  
+            - Get a GitHub developer token following https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line (no permissions needed) and add it as TWILIO_SERVERLESS_GITHUB_TOKEN to your environment variables
+  
+            - Wait for a few minutes up to an hour and try again.
+            `
+          );
+        } else {
+          const bodyMessage = err.response.body as GitHubError;
+          throw new Error(
+            bodyMessage ? `${err.message}\n${bodyMessage.message}` : err.message
+          );
+        }
       }
     }
 
@@ -196,7 +199,7 @@ export async function getTemplateFiles(
   }
 }
 
-function buildHeader(): OutgoingHttpHeaders {
+function buildHeader(): Headers {
   let githubToken = '';
   if (process.env.TWILIO_SERVERLESS_GITHUB_TOKEN) {
     githubToken = process.env.TWILIO_SERVERLESS_GITHUB_TOKEN;

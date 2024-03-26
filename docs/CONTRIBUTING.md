@@ -2,7 +2,7 @@
 
 ## About the Project
 
-This project is a "monorepo" meaning it contains several Node.js packages in one repository. The code for all packages are in the [`packages/`](../packages) directory. We are using a tool called [Lerna](https://lerna.js.org) to manage those multiple packages.
+This project is a "monorepo" meaning it contains several Node.js packages in one repository. The code for all packages are in the [`packages/`](../packages) directory. We are using a concept called [`npm` workspaces](https://docs.npmjs.com/cli/v8/using-npm/workspaces) to manage those multiple packages and a tool called [`changesets`](https://github.com/changesets/changesets) to handle the versioning and releasing.
 
 ## Before you contribute
 
@@ -14,10 +14,10 @@ If you are planning to contribute something that does not have an open issue yet
 
 ## Requirements
 
-Make sure you have Node.js 12 or newer installed. Due to compatibility with Twilio
-Functions this project has to support at least Node.js 12.0.0.
+Make sure you have Node.js 18 or newer installed. Due to compatibility with Twilio
+Functions this project has to support at least Node.js 18.0.0.
 
-We are using the npm CLI to manage our project. You should be able to use yarn but you might hit some issues.
+We are using the npm CLI to manage our project. You'll need at least `npm` version 8 or newer.
 
 ## Setup your local project
 
@@ -32,65 +32,41 @@ npm run bootstrap
 
 ## Contributing
 
-1. Perform changes. Check out [Working with Lerna](#working-with-lerna) for more info
+1. Perform changes. Check out [Working with Workspaces](#working-with-workspaces) for more info
+2. If you changed packages/plugins, run `twilio plugins:link <PATH_TO_THE_CHANGED_PACKAGE>` and then test the plugin locally by running `twilio <PLUGIN_NAME> <COMMAND>`
 2. Make sure tests pass by running `npm test`
 3. Stage the files you changed by running `git add` with the files you changed.
-4. Run `git commit` to kick off validation and enter your commit message. We are using [conventional commits](https://www.conventionalcommits.org/en/) for this project. When you run `npm run cm` it will trigger [`commitizen`](https://npm.im/commitizen) to assist you with your commit message.
-5. Submit a Pull Request
+4. If you have a customer facing change make sure to run `npm run changeset` at the root of the project, select what type of version change it is and which packages are impacted and describe the change. Check out ["How we version"](#how-we-version) for more details.
+5. Run `git commit` to kick off validation and enter your commit message. We are using [conventional commits](https://www.conventionalcommits.org/en/) for this project. When you run `npm run cm` it will trigger [`commitizen`](https://npm.im/commitizen) to assist you with your commit message.
+6. Push your changes and submit a Pull Request
 
 **Working on your first Pull Request?** You can learn how from this _free_ series [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github)
 
 ## For Maintainers: Releasing
 
-This project uses [`lerna version`](https://www.npmjs.com/package/@lerna/version) to create new releases for any package needed, create the respective git tag and update the necessary `CHANGELOG.md` files. We always pass certain flags, so please use it via `npm run release`. Here are the steps you need to run to release a new version:
+Version bumps are handled automatically by [this GitHub Action](../.github/workflows/on-merge-main.yml) whenever changes have been merged to `main`. If the automation will detect any changeset files inside the `.changeset` directory it will either open a new Pull Request to bump the version or force-push to the currently open Pull Request. In order to release to `npm` you'll have to merge that Pull Request which will automatically kick off the release.
 
-### Pre-release version (from `main` or any `features/*` branch):
+If the release fails, the issue might be in the NPM token expiring for twilio-labs-ci account. (For example a generic 404 not found response from NPM is usually token expiring) Current expiration is set for January 2026. Internal Slack channel for OSS support can help with the renewal.
 
-For example to release a new pre-release version containing `beta` and releasing it as `next`:
+## How we version
 
-```bash
-npm run release -- --conventional-prerelease --exact --preid beta
-git push origin main --follow-tags
-npm run npm:publish -- --otp=<OTP> --dist-tag next
-```
+All packages that are part of this project follow the [SemVer convention](https://semver.org/). Specifically this means the following version changes apply for the following changes:
+- `no change` (no changeset) - Changes in `devDependencies`, changes at the root of the project that don't result in a compilation output change, test changes, documentation changes, etc.
+- `patch` - Any changes that do not add new features such as bug fixes that are not altering the behavior
+- `minor` - New features that are additive and are not breaking current behavior
+- `major` - Any changes that are breaking changes incl. dropping support for features or arguments or drastic changes in behavior
 
-If you want to turn a prerelease into a permanent version you can use:
-
-```bash
-npm run release -- --conventional-commits --conventional-graduate
-git push origin main --follow-tags
-npm run npm:publish -- --otp=<OTP>
-```
-
-### Normal release (from `main` branch):
-
-For a normal release `standard-version` will detect the version increment automatically. Run:
-
-```bash
-npm run release
-git push origin main --follow-tags
-npm run npm:publish -- --otp=<OTP>
-```
-
-To ship a specific version instead (like a forced minor bump) you can run:
-
-```bash
-npm run release -- minor
-git push origin main --follow-tags
-npm run npm:publish -- --otp=<OTP>
-```
-
-## Working with Lerna
+## Working with Workspaces
 
 ### Linking Packages
 
-Lerna will automatically link together the different dependencies that are part of the project. You can run `npm run bootstrap` to create the links.
+npm will automatically link together the different dependencies that are part of the project when you run `npm install` at the root.
 
 ### Installing Dependencies
 
 Dev dependencies should ideally be installed at the top level using `npm install --save-dev`. If you want to execute a binary from a dependency in a particular package you should install it in that particular package instead.
 
-Installing dependencies for packages can be done in two ways. You can either use the [`lerna add` command](https://github.com/lerna/lerna/tree/master/commands/add) or using `npm install` inside the respective package.
+Installing dependencies for packages can be done in two ways. You can either use the `npm install <package-name> -w <package-to-install-dependency-in>` command (ex. `npm install lodash -w @twilio-labs/serverless-api`) or using `npm install` inside the respective package.
 
 The later might be the more intuitive one but it might cause some bootstraping issues.
 
@@ -98,13 +74,13 @@ The later might be the more intuitive one but it might cause some bootstraping i
 
 Scripts that are on the top level can be run via `npm run <script>`.
 
-If you want to run a script in every individual package where it is defined you can run: [`lerna run <script>`](https://github.com/lerna/lerna/tree/master/commands/run).
+If you want to run a script in every individual package where it is defined you can run: [`npm run <script> --workspaces --if-present`](https://docs.npmjs.com/cli/v8/using-npm/workspaces?v=true#running-commands-in-the-context-of-workspaces).
 
-To execute any bash command inside every package you can use [`lerna exec`](https://github.com/lerna/lerna/tree/master/commands/exec).
+To execute any bash command inside every package you can use [`npm exec`](https://docs.npmjs.com/cli/v8/commands/npm-exec).
 
 ### Resetting dependencies
 
-You can run `lerna clean` to delete all `node_modules` folder. To reinstall them run `npm run bootstrap`
+You can run `npm run reset` to delete all `node_modules` folder. To reinstall them run `npm install`
 
 ## Code of Conduct
 

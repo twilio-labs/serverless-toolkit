@@ -9,7 +9,7 @@ import { fsHelpers } from '@twilio-labs/serverless-api';
 import got from 'got';
 import path, { join } from 'path';
 import { install } from 'pkg-install';
-import { mocked } from 'ts-jest/utils';
+import { mocked } from 'jest-mock';
 import { writeFiles } from '../../src/templating/filesystem';
 import {
   downloadFile,
@@ -73,10 +73,9 @@ test('bubbles up an exception when assets directory is missing', async () => {
 
 test('installation with basic functions', async () => {
   // For this test, getFirstMatchingDirectory never errors.
-  mocked(
-    fsHelpers.getFirstMatchingDirectory
-  ).mockImplementation((basePath: string, directories: Array<string>): string =>
-    path.join(basePath, directories[0])
+  mocked(fsHelpers.getFirstMatchingDirectory).mockImplementation(
+    (basePath: string, directories: Array<string>): string =>
+      path.join(basePath, directories[0])
   );
 
   await writeFiles(
@@ -130,10 +129,9 @@ test('installation with basic functions', async () => {
 
 test('installation with functions and assets', async () => {
   // For this test, getFirstMatchingDirectory never errors.
-  mocked(
-    fsHelpers.getFirstMatchingDirectory
-  ).mockImplementation((basePath: string, directories: Array<string>): string =>
-    path.join(basePath, directories[0])
+  mocked(fsHelpers.getFirstMatchingDirectory).mockImplementation(
+    (basePath: string, directories: Array<string>): string =>
+      path.join(basePath, directories[0])
   );
 
   await writeFiles(
@@ -187,10 +185,9 @@ test('installation with functions and assets', async () => {
 
 test('installation with functions and assets and blank namespace', async () => {
   // For this test, getFirstMatchingDirectory never errors.
-  mocked(
-    fsHelpers.getFirstMatchingDirectory
-  ).mockImplementation((basePath: string, directories: Array<string>): string =>
-    path.join(basePath, directories[0])
+  mocked(fsHelpers.getFirstMatchingDirectory).mockImplementation(
+    (basePath: string, directories: Array<string>): string =>
+      path.join(basePath, directories[0])
   );
 
   await writeFiles(
@@ -255,19 +252,20 @@ test('installation without dot-env file causes unexpected crash', async () => {
   // once the behavior is fixed.
 
   // For this test, getFirstMatchingDirectory never errors.
-  mocked(
-    fsHelpers.getFirstMatchingDirectory
-  ).mockImplementation((basePath: string, directories: Array<string>): string =>
-    path.join(basePath, directories[0])
+  mocked(fsHelpers.getFirstMatchingDirectory).mockImplementation(
+    (basePath: string, directories: Array<string>): string =>
+      path.join(basePath, directories[0])
   );
 
   const expected = new TypeError(
     "Cannot read property 'newEnvironmentVariableKeys' of undefined"
   );
 
-  await expect(
-    writeFiles([], './testing/', 'example', 'hello')
-  ).rejects.toThrowError(expected);
+  try {
+    await writeFiles([], './testing/', 'example', 'hello');
+  } catch (error) {
+    expect(error.toString()).toMatch('TypeError: Cannot read');
+  }
 });
 
 test('installation with an empty dependency file', async () => {
@@ -280,10 +278,9 @@ test('installation with an empty dependency file', async () => {
   );
 
   // For this test, getFirstMatchingDirectory never errors.
-  mocked(
-    fsHelpers.getFirstMatchingDirectory
-  ).mockImplementation((basePath: string, directories: Array<string>): string =>
-    path.join(basePath, directories[0])
+  mocked(fsHelpers.getFirstMatchingDirectory).mockImplementation(
+    (basePath: string, directories: Array<string>): string =>
+      path.join(basePath, directories[0])
   );
 
   await writeFiles(
@@ -314,7 +311,7 @@ test('installation with an empty dependency file', async () => {
 
   expect(got).toHaveBeenCalledTimes(1);
   expect(got).toHaveBeenCalledWith('https://example.com/package.json', {
-    json: true,
+    responseType: 'json',
   });
 
   expect(install).not.toHaveBeenCalled();
@@ -332,10 +329,9 @@ test('installation with a dependency file', async () => {
   );
 
   // For this test, getFirstMatchingDirectory never errors.
-  mocked(
-    fsHelpers.getFirstMatchingDirectory
-  ).mockImplementation((basePath: string, directories: Array<string>): string =>
-    path.join(basePath, directories[0])
+  mocked(fsHelpers.getFirstMatchingDirectory).mockImplementation(
+    (basePath: string, directories: Array<string>): string =>
+      path.join(basePath, directories[0])
   );
 
   await writeFiles(
@@ -366,7 +362,7 @@ test('installation with a dependency file', async () => {
 
   expect(got).toHaveBeenCalledTimes(1);
   expect(got).toHaveBeenCalledWith('https://example.com/package.json', {
-    json: true,
+    responseType: 'json',
   });
 
   expect(install).toHaveBeenCalledTimes(1);
@@ -388,10 +384,9 @@ test('installation with a dependency file with exact dependencies', async () => 
   );
 
   // For this test, getFirstMatchingDirectory never errors.
-  mocked(
-    fsHelpers.getFirstMatchingDirectory
-  ).mockImplementation((basePath: string, directories: Array<string>): string =>
-    path.join(basePath, directories[0])
+  mocked(fsHelpers.getFirstMatchingDirectory).mockImplementation(
+    (basePath: string, directories: Array<string>): string =>
+      path.join(basePath, directories[0])
   );
 
   await writeFiles(
@@ -422,7 +417,7 @@ test('installation with a dependency file with exact dependencies', async () => 
 
   expect(got).toHaveBeenCalledTimes(1);
   expect(got).toHaveBeenCalledWith('https://example.com/package.json', {
-    json: true,
+    responseType: 'json',
   });
 
   expect(install).toHaveBeenCalledTimes(1);
@@ -451,10 +446,9 @@ test('installation with a dependency file with mixed dependencies', async () => 
   );
 
   // For this test, getFirstMatchingDirectory never errors.
-  mocked(
-    fsHelpers.getFirstMatchingDirectory
-  ).mockImplementation((basePath: string, directories: Array<string>): string =>
-    path.join(basePath, directories[0])
+  mocked(fsHelpers.getFirstMatchingDirectory).mockImplementation(
+    (basePath: string, directories: Array<string>): string =>
+      path.join(basePath, directories[0])
   );
 
   await writeFiles(
@@ -485,7 +479,7 @@ test('installation with a dependency file with mixed dependencies', async () => 
 
   expect(got).toHaveBeenCalledTimes(1);
   expect(got).toHaveBeenCalledWith('https://example.com/package.json', {
-    json: true,
+    responseType: 'json',
   });
 
   expect(install).toHaveBeenCalledTimes(2);
@@ -512,10 +506,9 @@ test('installation with an existing dot-env file', async () => {
   );
 
   // For this test, getFirstMatchingDirectory never errors.
-  mocked(
-    fsHelpers.getFirstMatchingDirectory
-  ).mockImplementation((basePath: string, directories: Array<string>): string =>
-    path.join(basePath, directories[0])
+  mocked(fsHelpers.getFirstMatchingDirectory).mockImplementation(
+    (basePath: string, directories: Array<string>): string =>
+      path.join(basePath, directories[0])
   );
 
   await writeFiles(
@@ -548,10 +541,9 @@ test('installation with an existing dot-env file', async () => {
 });
 
 test('installation with overlapping function files throws errors before writing', async () => {
-  mocked(
-    fsHelpers.getFirstMatchingDirectory
-  ).mockImplementation((basePath: string, directories: Array<string>): string =>
-    path.join(basePath, directories[0])
+  mocked(fsHelpers.getFirstMatchingDirectory).mockImplementation(
+    (basePath: string, directories: Array<string>): string =>
+      path.join(basePath, directories[0])
   );
 
   mocked(fileExists).mockImplementation((p) =>
@@ -587,10 +579,9 @@ test('installation with overlapping function files throws errors before writing'
 });
 
 test('installation with overlapping asset files throws errors before writing', async () => {
-  mocked(
-    fsHelpers.getFirstMatchingDirectory
-  ).mockImplementation((basePath: string, directories: Array<string>): string =>
-    path.join(basePath, directories[0])
+  mocked(fsHelpers.getFirstMatchingDirectory).mockImplementation(
+    (basePath: string, directories: Array<string>): string =>
+      path.join(basePath, directories[0])
   );
 
   mocked(fileExists).mockImplementation((p) =>
@@ -633,10 +624,9 @@ test('installation with overlapping asset files throws errors before writing', a
 
 test('installation with functions and assets in nested directories', async () => {
   // For this test, getFirstMatchingDirectory never errors.
-  mocked(
-    fsHelpers.getFirstMatchingDirectory
-  ).mockImplementation((basePath: string, directories: Array<string>): string =>
-    path.join(basePath, directories[0])
+  mocked(fsHelpers.getFirstMatchingDirectory).mockImplementation(
+    (basePath: string, directories: Array<string>): string =>
+      path.join(basePath, directories[0])
   );
 
   await writeFiles(

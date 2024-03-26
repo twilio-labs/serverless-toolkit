@@ -1,28 +1,28 @@
 {
   "name": "@twilio-labs/plugin-serverless",
   "description": "Develop and deploy Twilio Serverless Functions",
-  "version": "3.0.0",
+  "version": "3.1.6",
   "author": "Twilio Inc. <open-source@twilio.com> (https://www.twilio.com/labs)",
   "contributors": [
     "Dominik Kundel <dkundel@twilio.com>"
   ],
+  "main": "src/index.js",
   "dependencies": {
-    "@oclif/command": "^1.5.19",
-    "@oclif/config": "^1.13.3",
-    "@twilio/cli-core": "^6.0.0",
-    "create-twilio-function": "^3.3.2",
+    "@oclif/core": "^1.14.2",
+    "@twilio/cli-core": "^7.0.0",
+    "create-twilio-function": "^3.4.5",
     "lodash.camelcase": "^4.3.0",
     "lodash.kebabcase": "^4.1.1",
-    "twilio-run": "^3.4.1"
+    "twilio-run": "^4.0.0"
   },
   "devDependencies": {
-    "@oclif/dev-cli": "^1.22.2",
-    "@oclif/plugin-help": "^3.2.3",
+    "@oclif/plugin-help": "^5.1.12",
     "@oclif/test": "^1.2.5",
-    "@twilio/cli-test": "^2.0.2"
+    "@twilio/cli-test": "^2.0.2",
+    "oclif": "^4.0.0"
   },
   "engines": {
-    "node": ">=12.22.1"
+    "node": ">=18.0.0"
   },
   "files": [
     "/oclif.manifest.json",
@@ -87,8 +87,8 @@
   },
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
-    "prepack": "oclif-dev manifest && oclif-dev readme",
-    "version": "oclif-dev readme && git add README.md"
+    "prepack": "oclif manifest && oclif readme",
+    "version-package": "oclif readme && git add README.md && git commit -m \"chore(@twilio-labs/plugin-serverless): version update in readme\" || echo 'Nothing to commit'"
   },
   "gitHead": "6db273648ed19474f4125042556b10c051529912"
 }

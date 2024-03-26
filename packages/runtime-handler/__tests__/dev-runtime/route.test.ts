@@ -1,4 +1,4 @@
-jest.mock('../../node_modules/twilio', () => {
+jest.mock('../../../../node_modules/twilio', () => {
   // because we don't do a traditional require of twilio but a "project require" we have to mock this differently.
 
   const actualTwilio = jest.requireActual('twilio');
