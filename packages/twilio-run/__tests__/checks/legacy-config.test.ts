@@ -1,5 +1,5 @@
 import path from 'path';
-import { mocked } from 'ts-jest/utils';
+import { mocked } from 'jest-mock';
 import checkLegacyConfig, {
   printConfigWarning,
 } from '../../src/checks/legacy-config';

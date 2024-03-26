@@ -1,6 +1,5 @@
 /** @module @twilio-labs/serverless-api/dist/utils */
 
-import { fromBuffer } from 'file-type';
 import mime from 'mime-types';
 import path from 'path';
 
@@ -26,7 +25,8 @@ export async function getContentType(
   let contentType: string | undefined;
 
   if (content instanceof Buffer && !hasExtension(name)) {
-    const type = await fromBuffer(content);
+    const { fileTypeFromBuffer } = await import('file-type');
+    const type = await fileTypeFromBuffer(content);
     if (type) {
       contentType = type.mime;
     }

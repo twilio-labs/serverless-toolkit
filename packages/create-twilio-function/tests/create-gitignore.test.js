@@ -67,12 +67,14 @@ describe('create-gitignore', () => {
       const basePath = path.join(scratchDir, name);
       fs.mkdirSync(basePath, { recursive: true });
 
-      fs.closeSync(fs.openSync(path.join(basePath, '.gitignore'), 'w'));
-      expect.assertions(1);
+      const gitignorePath = path.join(basePath, '.gitignore');
+      fs.closeSync(fs.openSync(gitignorePath, 'w'));
+      expect.assertions(2);
       try {
         await createGitignore(basePath);
       } catch (e) {
-        expect(e.toString()).toMatch('file already exists');
+        expect(e.toString()).toMatch('Error');
+        expect(fs.readFileSync(gitignorePath, 'utf-8')).toEqual('');
       }
       cleanUp();
     });

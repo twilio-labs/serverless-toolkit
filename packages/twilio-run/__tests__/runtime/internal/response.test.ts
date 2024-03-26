@@ -5,7 +5,9 @@ test('has correct defaults', () => {
   const response = new Response();
   expect(response['body']).toBeNull();
   expect(response['statusCode']).toBe(200);
-  expect(response['headers']).toEqual({});
+  expect(response['headers']).toEqual({
+    'Set-Cookie': [],
+  });
 });
 
 test('sets status code, body and headers from constructor', () => {
@@ -24,6 +26,7 @@ test('sets status code, body and headers from constructor', () => {
     'Access-Control-Allow-Origin': 'example.com',
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
     'Access-Control-Allow-Headers': 'Content-Type',
+    'Set-Cookie': [],
   });
 });
 
@@ -45,7 +48,9 @@ test('sets body correctly', () => {
 
 test('sets headers correctly', () => {
   const response = new Response();
-  expect(response['headers']).toEqual({});
+  expect(response['headers']).toEqual({
+    'Set-Cookie': [],
+  });
   response.setHeaders({
     'Access-Control-Allow-Origin': 'example.com',
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
@@ -64,26 +69,33 @@ test('sets headers correctly', () => {
 
 test('appends a new header correctly', () => {
   const response = new Response();
-  expect(response['headers']).toEqual({});
+  expect(response['headers']).toEqual({
+    'Set-Cookie': [],
+  });
   response.appendHeader('Access-Control-Allow-Origin', 'dkundel.com');
   expect(response['headers']).toEqual({
     'Access-Control-Allow-Origin': 'dkundel.com',
+    'Set-Cookie': [],
   });
   response.appendHeader('Content-Type', 'application/json');
   expect(response['headers']).toEqual({
     'Access-Control-Allow-Origin': 'dkundel.com',
     'Content-Type': 'application/json',
+    'Set-Cookie': [],
   });
 });
 
 test('appends a header correctly with no existing one', () => {
   const response = new Response();
-  expect(response['headers']).toEqual({});
+  expect(response['headers']).toEqual({
+    'Set-Cookie': [],
+  });
   // @ts-ignore
   response['headers'] = undefined;
   response.appendHeader('Access-Control-Allow-Origin', 'dkundel.com');
   expect(response['headers']).toEqual({
     'Access-Control-Allow-Origin': 'dkundel.com',
+    'Set-Cookie': [],
   });
 });
 
@@ -121,7 +133,10 @@ test('calls express response correctly', () => {
 
   expect(mockRes.send).toHaveBeenCalledWith(`I'm a teapot!`);
   expect(mockRes.status).toHaveBeenCalledWith(418);
-  expect(mockRes.set).toHaveBeenCalledWith({ 'Content-Type': 'text/plain' });
+  expect(mockRes.set).toHaveBeenCalledWith({
+    'Content-Type': 'text/plain',
+    'Set-Cookie': [],
+  });
 });
 
 test('serializes a response', () => {
@@ -134,7 +149,10 @@ test('serializes a response', () => {
 
   expect(serialized.body).toEqual("I'm a teapot!");
   expect(serialized.statusCode).toEqual(418);
-  expect(serialized.headers).toEqual({ 'Content-Type': 'text/plain' });
+  expect(serialized.headers).toEqual({
+    'Content-Type': 'text/plain',
+    'Set-Cookie': [],
+  });
 });
 
 test('serializes a response with content type set to application/json', () => {
@@ -149,5 +167,8 @@ test('serializes a response with content type set to application/json', () => {
     JSON.stringify({ url: 'https://dkundel.com' })
   );
   expect(serialized.statusCode).toEqual(200);
-  expect(serialized.headers).toEqual({ 'Content-Type': 'application/json' });
+  expect(serialized.headers).toEqual({
+    'Content-Type': 'application/json',
+    'Set-Cookie': [],
+  });
 });

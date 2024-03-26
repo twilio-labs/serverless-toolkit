@@ -304,25 +304,46 @@ export function functionPathToRoute(
         reply,
         debugMessage,
         debugArgs = [],
+        crossForkLogMessage,
       }: {
         err?: Error | number | string;
         reply?: Reply;
         debugMessage?: string;
         debugArgs?: any[];
+        crossForkLogMessage?: {
+          level: keyof LoggerInstance;
+          args: [string] | [string, number] | [string, string];
+        };
       }) => {
         if (debugMessage) {
           log(debugMessage, ...debugArgs);
           return;
         }
+
+        if (crossForkLogMessage) {
+          if (
+            config.logger &&
+            typeof config.logger[crossForkLogMessage.level] === 'function'
+          ) {
+            config.logger[crossForkLogMessage.level](
+              // @ts-ignore
+              ...crossForkLogMessage.args
+            );
+          }
+          return;
+        }
+
         if (err) {
           const error = deserializeError(err);
           handleError(error, req, res, functionPath, config.logger);
         }
+
         if (reply) {
           res.status(reply.statusCode);
           res.set(reply.headers);
           res.send(reply.body);
         }
+
         forked.kill();
       }
     );

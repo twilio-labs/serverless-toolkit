@@ -9,7 +9,7 @@ import { getDebugFunction } from '../utils/logger';
 
 const debug = getDebugFunction('twilio-run:templating:defaultConfig');
 
-const DEFAULT_RUNTIME = 'node12';
+const DEFAULT_RUNTIME = 'node18';
 
 function renderDefault(config: Options): string {
   if (config.type === 'boolean') {
@@ -63,7 +63,7 @@ export async function writeDefaultConfigFile(
 ): Promise<boolean> {
   const fullConfigFilePath = path.resolve(baseDir, fileName);
 
-  const configFileExists = await fileExists(fullConfigFilePath);
+  const configFileExists = await fileExists(fullConfigFilePath, true);
 
   if (configFileExists && !overrideExisting) {
     return false;

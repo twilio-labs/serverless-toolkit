@@ -56,6 +56,7 @@ export async function getConfigFromFlags(
       (externalCliOptions && externalCliOptions.accountSid) ||
       undefined,
     environmentSuffix: environment,
+    region: flags.region,
   });
 
   flags = mergeFlagsAndConfig<LogsCliFlags>(configFlags, flags, cliInfo);
@@ -85,7 +86,8 @@ export async function getConfigFromFlags(
         ? flags.username
         : username.startsWith('AC')
         ? username
-        : externalCliOptions?.accountSid
+        : externalCliOptions?.accountSid,
+      flags.region
     ));
 
   const serviceSid = checkForValidServiceSid(command, potentialServiceSid);

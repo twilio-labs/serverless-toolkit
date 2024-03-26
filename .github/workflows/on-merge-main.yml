@@ -1,0 +1,46 @@
+name: Merge to main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  tests:
+    name: Run tests
+    uses: twilio-labs/serverless-toolkit/.github/workflows/nodejs.yml@main
+
+  release:
+    name: Run release work
+    needs: tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Update npm to 10.x
+        run: |
+          npm i -g npm@10
+      - name: Install Dependencies
+        run: npm install
+      - name: Setup CI Git User
+        run: |
+          git config user.name twilio-labs-ci
+          git config user.email 65686990+twilio-labs-ci@users.noreply.github.com
+      - name: Create new build
+        run: |
+          npm run clean
+          npm run build
+      - name: "Create Pull Request or Publish to npm"
+        uses: changesets/action@v1
+        with:
+          version: npm run version-packages
+          publish: npm run npm:publish
+          commit: "chore: version packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

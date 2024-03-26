@@ -145,4 +145,69 @@ describe('readSpecializedConfig', () => {
       env: '.env.stage',
     });
   });
+
+  test('account + region config override', () => {
+    __setTestConfig({
+      serviceSid: 'ZS11112222111122221111222211112222',
+      env: '.env.example',
+      commands: {
+        deploy: {
+          functionsFolder: '/tmp/functions',
+        },
+      },
+      environments: {
+        prod: {
+          serviceSid: 'ZS11112222111122221111222211112223',
+          env: '.env.prod',
+        },
+      },
+      projects: {
+        'AC11112222111122221111222211114444:au1': {
+          serviceSid: 'ZS11112222111122221111222211114444',
+        },
+        'AC11112222111122221111222211114444:ie1': {
+          serviceSid: 'ZS11112222111122221111222211114445',
+        },
+        AC11112222111122221111222211114444: {
+          serviceSid: 'ZS11112222111122221111222211114446',
+        },
+      },
+    });
+
+    expect(
+      readSpecializedConfig('/tmp', '.twilioserverlessrc', 'deploy', {
+        environmentSuffix: 'prod',
+        username: 'AC11112222111122221111222211114444',
+        region: 'ie1',
+      })
+    ).toEqual({
+      serviceSid: 'ZS11112222111122221111222211114445',
+      functionsFolder: '/tmp/functions',
+      env: '.env.prod',
+    });
+
+    expect(
+      readSpecializedConfig('/tmp', '.twilioserverlessrc', 'deploy', {
+        environmentSuffix: 'prod',
+        username: 'AC11112222111122221111222211114444',
+        region: 'au1',
+      })
+    ).toEqual({
+      serviceSid: 'ZS11112222111122221111222211114444',
+      functionsFolder: '/tmp/functions',
+      env: '.env.prod',
+    });
+
+    expect(
+      readSpecializedConfig('/tmp', '.twilioserverlessrc', 'deploy', {
+        environmentSuffix: 'prod',
+        username: 'AC11112222111122221111222211114444',
+        region: 'us1',
+      })
+    ).toEqual({
+      serviceSid: 'ZS11112222111122221111222211114446',
+      functionsFolder: '/tmp/functions',
+      env: '.env.prod',
+    });
+  });
 });

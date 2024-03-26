@@ -2,40 +2,48 @@
   "name": "@twilio-labs/serverless-toolkit",
   "private": true,
   "scripts": {
-    "bootstrap": "lerna bootstrap --no-ci",
-    "postbootstrap": "lerna run build",
-    "release": "lerna version --conventional-commits --no-commit-hooks --no-push",
-    "npm:publish": "lerna publish from-git",
+    "bootstrap": "npm run build",
+    "build": "npm run build --workspaces --if-present",
+    "changeset": "changeset",
+    "version-packages": "npm run create-version && npm run version-package --workspaces --if-present",
+    "create-version": "changeset version",
+    "npm:publish": "changeset publish",
     "cm": "git-cz",
     "jest": "jest",
-    "build:noemit": "lerna run build:noemit",
-    "clean": "lerna run clean",
+    "build:noemit": "npm run build:noemit --workspaces --if-present",
+    "clean": "npm run clean --workspaces --if-present",
     "test": "run-s build:noemit jest",
     "contrib:add": "all-contributors add",
     "contrib:generate": "all-contributors generate",
     "lint-staged": "lint-staged",
-    "docs": "lerna run docs",
+    "docs": "npm run docs --workspaces --if-present",
     "prepare": "husky install",
-    "pre-commit": "lint-staged"
+    "pre-commit": "lint-staged",
+    "reset": "npm exec --workspaces -- npx rimraf node_modules && npx rimraf node_modules"
   },
   "devDependencies": {
-    "@commitlint/cli": "^9.1.2",
-    "@commitlint/config-conventional": "^10.0.0",
-    "@types/jest": "^26.0.24",
+    "@changesets/changelog-github": "^0.4.8",
+    "@changesets/cli": "^2.26.0",
+    "@commitlint/cli": "^19.1.0",
+    "@commitlint/config-conventional": "^19.1.0",
+    "@twilio/test-dep": "npm:twilio@4.22.0",
+    "@types/jest": "^29.2.4",
     "all-contributors-cli": "^6.1.2",
     "commitizen": "^4.2.4",
+    "commitlint-plugin-workspace-scopes": "^1.1.0",
     "conventional-changelog-cli": "^2.1.0",
     "cz-conventional-changelog": "^2.1.0",
-    "husky": "^7.0.0",
-    "jest": "^26.6.3",
+    "husky": "^8.0.2",
+    "jest": "^29.7.0",
     "jest-express": "^1.10.1",
-    "lerna": "^4.0.0",
-    "lint-staged": "^9.0.0",
+    "lint-staged": "^15.2.2",
+    "listr": "^0.14.3",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
-    "ts-jest": "^26.5.0",
-    "typescript": "^3.9.7"
+    "ts-jest": "^29.1.2",
+    "typedoc": "^0.25.12",
+    "typescript": "^5.3.3"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -47,5 +55,12 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  }
+  },
+  "workspaces": [
+    "./packages/serverless-api",
+    "./packages/serverless-runtime-types",
+    "./packages/runtime-handler",
+    "./packages/twilio-run",
+    "./packages/*"
+  ]
 }

@@ -56,23 +56,24 @@ Create a new assets service to use as a bucket
 
 ```
 USAGE
-  $ twilio assets:init
+  $ twilio assets:init [-l debug|info|warn|error|none] [-o columns|json|tsv|none] [--silent] [-p <value>]
+    [--service-name <value>] [--properties <value>]
 
-OPTIONS
+FLAGS
   -l=(debug|info|warn|error|none)  [default: info] Level of logging messages.
   -o=(columns|json|tsv|none)       [default: columns] Format of command output.
-  -p, --profile=profile            Shorthand identifier for your profile.
-
-  --properties=properties          [default: service_sid, sid, domain_name] The asset service environment properties you
+  -p, --profile=<value>            Shorthand identifier for your profile.
+      --properties=<value>         [default: service_sid, sid, domain_name] The asset service environment properties you
                                    would like to display (JSON output always shows all properties).
-
-  --service-name=service-name      A unique name for your asset service. May only contain alphanumeric characters and
+      --service-name=<value>       A unique name for your asset service. May only contain alphanumeric characters and
                                    hyphens.
+      --silent                     Suppress  output and logs. This is a shorthand for "-l none -o none".
 
-  --silent                         Suppress output and logs. This is a shorthand for "-l none -o none".
+DESCRIPTION
+  Create a new assets service to use as a bucket
 ```
 
-_See code: [src/commands/assets/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.0/src/commands/assets/init.js)_
+_See code: [src/commands/assets/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.5/src/commands/assets/init.js)_
 
 ## `twilio assets:list`
 
@@ -80,20 +81,22 @@ List all the assets in the service
 
 ```
 USAGE
-  $ twilio assets:list
+  $ twilio assets:list [-l debug|info|warn|error|none] [-o columns|json|tsv|none] [--silent] [-p <value>]
+    [--properties <value>]
 
-OPTIONS
+FLAGS
   -l=(debug|info|warn|error|none)  [default: info] Level of logging messages.
   -o=(columns|json|tsv|none)       [default: columns] Format of command output.
-  -p, --profile=profile            Shorthand identifier for your profile.
-
-  --properties=properties          [default: sid, path, url, visibility] The asset properties you would like to display
+  -p, --profile=<value>            Shorthand identifier for your profile.
+      --properties=<value>         [default: sid, path, url, visibility] The asset properties you would like to display
                                    (JSON output always shows all properties).
+      --silent                     Suppress  output and logs. This is a shorthand for "-l none -o none".
 
-  --silent                         Suppress output and logs. This is a shorthand for "-l none -o none".
+DESCRIPTION
+  List all the assets in the service
 ```
 
-_See code: [src/commands/assets/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.0/src/commands/assets/list.js)_
+_See code: [src/commands/assets/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.5/src/commands/assets/list.js)_
 
 ## `twilio assets:upload FILE`
 
@@ -101,25 +104,26 @@ Upload a new asset to the Assets service
 
 ```
 USAGE
-  $ twilio assets:upload FILE
+  $ twilio assets:upload FILE [-l debug|info|warn|error|none] [-o columns|json|tsv|none] [--silent] [-p <value>]
+    [--protected] [--properties <value>]
 
 ARGUMENTS
   FILE  The path to the file you want to upload
 
-OPTIONS
+FLAGS
   -l=(debug|info|warn|error|none)  [default: info] Level of logging messages.
   -o=(columns|json|tsv|none)       [default: columns] Format of command output.
-  -p, --profile=profile            Shorthand identifier for your profile.
-
-  --properties=properties          [default: sid, path, url, visibility] The asset properties you would like to display
+  -p, --profile=<value>            Shorthand identifier for your profile.
+      --properties=<value>         [default: sid, path, url, visibility] The asset properties you would like to display
                                    (JSON output always shows all properties).
+      --protected                  Sets the uploaded asset's visibility to 'protected'
+      --silent                     Suppress  output and logs. This is a shorthand for "-l none -o none".
 
-  --protected                      Sets the uploaded asset's visibility to 'protected'
-
-  --silent                         Suppress output and logs. This is a shorthand for "-l none -o none".
+DESCRIPTION
+  Upload a new asset to the Assets service
 ```
 
-_See code: [src/commands/assets/upload.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.0/src/commands/assets/upload.js)_
+_See code: [src/commands/assets/upload.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.5/src/commands/assets/upload.js)_
 <!-- commandsstop -->
 
 ## Contributing
