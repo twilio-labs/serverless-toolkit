@@ -2,6 +2,7 @@ name: No Response
 
 # Both `issue_comment` and `schedule` event types are required for this Action
 # to work properly.
+# Details here: https://github.com/lee-dohm/no-response/blob/main/action.yml
 on:
   issue_comment:
     types: [created]
