@@ -79,7 +79,7 @@ export class Response implements TwilioResponse {
           this.headers[COOKIE_HEADER] = newHeaderValue;
         }
       } else {
-        this.headers[COOKIE_HEADER] = Array.isArray(value) ? value: [value];
+        this.headers[COOKIE_HEADER] = Array.isArray(value) ? value : [value];
       }
     } else {
       const existingValue = this.headers[key];
@@ -133,12 +133,17 @@ export class Response implements TwilioResponse {
   }
 
   serialize() {
+    const contentType = this.headers['Content-Type'];
+    let body = this.body;
+    if (
+      typeof contentType === 'string' &&
+      contentType.startsWith('application/json')
+    ) {
+      body = JSON.stringify(body);
+    }
     return {
       statusCode: this.statusCode,
-      body:
-        this.headers['Content-Type'] === 'application/json'
-          ? JSON.stringify(this.body)
-          : this.body,
+      body: body,
       headers: this.headers,
     };
   }

@@ -292,3 +292,21 @@ test('serializes a response with content type set to application/json', () => {
     'Set-Cookie': [],
   });
 });
+
+test('serializes a response with content type set to application/json with a charset', () => {
+  const response = new Response();
+  response.setBody({ url: 'https://dkundel.com' });
+  response.setStatusCode(200);
+  response.appendHeader('Content-Type', 'application/json; charset=UTF-8');
+
+  const serialized = response.serialize();
+
+  expect(serialized.body).toEqual(
+    JSON.stringify({ url: 'https://dkundel.com' })
+  );
+  expect(serialized.statusCode).toEqual(200);
+  expect(serialized.headers).toEqual({
+    'Content-Type': 'application/json; charset=UTF-8',
+    'Set-Cookie': [],
+  });
+});
