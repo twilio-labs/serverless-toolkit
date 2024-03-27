@@ -1,0 +1,21 @@
+name: No Response
+
+# Both `issue_comment` and `schedule` event types are required for this Action
+# to work properly.
+# Details here: https://github.com/lee-dohm/no-response/blob/main/action.yml
+on:
+  issue_comment:
+    types: [created]
+  schedule:
+    # Schedule for 00:00 UTC every day
+    - cron: '0 0 * * *'
+
+jobs:
+  noResponse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: lee-dohm/no-response@v0.5.0
+        with:
+          token: ${{ github.token }}
+          daysUntilClose: 30
+          responseRequiredLabel: question
