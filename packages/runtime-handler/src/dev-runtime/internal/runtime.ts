@@ -82,7 +82,7 @@ export function create({
       env.AUTH_TOKEN,
       options
     );
-    const service = client.sync.services(
+    const service = client.sync.v1.services(
       serviceName || 'default'
     ) as RuntimeSyncServiceContext;
 
