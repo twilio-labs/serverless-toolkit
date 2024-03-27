@@ -70,7 +70,7 @@ process.on('uncaughtException', (err, origin) => {
 
 process.on(
   'message',
-  ({ functionPath, event, config, path }: FunctionRunnerOptions) => {
+  async ({ functionPath, event, config, path }: FunctionRunnerOptions) => {
     try {
       setRoutes(config.routes);
       constructGlobalScope(config);
@@ -110,7 +110,11 @@ process.on(
           `Could not find a "handler" function in file ${functionPath}`
         );
       }
-      handler(context, event, callback);
+      if (handler.constructor.name === 'AsyncFunction') {
+        await handler(context, event, callback);
+      } else {
+        handler(context, event, callback);
+      }
     } catch (err) {
       if (process.send) {
         process.send({ err: serializeError(err) });
