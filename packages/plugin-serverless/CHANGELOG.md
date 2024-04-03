@@ -1,5 +1,14 @@
 # Change Log
 
+## 3.1.7
+
+### Patch Changes
+
+- [#462](https://github.com/twilio-labs/serverless-toolkit/pull/462) [`3868a78d8175a622766560caceb86f647a3c34d5`](https://github.com/twilio-labs/serverless-toolkit/commit/3868a78d8175a622766560caceb86f647a3c34d5) Thanks [@dkundel](https://github.com/dkundel)! - Fix of debug/inspect mode by disabling fork process
+
+- Updated dependencies [[`3868a78d8175a622766560caceb86f647a3c34d5`](https://github.com/twilio-labs/serverless-toolkit/commit/3868a78d8175a622766560caceb86f647a3c34d5)]:
+  - twilio-run@4.0.1
+
 ## 3.1.6
 
 ### Patch Changes
