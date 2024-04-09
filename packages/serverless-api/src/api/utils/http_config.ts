@@ -5,7 +5,7 @@ if (typeof retryLimit === 'undefined') {
 
 let concurrency = process.env.TWILIO_SERVERLESS_API_CONCURRENCY;
 if (typeof concurrency === 'undefined') {
-  concurrency = '50';
+  concurrency = '10';
 }
 
 export const RETRY_LIMIT = parseInt(retryLimit, 10);

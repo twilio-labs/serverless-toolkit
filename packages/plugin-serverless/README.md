@@ -43,8 +43,8 @@ USAGE
 ### Concurrency
 
 When deploying lots of Functions and Assets it is possible to run up against the enforced concurrency limits of the Twilio API. You can limit the concurrency and set how many times the library retries API requests using environment variables.
-
-The default concurrency is 50 and the default number of retries is 10. You can change this by setting environment variables. The following would set concurrency to 1, only 1 live request at a time, and retries to 0, so if it fails it won't retry.
+It is advisable to keep the concurrency low (around 10-15) to avoid hitting the rate limits of the Twilio API.
+The default concurrency is 10 and the default number of retries is 10. You can change this by setting environment variables. The following would set concurrency to 1, only 1 live request at a time, and retries to 0, so if it fails it won't retry.
 
 ```sh-session
 export TWILIO_SERVERLESS_API_CONCURRENCY=1
