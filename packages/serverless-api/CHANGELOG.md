@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.5.2
+
+### Patch Changes
+
+- [#517](https://github.com/twilio-labs/serverless-toolkit/pull/517) [`8dee2e88a5e4de0201f1ae99a7f7cb73bea3e0b0`](https://github.com/twilio-labs/serverless-toolkit/commit/8dee2e88a5e4de0201f1ae99a7f7cb73bea3e0b0) Thanks [@victoray](https://github.com/victoray)! - Change default concurrency limit from 50 to 10
+
 ## 5.5.1
 
 ### Patch Changes
