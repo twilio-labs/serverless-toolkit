@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.0.2
+
+### Patch Changes
+
+- [#487](https://github.com/twilio-labs/serverless-toolkit/pull/487) [`cdf9e3a1fced910acc63cabb41920c96cd81670c`](https://github.com/twilio-labs/serverless-toolkit/commit/cdf9e3a1fced910acc63cabb41920c96cd81670c) Thanks [@stevennic-twilio](https://github.com/stevennic-twilio)! - Fix sync.services deprecation warning
+
 ## 2.0.1
 
 ### Patch Changes

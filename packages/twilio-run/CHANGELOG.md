@@ -1,5 +1,14 @@
 # Change Log
 
+## 4.0.2
+
+### Patch Changes
+
+- [#487](https://github.com/twilio-labs/serverless-toolkit/pull/487) [`cdf9e3a1fced910acc63cabb41920c96cd81670c`](https://github.com/twilio-labs/serverless-toolkit/commit/cdf9e3a1fced910acc63cabb41920c96cd81670c) Thanks [@stevennic-twilio](https://github.com/stevennic-twilio)! - Fix sync.services deprecation warning
+
+- Updated dependencies [[`8dee2e88a5e4de0201f1ae99a7f7cb73bea3e0b0`](https://github.com/twilio-labs/serverless-toolkit/commit/8dee2e88a5e4de0201f1ae99a7f7cb73bea3e0b0)]:
+  - @twilio-labs/serverless-api@5.5.2
+
 ## 4.0.1
 
 ### Patch Changes

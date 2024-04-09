@@ -1,5 +1,14 @@
 # Change Log
 
+## 3.1.8
+
+### Patch Changes
+
+- [#517](https://github.com/twilio-labs/serverless-toolkit/pull/517) [`8dee2e88a5e4de0201f1ae99a7f7cb73bea3e0b0`](https://github.com/twilio-labs/serverless-toolkit/commit/8dee2e88a5e4de0201f1ae99a7f7cb73bea3e0b0) Thanks [@victoray](https://github.com/victoray)! - Change default concurrency limit from 50 to 10
+
+- Updated dependencies [[`cdf9e3a1fced910acc63cabb41920c96cd81670c`](https://github.com/twilio-labs/serverless-toolkit/commit/cdf9e3a1fced910acc63cabb41920c96cd81670c)]:
+  - twilio-run@4.0.2
+
 ## 3.1.7
 
 ### Patch Changes
