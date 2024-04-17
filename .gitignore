@@ -74,3 +74,5 @@ dist/
 packages/serverless-api/docs/
 
 .idea
+
+**/.DS_Store

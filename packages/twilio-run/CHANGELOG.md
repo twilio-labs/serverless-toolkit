@@ -1,5 +1,33 @@
 # Change Log
 
+## 4.0.2
+
+### Patch Changes
+
+- [#487](https://github.com/twilio-labs/serverless-toolkit/pull/487) [`cdf9e3a1fced910acc63cabb41920c96cd81670c`](https://github.com/twilio-labs/serverless-toolkit/commit/cdf9e3a1fced910acc63cabb41920c96cd81670c) Thanks [@stevennic-twilio](https://github.com/stevennic-twilio)! - Fix sync.services deprecation warning
+
+- Updated dependencies [[`8dee2e88a5e4de0201f1ae99a7f7cb73bea3e0b0`](https://github.com/twilio-labs/serverless-toolkit/commit/8dee2e88a5e4de0201f1ae99a7f7cb73bea3e0b0)]:
+  - @twilio-labs/serverless-api@5.5.2
+
+## 4.0.1
+
+### Patch Changes
+
+- [#462](https://github.com/twilio-labs/serverless-toolkit/pull/462) [`3868a78d8175a622766560caceb86f647a3c34d5`](https://github.com/twilio-labs/serverless-toolkit/commit/3868a78d8175a622766560caceb86f647a3c34d5) Thanks [@dkundel](https://github.com/dkundel)! - Fix of debug/inspect mode by disabling fork process
+
+## 4.0.0
+
+### Major Changes
+
+- [#509](https://github.com/twilio-labs/serverless-toolkit/pull/509) [`6d65bea828338a6dd44cb357c324d9b63e74e081`](https://github.com/twilio-labs/serverless-toolkit/commit/6d65bea828338a6dd44cb357c324d9b63e74e081) Thanks [@makserik](https://github.com/makserik)! - Twilio SDK from 3.x to 4.23.0. Required Node version bumped to 18 min.
+
+### Patch Changes
+
+- [#510](https://github.com/twilio-labs/serverless-toolkit/pull/510) [`feb9686fa6bfa5b49e634e414ff56a61c61cbe89`](https://github.com/twilio-labs/serverless-toolkit/commit/feb9686fa6bfa5b49e634e414ff56a61c61cbe89) Thanks [@makserik](https://github.com/makserik)! - FRIDGE-814 fix chalk
+
+- Updated dependencies [[`6d65bea828338a6dd44cb357c324d9b63e74e081`](https://github.com/twilio-labs/serverless-toolkit/commit/6d65bea828338a6dd44cb357c324d9b63e74e081)]:
+  - @twilio-labs/serverless-runtime-types@4.0.0
+
 ## 3.5.4
 
 ### Patch Changes

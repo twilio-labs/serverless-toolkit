@@ -1,5 +1,30 @@
 # Change Log
 
+## 2.0.2
+
+### Patch Changes
+
+- [#487](https://github.com/twilio-labs/serverless-toolkit/pull/487) [`cdf9e3a1fced910acc63cabb41920c96cd81670c`](https://github.com/twilio-labs/serverless-toolkit/commit/cdf9e3a1fced910acc63cabb41920c96cd81670c) Thanks [@stevennic-twilio](https://github.com/stevennic-twilio)! - Fix sync.services deprecation warning
+
+## 2.0.1
+
+### Patch Changes
+
+- [#459](https://github.com/twilio-labs/serverless-toolkit/pull/459) [`7bebf6f370c7fbfab3f1431741a48a8cdaaf552c`](https://github.com/twilio-labs/serverless-toolkit/commit/7bebf6f370c7fbfab3f1431741a48a8cdaaf552c) Thanks [@dkundel](https://github.com/dkundel)! - Fix error messages in local development
+
+- [#392](https://github.com/twilio-labs/serverless-toolkit/pull/392) [`34de0811d9a6980c69f01be9d03251c2f2496b4b`](https://github.com/twilio-labs/serverless-toolkit/commit/34de0811d9a6980c69f01be9d03251c2f2496b4b) Thanks [@philnash](https://github.com/philnash)! - Don't check for exact Content-Type matches
+
+## 2.0.0
+
+### Major Changes
+
+- [#509](https://github.com/twilio-labs/serverless-toolkit/pull/509) [`6d65bea828338a6dd44cb357c324d9b63e74e081`](https://github.com/twilio-labs/serverless-toolkit/commit/6d65bea828338a6dd44cb357c324d9b63e74e081) Thanks [@makserik](https://github.com/makserik)! - Twilio SDK from 3.x to 4.23.0. Required Node version bumped to 18 min.
+
+### Patch Changes
+
+- Updated dependencies [[`6d65bea828338a6dd44cb357c324d9b63e74e081`](https://github.com/twilio-labs/serverless-toolkit/commit/6d65bea828338a6dd44cb357c324d9b63e74e081)]:
+  - @twilio-labs/serverless-runtime-types@4.0.0
+
 ## 1.3.1
 
 ### Patch Changes

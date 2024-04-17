@@ -26,7 +26,7 @@ import {
 import { Reply } from './internal/functionRunner';
 import { Response } from './internal/response';
 import * as Runtime from './internal/runtime';
-import { ServerConfig } from './types';
+import { LoggerInstance, ServerConfig } from './types';
 import debug from './utils/debug';
 import { wrapErrorInHtml } from './utils/error-html';
 import { getCodeLocation } from './utils/getCodeLocation';
@@ -303,26 +303,47 @@ export function functionPathToRoute(
         reply,
         debugMessage,
         debugArgs = [],
+        crossForkLogMessage,
       }: {
         err?: Error | number | string;
         reply?: Reply;
         debugMessage?: string;
         debugArgs?: any[];
+        crossForkLogMessage?: {
+          level: keyof LoggerInstance;
+          args: [string] | [string, number] | [string, string];
+        };
       }) => {
         if (debugMessage) {
           log(debugMessage, ...debugArgs);
           return;
         }
+
+        if (crossForkLogMessage) {
+          if (
+            config.logger &&
+            typeof config.logger[crossForkLogMessage.level] === 'function'
+          ) {
+            config.logger[crossForkLogMessage.level](
+              // @ts-ignore
+              ...crossForkLogMessage.args
+            );
+          }
+          return;
+        }
+
         if (err) {
           const error = deserializeError(err);
           handleError(error, req, res, functionPath);
         }
+
         if (reply) {
           const body = reply.body?.type === 'Buffer' && reply.body.data ? Buffer.from(reply.body, 'binary') : reply.body;
           res.status(reply.statusCode);
           res.set(reply.headers);
           res.send(body);
         }
+
         forked.kill();
       }
     );
