@@ -1,6 +1,6 @@
 {
   "name": "create-twilio-function",
-  "version": "3.4.5",
+  "version": "3.4.6",
   "description": "A CLI tool to generate a new Twilio Function using that can be run locally with twilio-run.",
   "bin": "./bin/create-twilio-function",
   "main": "./src/create-twilio-function.js",
