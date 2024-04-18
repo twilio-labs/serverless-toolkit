@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.4.6
+
+### Patch Changes
+
+- [#518](https://github.com/twilio-labs/serverless-toolkit/pull/518) [`56e531ee86516cd5755f961dd26623c4f5427356`](https://github.com/twilio-labs/serverless-toolkit/commit/56e531ee86516cd5755f961dd26623c4f5427356) Thanks [@victoray](https://github.com/victoray)! - Update default twilio library to v5
+
 ## 3.4.5
 
 ### Patch Changes
