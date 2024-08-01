@@ -8,6 +8,6 @@ module.exports = {
   twilioRun: pkgJson.dependencies['twilio-run'],
   node: '18',
   typescript: '^5.3.3',
-  serverlessRuntimeTypes: '^1.1',
-  copyfiles: '^2.2.0',
+  serverlessRuntimeTypes: '^4.0.0',
+  copyfiles: '^2.4.1',
 };
