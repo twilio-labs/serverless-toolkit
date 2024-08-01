@@ -27,9 +27,11 @@ jobs:
       - name: Update npm to 8.x
         run: |
           npm i -g npm@8
+          npm --version
+          node --version
       - name: npm install, build, and test
         run: |
-          npm install --legacy-peer-deps
+          npm install
           npm run build
           npm run test
         env:
