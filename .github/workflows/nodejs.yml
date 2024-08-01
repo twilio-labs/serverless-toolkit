@@ -26,10 +26,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Update npm to 8.x
         run: |
-          npm i -g npm@10
+          npm i -g npm@8
       - name: npm install, build, and test
         run: |
-          npm install
+          npm install --legacy-peer-deps
           npm run build
           npm run test
         env:
