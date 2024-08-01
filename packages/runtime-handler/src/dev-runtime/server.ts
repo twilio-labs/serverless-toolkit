@@ -132,7 +132,7 @@ export class LocalDevelopmentServer extends EventEmitter {
         : undefined;
       log('Legacy mode enabled');
       app.use('/assets/*', (req, res, next) => {
-        req.path = req.path.replace('/assets/', '/');
+        req.url = req.url.replace('/assets/', '/');
         next();
       });
     }
