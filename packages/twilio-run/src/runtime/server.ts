@@ -199,8 +199,8 @@ export async function createServer(
       : undefined;
     debug('Legacy mode enabled');
     app.use('/assets/*', (req, res, next) => {
-      const newReq = { ...req, path: req.path.replace('/assets/', '/') };
-      next(newReq);
+      req.path = req.path.replace('/assets/', '/');
+      next();
     });
   }
 
