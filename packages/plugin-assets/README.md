@@ -56,7 +56,7 @@ Create a new assets service to use as a bucket
 
 ```
 USAGE
-  $ twilio assets:init [-l debug|info|warn|error|none] [-o columns|json|tsv|none] [--silent] [-p <value>]
+  $ twilio assets:init [-l (debug|info|warn|error|none)] [-o (columns|json|tsv|none)] [--silent] [-p <value>]
     [--service-name <value>] [--properties <value>]
 
 FLAGS
@@ -81,7 +81,7 @@ List all the assets in the service
 
 ```
 USAGE
-  $ twilio assets:list [-l debug|info|warn|error|none] [-o columns|json|tsv|none] [--silent] [-p <value>]
+  $ twilio assets:list [-l (debug|info|warn|error|none)] [-o (columns|json|tsv|none)] [--silent] [-p <value>]
     [--properties <value>]
 
 FLAGS
@@ -104,8 +104,8 @@ Upload a new asset to the Assets service
 
 ```
 USAGE
-  $ twilio assets:upload FILE [-l debug|info|warn|error|none] [-o columns|json|tsv|none] [--silent] [-p <value>]
-    [--protected] [--properties <value>]
+  $ twilio assets:upload FILE [-l (debug|info|warn|error|none)] [-o (columns|json|tsv|none)] [--silent] [-p
+    <value>] [--protected] [--properties <value>]
 
 ARGUMENTS
   FILE  The path to the file you want to upload
