@@ -1,6 +1,6 @@
 {
   "name": "@twilio-labs/serverless-runtime-types",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "TypeScript definitions to define globals for the Twilio Serverless runtime",
   "main": "index.js",
   "types": "index.d.ts",

@@ -77,7 +77,7 @@ Promotes an existing deployment to a new environment
 
 ```
 USAGE
-  $ twilio serverless:activate [-l debug|info|warn|error|none] [-o columns|json|tsv|none] [--silent] [-p <value>] [-l
+  $ twilio serverless:activate [-l (debug|info|warn|error|none)] [-o (columns|json|tsv|none)] [--silent] [-p <value>] [-l
     <value>] [-c <value>] [--cwd <value>] [--env <value>] [-u <value>] [--password <value>] [--load-system-env]
     [--service-sid <value>] [--build-sid <value>] [--from-build <value>] [--source-environment <value>] [--from <value>]
     [--environment <value>] [--to <value>] [--production] [--create-environment] [--force] [-o <value>]
@@ -125,7 +125,7 @@ Deploys existing functions and assets to Twilio
 
 ```
 USAGE
-  $ twilio serverless:deploy [-l debug|info|warn|error|none] [-o columns|json|tsv|none] [--silent] [-p <value>] [-l
+  $ twilio serverless:deploy [-l (debug|info|warn|error|none)] [-o (columns|json|tsv|none)] [--silent] [-p <value>] [-l
     <value>] [-c <value>] [--cwd <value>] [--env <value>] [-u <value>] [--password <value>] [--load-system-env]
     [--service-sid <value>] [--environment <value>] [--to <value>] [-n <value>] [--override-existing-project] [--force]
     [--functions] [--assets] [--assets-folder <value>] [--functions-folder <value>] [--runtime <value>] [-o <value>]
@@ -217,7 +217,7 @@ Retrieves the value of a specific environment variable
 
 ```
 USAGE
-  $ twilio serverless:env:get [-l debug|info|warn|error|none] [-o columns|json|tsv|none] [--silent] [-p <value>] [-l
+  $ twilio serverless:env:get [-l (debug|info|warn|error|none)] [-o (columns|json|tsv|none)] [--silent] [-p <value>] [-l
     <value>] [-c <value>] [--cwd <value>] [--env <value>] [-u <value>] [--password <value>] [--load-system-env]
     [--service-sid <value>] [--environment <value>] [--to <value>] [--key <value>] [--production]
 
@@ -256,7 +256,7 @@ Takes a .env file and uploads all environment variables to a given environment
 
 ```
 USAGE
-  $ twilio serverless:env:import [-l debug|info|warn|error|none] [-o columns|json|tsv|none] [--silent] [-p <value>] [-l
+  $ twilio serverless:env:import [-l (debug|info|warn|error|none)] [-o (columns|json|tsv|none)] [--silent] [-p <value>] [-l
     <value>] [-c <value>] [--cwd <value>] [--env <value>] [-u <value>] [--password <value>] [--load-system-env]
     [--service-sid <value>] [--environment <value>] [--to <value>] [--production]
 
@@ -294,7 +294,7 @@ Lists all environment variables for a given environment
 
 ```
 USAGE
-  $ twilio serverless:env:list [-l debug|info|warn|error|none] [-o columns|json|tsv|none] [--silent] [-p <value>] [-l
+  $ twilio serverless:env:list [-l (debug|info|warn|error|none)] [-o (columns|json|tsv|none)] [--silent] [-p <value>] [-l
     <value>] [-c <value>] [--cwd <value>] [--env <value>] [-u <value>] [--password <value>] [--load-system-env]
     [--service-sid <value>] [--environment <value>] [--to <value>] [--show-values] [--production] [-o <value>]
 
@@ -334,7 +334,7 @@ Sets an environment variable with a given key and value
 
 ```
 USAGE
-  $ twilio serverless:env:set [-l debug|info|warn|error|none] [-o columns|json|tsv|none] [--silent] [-p <value>] [-l
+  $ twilio serverless:env:set [-l (debug|info|warn|error|none)] [-o (columns|json|tsv|none)] [--silent] [-p <value>] [-l
     <value>] [-c <value>] [--cwd <value>] [--env <value>] [-u <value>] [--password <value>] [--load-system-env]
     [--service-sid <value>] [--environment <value>] [--to <value>] [--key <value>] [--value <value>] [--production]
 
@@ -374,7 +374,7 @@ Removes an environment variable for a given key
 
 ```
 USAGE
-  $ twilio serverless:env:unset [-l debug|info|warn|error|none] [-o columns|json|tsv|none] [--silent] [-p <value>] [-l
+  $ twilio serverless:env:unset [-l (debug|info|warn|error|none)] [-o (columns|json|tsv|none)] [--silent] [-p <value>] [-l
     <value>] [-c <value>] [--cwd <value>] [--env <value>] [-u <value>] [--password <value>] [--load-system-env]
     [--service-sid <value>] [--environment <value>] [--to <value>] [--key <value>] [--production]
 
@@ -413,8 +413,9 @@ Creates a new Twilio Function project
 
 ```
 USAGE
-  $ twilio serverless:init NAME [-l debug|info|warn|error|none] [-o columns|json|tsv|none] [--silent] [-p <value>]
-    [-a <value>] [-t <value>] [--skip-credentials] [--import-credentials] [--template <value>] [--empty] [--typescript]
+  $ twilio serverless:init NAME [-l (debug|info|warn|error|none)] [-o (columns|json|tsv|none)] [--silent] [-p
+    <value>] [-a <value>] [-t <value>] [--skip-credentials] [--import-credentials] [--template <value>] [--empty]
+    [--typescript]
 
 ARGUMENTS
   NAME  Name of Serverless project and directory that will be created
@@ -446,9 +447,10 @@ List existing services, environments, variables, deployments for your Twilio Ser
 
 ```
 USAGE
-  $ twilio serverless:list [TYPES] [-l debug|info|warn|error|none] [-o columns|json|tsv|none] [--silent] [-p <value>]
-    [-l <value>] [-c <value>] [--cwd <value>] [--env <value>] [-u <value>] [--password <value>] [--load-system-env] [-n
-    <value>] [--extended-output] [--service-sid <value>] [-o <value>] [--environment <value>] [--to <value>]
+  $ twilio serverless:list [TYPES] [-l (debug|info|warn|error|none)] [-o (columns|json|tsv|none)] [--silent] [-p
+    <value>] [-l <value>] [-c <value>] [--cwd <value>] [--env <value>] [-u <value>] [--password <value>]
+    [--load-system-env] [-n <value>] [--extended-output] [--service-sid <value>] [-o <value>] [--environment <value>]
+    [--to <value>]
 
 ARGUMENTS
   TYPES  [default: services] Comma separated list of things to list (services,environments,functions,assets,variables)
@@ -505,7 +507,7 @@ Print logs from your Twilio Serverless project
 
 ```
 USAGE
-  $ twilio serverless:logs [-l debug|info|warn|error|none] [-o columns|json|tsv|none] [--silent] [-p <value>] [-l
+  $ twilio serverless:logs [-l (debug|info|warn|error|none)] [-o (columns|json|tsv|none)] [--silent] [-p <value>] [-l
     <value>] [-c <value>] [--cwd <value>] [--env <value>] [-u <value>] [--password <value>] [--load-system-env]
     [--service-sid <value>] [--function-sid <value>] [--tail] [-o <value>] [--production] [--environment <value>] [--to
     <value>]
@@ -569,7 +571,7 @@ Promotes an existing deployment to a new environment
 
 ```
 USAGE
-  $ twilio serverless:promote [-l debug|info|warn|error|none] [-o columns|json|tsv|none] [--silent] [-p <value>] [-l
+  $ twilio serverless:promote [-l (debug|info|warn|error|none)] [-o (columns|json|tsv|none)] [--silent] [-p <value>] [-l
     <value>] [-c <value>] [--cwd <value>] [--env <value>] [-u <value>] [--password <value>] [--load-system-env]
     [--service-sid <value>] [--build-sid <value>] [--from-build <value>] [--source-environment <value>] [--from <value>]
     [--environment <value>] [--to <value>] [--production] [--create-environment] [--force] [-o <value>]

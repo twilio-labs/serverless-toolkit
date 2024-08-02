@@ -1,5 +1,14 @@
 # Change Log
 
+## 3.4.7
+
+### Patch Changes
+
+- [#524](https://github.com/twilio-labs/serverless-toolkit/pull/524) [`f30d928636267c170b75d2b7d6983739b2ca55e2`](https://github.com/twilio-labs/serverless-toolkit/commit/f30d928636267c170b75d2b7d6983739b2ca55e2) Thanks [@victoray](https://github.com/victoray)! - - update default version for new projects
+  - bump dev dependencies @types/express and typedoc
+- Updated dependencies [[`f30d928636267c170b75d2b7d6983739b2ca55e2`](https://github.com/twilio-labs/serverless-toolkit/commit/f30d928636267c170b75d2b7d6983739b2ca55e2)]:
+  - twilio-run@4.0.3
+
 ## 3.4.6
 
 ### Patch Changes
