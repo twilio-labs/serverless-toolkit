@@ -67,6 +67,9 @@ export class Response implements TwilioResponse {
 
   appendHeader(key: string, value: HeaderValue): Response {
     debug('Appending header for %s', key, value);
+    if (typeof value === 'object' && !Array.isArray(value)) {
+      throw new Error('Header value cannot be an object');
+    }
     this.headers = this.headers || {};
     let newHeaderValue: HeaderValue = [];
     if (key.toLowerCase() === COOKIE_HEADER.toLowerCase()) {

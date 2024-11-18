@@ -85,6 +85,17 @@ test('appends a new header correctly', () => {
   });
 });
 
+test('object cant be a header', () => {
+  const response = new Response();
+  expect(response['headers']).toEqual({
+    'Set-Cookie': [],
+  });
+
+  expect(() => {
+    response.appendHeader('Access-Control-Allow-Origin', {} as any);
+  }).toThrow('Header value cannot be an object');
+});
+
 test('appends a header correctly with no existing one', () => {
   const response = new Response();
   expect(response['headers']).toEqual({
