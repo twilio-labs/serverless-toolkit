@@ -48,6 +48,7 @@ export interface ServiceResource extends UpdateableResourceBase {
   unique_name: string;
   include_credentials: boolean;
   friendly_name: string;
+  ui_editable?: boolean;
 }
 
 export interface ServiceList extends BaseList<'services'> {

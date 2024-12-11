@@ -507,13 +507,8 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
    */
   async activateBuild(activateConfig: ActivateConfig): Promise<ActivateResult> {
     try {
-      let {
-        buildSid,
-        targetEnvironment,
-        serviceSid,
-        sourceEnvironment,
-        env,
-      } = activateConfig;
+      let { buildSid, targetEnvironment, serviceSid, sourceEnvironment, env } =
+        activateConfig;
 
       if (!buildSid && !sourceEnvironment) {
         const error = new Error(
@@ -630,7 +625,11 @@ export class TwilioServerlessApiClient extends events.EventEmitter {
           message: 'Creating Service',
         });
         try {
-          serviceSid = await createService(config.serviceName, this);
+          serviceSid = await createService(
+            config.serviceName,
+            this,
+            config.uiEditable
+          );
         } catch (err) {
           const alternativeServiceSid = await findServiceSid(
             config.serviceName,

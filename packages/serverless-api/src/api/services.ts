@@ -14,11 +14,13 @@ const log = debug('twilio-serverless-api:services');
  * @export
  * @param {string} serviceName the unique name for the service
  * @param {TwilioServerlessApiClient} client API client
+ * @param {boolean} uiEditable Whether the Service's properties and subresources can be edited via the UI. The default value is false.
  * @returns {Promise<string>}
  */
 export async function createService(
   serviceName: string,
-  client: TwilioServerlessApiClient
+  client: TwilioServerlessApiClient,
+  uiEditable: boolean = false
 ): Promise<string> {
   try {
     const resp = await client.request('post', 'Services', {
@@ -26,9 +28,10 @@ export async function createService(
         UniqueName: serviceName,
         FriendlyName: serviceName,
         IncludeCredentials: true,
+        UiEditable: uiEditable,
       },
     });
-    const service = (resp.body as unknown) as ServiceResource;
+    const service = resp.body as unknown as ServiceResource;
 
     return service.sid;
   } catch (err) {
@@ -82,7 +85,7 @@ export async function getService(
 ): Promise<ServiceResource> {
   try {
     const resp = await client.request('get', `Services/${sid}`);
-    return (resp.body as unknown) as ServiceResource;
+    return resp.body as unknown as ServiceResource;
   } catch (err) {
     log('%O', new ClientApiError(err));
     throw err;
