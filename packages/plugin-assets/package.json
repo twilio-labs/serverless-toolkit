@@ -9,7 +9,7 @@
   "main": "src/index.js",
   "dependencies": {
     "@oclif/core": "^1.14.2",
-    "@twilio-labs/serverless-api": "^5.5.0",
+    "@twilio-labs/serverless-api": "^5.5.2",
     "@twilio/cli-core": "^7.0.0",
     "inquirer": "^8.0.0",
     "ora": "^5.4.0",
