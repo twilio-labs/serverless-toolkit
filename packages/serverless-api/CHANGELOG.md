@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.6.0
+
+### Minor Changes
+
+- [#529](https://github.com/twilio-labs/serverless-toolkit/pull/529) [`13b9a2e5c41a960161467cf0290bb143672907ff`](https://github.com/twilio-labs/serverless-toolkit/commit/13b9a2e5c41a960161467cf0290bb143672907ff) Thanks [@Th3R3p0](https://github.com/Th3R3p0)! - Adding UiEditable param to createService
+
 ## 5.5.2
 
 ### Patch Changes
