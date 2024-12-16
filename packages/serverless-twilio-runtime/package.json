@@ -1,6 +1,6 @@
 {
   "name": "@twilio-labs/serverless-twilio-runtime",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Serverless framework integartion for Twilio runtime",
   "main": "index.js",
   "scripts": {
@@ -30,7 +30,7 @@
     "url": "https://github.com/twilio-labs/serverless-toolkit/issues"
   },
   "dependencies": {
-    "@twilio-labs/serverless-api": "^5.5.2"
+    "@twilio-labs/serverless-api": "^5.6.0"
   },
   "gitHead": "9382ba7f1c23cdf18ac8bb6cada92340d63491dd"
 }

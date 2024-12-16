@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.1.0
+
+### Minor Changes
+
+- [#526](https://github.com/twilio-labs/serverless-toolkit/pull/526) [`d43ab634435d7380dcb0baa8b1a0c26fd8b12e84`](https://github.com/twilio-labs/serverless-toolkit/commit/d43ab634435d7380dcb0baa8b1a0c26fd8b12e84) Thanks [@makserik](https://github.com/makserik)! - handle adding object as header correctly as an error
+
 ## 2.0.3
 
 ### Patch Changes

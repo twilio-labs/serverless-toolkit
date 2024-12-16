@@ -1,5 +1,16 @@
 # Change Log
 
+## 3.2.0
+
+### Minor Changes
+
+- [#529](https://github.com/twilio-labs/serverless-toolkit/pull/529) [`13b9a2e5c41a960161467cf0290bb143672907ff`](https://github.com/twilio-labs/serverless-toolkit/commit/13b9a2e5c41a960161467cf0290bb143672907ff) Thanks [@Th3R3p0](https://github.com/Th3R3p0)! - Adding UiEditable param to createService
+
+### Patch Changes
+
+- Updated dependencies [[`d43ab634435d7380dcb0baa8b1a0c26fd8b12e84`](https://github.com/twilio-labs/serverless-toolkit/commit/d43ab634435d7380dcb0baa8b1a0c26fd8b12e84)]:
+  - twilio-run@4.1.0
+
 ## 3.1.8
 
 ### Patch Changes
