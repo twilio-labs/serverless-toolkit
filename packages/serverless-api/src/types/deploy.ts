@@ -47,6 +47,10 @@ type DeployProjectConfigBase = {
    * Version of Node.js to deploy with in Twilio Runtime. Can be "node18"
    */
   runtime?: string;
+  /**
+   * Whether the Service's properties and subresources can be edited via the UI. The default value is false.
+   */
+  uiEditable?: boolean;
 };
 
 /**

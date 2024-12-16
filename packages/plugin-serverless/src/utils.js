@@ -80,6 +80,7 @@ function createExternalCliOptions(flags, twilioClient) {
   const pluginInfo = {
     version: pkgJson.version,
     name: pkgJson.name,
+    uiEditable: pkgJson.uiEditable,
   };
 
   if (
