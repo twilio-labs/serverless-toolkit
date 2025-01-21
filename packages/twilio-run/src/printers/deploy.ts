@@ -160,7 +160,7 @@ function prettyPrintDeployedResources(
       .sort(sortByAccess)
       .map((fn) => {
         const accessPrefix =
-          fn.access !== 'public' ? chalk`{bold [${fn.access}]} ` : '';
+          chalk`{bold [${fn.access}]} `;
         return chalk`   ${accessPrefix}{dim https://${result.domain}}${fn.path}`;
       })
       .join('\n');
@@ -173,7 +173,7 @@ function prettyPrintDeployedResources(
       .sort(sortByAccess)
       .map((asset) => {
         const accessPrefix =
-          asset.access !== 'public' ? chalk`{bold [${asset.access}]} ` : '';
+          chalk`{bold [${asset.access}]} `;
         const accessUrl =
           asset.access === 'private'
             ? chalk`{dim Runtime.getAssets()['}${asset.path}{dim ']}`
