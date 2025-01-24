@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.5.0
+
+### Minor Changes
+
+- [#531](https://github.com/twilio-labs/serverless-toolkit/pull/531) [`b18bbec1214e3b4c65b32432ddfd1a9ac8044dae`](https://github.com/twilio-labs/serverless-toolkit/commit/b18bbec1214e3b4c65b32432ddfd1a9ac8044dae) Thanks [@AndreLars](https://github.com/AndreLars)! - fix hello-world template
+
 ## 3.4.7
 
 ### Patch Changes
