@@ -157,13 +157,13 @@ export function constructContext<T extends {} = {}>(
 }> {
   function getTwilioClient(opts?: TwilioClientOptions): TwilioClient {
     checkForValidAccountSid(env.ACCOUNT_SID, {
-      shouldPrintMessage: true,
+      shouldPrintMessage: logger ? !!logger.error : false,
       shouldThrowError: true,
       functionName: 'context.getTwilioClient()',
       logger: logger,
     });
     checkForValidAuthToken(env.AUTH_TOKEN, {
-      shouldPrintMessage: true,
+      shouldPrintMessage: logger ? !!logger.error : false,
       shouldThrowError: true,
       functionName: 'context.getTwilioClient()',
       logger: logger,
@@ -221,12 +221,13 @@ export function handleError(
   err: Error | string | object,
   req: ExpressRequest,
   res: ExpressResponse,
-  functionFilePath?: string
+  functionFilePath?: string,
+  logger?: LoggerInstance
 ) {
   res.status(500);
   if (isError(err)) {
     const cleanedupError = cleanUpStackTrace(err);
-
+    logger?.error(cleanedupError.toString());
     if (req.useragent && (req.useragent.isDesktop || req.useragent.isMobile)) {
       res.type('text/html');
       res.send(wrapErrorInHtml(cleanedupError, functionFilePath));
@@ -334,7 +335,7 @@ export function functionPathToRoute(
 
         if (err) {
           const error = deserializeError(err);
-          handleError(error, req, res, functionPath);
+          handleError(error, req, res, functionPath, config.logger);
         }
 
         if (reply) {
