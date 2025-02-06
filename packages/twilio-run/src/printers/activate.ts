@@ -25,7 +25,8 @@ export function printActivateConfig(
 
 export function printActivateResult(
   result: ActivateResult,
-  outputFormat: OutputFormat
+  outputFormat: OutputFormat,
+  region = 'us1'
 ) {
   if (outputFormat === 'json') {
     writeJSONOutput(result);
@@ -36,7 +37,11 @@ export function printActivateResult(
 
   const twilioConsoleLogsLink = terminalLink(
     'Open the Twilio Console',
-    getTwilioConsoleDeploymentUrl(result.serviceSid, result.environmentSid),
+    getTwilioConsoleDeploymentUrl(
+      result.serviceSid,
+      result.environmentSid,
+      region
+    ),
     {
       fallback: (text: string, url: string) => chalk.dim(url),
     }
