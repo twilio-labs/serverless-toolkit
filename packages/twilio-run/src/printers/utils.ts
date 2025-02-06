@@ -11,9 +11,10 @@ export const supportsEmoji =
 
 export function getTwilioConsoleDeploymentUrl(
   serviceSid: string,
-  environmentSid: string
+  environmentSid: string,
+  region = 'us1'
 ) {
-  return `https://www.twilio.com/console/functions/editor/${serviceSid}/environment/${environmentSid}`;
+  return `https://console.twilio.com/${region}/develop/functions/editor/${serviceSid}/environment/${environmentSid}`;
 }
 
 export function printObjectWithoutHeaders(obj: {}): string {
@@ -27,7 +28,7 @@ export function terminalLink(name: string, link: string): string {
 export function borderLeft(text: string, color: string): string {
   return text
     .split('\n')
-    .map(str => `${chalk.keyword(color)('│')} ${str}`)
+    .map((str) => `${chalk.keyword(color)('│')} ${str}`)
     .join('\n');
 }
 

@@ -64,7 +64,8 @@ function plainPrintDeployedResources(
     runtime: result.runtime,
     viewLiveLogs: getTwilioConsoleDeploymentUrl(
       result.serviceSid,
-      result.environmentSid
+      result.environmentSid,
+      config.region
     ),
   };
 
@@ -132,7 +133,11 @@ function prettyPrintDeployedResources(
 ) {
   const twilioConsoleLogsLink = terminalLink(
     'Open the Twilio Console',
-    getTwilioConsoleDeploymentUrl(result.serviceSid, result.environmentSid),
+    getTwilioConsoleDeploymentUrl(
+      result.serviceSid,
+      result.environmentSid,
+      config.region
+    ),
     {
       fallback: (text: string, url: string) => chalk.dim(url),
     }
@@ -159,8 +164,7 @@ function prettyPrintDeployedResources(
     const functionMessage = result.functionResources
       .sort(sortByAccess)
       .map((fn) => {
-        const accessPrefix =
-          chalk`{bold [${fn.access}]} `;
+        const accessPrefix = chalk`{bold [${fn.access}]} `;
         return chalk`   ${accessPrefix}{dim https://${result.domain}}${fn.path}`;
       })
       .join('\n');
@@ -172,8 +176,7 @@ function prettyPrintDeployedResources(
     const assetMessage = result.assetResources
       .sort(sortByAccess)
       .map((asset) => {
-        const accessPrefix =
-          chalk`{bold [${asset.access}]} `;
+        const accessPrefix = chalk`{bold [${asset.access}]} `;
         const accessUrl =
           asset.access === 'private'
             ? chalk`{dim Runtime.getAssets()['}${asset.path}{dim ']}`
@@ -223,7 +226,8 @@ export function printJsonDeployedResources(
     runtime: result.runtime,
     viewLiveLogs: getTwilioConsoleDeploymentUrl(
       result.serviceSid,
-      result.environmentSid
+      result.environmentSid,
+      config.region
     ),
     functions: result.functionResources.sort(sortByAccess).map(formatResource),
     assets: result.assetResources.sort(sortByAccess).map(formatResource),

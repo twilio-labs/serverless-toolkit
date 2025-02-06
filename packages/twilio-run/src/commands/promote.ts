@@ -94,7 +94,7 @@ export async function handler(
         config.targetEnvironment || 'production'
       }`
     );
-    printActivateResult(result, config.outputFormat);
+    printActivateResult(result, config.outputFormat, config.region);
   } catch (err) {
     handleError(err, spinner);
   }
