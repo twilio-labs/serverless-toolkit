@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.1.1
+
+### Patch Changes
+
+- [#535](https://github.com/twilio-labs/serverless-toolkit/pull/535) [`50eae0acaa3561c65c61326667a216650f3200c4`](https://github.com/twilio-labs/serverless-toolkit/commit/50eae0acaa3561c65c61326667a216650f3200c4) Thanks [@victoray](https://github.com/victoray)! - Display access visibility for public assets and functions on deploy.
+  Update links to route to regional console
+
 ## 4.1.0
 
 ### Minor Changes
