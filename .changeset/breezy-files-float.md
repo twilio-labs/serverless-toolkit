@@ -1,8 +1,8 @@
 ---
-"@twilio-labs/serverless-api": patch
-"twilio-run": patch
-"create-twilio-function": patch
-"@twilio-labs/plugin-serverless": patch
+"@twilio-labs/serverless-api": minor
+"twilio-run": minor
+"create-twilio-function": minor
+"@twilio-labs/plugin-serverless": minor
 ---
 
-Update toolkit to default to node22
+chore: update toolkit to default to node22
