@@ -70,7 +70,7 @@
     "nocache": "^2.1.0",
     "normalize.css": "^8.0.1",
     "serialize-error": "^7.0.1",
-    "twilio": "4.23.0"
+    "twilio": "5.5.2"
   },
   "gitHead": "6db273648ed19474f4125042556b10c051529912"
 }

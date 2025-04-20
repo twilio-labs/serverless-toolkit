@@ -29,12 +29,14 @@
   },
   "dependencies": {
     "@types/express": "^4.17.21",
-    "@types/qs": "^6.9.4",
-    "twilio": "^4.23.0"
+    "@types/qs": "^6.9.4"
   },
+  "peerDependencies": {
+		"twilio": "^5.5.2"
+  },		
   "devDependencies": {
     "all-contributors-cli": "^6.7.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.8.0"
   },
   "publishConfig": {
     "access": "public"

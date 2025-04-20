@@ -22,6 +22,17 @@
 npm install @twilio-labs/serverless-runtime-types
 ```
 
+**Peer Dependency Requirement:**
+
+This package requires the core `twilio` Node.js library as a **peer dependency** (version `^5.5.2` or compatible). This is necessary to ensure type consistency and prevent version conflicts within your project.
+
+**You MUST explicitly install both `@twilio-labs/serverless-runtime-types` and a compatible version of `twilio` in your project.**
+
+```bash
+# Using npm
+npm install @twilio-labs/serverless-runtime-types twilio@^5.5.2 --save-dev
+```
+
 ## Example
 
 ### In JavaScript
