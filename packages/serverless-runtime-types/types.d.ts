@@ -2,7 +2,7 @@ import * as twilio from 'twilio';
 import { ServiceContext } from 'twilio/lib/rest/sync/v1/service';
 import { SyncListListInstance } from 'twilio/lib/rest/sync/v1/service/syncList';
 import { SyncMapListInstance } from 'twilio/lib/rest/sync/v1/service/syncMap';
-import { TwilioClientOptions } from 'twilio/lib/rest/Twilio';
+export {  RequestClientOptions as TwilioClientOptions  } from 'twilio/lib/rest/Twilio';
 
 export type EnvironmentVariables = {
   [key: string]: string | undefined;
@@ -412,6 +412,6 @@ export type GlobalTwilio = Omit<typeof twilio, 'default'> & {
 export { ServiceContext } from 'twilio/lib/rest/sync/v1/service';
 export { SyncListListInstance } from 'twilio/lib/rest/sync/v1/service/syncList';
 export { SyncMapListInstance } from 'twilio/lib/rest/sync/v1/service/syncMap';
-export { TwilioClientOptions } from 'twilio/lib/rest/Twilio';
+export {  RequestClientOptions as TwilioClientOptions  } from 'twilio/lib/rest/Twilio';
 export type TwilioClient = twilio.Twilio;
 export type TwilioPackage = typeof twilio;
