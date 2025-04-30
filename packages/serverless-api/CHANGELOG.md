@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.7.0
+
+### Minor Changes
+
+- [#540](https://github.com/twilio-labs/serverless-toolkit/pull/540) [`3c1149ce220900fb37c8bbbd56ef47fc6cd02838`](https://github.com/twilio-labs/serverless-toolkit/commit/3c1149ce220900fb37c8bbbd56ef47fc6cd02838) Thanks [@jannoteelem](https://github.com/jannoteelem)! - chore: update toolkit to default to node22
+
 ## 5.6.0
 
 ### Minor Changes
