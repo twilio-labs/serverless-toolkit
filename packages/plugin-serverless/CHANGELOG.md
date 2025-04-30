@@ -1,5 +1,17 @@
 # Change Log
 
+## 3.3.0
+
+### Minor Changes
+
+- [#540](https://github.com/twilio-labs/serverless-toolkit/pull/540) [`3c1149ce220900fb37c8bbbd56ef47fc6cd02838`](https://github.com/twilio-labs/serverless-toolkit/commit/3c1149ce220900fb37c8bbbd56ef47fc6cd02838) Thanks [@jannoteelem](https://github.com/jannoteelem)! - chore: update toolkit to default to node22
+
+### Patch Changes
+
+- Updated dependencies [[`3c1149ce220900fb37c8bbbd56ef47fc6cd02838`](https://github.com/twilio-labs/serverless-toolkit/commit/3c1149ce220900fb37c8bbbd56ef47fc6cd02838), [`50eae0acaa3561c65c61326667a216650f3200c4`](https://github.com/twilio-labs/serverless-toolkit/commit/50eae0acaa3561c65c61326667a216650f3200c4)]:
+  - twilio-run@4.2.0
+  - create-twilio-function@3.6.0
+
 ## 3.2.0
 
 ### Minor Changes
