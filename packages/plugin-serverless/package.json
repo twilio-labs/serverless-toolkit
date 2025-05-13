@@ -10,7 +10,7 @@
   "dependencies": {
     "@oclif/core": "^1.14.2",
     "@twilio/cli-core": "^7.0.0",
-    "create-twilio-function": "^3.4.5",
+    "create-twilio-function": "^3.5.0",
     "lodash.camelcase": "^4.3.0",
     "lodash.kebabcase": "^4.1.1",
     "twilio-run": "^4.1.0"

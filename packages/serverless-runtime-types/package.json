@@ -32,7 +32,7 @@
     "@types/qs": "^6.9.4"
   },
   "peerDependencies": {
-		"twilio": "^5.5.2"
+		"twilio": "^5.6.0"
   },		
   "devDependencies": {
     "all-contributors-cli": "^6.7.0",

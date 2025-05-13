@@ -1,7 +1,7 @@
 const pkgJson = require('../../package.json');
 
 module.exports = {
-  twilio: '5.5.2',
+  twilio: '5.6.0',
   twilioRuntimeHandler: pkgJson.devDependencies[
     '@twilio/runtime-handler'
   ].replace(/[\^~]/, ''),
