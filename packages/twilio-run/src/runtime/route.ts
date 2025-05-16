@@ -4,6 +4,7 @@ import {
   ServerlessEventObject,
   ServerlessFunctionSignature,
 } from '@twilio-labs/serverless-runtime-types/types';
+
 import { fork } from 'child_process';
 import {
   NextFunction,
@@ -23,7 +24,6 @@ import { cleanUpStackTrace } from '../utils/stack-trace/clean-up';
 import { Reply } from './internal/functionRunner';
 import { Response } from './internal/response';
 import * as Runtime from './internal/runtime';
-import * as PATH from 'path';
 
 const RUNNER_PATH =
   process.env.NODE_ENV === 'test'
@@ -40,7 +40,7 @@ export function constructEvent<T extends ServerlessEventObject>(
   return { ...req.query, ...req.body };
 }
 
-export function constructContext<T extends {} = {}>(
+export function constructContext(
   { url, env }: StartCliConfig,
   functionPath: string
 ): Context<{

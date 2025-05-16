@@ -2,7 +2,7 @@ import * as twilio from 'twilio';
 import { ServiceContext } from 'twilio/lib/rest/sync/v1/service';
 import { SyncListListInstance } from 'twilio/lib/rest/sync/v1/service/syncList';
 import { SyncMapListInstance } from 'twilio/lib/rest/sync/v1/service/syncMap';
-import { TwilioClientOptions } from 'twilio/lib/rest/Twilio';
+import { ClientOpts } from 'twilio';
 
 export type EnvironmentVariables = {
   [key: string]: string | undefined;
@@ -187,7 +187,7 @@ export interface TwilioResponse {
   removeCookie(key: string): TwilioResponse;
 }
 
-export type RuntimeSyncClientOptions = TwilioClientOptions & {
+export type RuntimeSyncClientOptions = ClientOpts & {
   serviceName?: string;
 };
 
@@ -360,7 +360,7 @@ export type Context<T = {}> = {
    * };
    * ```
    */
-  getTwilioClient(options?: TwilioClientOptions): twilio.Twilio;
+  getTwilioClient(options?: ClientOpts): twilio.Twilio;
   /**
    * The domain name for the Service that contains this Function.
    */
@@ -412,6 +412,7 @@ export type GlobalTwilio = Omit<typeof twilio, 'default'> & {
 export { ServiceContext } from 'twilio/lib/rest/sync/v1/service';
 export { SyncListListInstance } from 'twilio/lib/rest/sync/v1/service/syncList';
 export { SyncMapListInstance } from 'twilio/lib/rest/sync/v1/service/syncMap';
-export { TwilioClientOptions } from 'twilio/lib/rest/Twilio';
+export { ClientOpts as TwilioClientOptions } from 'twilio/lib/rest/Twilio';
+
 export type TwilioClient = twilio.Twilio;
 export type TwilioPackage = typeof twilio;

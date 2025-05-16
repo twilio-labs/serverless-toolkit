@@ -24,7 +24,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@twilio/runtime-handler": "^2.0.3",
+    "@twilio/runtime-handler": "^2.1.0",
     "nock": "^11.3.4"
   },
   "dependencies": {
