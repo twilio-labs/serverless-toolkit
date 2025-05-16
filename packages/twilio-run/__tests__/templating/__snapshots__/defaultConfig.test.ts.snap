@@ -36,7 +36,7 @@ exports[`writeDefaultConfigFile default file should match snapshot 1`] = `
 	// "production": false 	/* Promote build to the production environment (no domain suffix). Overrides environment flag */,
 	// "properties": null 	/* Specify the output properties you want to see. Works best on single types */,
 	// "region": null 	/* Twilio API Region */,
-	"runtime": "node18" 	/* The version of Node.js to deploy the build to. (node18) */,
+	"runtime": "node22" 	/* The version of Node.js to deploy the build to. (node22) */,
 	// "serviceName": null 	/* Overrides the name of the Serverless project. Default: the name field in your package.json */,
 	// "serviceSid": null 	/* SID of the Twilio Serverless Service to deploy to */,
 	// "sourceEnvironment": null 	/* SID or suffix of an existing environment you want to deploy from. */,

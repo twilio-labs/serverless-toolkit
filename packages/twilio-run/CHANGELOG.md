@@ -1,5 +1,18 @@
 # Change Log
 
+## 4.2.0
+
+### Minor Changes
+
+- [#540](https://github.com/twilio-labs/serverless-toolkit/pull/540) [`3c1149ce220900fb37c8bbbd56ef47fc6cd02838`](https://github.com/twilio-labs/serverless-toolkit/commit/3c1149ce220900fb37c8bbbd56ef47fc6cd02838) Thanks [@jannoteelem](https://github.com/jannoteelem)! - chore: update toolkit to default to node22
+
+### Patch Changes
+
+- [#535](https://github.com/twilio-labs/serverless-toolkit/pull/535) [`50eae0acaa3561c65c61326667a216650f3200c4`](https://github.com/twilio-labs/serverless-toolkit/commit/50eae0acaa3561c65c61326667a216650f3200c4) Thanks [@victoray](https://github.com/victoray)! - Display access visibility for public assets and functions on deploy.
+  Update links to route to regional console
+- Updated dependencies [[`3c1149ce220900fb37c8bbbd56ef47fc6cd02838`](https://github.com/twilio-labs/serverless-toolkit/commit/3c1149ce220900fb37c8bbbd56ef47fc6cd02838)]:
+  - @twilio-labs/serverless-api@5.7.0
+
 ## 4.1.0
 
 ### Minor Changes
