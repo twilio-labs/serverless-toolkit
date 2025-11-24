@@ -23,7 +23,7 @@
     "rimraf": "^5.0.5"
   },
   "engines": {
-    "node": ">=18"
+    "node": "^20.x || ^22.x"
   },
   "files": [
     "/oclif.manifest.json",

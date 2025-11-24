@@ -16,9 +16,12 @@ function generateMockCallSite(
     getFunction: jest.fn(),
     getFunctionName: jest.fn(),
     getMethodName: jest.fn(),
+    getPosition: jest.fn(),
     getFileName: jest.fn().mockReturnValue(fileName),
     getLineNumber: jest.fn(),
     getColumnNumber: jest.fn(),
+    getEnclosingColumnNumber: jest.fn(),
+    getEnclosingLineNumber: jest.fn(),
     getEvalOrigin: jest.fn(),
     isToplevel: jest.fn(),
     isEval: jest.fn(),
@@ -27,6 +30,8 @@ function generateMockCallSite(
     isAsync: jest.fn(),
     isPromiseAll: jest.fn(),
     getPromiseIndex: jest.fn(),
+    getScriptHash: jest.fn(),
+    getScriptNameOrSourceURL: jest.fn(),
     toString: () => {
       return str;
     },
