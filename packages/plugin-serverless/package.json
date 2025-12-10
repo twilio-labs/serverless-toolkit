@@ -22,7 +22,7 @@
     "oclif": "^4.0.0"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "^20.x || ^22.x"
   },
   "files": [
     "/oclif.manifest.json",
