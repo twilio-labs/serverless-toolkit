@@ -167,7 +167,7 @@ DESCRIPTION
   Deploys existing functions and assets to Twilio
 ```
 
-_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.3.0/src/commands/serverless/deploy.js)_
+_See code: [src/commands/serverless/deploy.js](https://github.com/twilio-labs/serverless-toolkit/blob/v4.0.0/src/commands/serverless/deploy.js)_
 
 ## `twilio serverless:dev [DIR]`
 
@@ -180,7 +180,7 @@ USAGE
     [--assets-folder <value>] [--functions-folder <value>] [--fork-process]
 
 ARGUMENTS
-  DIR  Root directory to serve local Functions/Assets from
+  [DIR]  Root directory to serve local Functions/Assets from
 
 FLAGS
   -c, --config=<value>            Location of the config file. Absolute path or relative to current working directory
@@ -248,7 +248,7 @@ DESCRIPTION
   Retrieves the value of a specific environment variable
 ```
 
-_See code: [src/commands/serverless/env/get.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.3.0/src/commands/serverless/env/get.js)_
+_See code: [src/commands/serverless/env/get.js](https://github.com/twilio-labs/serverless-toolkit/blob/v4.0.0/src/commands/serverless/env/get.js)_
 
 ## `twilio serverless:env:import`
 
@@ -286,7 +286,7 @@ DESCRIPTION
   Takes a .env file and uploads all environment variables to a given environment
 ```
 
-_See code: [src/commands/serverless/env/import.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.3.0/src/commands/serverless/env/import.js)_
+_See code: [src/commands/serverless/env/import.js](https://github.com/twilio-labs/serverless-toolkit/blob/v4.0.0/src/commands/serverless/env/import.js)_
 
 ## `twilio serverless:env:list`
 
@@ -326,7 +326,7 @@ DESCRIPTION
   Lists all environment variables for a given environment
 ```
 
-_See code: [src/commands/serverless/env/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.3.0/src/commands/serverless/env/list.js)_
+_See code: [src/commands/serverless/env/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v4.0.0/src/commands/serverless/env/list.js)_
 
 ## `twilio serverless:env:set`
 
@@ -366,7 +366,7 @@ DESCRIPTION
   Sets an environment variable with a given key and value
 ```
 
-_See code: [src/commands/serverless/env/set.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.3.0/src/commands/serverless/env/set.js)_
+_See code: [src/commands/serverless/env/set.js](https://github.com/twilio-labs/serverless-toolkit/blob/v4.0.0/src/commands/serverless/env/set.js)_
 
 ## `twilio serverless:env:unset`
 
@@ -405,7 +405,7 @@ DESCRIPTION
   Removes an environment variable for a given key
 ```
 
-_See code: [src/commands/serverless/env/unset.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.3.0/src/commands/serverless/env/unset.js)_
+_See code: [src/commands/serverless/env/unset.js](https://github.com/twilio-labs/serverless-toolkit/blob/v4.0.0/src/commands/serverless/env/unset.js)_
 
 ## `twilio serverless:init NAME`
 
@@ -439,7 +439,7 @@ DESCRIPTION
   Creates a new Twilio Function project
 ```
 
-_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.3.0/src/commands/serverless/init.js)_
+_See code: [src/commands/serverless/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v4.0.0/src/commands/serverless/init.js)_
 
 ## `twilio serverless:list [TYPES]`
 
@@ -453,7 +453,7 @@ USAGE
     [--to <value>]
 
 ARGUMENTS
-  TYPES  [default: services] Comma separated list of things to list (services,environments,functions,assets,variables)
+  [TYPES]  [default: services] Comma separated list of things to list (services,environments,functions,assets,variables)
 
 FLAGS
   -c, --config=<value>             Location of the config file. Absolute path or relative to current working directory
@@ -482,7 +482,7 @@ DESCRIPTION
   List existing services, environments, variables, deployments for your Twilio Serverless Account
 ```
 
-_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.3.0/src/commands/serverless/list.js)_
+_See code: [src/commands/serverless/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v4.0.0/src/commands/serverless/list.js)_
 
 ## `twilio serverless:list-templates`
 
@@ -499,7 +499,7 @@ DESCRIPTION
   Lists the available Twilio Function templates
 ```
 
-_See code: [src/commands/serverless/list-templates.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.3.0/src/commands/serverless/list-templates.js)_
+_See code: [src/commands/serverless/list-templates.js](https://github.com/twilio-labs/serverless-toolkit/blob/v4.0.0/src/commands/serverless/list-templates.js)_
 
 ## `twilio serverless:logs`
 
@@ -539,7 +539,7 @@ DESCRIPTION
   Print logs from your Twilio Serverless project
 ```
 
-_See code: [src/commands/serverless/logs.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.3.0/src/commands/serverless/logs.js)_
+_See code: [src/commands/serverless/logs.js](https://github.com/twilio-labs/serverless-toolkit/blob/v4.0.0/src/commands/serverless/logs.js)_
 
 ## `twilio serverless:new [NAMESPACE]`
 
@@ -550,7 +550,7 @@ USAGE
   $ twilio serverless:new [NAMESPACE] [-l <value>] [-c <value>] [--cwd <value>] [--env <value>] [--template <value>]
 
 ARGUMENTS
-  NAMESPACE  The namespace your assets/functions should be grouped under
+  [NAMESPACE]  The namespace your assets/functions should be grouped under
 
 FLAGS
   -c, --config=<value>     Location of the config file. Absolute path or relative to current working directory (cwd)
@@ -563,7 +563,7 @@ DESCRIPTION
   Creates a new Twilio Function based on an existing template
 ```
 
-_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.3.0/src/commands/serverless/new.js)_
+_See code: [src/commands/serverless/new.js](https://github.com/twilio-labs/serverless-toolkit/blob/v4.0.0/src/commands/serverless/new.js)_
 
 ## `twilio serverless:promote`
 
@@ -613,7 +613,7 @@ ALIASES
   $ twilio serverless:activate
 ```
 
-_See code: [src/commands/serverless/promote.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.3.0/src/commands/serverless/promote.js)_
+_See code: [src/commands/serverless/promote.js](https://github.com/twilio-labs/serverless-toolkit/blob/v4.0.0/src/commands/serverless/promote.js)_
 
 ## `twilio serverless:run [DIR]`
 
@@ -626,7 +626,7 @@ USAGE
     [--assets-folder <value>] [--functions-folder <value>] [--fork-process]
 
 ARGUMENTS
-  DIR  Root directory to serve local Functions/Assets from
+  [DIR]  Root directory to serve local Functions/Assets from
 
 FLAGS
   -c, --config=<value>            Location of the config file. Absolute path or relative to current working directory
@@ -668,7 +668,7 @@ USAGE
     [--assets-folder <value>] [--functions-folder <value>] [--fork-process]
 
 ARGUMENTS
-  DIR  Root directory to serve local Functions/Assets from
+  [DIR]  Root directory to serve local Functions/Assets from
 
 FLAGS
   -c, --config=<value>            Location of the config file. Absolute path or relative to current working directory
@@ -699,7 +699,7 @@ ALIASES
   $ twilio serverless:run
 ```
 
-_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.3.0/src/commands/serverless/start.js)_
+_See code: [src/commands/serverless/start.js](https://github.com/twilio-labs/serverless-toolkit/blob/v4.0.0/src/commands/serverless/start.js)_
 <!-- commandsstop -->
 
 ## Contributing

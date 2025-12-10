@@ -1,5 +1,15 @@
 # Change Log
 
+## 5.0.0
+
+### Major Changes
+
+- [#544](https://github.com/twilio-labs/serverless-toolkit/pull/544) [`9f945cd79e89aaa00474c56a5ab3d6b41415b874`](https://github.com/twilio-labs/serverless-toolkit/commit/9f945cd79e89aaa00474c56a5ab3d6b41415b874) Thanks [@alfrol](https://github.com/alfrol)! - **WHAT**: Remove Node.js 18 from supported versions.
+
+  **WHY**: Node.js 18 is EOL and will not receive bug fixes or security upgrades. Users should migrate to Node.js 20 or 22.
+
+  **BREAKING CHANGE**: Projects using `create-twilio-function`, `@twilio-labs/plugin-asset`, `@twilio-labs/plugin-serverless`, `@twilio-labs/serverless-twilio-runtime` or `twilio-run` will have to migrate to Node.js 20 or 22.
+
 ## 4.2.0
 
 ### Minor Changes
