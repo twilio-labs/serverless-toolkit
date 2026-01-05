@@ -43,8 +43,9 @@
     "@types/semver": "^7.3.6",
     "body-parser": "^1.18.3",
     "boxen": "^5.1.2",
+    "braces": "^3.0.3",
     "chalk": "^4.1.1",
-    "chokidar": "^3.2.3",
+    "chokidar": "^3.6.0",
     "columnify": "^1.5.4",
     "common-tags": "^1.8.0",
     "conf": "^10.0.0",
@@ -52,7 +53,7 @@
     "debug": "^3.1.0",
     "dotenv": "^6.2.0",
     "enquirer": "^2.3.6",
-    "express": "^4.16.3",
+    "express": "^4.19.2",
     "express-useragent": "^1.0.13",
     "fast-redact": "^1.5.0",
     "got": "^11.8.5",
@@ -83,7 +84,7 @@
     "yargs": "^17.2.1"
   },
   "optionalDependencies": {
-    "ngrok": "^3.3.0"
+    "ngrok": "^4.3.3"
   },
   "devDependencies": {
     "@twilio/runtime-handler": "^2.1.0",
