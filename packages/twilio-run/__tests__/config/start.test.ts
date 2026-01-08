@@ -13,13 +13,19 @@ import {
 import os from 'os';
 import path from 'path';
 
-jest.mock('ngrok', () => {
+jest.mock('@ngrok/ngrok', () => {
   return {
-    connect: jest
+    forward: jest
       .fn()
       .mockImplementation(
-        ({ addr, subdomain }: { addr: number | string; subdomain: string }) =>
-          Promise.resolve(`https://${subdomain || 'random'}.ngrok.io`)
+        ({ addr, domain }: { addr: number | string; domain?: string }) => {
+          const subdomain = domain ? domain.replace('.ngrok.io', '') : 'random';
+
+          return Promise.resolve({
+            url: () => `https://${subdomain}.ngrok.io`,
+            close: jest.fn().mockResolvedValue(undefined),
+          });
+        }
       ),
   };
 });
@@ -50,6 +56,85 @@ describe('getUrl', () => {
 
     const url = await getUrl(config, 3000);
     expect(url).toBe('https://dom.ngrok.io');
+  });
+
+  test('handles ENOEXEC error with helpful message', async () => {
+    const ngrok = require('@ngrok/ngrok');
+    const originalForward = ngrok.forward;
+
+    // Mock ngrok to throw ENOEXEC error
+    ngrok.forward = jest.fn().mockRejectedValue({
+      code: 'ENOEXEC',
+      errno: -88,
+      message: 'spawn ngrok ENOEXEC',
+    });
+
+    const config = { ngrok: '' } as unknown as StartCliFlags;
+
+    await expect(getUrl(config, 3000)).rejects.toThrow(/ngrok failed to start/);
+
+    // Restore original mock
+    ngrok.forward = originalForward;
+  });
+
+  test('handles generic ngrok errors with helpful message', async () => {
+    const ngrok = require('@ngrok/ngrok');
+    const originalForward = ngrok.forward;
+
+    // Mock ngrok to throw a generic error
+    ngrok.forward = jest.fn().mockRejectedValue({
+      message: 'Connection refused',
+    });
+
+    const config = { ngrok: '' } as unknown as StartCliFlags;
+
+    await expect(getUrl(config, 3000)).rejects.toThrow(
+      /ngrok failed to start: Connection refused/
+    );
+
+    // Restore original mock
+    ngrok.forward = originalForward;
+  });
+
+  test('converts subdomain to full domain format', async () => {
+    const ngrok = require('@ngrok/ngrok');
+
+    const config = { ngrok: 'mysubdomain' } as unknown as StartCliFlags;
+    await getUrl(config, 3000);
+
+    expect(ngrok.forward).toHaveBeenCalledWith({
+      addr: 3000,
+      domain: 'mysubdomain.ngrok.io',
+    });
+  });
+
+  test('preserves full domain if provided', async () => {
+    const ngrok = require('@ngrok/ngrok');
+
+    const config = { ngrok: 'custom.ngrok.io' } as unknown as StartCliFlags;
+    await getUrl(config, 3000);
+
+    expect(ngrok.forward).toHaveBeenCalledWith({
+      addr: 3000,
+      domain: 'custom.ngrok.io',
+    });
+  });
+
+  test('handles listener without URL', async () => {
+    const ngrok = require('@ngrok/ngrok');
+    const originalForward = ngrok.forward;
+
+    ngrok.forward = jest.fn().mockResolvedValue({
+      url: () => undefined,
+      close: jest.fn(),
+    });
+
+    const config = { ngrok: '' } as unknown as StartCliFlags;
+
+    await expect(getUrl(config, 3000)).rejects.toThrow(/no URL was returned/);
+
+    // Restore original mock
+    ngrok.forward = originalForward;
   });
 });
 

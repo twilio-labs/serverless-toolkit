@@ -188,7 +188,7 @@ export const ALL_FLAGS = {
   ngrok: {
     type: 'string',
     describe:
-      'Uses ngrok to create a public url. Pass a string to set the subdomain (requires a paid-for ngrok account).',
+      'Uses ngrok to create a public url. Pass a string to set the subdomain (e.g., "myapp" or "myapp.ngrok.io"). Requires a paid ngrok account for custom subdomains.',
   } as Options,
   logs: {
     type: 'boolean',

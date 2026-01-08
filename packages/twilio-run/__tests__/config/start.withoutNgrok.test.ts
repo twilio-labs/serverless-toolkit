@@ -1,7 +1,7 @@
 import { getUrl, StartCliFlags } from '../../src/config/start';
 
-jest.mock('ngrok', () => {
-  throw new Error("Cannot find module 'ngrok'");
+jest.mock('@ngrok/ngrok', () => {
+  throw new Error("Cannot find module '@ngrok/ngrok'");
 });
 
 describe('getUrl', () => {

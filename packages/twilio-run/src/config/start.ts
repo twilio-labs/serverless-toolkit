@@ -16,9 +16,69 @@ import { PackageJson } from 'type-fest';
 
 const debug = getDebugFunction('twilio-run:cli:config');
 
+// Helper function to read ngrok authtoken from config file
+function getNgrokAuthToken(): string | undefined {
+  const os = require('os');
+  const possiblePaths = [
+    path.join(os.homedir(), '.ngrok2', 'ngrok.yml'),
+    path.join(
+      os.homedir(),
+      'Library',
+      'Application Support',
+      'ngrok',
+      'ngrok.yml'
+    ),
+  ];
+
+  for (const configPath of possiblePaths) {
+    try {
+      if (require('fs').existsSync(configPath)) {
+        const content = readFileSync(configPath, 'utf8');
+        const match = content.match(/authtoken:\s*(.+)/);
+        if (match && match[1]) {
+          return match[1].trim();
+        }
+      }
+    } catch (error) {
+      // Ignore errors and try next path
+    }
+  }
+
+  return undefined;
+}
+
+// Store ngrok listener for cleanup on exit
+let ngrokListener: any = null;
+
+// Register cleanup handlers
+process.on('SIGINT', async () => {
+  if (ngrokListener && typeof ngrokListener.close === 'function') {
+    debug('Closing ngrok tunnel...');
+    try {
+      await ngrokListener.close();
+    } catch (error) {
+      // Ignore errors during cleanup
+    }
+  }
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  if (ngrokListener && typeof ngrokListener.close === 'function') {
+    debug('Closing ngrok tunnel...');
+    try {
+      await ngrokListener.close();
+    } catch (error) {
+      // Ignore errors during cleanup
+    }
+  }
+  process.exit(0);
+});
+
 type NgrokConfig = {
   addr: string | number;
-  subdomain?: string;
+  domain?: string;
+  authtoken?: string;
 };
 
 type InspectInfo = {
@@ -72,19 +132,65 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
   if (typeof cli.ngrok !== 'undefined') {
     debug('Starting ngrok tunnel');
     const ngrokConfig: NgrokConfig = { addr: port };
+
+    // Convert subdomain to domain format for backward compatibility
     if (typeof cli.ngrok === 'string' && cli.ngrok.length > 0) {
-      ngrokConfig.subdomain = cli.ngrok;
+      ngrokConfig.domain = cli.ngrok.includes('.')
+        ? cli.ngrok // Already a full domain
+        : `${cli.ngrok}.ngrok.io`; // Just subdomain, add .ngrok.io
     }
+
+    // Read authtoken from ngrok config file
+    const authtoken = getNgrokAuthToken();
+    if (authtoken) {
+      ngrokConfig.authtoken = authtoken;
+      debug('Found ngrok authtoken in config file');
+    }
+
     let ngrok;
     try {
-      ngrok = require('ngrok');
+      ngrok = require('@ngrok/ngrok');
     } catch (error) {
       throw new Error(
         'ngrok could not be started because the module is not installed. Please install optional dependencies and try again.'
       );
     }
-    url = await ngrok.connect(ngrokConfig);
-    debug('ngrok tunnel URL: %s', url);
+
+    try {
+      // Use forward() instead of connect()
+      const listener = await ngrok.forward(ngrokConfig);
+
+      // Store for cleanup on exit
+      ngrokListener = listener;
+
+      // Get URL from listener
+      const tunnelUrl = listener.url();
+      if (!tunnelUrl) {
+        throw new Error('ngrok tunnel was created but no URL was returned');
+      }
+
+      url = tunnelUrl;
+      debug('ngrok tunnel URL: %s', url);
+    } catch (error: any) {
+      // Enhanced error handling
+      if (error.code === 'ENOEXEC' || error.errno === -88) {
+        const platform = process.platform;
+        const arch = process.arch;
+        throw new Error(
+          `ngrok failed to start.\n` +
+            `System: ${platform}-${arch}\n\n` +
+            `Try: npm install @ngrok/ngrok@latest\n\n` +
+            `Original error: ${error.message}`
+        );
+      }
+
+      // Re-throw other errors with context
+      throw new Error(
+        `ngrok failed to start: ${error.message}\n` +
+          `Check your ngrok configuration and network connectivity.\n` +
+          `For more help, visit: https://ngrok.com/docs`
+      );
+    }
   }
 
   return url;
