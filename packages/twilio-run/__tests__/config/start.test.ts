@@ -4,6 +4,7 @@ import {
   getBaseDirectory,
   getConfigFromCli,
   getInspectInfo,
+  getNgrokAuthToken,
   getPort,
   getUrl,
   StartCliConfig,
@@ -383,5 +384,119 @@ describe('getConfigFromCli', () => {
       expect(startConfig.forkProcess).toEqual(false);
       expect(startConfig.inspect).not.toEqual(undefined);
     }
+  });
+});
+
+describe('getNgrokAuthToken', () => {
+  let existsSyncSpy: jest.SpyInstance;
+  let readFileSyncSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    // Mock fs module functions
+    const fs = require('fs');
+    existsSyncSpy = jest.spyOn(fs, 'existsSync');
+    readFileSyncSpy = jest.spyOn(fs, 'readFileSync');
+  });
+
+  afterEach(() => {
+    existsSyncSpy.mockRestore();
+    readFileSyncSpy.mockRestore();
+  });
+
+  test('returns undefined when no config files exist', () => {
+    existsSyncSpy.mockReturnValue(false);
+
+    const token = getNgrokAuthToken();
+
+    expect(token).toBeUndefined();
+    expect(existsSyncSpy).toHaveBeenCalled();
+    expect(readFileSyncSpy).not.toHaveBeenCalled();
+  });
+
+  test('reads authtoken from ~/.ngrok2/ngrok.yml', () => {
+    const expectedToken = 'test-token-12345';
+    const configContent = `authtoken: ${expectedToken}\nregion: us`;
+
+    existsSyncSpy.mockImplementation((path: string) => {
+      return path.includes('.ngrok2');
+    });
+    readFileSyncSpy.mockReturnValue(configContent);
+
+    const token = getNgrokAuthToken();
+
+    expect(token).toBe(expectedToken);
+    expect(readFileSyncSpy).toHaveBeenCalledWith(
+      expect.stringContaining('.ngrok2'),
+      'utf8'
+    );
+  });
+
+  test('reads authtoken from ~/Library/Application Support/ngrok/ngrok.yml', () => {
+    const expectedToken = 'test-token-67890';
+    const configContent = `region: us\nauthtoken: ${expectedToken}`;
+
+    existsSyncSpy.mockImplementation((path: string) => {
+      return path.includes('Application Support');
+    });
+    readFileSyncSpy.mockReturnValue(configContent);
+
+    const token = getNgrokAuthToken();
+
+    expect(token).toBe(expectedToken);
+    expect(readFileSyncSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Application Support'),
+      'utf8'
+    );
+  });
+
+  test('returns undefined when config file exists but has no authtoken', () => {
+    const configContent = `region: us\nversion: 2`;
+
+    existsSyncSpy.mockReturnValue(true);
+    readFileSyncSpy.mockReturnValue(configContent);
+
+    const token = getNgrokAuthToken();
+
+    expect(token).toBeUndefined();
+  });
+
+  test('handles authtoken with spaces', () => {
+    const expectedToken = 'test-token-with-spaces';
+    const configContent = `authtoken:    ${expectedToken}   \n`;
+
+    existsSyncSpy.mockReturnValue(true);
+    readFileSyncSpy.mockReturnValue(configContent);
+
+    const token = getNgrokAuthToken();
+
+    expect(token).toBe(expectedToken);
+  });
+
+  test('returns undefined when file read throws error', () => {
+    existsSyncSpy.mockReturnValue(true);
+    readFileSyncSpy.mockImplementation(() => {
+      throw new Error('Permission denied');
+    });
+
+    const token = getNgrokAuthToken();
+
+    expect(token).toBeUndefined();
+  });
+
+  test('tries second path when first does not exist', () => {
+    const expectedToken = 'test-token-second-path';
+    const configContent = `authtoken: ${expectedToken}`;
+
+    let callCount = 0;
+    existsSyncSpy.mockImplementation(() => {
+      callCount++;
+      return callCount === 2; // Only second path exists
+    });
+    readFileSyncSpy.mockReturnValue(configContent);
+
+    const token = getNgrokAuthToken();
+
+    expect(token).toBe(expectedToken);
+    expect(existsSyncSpy).toHaveBeenCalledTimes(2);
   });
 });

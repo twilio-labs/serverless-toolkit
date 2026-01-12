@@ -1,6 +1,7 @@
 import { EnvironmentVariables } from '@twilio-labs/serverless-api';
 import dotenv from 'dotenv';
-import { readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
+import os from 'os';
 import path, { resolve } from 'path';
 import { Arguments } from 'yargs';
 import { ExternalCliOptions } from '../commands/shared';
@@ -13,12 +14,12 @@ import { readPackageJsonContent } from './utils';
 import { readSpecializedConfig } from './global';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 import { PackageJson } from 'type-fest';
+import type { Listener } from '@ngrok/ngrok';
 
 const debug = getDebugFunction('twilio-run:cli:config');
 
 // Helper function to read ngrok authtoken from config file
-function getNgrokAuthToken(): string | undefined {
-  const os = require('os');
+export function getNgrokAuthToken(): string | undefined {
   const possiblePaths = [
     path.join(os.homedir(), '.ngrok2', 'ngrok.yml'),
     path.join(
@@ -32,7 +33,7 @@ function getNgrokAuthToken(): string | undefined {
 
   for (const configPath of possiblePaths) {
     try {
-      if (require('fs').existsSync(configPath)) {
+      if (existsSync(configPath)) {
         const content = readFileSync(configPath, 'utf8');
         const match = content.match(/authtoken:\s*(.+)/);
         if (match && match[1]) {
@@ -48,32 +49,34 @@ function getNgrokAuthToken(): string | undefined {
 }
 
 // Store ngrok listener for cleanup on exit
-let ngrokListener: any = null;
+let ngrokListener: Listener | null = null;
+let ngrokCleanupRegistered = false;
 
-// Register cleanup handlers
-process.on('SIGINT', async () => {
-  if (ngrokListener && typeof ngrokListener.close === 'function') {
-    debug('Closing ngrok tunnel...');
-    try {
-      await ngrokListener.close();
-    } catch (error) {
-      // Ignore errors during cleanup
-    }
-  }
-  process.exit(0);
-});
+// Register cleanup handlers for ngrok tunnel
+function registerNgrokCleanup(listener: Listener): void {
+  ngrokListener = listener;
 
-process.on('SIGTERM', async () => {
-  if (ngrokListener && typeof ngrokListener.close === 'function') {
-    debug('Closing ngrok tunnel...');
-    try {
-      await ngrokListener.close();
-    } catch (error) {
-      // Ignore errors during cleanup
-    }
+  if (ngrokCleanupRegistered) {
+    return; // Already registered, just update the listener reference
   }
-  process.exit(0);
-});
+
+  ngrokCleanupRegistered = true;
+
+  const handleShutdown = async () => {
+    if (ngrokListener && typeof ngrokListener.close === 'function') {
+      debug('Closing ngrok tunnel...');
+      try {
+        await ngrokListener.close();
+      } catch (error) {
+        // Ignore errors during cleanup
+      }
+    }
+    process.exit(0);
+  };
+
+  process.on('SIGINT', handleShutdown);
+  process.on('SIGTERM', handleShutdown);
+}
 
 type NgrokConfig = {
   addr: string | number;
@@ -157,11 +160,23 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
     }
 
     try {
+      // Close any existing tunnel before creating a new one
+      if (ngrokListener) {
+        debug('Closing existing ngrok tunnel before creating new one...');
+        try {
+          await ngrokListener.close();
+        } catch (error) {
+          debug('Error closing existing tunnel: %s', error);
+          // Continue anyway to create new tunnel
+        }
+        ngrokListener = null;
+      }
+
       // Use forward() instead of connect()
       const listener = await ngrok.forward(ngrokConfig);
 
-      // Store for cleanup on exit
-      ngrokListener = listener;
+      // Register cleanup handlers and store listener
+      registerNgrokCleanup(listener);
 
       // Get URL from listener
       const tunnelUrl = listener.url();
@@ -172,14 +187,23 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
       url = tunnelUrl;
       debug('ngrok tunnel URL: %s', url);
     } catch (error: any) {
-      // Enhanced error handling
-      if (error.code === 'ENOEXEC' || error.errno === -88) {
+      // Handle known ngrok execution failures:
+      // - error.code === 'ENOEXEC': standard "exec format error" (errno 8)
+      // - errno === -88: observed macOS-specific ngrok spawn error (not standard ENOEXEC)
+      if (
+        error &&
+        (error.code === 'ENOEXEC' ||
+          (typeof error.errno === 'number' && error.errno === -88))
+      ) {
         const platform = process.platform;
         const arch = process.arch;
         throw new Error(
           `ngrok failed to start.\n` +
             `System: ${platform}-${arch}\n\n` +
-            `Try: npm install @ngrok/ngrok@latest\n\n` +
+            `This usually indicates a problem executing the ngrok binary, ` +
+            `such as an incompatible architecture or missing execute permissions.\n` +
+            `Verify that your environment is supported by @ngrok/ngrok ` +
+            `and that the ngrok binary is executable.\n\n` +
             `Original error: ${error.message}`
         );
       }

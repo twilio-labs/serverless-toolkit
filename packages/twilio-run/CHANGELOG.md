@@ -5,7 +5,7 @@
 ### Patch Changes
 
 - Migrate from `ngrok` to `@ngrok/ngrok` package for improved reliability and Apple Silicon support
-  - Fixes spawn error -88 on Apple Silicon (M1/M2) Macs
+  - Fixes spawn error -88 on Apple Silicon Macs
   - Pure JavaScript implementation eliminates architecture-specific binary issues
   - Automatically reads authtoken from ngrok config file (`~/.ngrok2/ngrok.yml` or `~/Library/Application Support/ngrok/ngrok.yml`)
   - Backward compatible: `--ngrok=myapp` automatically converts to `myapp.ngrok.io`
