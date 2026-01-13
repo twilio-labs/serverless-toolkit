@@ -98,6 +98,10 @@ describe('getUrl', () => {
   });
 
   test('converts subdomain to full domain format', async () => {
+    const fs = require('fs');
+    const existsSpy = jest.spyOn(fs, 'existsSync');
+    existsSpy.mockReturnValue(false); // Prevent reading real ngrok config
+
     const ngrok = require('@ngrok/ngrok');
 
     const config = { ngrok: 'mysubdomain' } as unknown as StartCliFlags;
@@ -107,9 +111,15 @@ describe('getUrl', () => {
       addr: 3000,
       domain: 'mysubdomain.ngrok.io',
     });
+
+    existsSpy.mockRestore();
   });
 
   test('preserves full domain if provided', async () => {
+    const fs = require('fs');
+    const existsSpy = jest.spyOn(fs, 'existsSync');
+    existsSpy.mockReturnValue(false); // Prevent reading real ngrok config
+
     const ngrok = require('@ngrok/ngrok');
 
     const config = { ngrok: 'custom.ngrok.io' } as unknown as StartCliFlags;
@@ -119,9 +129,15 @@ describe('getUrl', () => {
       addr: 3000,
       domain: 'custom.ngrok.io',
     });
+
+    existsSpy.mockRestore();
   });
 
   test('converts non-ngrok domains to ngrok.io format', async () => {
+    const fs = require('fs');
+    const existsSpy = jest.spyOn(fs, 'existsSync');
+    existsSpy.mockReturnValue(false); // Prevent reading real ngrok config
+
     const ngrok = require('@ngrok/ngrok');
 
     const config = { ngrok: 'my.app' } as unknown as StartCliFlags;
@@ -131,6 +147,8 @@ describe('getUrl', () => {
       addr: 3000,
       domain: 'my.app.ngrok.io',
     });
+
+    existsSpy.mockRestore();
   });
 
   test('handles listener without URL', async () => {
