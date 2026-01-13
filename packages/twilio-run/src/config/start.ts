@@ -38,7 +38,7 @@ export function getNgrokAuthToken(): string | undefined {
         const content = readFileSync(configPath, 'utf8');
         const match = content.match(/authtoken:\s*(\S+)/);
         if (match && match[1]) {
-          return match[1].trim();
+          return match[1];
         }
       }
     } catch (error) {
