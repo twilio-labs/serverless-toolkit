@@ -29,13 +29,14 @@ export function getNgrokAuthToken(): string | undefined {
       'ngrok',
       'ngrok.yml'
     ),
+    path.join(os.homedir(), 'AppData', 'Local', 'ngrok', 'ngrok.yml'),
   ];
 
   for (const configPath of possiblePaths) {
     try {
       if (existsSync(configPath)) {
         const content = readFileSync(configPath, 'utf8');
-        const match = content.match(/authtoken:\s*(.+)/);
+        const match = content.match(/authtoken:\s*(\S+)/);
         if (match && match[1]) {
           return match[1].trim();
         }
@@ -138,7 +139,7 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
 
     // Convert subdomain to domain format for backward compatibility
     if (typeof cli.ngrok === 'string' && cli.ngrok.length > 0) {
-      ngrokConfig.domain = cli.ngrok.includes('.')
+      ngrokConfig.domain = cli.ngrok.includes('.ngrok.')
         ? cli.ngrok // Already a full domain
         : `${cli.ngrok}.ngrok.io`; // Just subdomain, add .ngrok.io
     }

@@ -121,6 +121,18 @@ describe('getUrl', () => {
     });
   });
 
+  test('converts non-ngrok domains to ngrok.io format', async () => {
+    const ngrok = require('@ngrok/ngrok');
+
+    const config = { ngrok: 'my.app' } as unknown as StartCliFlags;
+    await getUrl(config, 3000);
+
+    expect(ngrok.forward).toHaveBeenCalledWith({
+      addr: 3000,
+      domain: 'my.app.ngrok.io',
+    });
+  });
+
   test('handles listener without URL', async () => {
     const ngrok = require('@ngrok/ngrok');
     const originalForward = ngrok.forward;
@@ -136,6 +148,30 @@ describe('getUrl', () => {
 
     // Restore original mock
     ngrok.forward = originalForward;
+  });
+
+  test('passes authtoken to ngrok.forward() when found in config', async () => {
+    const fs = require('fs');
+    const existsSpy = jest.spyOn(fs, 'existsSync');
+    const readSpy = jest.spyOn(fs, 'readFileSync');
+
+    existsSpy.mockReturnValue(true);
+    readSpy.mockReturnValue('authtoken: test-token-12345\nregion: us');
+
+    const ngrok = require('@ngrok/ngrok');
+    const config = { ngrok: 'myapp' } as unknown as StartCliFlags;
+
+    await getUrl(config, 3000);
+
+    expect(ngrok.forward).toHaveBeenCalledWith({
+      addr: 3000,
+      domain: 'myapp.ngrok.io',
+      authtoken: 'test-token-12345',
+    });
+
+    // Restore spies
+    existsSpy.mockRestore();
+    readSpy.mockRestore();
   });
 });
 
@@ -463,6 +499,18 @@ describe('getNgrokAuthToken', () => {
   test('handles authtoken with spaces', () => {
     const expectedToken = 'test-token-with-spaces';
     const configContent = `authtoken:    ${expectedToken}   \n`;
+
+    existsSyncSpy.mockReturnValue(true);
+    readFileSyncSpy.mockReturnValue(configContent);
+
+    const token = getNgrokAuthToken();
+
+    expect(token).toBe(expectedToken);
+  });
+
+  test('extracts authtoken without inline comments', () => {
+    const expectedToken = 'test-token-12345';
+    const configContent = `authtoken: ${expectedToken} # this is my token\nregion: us`;
 
     existsSyncSpy.mockReturnValue(true);
     readFileSyncSpy.mockReturnValue(configContent);
