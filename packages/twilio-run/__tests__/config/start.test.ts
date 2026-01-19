@@ -503,6 +503,24 @@ describe('getNgrokAuthToken', () => {
     );
   });
 
+  test('reads authtoken from Windows AppData path', () => {
+    const expectedToken = 'test-token-windows';
+    const configContent = `authtoken: ${expectedToken}\nregion: eu`;
+
+    existsSyncSpy.mockImplementation((path: string) => {
+      return path.includes('AppData');
+    });
+    readFileSyncSpy.mockReturnValue(configContent);
+
+    const token = getNgrokAuthToken();
+
+    expect(token).toBe(expectedToken);
+    expect(readFileSyncSpy).toHaveBeenCalledWith(
+      expect.stringContaining('AppData'),
+      'utf8'
+    );
+  });
+
   test('returns undefined when config file exists but has no authtoken', () => {
     const configContent = `region: us\nversion: 2`;
 

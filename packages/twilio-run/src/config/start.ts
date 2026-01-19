@@ -51,17 +51,10 @@ export function getNgrokAuthToken(): string | undefined {
 
 // Store ngrok listener for cleanup on exit
 let ngrokListener: Listener | null = null;
-let ngrokCleanupRegistered = false;
 
 // Register cleanup handlers for ngrok tunnel
 function registerNgrokCleanup(listener: Listener): void {
   ngrokListener = listener;
-
-  if (ngrokCleanupRegistered) {
-    return; // Already registered, just update the listener reference
-  }
-
-  ngrokCleanupRegistered = true;
 
   const handleShutdown = async () => {
     if (ngrokListener && typeof ngrokListener.close === 'function') {
@@ -75,8 +68,8 @@ function registerNgrokCleanup(listener: Listener): void {
     process.exit(0);
   };
 
-  process.on('SIGINT', handleShutdown);
-  process.on('SIGTERM', handleShutdown);
+  process.once('SIGINT', handleShutdown);
+  process.once('SIGTERM', handleShutdown);
 }
 
 type NgrokConfig = {
