@@ -300,6 +300,38 @@ describe('getUrl', () => {
 
     readSpy.mockRestore();
   });
+
+  test('validation error has correct message without connection context', async () => {
+    const ngrok = require('@ngrok/ngrok');
+    const originalForward = ngrok.forward;
+
+    // Mock ngrok to return listener without URL
+    ngrok.forward = jest.fn().mockResolvedValue({
+      url: () => undefined, // No URL returned
+      close: jest.fn(),
+    });
+
+    const config = { ngrok: '' } as unknown as StartCliFlags;
+
+    // Verify error message contains internal error text
+    await expect(getUrl(config, 3000)).rejects.toThrow(
+      /unexpected internal error/
+    );
+    await expect(getUrl(config, 3000)).rejects.toThrow(
+      /Please report this issue/
+    );
+
+    // Verify error message does NOT contain connection-related text
+    try {
+      await getUrl(config, 3000);
+      fail('Expected getUrl to throw an error');
+    } catch (error: any) {
+      expect(error.message).not.toContain('Check your ngrok configuration');
+      expect(error.message).not.toContain('network connectivity');
+    }
+
+    ngrok.forward = originalForward;
+  });
 });
 
 describe('getPort', () => {
@@ -641,7 +673,7 @@ describe('getNgrokAuthToken', () => {
     expect(token).toBeUndefined();
   });
 
-  test('handles authtoken with spaces', () => {
+  test('trims whitespace around authtoken', () => {
     const expectedToken = 'test-token-with-spaces';
     const configContent = `authtoken:    ${expectedToken}   \n`;
 

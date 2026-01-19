@@ -201,38 +201,22 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
       );
     }
 
+    // Close any existing tunnel before creating a new one
+    if (ngrokListener) {
+      debug('Closing existing ngrok tunnel before creating new one...');
+      try {
+        await ngrokListener.close();
+      } catch (error) {
+        debug('Error closing existing tunnel: %s', error);
+        // Continue anyway to create new tunnel
+      }
+      ngrokListener = null;
+    }
+
+    // Create new tunnel (connection errors handled here)
+    let listener;
     try {
-      // Close any existing tunnel before creating a new one
-      if (ngrokListener) {
-        debug('Closing existing ngrok tunnel before creating new one...');
-        try {
-          await ngrokListener.close();
-        } catch (error) {
-          debug('Error closing existing tunnel: %s', error);
-          // Continue anyway to create new tunnel
-        }
-        ngrokListener = null;
-      }
-
-      // Use forward() instead of connect()
-      const listener = await ngrok.forward(ngrokConfig);
-
-      // Validate listener before registering cleanup
-      // This validation is outside the ngrok error handler
-      const tunnelUrl = listener.url();
-      if (!tunnelUrl) {
-        throw new Error(
-          'ngrok tunnel was created but no URL was returned. ' +
-            'This is an unexpected internal error. ' +
-            'Please report this issue at https://github.com/twilio-labs/serverless-toolkit/issues'
-        );
-      }
-
-      // Only register cleanup after validation succeeds
-      registerNgrokCleanup(listener);
-
-      url = tunnelUrl;
-      debug('ngrok tunnel URL: %s', url);
+      listener = await ngrok.forward(ngrokConfig);
     } catch (error: any) {
       // Handle known ngrok execution failures:
       // - error.code === 'ENOEXEC': standard "exec format error" (errno 8)
@@ -255,13 +239,28 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
         );
       }
 
-      // Re-throw other errors with context
+      // Re-throw connection errors with context
       throw new Error(
         `ngrok failed to start: ${error?.message || 'Unknown error'}\n` +
           `Check your ngrok configuration and network connectivity.\n` +
           `For more help, visit: https://ngrok.com/docs`
       );
     }
+
+    // Validate tunnel (OUTSIDE ngrok error handler - internal validation)
+    const tunnelUrl = listener.url();
+    if (!tunnelUrl) {
+      throw new Error(
+        'ngrok tunnel was created but no URL was returned. ' +
+          'This is an unexpected internal error. ' +
+          'Please report this issue at https://github.com/twilio-labs/serverless-toolkit/issues'
+      );
+    }
+
+    // Register cleanup and return (OUTSIDE all error handlers)
+    registerNgrokCleanup(listener);
+    url = tunnelUrl;
+    debug('ngrok tunnel URL: %s', url);
   }
 
   return url;
