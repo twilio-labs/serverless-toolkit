@@ -49,12 +49,11 @@ export function getNgrokAuthToken(): string | undefined {
   return undefined;
 }
 
-// Store ngrok listener for cleanup on exit
-// Note: This is a module-level singleton designed for CLI usage where the server
-// runs once and exits. In test environments or programmatic usage with multiple
-// server restarts, call close() on the listener before creating a new tunnel.
+// Module-level singleton for CLI usage: creates one tunnel per process.
+// Supports sequential tunnel creation (close old, create new) for tests.
+// Signal handlers use process.once() (auto-remove after firing) + process.off() (consistent API).
+// NOT supported: Concurrent tunnels (only one reference stored).
 let ngrokListener: Listener | null = null;
-let ngrokCleanupRegistered = false;
 
 // Store handler references for cleanup
 let sigintHandler: (() => Promise<void>) | null = null;
@@ -72,36 +71,47 @@ const handleShutdown = async () => {
   process.exit(0);
 };
 
-// Register cleanup handlers for ngrok tunnel
+/**
+ * Register SIGINT/SIGTERM cleanup handlers for ngrok tunnel.
+ * Removes any existing handlers before registering new ones (supports sequential tunnels).
+ * Uses process.once() (auto-removes after signal) + process.off() (for manual removal in tests).
+ */
 function registerNgrokCleanup(listener: Listener): void {
   ngrokListener = listener;
 
-  // Only register handlers once
-  if (!ngrokCleanupRegistered) {
-    sigintHandler = handleShutdown;
-    sigtermHandler = handleShutdown;
-
-    process.once('SIGINT', sigintHandler);
-    process.once('SIGTERM', sigtermHandler);
-    ngrokCleanupRegistered = true;
+  // Remove any existing handlers from previous tunnel (for test/sequential usage)
+  if (sigintHandler) {
+    process.off('SIGINT', sigintHandler);
   }
+  if (sigtermHandler) {
+    process.off('SIGTERM', sigtermHandler);
+  }
+
+  // Register new handlers for current tunnel
+  sigintHandler = handleShutdown;
+  sigtermHandler = handleShutdown;
+
+  process.once('SIGINT', sigintHandler);
+  process.once('SIGTERM', sigtermHandler);
 }
 
-// For testing purposes only: reset module state
+/**
+ * Reset module state for testing. Removes signal handlers before they fire.
+ * Production code doesn't need this (process.once() auto-removes after signal).
+ */
 export function __resetNgrokState(): void {
-  // Remove signal handlers if they exist
+  // Remove signal handlers if they exist (before signal fires)
   if (sigintHandler) {
-    process.removeListener('SIGINT', sigintHandler);
+    process.off('SIGINT', sigintHandler);
     sigintHandler = null;
   }
   if (sigtermHandler) {
-    process.removeListener('SIGTERM', sigtermHandler);
+    process.off('SIGTERM', sigtermHandler);
     sigtermHandler = null;
   }
 
   // Reset module state
   ngrokListener = null;
-  ngrokCleanupRegistered = false;
 }
 
 type NgrokConfig = {
@@ -207,14 +217,19 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
       // Use forward() instead of connect()
       const listener = await ngrok.forward(ngrokConfig);
 
-      // Register cleanup handlers and store listener
-      registerNgrokCleanup(listener);
-
-      // Get URL from listener
+      // Validate listener before registering cleanup
+      // This validation is outside the ngrok error handler
       const tunnelUrl = listener.url();
       if (!tunnelUrl) {
-        throw new Error('ngrok tunnel was created but no URL was returned');
+        throw new Error(
+          'ngrok tunnel was created but no URL was returned. ' +
+            'This is an unexpected internal error. ' +
+            'Please report this issue at https://github.com/twilio-labs/serverless-toolkit/issues'
+        );
       }
+
+      // Only register cleanup after validation succeeds
+      registerNgrokCleanup(listener);
 
       url = tunnelUrl;
       debug('ngrok tunnel URL: %s', url);

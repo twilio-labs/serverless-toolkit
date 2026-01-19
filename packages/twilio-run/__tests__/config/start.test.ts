@@ -33,12 +33,20 @@ jest.mock('@ngrok/ngrok', () => {
 });
 
 describe('getUrl', () => {
+  let existsSpy: jest.SpyInstance;
+
   beforeEach(() => {
     __resetNgrokState();
+
+    // Prevent reading real ngrok config files
+    const fs = require('fs');
+    existsSpy = jest.spyOn(fs, 'existsSync');
+    existsSpy.mockReturnValue(false);
   });
 
   afterEach(() => {
     __resetNgrokState();
+    existsSpy.mockRestore();
   });
 
   test('returns localhost if ngrok is not passed', async () => {
@@ -276,6 +284,21 @@ describe('getUrl', () => {
 
     // Verify forward was called twice
     expect(ngrok.forward).toHaveBeenCalledTimes(2);
+  });
+
+  test('does not read real ngrok config during tests', async () => {
+    const fs = require('fs');
+    const readSpy = jest.spyOn(fs, 'readFileSync');
+
+    const config = { ngrok: 'test' } as unknown as StartCliFlags;
+    await getUrl(config, 3000);
+
+    // Verify existsSync was called (from beforeEach mock) but returned false
+    expect(existsSpy).toHaveBeenCalled();
+    // Verify readFileSync was NOT called (because exists returned false)
+    expect(readSpy).not.toHaveBeenCalled();
+
+    readSpy.mockRestore();
   });
 });
 
@@ -673,15 +696,22 @@ describe('getNgrokAuthToken', () => {
 
 describe('ngrok cleanup handlers', () => {
   let processOnceSpy: jest.SpyInstance;
+  let existsSpy: jest.SpyInstance;
 
   beforeEach(() => {
     // Reset module state before each test
     __resetNgrokState();
     processOnceSpy = jest.spyOn(process, 'once');
+
+    // Prevent reading real ngrok config files
+    const fs = require('fs');
+    existsSpy = jest.spyOn(fs, 'existsSync');
+    existsSpy.mockReturnValue(false);
   });
 
   afterEach(() => {
     processOnceSpy.mockRestore();
+    existsSpy.mockRestore();
   });
 
   test('registers SIGINT and SIGTERM handlers', async () => {
@@ -698,7 +728,7 @@ describe('ngrok cleanup handlers', () => {
     );
   });
 
-  test('does not register handlers multiple times', async () => {
+  test('re-registers handlers for sequential tunnels', async () => {
     const config = {
       ngrok: 'test-app',
     } as unknown as StartCliFlags;
@@ -706,8 +736,8 @@ describe('ngrok cleanup handlers', () => {
     await getUrl(config, 3000);
     await getUrl(config, 3000);
 
-    // Should only be called once for each signal (2 total, not 4)
-    expect(processOnceSpy).toHaveBeenCalledTimes(2);
+    // Handlers are removed and re-registered for each tunnel (4 total: 2 per getUrl call)
+    expect(processOnceSpy).toHaveBeenCalledTimes(4);
   });
 
   test('cleanup handler calls listener.close()', async () => {
@@ -789,22 +819,16 @@ describe('ngrok cleanup handlers', () => {
       expect.any(Function)
     );
 
-    // Spy on process.removeListener
-    const removeListenerSpy = jest.spyOn(process, 'removeListener');
+    // Spy on process.off (modern API)
+    const processOffSpy = jest.spyOn(process, 'off');
 
     // Reset state
     __resetNgrokState();
 
     // Verify handlers were removed
-    expect(removeListenerSpy).toHaveBeenCalledWith(
-      'SIGINT',
-      expect.any(Function)
-    );
-    expect(removeListenerSpy).toHaveBeenCalledWith(
-      'SIGTERM',
-      expect.any(Function)
-    );
+    expect(processOffSpy).toHaveBeenCalledWith('SIGINT', expect.any(Function));
+    expect(processOffSpy).toHaveBeenCalledWith('SIGTERM', expect.any(Function));
 
-    removeListenerSpy.mockRestore();
+    processOffSpy.mockRestore();
   });
 });
