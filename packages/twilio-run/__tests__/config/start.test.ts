@@ -34,6 +34,7 @@ jest.mock('@ngrok/ngrok', () => {
 
 describe('getUrl', () => {
   let existsSpy: jest.SpyInstance;
+  let readFileSpy: jest.SpyInstance;
 
   beforeEach(() => {
     __resetNgrokState();
@@ -42,11 +43,13 @@ describe('getUrl', () => {
     const fs = require('fs');
     existsSpy = jest.spyOn(fs, 'existsSync');
     existsSpy.mockReturnValue(false);
+    readFileSpy = jest.spyOn(fs, 'readFileSync');
   });
 
   afterEach(() => {
     __resetNgrokState();
     existsSpy.mockRestore();
+    readFileSpy.mockRestore();
   });
 
   test('returns localhost if ngrok is not passed', async () => {
@@ -115,10 +118,7 @@ describe('getUrl', () => {
   });
 
   test('converts subdomain to full domain format', async () => {
-    const fs = require('fs');
-    const existsSpy = jest.spyOn(fs, 'existsSync');
-    existsSpy.mockReturnValue(false); // Prevent reading real ngrok config
-
+    // Use shared existsSpy from beforeEach (already mocked to return false)
     const ngrok = require('@ngrok/ngrok');
 
     const config = { ngrok: 'mysubdomain' } as unknown as StartCliFlags;
@@ -128,15 +128,11 @@ describe('getUrl', () => {
       addr: 3000,
       domain: 'mysubdomain.ngrok.io',
     });
-
-    existsSpy.mockRestore();
+    // No manual spy creation or restoration
   });
 
   test('preserves full domain if provided', async () => {
-    const fs = require('fs');
-    const existsSpy = jest.spyOn(fs, 'existsSync');
-    existsSpy.mockReturnValue(false); // Prevent reading real ngrok config
-
+    // Use shared existsSpy from beforeEach (already mocked to return false)
     const ngrok = require('@ngrok/ngrok');
 
     const config = { ngrok: 'custom.ngrok.io' } as unknown as StartCliFlags;
@@ -146,15 +142,11 @@ describe('getUrl', () => {
       addr: 3000,
       domain: 'custom.ngrok.io',
     });
-
-    existsSpy.mockRestore();
+    // No manual spy creation or restoration
   });
 
   test('converts non-ngrok domains to ngrok.io format', async () => {
-    const fs = require('fs');
-    const existsSpy = jest.spyOn(fs, 'existsSync');
-    existsSpy.mockReturnValue(false); // Prevent reading real ngrok config
-
+    // Use shared existsSpy from beforeEach (already mocked to return false)
     const ngrok = require('@ngrok/ngrok');
 
     const config = { ngrok: 'my.app' } as unknown as StartCliFlags;
@@ -164,15 +156,11 @@ describe('getUrl', () => {
       addr: 3000,
       domain: 'my.app.ngrok.io',
     });
-
-    existsSpy.mockRestore();
+    // No manual spy creation or restoration
   });
 
   test('preserves ngrok.dev domain if provided', async () => {
-    const fs = require('fs');
-    const existsSpy = jest.spyOn(fs, 'existsSync');
-    existsSpy.mockReturnValue(false);
-
+    // Use shared existsSpy from beforeEach (already mocked to return false)
     const ngrok = require('@ngrok/ngrok');
     const config = { ngrok: 'custom.ngrok.dev' } as unknown as StartCliFlags;
     await getUrl(config, 3000);
@@ -181,15 +169,11 @@ describe('getUrl', () => {
       addr: 3000,
       domain: 'custom.ngrok.dev',
     });
-
-    existsSpy.mockRestore();
+    // No manual spy creation or restoration
   });
 
   test('preserves ngrok-free.app domain if provided', async () => {
-    const fs = require('fs');
-    const existsSpy = jest.spyOn(fs, 'existsSync');
-    existsSpy.mockReturnValue(false);
-
+    // Use shared existsSpy from beforeEach (already mocked to return false)
     const ngrok = require('@ngrok/ngrok');
     const config = { ngrok: 'test.ngrok-free.app' } as unknown as StartCliFlags;
     await getUrl(config, 3000);
@@ -198,15 +182,11 @@ describe('getUrl', () => {
       addr: 3000,
       domain: 'test.ngrok-free.app',
     });
-
-    existsSpy.mockRestore();
+    // No manual spy creation or restoration
   });
 
   test('appends .ngrok.io to domains that do not match ngrok TLDs', async () => {
-    const fs = require('fs');
-    const existsSpy = jest.spyOn(fs, 'existsSync');
-    existsSpy.mockReturnValue(false);
-
+    // Use shared existsSpy from beforeEach (already mocked to return false)
     const ngrok = require('@ngrok/ngrok');
     const config = { ngrok: 'company.ngrokit.com' } as unknown as StartCliFlags;
     await getUrl(config, 3000);
@@ -215,8 +195,7 @@ describe('getUrl', () => {
       addr: 3000,
       domain: 'company.ngrokit.com.ngrok.io',
     });
-
-    existsSpy.mockRestore();
+    // No manual spy creation or restoration
   });
 
   test('handles listener without URL', async () => {
@@ -237,12 +216,9 @@ describe('getUrl', () => {
   });
 
   test('passes authtoken to ngrok.forward() when found in config', async () => {
-    const fs = require('fs');
-    const existsSpy = jest.spyOn(fs, 'existsSync');
-    const readSpy = jest.spyOn(fs, 'readFileSync');
-
-    existsSpy.mockReturnValue(true);
-    readSpy.mockReturnValue('authtoken: test-token-12345\nregion: us');
+    // Use shared spies from beforeEach
+    existsSpy.mockReturnValueOnce(true);
+    readFileSpy.mockReturnValueOnce('authtoken: test-token-12345\nregion: us');
 
     const ngrok = require('@ngrok/ngrok');
     const config = { ngrok: 'myapp' } as unknown as StartCliFlags;
@@ -254,10 +230,7 @@ describe('getUrl', () => {
       domain: 'myapp.ngrok.io',
       authtoken: 'test-token-12345',
     });
-
-    // Restore spies
-    existsSpy.mockRestore();
-    readSpy.mockRestore();
+    // No manual spy creation or restoration
   });
 
   test('closes existing tunnel before creating new one', async () => {
@@ -287,18 +260,15 @@ describe('getUrl', () => {
   });
 
   test('does not read real ngrok config during tests', async () => {
-    const fs = require('fs');
-    const readSpy = jest.spyOn(fs, 'readFileSync');
-
+    // Use shared spies from beforeEach
     const config = { ngrok: 'test' } as unknown as StartCliFlags;
     await getUrl(config, 3000);
 
     // Verify existsSync was called (from beforeEach mock) but returned false
     expect(existsSpy).toHaveBeenCalled();
     // Verify readFileSync was NOT called (because exists returned false)
-    expect(readSpy).not.toHaveBeenCalled();
-
-    readSpy.mockRestore();
+    expect(readFileSpy).not.toHaveBeenCalled();
+    // No manual spy creation or restoration
   });
 
   test('validation error has correct message without connection context', async () => {
@@ -826,7 +796,7 @@ describe('ngrok cleanup handlers', () => {
     const exitSpy = jest.spyOn(process, 'exit').mockImplementation();
 
     // Call the handler - should not throw despite close() error
-    await expect(sigintHandler()).resolves.not.toThrow();
+    await sigintHandler();
 
     // Verify close was attempted
     expect(listener.close).toHaveBeenCalled();

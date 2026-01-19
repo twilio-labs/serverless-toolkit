@@ -14,9 +14,17 @@ import { readPackageJsonContent } from './utils';
 import { readSpecializedConfig } from './global';
 import { mergeFlagsAndConfig } from './utils/mergeFlagsAndConfig';
 import { PackageJson } from 'type-fest';
-import type { Listener } from '@ngrok/ngrok';
 
 const debug = getDebugFunction('twilio-run:cli:config');
+
+/**
+ * Local interface matching the subset of @ngrok/ngrok's Listener we use.
+ * Defined locally to avoid compile-time dependency on optional package.
+ */
+interface NgrokListener {
+  url(): string | null;
+  close(): Promise<void>;
+}
 
 // Helper function to read ngrok authtoken from config file
 export function getNgrokAuthToken(): string | undefined {
@@ -53,7 +61,7 @@ export function getNgrokAuthToken(): string | undefined {
 // Supports sequential tunnel creation (close old, create new) for tests.
 // Signal handlers use process.once() (auto-remove after firing) + process.off() (consistent API).
 // NOT supported: Concurrent tunnels (only one reference stored).
-let ngrokListener: Listener | null = null;
+let ngrokListener: NgrokListener | null = null;
 
 // Store handler references for cleanup
 let sigintHandler: (() => Promise<void>) | null = null;
@@ -76,7 +84,7 @@ const handleShutdown = async () => {
  * Removes any existing handlers before registering new ones (supports sequential tunnels).
  * Uses process.once() (auto-removes after signal) + process.off() (for manual removal in tests).
  */
-function registerNgrokCleanup(listener: Listener): void {
+function registerNgrokCleanup(listener: NgrokListener): void {
   ngrokListener = listener;
 
   // Remove any existing handlers from previous tunnel (for test/sequential usage)
