@@ -212,13 +212,13 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
             `such as an incompatible architecture or missing execute permissions.\n` +
             `Verify that your environment is supported by @ngrok/ngrok ` +
             `and that the ngrok binary is executable.\n\n` +
-            `Original error: ${error.message}`
+            `Original error: ${error?.message || 'Unknown error'}`
         );
       }
 
       // Re-throw other errors with context
       throw new Error(
-        `ngrok failed to start: ${error.message}\n` +
+        `ngrok failed to start: ${error?.message || 'Unknown error'}\n` +
           `Check your ngrok configuration and network connectivity.\n` +
           `For more help, visit: https://ngrok.com/docs`
       );
