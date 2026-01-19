@@ -153,8 +153,6 @@ twilio-run --ngrok
 
 # Exposes the Twilio functions via ngrok using a custom subdomain (requires a paid ngrok account)
 twilio-run --ngrok=myapp
-# or with full domain format
-twilio-run --ngrok=myapp.ngrok.io
 ```
 
 ### `twilio-run deploy`
