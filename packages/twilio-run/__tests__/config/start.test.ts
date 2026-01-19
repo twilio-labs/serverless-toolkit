@@ -33,6 +33,14 @@ jest.mock('@ngrok/ngrok', () => {
 });
 
 describe('getUrl', () => {
+  beforeEach(() => {
+    __resetNgrokState();
+  });
+
+  afterEach(() => {
+    __resetNgrokState();
+  });
+
   test('returns localhost if ngrok is not passed', async () => {
     const config = {
       ngrok: undefined,
@@ -147,6 +155,57 @@ describe('getUrl', () => {
     expect(ngrok.forward).toHaveBeenCalledWith({
       addr: 3000,
       domain: 'my.app.ngrok.io',
+    });
+
+    existsSpy.mockRestore();
+  });
+
+  test('preserves ngrok.dev domain if provided', async () => {
+    const fs = require('fs');
+    const existsSpy = jest.spyOn(fs, 'existsSync');
+    existsSpy.mockReturnValue(false);
+
+    const ngrok = require('@ngrok/ngrok');
+    const config = { ngrok: 'custom.ngrok.dev' } as unknown as StartCliFlags;
+    await getUrl(config, 3000);
+
+    expect(ngrok.forward).toHaveBeenCalledWith({
+      addr: 3000,
+      domain: 'custom.ngrok.dev',
+    });
+
+    existsSpy.mockRestore();
+  });
+
+  test('preserves ngrok-free.app domain if provided', async () => {
+    const fs = require('fs');
+    const existsSpy = jest.spyOn(fs, 'existsSync');
+    existsSpy.mockReturnValue(false);
+
+    const ngrok = require('@ngrok/ngrok');
+    const config = { ngrok: 'test.ngrok-free.app' } as unknown as StartCliFlags;
+    await getUrl(config, 3000);
+
+    expect(ngrok.forward).toHaveBeenCalledWith({
+      addr: 3000,
+      domain: 'test.ngrok-free.app',
+    });
+
+    existsSpy.mockRestore();
+  });
+
+  test('appends .ngrok.io to domains that do not match ngrok TLDs', async () => {
+    const fs = require('fs');
+    const existsSpy = jest.spyOn(fs, 'existsSync');
+    existsSpy.mockReturnValue(false);
+
+    const ngrok = require('@ngrok/ngrok');
+    const config = { ngrok: 'company.ngrokit.com' } as unknown as StartCliFlags;
+    await getUrl(config, 3000);
+
+    expect(ngrok.forward).toHaveBeenCalledWith({
+      addr: 3000,
+      domain: 'company.ngrokit.com.ngrok.io',
     });
 
     existsSpy.mockRestore();
@@ -714,5 +773,38 @@ describe('ngrok cleanup handlers', () => {
     expect(exitSpy).toHaveBeenCalledWith(0);
 
     exitSpy.mockRestore();
+  });
+
+  test('__resetNgrokState removes signal handlers', async () => {
+    const config = {
+      ngrok: 'test-app',
+    } as unknown as StartCliFlags;
+
+    await getUrl(config, 3000);
+
+    // Verify handlers are registered
+    expect(processOnceSpy).toHaveBeenCalledWith('SIGINT', expect.any(Function));
+    expect(processOnceSpy).toHaveBeenCalledWith(
+      'SIGTERM',
+      expect.any(Function)
+    );
+
+    // Spy on process.removeListener
+    const removeListenerSpy = jest.spyOn(process, 'removeListener');
+
+    // Reset state
+    __resetNgrokState();
+
+    // Verify handlers were removed
+    expect(removeListenerSpy).toHaveBeenCalledWith(
+      'SIGINT',
+      expect.any(Function)
+    );
+    expect(removeListenerSpy).toHaveBeenCalledWith(
+      'SIGTERM',
+      expect.any(Function)
+    );
+
+    removeListenerSpy.mockRestore();
   });
 });

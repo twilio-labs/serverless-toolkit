@@ -56,6 +56,10 @@ export function getNgrokAuthToken(): string | undefined {
 let ngrokListener: Listener | null = null;
 let ngrokCleanupRegistered = false;
 
+// Store handler references for cleanup
+let sigintHandler: (() => Promise<void>) | null = null;
+let sigtermHandler: (() => Promise<void>) | null = null;
+
 const handleShutdown = async () => {
   if (ngrokListener && typeof ngrokListener.close === 'function') {
     debug('Closing ngrok tunnel...');
@@ -74,14 +78,28 @@ function registerNgrokCleanup(listener: Listener): void {
 
   // Only register handlers once
   if (!ngrokCleanupRegistered) {
-    process.once('SIGINT', handleShutdown);
-    process.once('SIGTERM', handleShutdown);
+    sigintHandler = handleShutdown;
+    sigtermHandler = handleShutdown;
+
+    process.once('SIGINT', sigintHandler);
+    process.once('SIGTERM', sigtermHandler);
     ngrokCleanupRegistered = true;
   }
 }
 
 // For testing purposes only: reset module state
 export function __resetNgrokState(): void {
+  // Remove signal handlers if they exist
+  if (sigintHandler) {
+    process.removeListener('SIGINT', sigintHandler);
+    sigintHandler = null;
+  }
+  if (sigtermHandler) {
+    process.removeListener('SIGTERM', sigtermHandler);
+    sigtermHandler = null;
+  }
+
+  // Reset module state
   ngrokListener = null;
   ngrokCleanupRegistered = false;
 }
@@ -146,8 +164,14 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
 
     // Convert subdomain to domain format for backward compatibility
     if (typeof cli.ngrok === 'string' && cli.ngrok.length > 0) {
-      ngrokConfig.domain = cli.ngrok.includes('.ngrok.')
-        ? cli.ngrok // Already a full domain
+      // Check if it's already a full ngrok domain (ends with official ngrok TLDs)
+      const isNgrokDomain =
+        cli.ngrok.endsWith('.ngrok.io') ||
+        cli.ngrok.endsWith('.ngrok.dev') ||
+        cli.ngrok.endsWith('.ngrok-free.app');
+
+      ngrokConfig.domain = isNgrokDomain
+        ? cli.ngrok // Already a full ngrok domain
         : `${cli.ngrok}.ngrok.io`; // Just subdomain, add .ngrok.io
     }
 
