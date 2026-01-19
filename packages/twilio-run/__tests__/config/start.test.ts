@@ -9,6 +9,7 @@ import {
   getUrl,
   StartCliConfig,
   StartCliFlags,
+  __resetNgrokState,
 } from '../../src/config/start';
 
 import os from 'os';
@@ -190,6 +191,32 @@ describe('getUrl', () => {
     // Restore spies
     existsSpy.mockRestore();
     readSpy.mockRestore();
+  });
+
+  test('closes existing tunnel before creating new one', async () => {
+    const config = {
+      ngrok: 'test-app',
+    } as unknown as StartCliFlags;
+
+    const ngrok = require('@ngrok/ngrok');
+
+    // First call
+    const url1 = await getUrl(config, 3000);
+    expect(url1).toBe('https://test-app.ngrok.io');
+
+    // Get reference to first listener
+    const firstListener = await ngrok.forward.mock.results[0].value;
+    const firstClose = firstListener.close;
+
+    // Second call
+    const url2 = await getUrl(config, 3000);
+    expect(url2).toBe('https://test-app.ngrok.io');
+
+    // Verify first listener's close was called
+    expect(firstClose).toHaveBeenCalled();
+
+    // Verify forward was called twice
+    expect(ngrok.forward).toHaveBeenCalledTimes(2);
   });
 });
 
@@ -582,5 +609,110 @@ describe('getNgrokAuthToken', () => {
 
     expect(token).toBe(expectedToken);
     expect(existsSyncSpy).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('ngrok cleanup handlers', () => {
+  let processOnceSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    // Reset module state before each test
+    __resetNgrokState();
+    processOnceSpy = jest.spyOn(process, 'once');
+  });
+
+  afterEach(() => {
+    processOnceSpy.mockRestore();
+  });
+
+  test('registers SIGINT and SIGTERM handlers', async () => {
+    const config = {
+      ngrok: 'test-app',
+    } as unknown as StartCliFlags;
+
+    await getUrl(config, 3000);
+
+    expect(processOnceSpy).toHaveBeenCalledWith('SIGINT', expect.any(Function));
+    expect(processOnceSpy).toHaveBeenCalledWith(
+      'SIGTERM',
+      expect.any(Function)
+    );
+  });
+
+  test('does not register handlers multiple times', async () => {
+    const config = {
+      ngrok: 'test-app',
+    } as unknown as StartCliFlags;
+
+    await getUrl(config, 3000);
+    await getUrl(config, 3000);
+
+    // Should only be called once for each signal (2 total, not 4)
+    expect(processOnceSpy).toHaveBeenCalledTimes(2);
+  });
+
+  test('cleanup handler calls listener.close()', async () => {
+    const config = {
+      ngrok: 'test-app',
+    } as unknown as StartCliFlags;
+
+    await getUrl(config, 3000);
+
+    const ngrok = require('@ngrok/ngrok');
+    const listener = await ngrok.forward.mock.results[0].value;
+
+    // Get the SIGINT handler that was registered
+    const sigintHandler = processOnceSpy.mock.calls.find(
+      (call) => call[0] === 'SIGINT'
+    )?.[1];
+
+    expect(sigintHandler).toBeDefined();
+
+    // Mock process.exit to prevent test from exiting
+    const exitSpy = jest.spyOn(process, 'exit').mockImplementation();
+
+    // Call the handler
+    await sigintHandler();
+
+    // Verify close was called
+    expect(listener.close).toHaveBeenCalled();
+    expect(exitSpy).toHaveBeenCalledWith(0);
+
+    exitSpy.mockRestore();
+  });
+
+  test('cleanup handler handles errors during close gracefully', async () => {
+    const config = {
+      ngrok: 'test-app',
+    } as unknown as StartCliFlags;
+
+    await getUrl(config, 3000);
+
+    const ngrok = require('@ngrok/ngrok');
+    const listener = await ngrok.forward.mock.results[0].value;
+
+    // Make listener.close() throw an error
+    listener.close.mockRejectedValue(new Error('Failed to close tunnel'));
+
+    // Get the SIGINT handler that was registered
+    const sigintHandler = processOnceSpy.mock.calls.find(
+      (call) => call[0] === 'SIGINT'
+    )?.[1];
+
+    expect(sigintHandler).toBeDefined();
+
+    // Mock process.exit to prevent test from exiting
+    const exitSpy = jest.spyOn(process, 'exit').mockImplementation();
+
+    // Call the handler - should not throw despite close() error
+    await expect(sigintHandler()).resolves.not.toThrow();
+
+    // Verify close was attempted
+    expect(listener.close).toHaveBeenCalled();
+
+    // Verify process.exit is still called even after error
+    expect(exitSpy).toHaveBeenCalledWith(0);
+
+    exitSpy.mockRestore();
   });
 });

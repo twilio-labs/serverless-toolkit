@@ -50,26 +50,40 @@ export function getNgrokAuthToken(): string | undefined {
 }
 
 // Store ngrok listener for cleanup on exit
+// Note: This is a module-level singleton designed for CLI usage where the server
+// runs once and exits. In test environments or programmatic usage with multiple
+// server restarts, call close() on the listener before creating a new tunnel.
 let ngrokListener: Listener | null = null;
+let ngrokCleanupRegistered = false;
+
+const handleShutdown = async () => {
+  if (ngrokListener && typeof ngrokListener.close === 'function') {
+    debug('Closing ngrok tunnel...');
+    try {
+      await ngrokListener.close();
+    } catch (error) {
+      // Ignore errors during cleanup
+    }
+  }
+  process.exit(0);
+};
 
 // Register cleanup handlers for ngrok tunnel
 function registerNgrokCleanup(listener: Listener): void {
   ngrokListener = listener;
 
-  const handleShutdown = async () => {
-    if (ngrokListener && typeof ngrokListener.close === 'function') {
-      debug('Closing ngrok tunnel...');
-      try {
-        await ngrokListener.close();
-      } catch (error) {
-        // Ignore errors during cleanup
-      }
-    }
-    process.exit(0);
-  };
+  // Only register handlers once
+  if (!ngrokCleanupRegistered) {
+    process.once('SIGINT', handleShutdown);
+    process.once('SIGTERM', handleShutdown);
+    ngrokCleanupRegistered = true;
+  }
+}
 
-  process.once('SIGINT', handleShutdown);
-  process.once('SIGTERM', handleShutdown);
+// For testing purposes only: reset module state
+export function __resetNgrokState(): void {
+  ngrokListener = null;
+  ngrokCleanupRegistered = false;
 }
 
 type NgrokConfig = {
