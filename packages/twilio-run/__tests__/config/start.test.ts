@@ -21,10 +21,12 @@ jest.mock('@ngrok/ngrok', () => {
       .fn()
       .mockImplementation(
         ({ addr, domain }: { addr: number | string; domain?: string }) => {
-          const subdomain = domain ? domain.replace('.ngrok.io', '') : 'random';
+          const urlString = domain
+            ? `https://${domain}`
+            : 'https://random.ngrok.io';
 
           return Promise.resolve({
-            url: () => `https://${subdomain}.ngrok.io`,
+            url: () => urlString,
             close: jest.fn().mockResolvedValue(undefined),
           });
         }
