@@ -15,24 +15,28 @@ import {
 import os from 'os';
 import path from 'path';
 
-jest.mock('@ngrok/ngrok', () => {
-  return {
-    forward: jest
-      .fn()
-      .mockImplementation(
-        ({ addr, domain }: { addr: number | string; domain?: string }) => {
-          const urlString = domain
-            ? `https://${domain}`
-            : 'https://random.ngrok.io';
+jest.mock(
+  '@ngrok/ngrok',
+  () => {
+    return {
+      forward: jest
+        .fn()
+        .mockImplementation(
+          ({ addr, domain }: { addr: number | string; domain?: string }) => {
+            const urlString = domain
+              ? `https://${domain}`
+              : 'https://random.ngrok.io';
 
-          return Promise.resolve({
-            url: () => urlString,
-            close: jest.fn().mockResolvedValue(undefined),
-          });
-        }
-      ),
-  };
-});
+            return Promise.resolve({
+              url: () => urlString,
+              close: jest.fn().mockResolvedValue(undefined),
+            });
+          }
+        ),
+    };
+  },
+  { virtual: true }
+);
 
 describe('getUrl', () => {
   let existsSpy: jest.SpyInstance;

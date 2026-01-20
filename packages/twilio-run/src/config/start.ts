@@ -203,7 +203,7 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
       ngrok = require('@ngrok/ngrok');
     } catch (error) {
       throw new Error(
-        'ngrok could not be started because the module is not installed. Please install optional dependencies and try again.'
+        '@ngrok/ngrok could not be started because the module is not installed. Please install optional dependencies and try again.'
       );
     }
 
