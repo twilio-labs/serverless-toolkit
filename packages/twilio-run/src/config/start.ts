@@ -64,17 +64,15 @@ export function getNgrokAuthToken(): string | undefined {
 let ngrokListener: NgrokListener | null = null;
 
 // Store handler references for cleanup
-let sigintHandler: (() => Promise<void>) | null = null;
-let sigtermHandler: (() => Promise<void>) | null = null;
+let sigintHandler: (() => void) | null = null;
+let sigtermHandler: (() => void) | null = null;
 
-const handleShutdown = async () => {
+const handleShutdown = () => {
   if (ngrokListener && typeof ngrokListener.close === 'function') {
     debug('Closing ngrok tunnel...');
-    try {
-      await ngrokListener.close();
-    } catch (error) {
+    ngrokListener.close().catch(() => {
       // Ignore errors during cleanup
-    }
+    });
   }
   process.exit(0);
 };
@@ -200,7 +198,7 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
       debug('Found ngrok authtoken in config file');
     }
 
-    let ngrok;
+    let ngrok: any;
     try {
       ngrok = require('@ngrok/ngrok');
     } catch (error) {
@@ -222,7 +220,7 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
     }
 
     // Create new tunnel (connection errors handled here)
-    let listener;
+    let listener: NgrokListener;
     try {
       listener = await ngrok.forward(ngrokConfig);
     } catch (error: any) {
@@ -258,6 +256,18 @@ export async function getUrl(cli: StartCliFlags, port: string | number) {
     // Validate tunnel (OUTSIDE ngrok error handler - internal validation)
     const tunnelUrl = listener.url();
     if (!tunnelUrl) {
+      // Best-effort cleanup before throwing
+      try {
+        await listener.close();
+        debug('Closed listener after validation failure');
+      } catch (closeError) {
+        debug(
+          'Failed to close listener during validation error: %s',
+          closeError
+        );
+        // Continue to throw the validation error
+      }
+
       throw new Error(
         'ngrok tunnel was created but no URL was returned. ' +
           'This is an unexpected internal error. ' +
@@ -347,7 +357,7 @@ export async function getConfigFromCli(
   cliInfo: CliInfo = { options: {} },
   externalCliOptions?: ExternalCliOptions
 ): Promise<StartCliConfig> {
-  let cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
+  const cwd = flags.cwd ? path.resolve(flags.cwd) : process.cwd();
   const configFlags = readSpecializedConfig(cwd, flags.config, 'start', {
     username:
       (externalCliOptions && externalCliOptions.accountSid) || undefined,
