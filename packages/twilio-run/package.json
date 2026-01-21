@@ -83,7 +83,7 @@
     "yargs": "^17.2.1"
   },
   "optionalDependencies": {
-    "ngrok": "^3.3.0"
+    "@ngrok/ngrok": "^1.7.0"
   },
   "devDependencies": {
     "@twilio/runtime-handler": "^2.1.0",
