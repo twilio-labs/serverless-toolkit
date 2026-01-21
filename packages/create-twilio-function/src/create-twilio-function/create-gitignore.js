@@ -2,7 +2,7 @@ const { createWriteStream } = require('fs');
 const { join } = require('path');
 const gitignore = require('gitignore');
 
-const ADDITIONAL_CONTENT = '# Twilio Serverless\n.twiliodeployinfo\n\n';
+const ADDITIONAL_CONTENT = '# Twilio Serverless\n.twiliodeployinfo\n.env.prod\n.env.dev\n.env.stage\n\n';
 
 function createGitignore(dirPath) {
   return new Promise((resolve, reject) => {
