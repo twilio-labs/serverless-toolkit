@@ -16,7 +16,7 @@ import { getDebugFunction } from '../../utils/logger';
 
 const debug = getDebugFunction('twilio-run:runtime');
 
-const { getCachedResources } = require('./route-cache');
+import { getCachedResources } from './route-cache';
 
 function getAssets(): AssetResourceMap {
   const { assets } = getCachedResources();
@@ -72,9 +72,9 @@ export function create({ env }: StartCliConfig): RuntimeInstance {
         .join(',')})`,
     });
     const client = twilio(env.ACCOUNT_SID, env.AUTH_TOKEN, options);
-    const service = (client.sync.v1.services(
+    const service = client.sync.v1.services(
       serviceName || 'default'
-    ) as unknown) as RuntimeSyncServiceContext;
+    ) as unknown as RuntimeSyncServiceContext;
 
     service.maps = service.syncMaps;
     service.lists = service.syncLists;

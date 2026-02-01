@@ -7,7 +7,7 @@ Define the version of the `@twilio/runtime-handler` inside your `dependencies` s
 ```json
 {
   "dependencies": {
-    "@twilio/runtime-handler": "1.1.0"
+    "@twilio/runtime-handler": "2.1.0"
   }
 }
 ```

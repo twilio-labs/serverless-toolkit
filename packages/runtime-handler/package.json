@@ -39,7 +39,7 @@
     "clean": "rimraf ./dist"
   },
   "devDependencies": {
-    "@twilio/test-dep": "npm:twilio@4.22.0",
+    "@twilio/test-dep": "npm:twilio@5.6.0",
     "@types/common-tags": "^1.8.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/debug": "^4.1.4",
@@ -70,7 +70,7 @@
     "nocache": "^2.1.0",
     "normalize.css": "^8.0.1",
     "serialize-error": "^7.0.1",
-    "twilio": "4.23.0"
+    "twilio": "5.6.0"
   },
   "gitHead": "6db273648ed19474f4125042556b10c051529912"
 }
