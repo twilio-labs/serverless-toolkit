@@ -1,6 +1,6 @@
 {
   "name": "twilio-run",
-  "version": "4.2.0",
+  "version": "5.0.1",
   "bin": {
     "twilio-functions": "./bin/twilio-run.js",
     "twilio-run": "./bin/twilio-run.js",
@@ -85,7 +85,7 @@
 	  "twilio": "^5.6.0"
 	},		
   "optionalDependencies": {
-    "ngrok": "^3.3.0"
+    "@ngrok/ngrok": "^1.7.0"
   },
   "devDependencies": {
     "@twilio/runtime-handler": "^2.1.0",
@@ -124,7 +124,7 @@
     "README.md"
   ],
   "engines": {
-    "node": ">=18.0.0"
+    "node": "^20.x || ^22.x"
   },
   "gitHead": "6db273648ed19474f4125042556b10c051529912"
 }

@@ -73,7 +73,7 @@ DESCRIPTION
   Create a new assets service to use as a bucket
 ```
 
-_See code: [src/commands/assets/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.6/src/commands/assets/init.js)_
+_See code: [src/commands/assets/init.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.0/src/commands/assets/init.js)_
 
 ## `twilio assets:list`
 
@@ -96,7 +96,7 @@ DESCRIPTION
   List all the assets in the service
 ```
 
-_See code: [src/commands/assets/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.6/src/commands/assets/list.js)_
+_See code: [src/commands/assets/list.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.0/src/commands/assets/list.js)_
 
 ## `twilio assets:upload FILE`
 
@@ -123,7 +123,7 @@ DESCRIPTION
   Upload a new asset to the Assets service
 ```
 
-_See code: [src/commands/assets/upload.js](https://github.com/twilio-labs/serverless-toolkit/blob/v2.0.6/src/commands/assets/upload.js)_
+_See code: [src/commands/assets/upload.js](https://github.com/twilio-labs/serverless-toolkit/blob/v3.0.0/src/commands/assets/upload.js)_
 <!-- commandsstop -->
 
 ## Contributing
