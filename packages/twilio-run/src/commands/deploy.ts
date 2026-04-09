@@ -20,6 +20,7 @@ import {
 } from '../flags';
 import { printConfigInfo, printDeployedResources } from '../printers/deploy';
 import { HttpError, saveLatestDeploymentData } from '../serverless-api/utils';
+import { clearDeployInfoCache } from '../utils/deployInfoCache';
 import {
   getDebugFunction,
   getOraSpinner,
@@ -123,7 +124,31 @@ export async function handler(
     client.on('status-update', (evt) => {
       spinner.text = evt.message + '\n';
     });
-    const result = await client.deployLocalProject(config);
+
+    let result;
+    try {
+      result = await client.deployLocalProject(config);
+    } catch (deployErr) {
+      // If the cached service SID is stale (service was deleted externally),
+      // clear the cache and retry without the stale SID
+      const isStaleService = config.serviceSid && deployErr.code === 20404;
+      if (isStaleService) {
+        const accountSid = config.username.startsWith('AC')
+          ? config.username
+          : externalCliOptions?.accountSid;
+        logger.warn(
+          `Cached service ${config.serviceSid} not found (it may have been deleted). Clearing cache and retrying.`
+        );
+        if (accountSid) {
+          clearDeployInfoCache(config.cwd, accountSid, config.region);
+        }
+        config.serviceSid = undefined;
+        result = await client.deployLocalProject(config);
+      } else {
+        throw deployErr;
+      }
+    }
+
     spinner.text = 'Serverless project successfully deployed\n';
     spinner.succeed();
     printDeployedResources(config, result, config.outputFormat);

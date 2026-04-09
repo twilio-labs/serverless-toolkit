@@ -58,6 +58,30 @@ export function getDeployInfoCache(
   return {};
 }
 
+export function clearDeployInfoCache(
+  baseDir: string,
+  username: string,
+  region: string = 'us1',
+  deployInfoCacheFileName: string = '.twiliodeployinfo'
+): void {
+  const fullPath = path.resolve(baseDir, deployInfoCacheFileName);
+  debug('Clearing stale deploy info cache entry for %s:%s', username, region);
+  const currentDeployInfoCache = getDeployInfoCache(
+    baseDir,
+    deployInfoCacheFileName
+  );
+
+  delete currentDeployInfoCache[`${username}:${region}`];
+  delete currentDeployInfoCache[username];
+
+  try {
+    const data = JSON.stringify(currentDeployInfoCache, null, '\t');
+    fs.writeFileSync(fullPath, data, 'utf8');
+  } catch (err) {
+    debug('Failed to clear deploy info cache entry');
+  }
+}
+
 export function updateDeployInfoCache(
   baseDir: string,
   username: string,
