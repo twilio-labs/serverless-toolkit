@@ -10,7 +10,7 @@ async function run() {
   const result = await client.deployProject({
     ...config,
     overrideExistingService: true,
-    runtime: 'node24',
+    runtime: 'node22',
     env: {
       HELLO: 'ahoy',
       WORLD: 'welt',
