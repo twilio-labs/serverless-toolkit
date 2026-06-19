@@ -5,4 +5,4 @@
 "@twilio-labs/plugin-serverless": minor
 ---
 
-chore: update toolkit to default to node24
+feat: add node24 as supported runtime and update default from node22 to node24
