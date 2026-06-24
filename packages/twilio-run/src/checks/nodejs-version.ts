@@ -8,8 +8,11 @@ export function printVersionWarning(
   expectedVersion: string[]
 ): void {
   const title = 'Different Node.js Version Found';
+  const supportedVersions = expectedVersion
+    .map((version) => `${version}x`)
+    .join(', ');
   const msg = stripIndent`
-      You are currently running Node.js ${nodeVersion} on this local machine. The production environment for Twilio Serverless currently supports versions ${expectedVersion}x.
+      You are currently running Node.js ${nodeVersion} on this local machine. The production environment for Twilio Serverless currently supports versions ${supportedVersions}.
 
       When you deploy to Twilio Serverless, you may encounter differences between local development and production.
 
