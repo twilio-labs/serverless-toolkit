@@ -86,7 +86,7 @@
     "@ngrok/ngrok": "^1.7.0"
   },
   "devDependencies": {
-    "@twilio/runtime-handler": "^2.1.0",
+    "@twilio/runtime-handler": "^2.0.3",
     "@types/cheerio": "^0.22.12",
     "@types/common-tags": "^1.8.0",
     "@types/debug": "^4.1.4",
