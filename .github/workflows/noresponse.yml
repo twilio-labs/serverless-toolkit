@@ -4,11 +4,7 @@ name: No Response
 # to work properly.
 # Details here: https://github.com/lee-dohm/no-response/blob/main/action.yml
 on:
-  issue_comment:
-    types: [created]
-  schedule:
-    # Schedule for 00:00 UTC every day
-    - cron: '0 0 * * *'
+  workflow_dispatch: # disabled: lee-dohm/no-response is blocked by enterprise policy
 
 jobs:
   noResponse:

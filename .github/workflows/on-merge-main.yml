@@ -17,9 +17,12 @@ jobs:
 
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup Node.js 20
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3
         with:
           node-version: 20
       - name: Update npm to 10.x
@@ -35,12 +38,40 @@ jobs:
         run: |
           npm run clean
           npm run build
-      - name: "Create Pull Request or Publish to npm"
-        uses: changesets/action@v1
-        with:
-          version: npm run version-packages
-          publish: npm run npm:publish
-          commit: "chore: version packages"
+      - name: Check for changesets
+        id: changesets
+        run: |
+          if [ -n "$(find .changeset -name '*.md' -not -name 'README.md')" ]; then
+            echo "has_changesets=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changesets=false" >> $GITHUB_OUTPUT
+          fi
+      - name: Create Pull Request or Publish to npm
+        run: |
+          if [ "${{ steps.changesets.outputs.has_changesets }}" = "true" ]; then
+            # Changesets exist — open/update a version PR
+            npm run version-packages
+            git add -A
+            git status
+            if git diff --cached --quiet; then
+              echo "No version changes to commit"
+            else
+              git commit -m "chore: version packages"
+              BRANCH="changeset-release/main"
+              git checkout -b "$BRANCH" 2>/dev/null || git checkout "$BRANCH"
+              git push origin "$BRANCH" --force
+              gh pr create \
+                --title "chore: version packages" \
+                --body "This PR was opened by the release workflow. Merge to publish to npm." \
+                --base main \
+                --head "$BRANCH" \
+              || gh pr edit "$BRANCH" --title "chore: version packages"
+            fi
+          else
+            # No changesets — publish any packages whose version exceeds what is on npm
+            npm run npm:publish
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
