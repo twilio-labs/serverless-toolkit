@@ -9,11 +9,12 @@
   "author": "Twilio Inc. <open-source@twilio.com> (https://www.twilio.com/labs)",
   "homepage": "https://github.com/twilio-labs/serverless-toolkit/tree/main/packages/runtime-handler#readme",
   "license": "MIT",
-  "main": "dist/invalid.js",
-  "types": "dist/invalid.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
-    ".": "./dist/invalid.js",
-    "./dev": "./dist/dev-runtime/dev-runtime.js"
+    ".": "./dist/index.js",
+    "./dev": "./dist/dev-runtime/dev-runtime.js",
+    "./testing": "./dist/index.js"
   },
   "directories": {
     "src": "src",
