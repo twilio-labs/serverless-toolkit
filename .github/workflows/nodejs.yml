@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [windows-latest-large, ubuntu-latest-large]
         node-version: [ lts/-1, lts/*]
 
     steps:
