@@ -5,6 +5,7 @@ import path from 'path';
 import { Argv } from 'yargs';
 import { checkConfigForCredentials } from '../checks/check-credentials';
 import { checkForValidRuntimeHandlerVersion } from '../checks/check-runtime-handler';
+import { checkForDeprecatedRuntime } from '../checks/deprecated-runtime';
 import checkLegacyConfig from '../checks/legacy-config';
 import checkProjectStructure from '../checks/project-structure';
 import {
@@ -110,6 +111,8 @@ export async function handler(
     process.exit(1);
     return;
   }
+
+  checkForDeprecatedRuntime(config.runtime);
 
   debug('Deploy Config %P', config);
 
