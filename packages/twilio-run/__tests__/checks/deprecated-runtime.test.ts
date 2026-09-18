@@ -1,5 +1,8 @@
 import { mocked } from 'jest-mock';
-import { checkForDeprecatedRuntime } from '../../src/checks/deprecated-runtime';
+import {
+  checkForDeprecatedRuntime,
+  DEPRECATED_RUNTIMES,
+} from '../../src/checks/deprecated-runtime';
 import { logger } from '../../src/utils/logger';
 
 jest.mock('../../src/utils/logger', () => {
@@ -15,8 +18,42 @@ describe('checkForDeprecatedRuntime', () => {
     mocked(logger.warn).mockClear();
   });
 
-  test('should not warn for supported runtimes', () => {
+  test('should warn for every deprecated runtime', () => {
+    DEPRECATED_RUNTIMES.forEach((runtime) => {
+      expect(checkForDeprecatedRuntime(runtime)).toEqual(false);
+    });
+    expect(logger.warn).toHaveBeenCalledTimes(DEPRECATED_RUNTIMES.length);
+  });
+
+  test('should list every even major up to and including 20', () => {
+    expect(DEPRECATED_RUNTIMES).toEqual([
+      'node4',
+      'node6',
+      'node8',
+      'node10',
+      'node12',
+      'node14',
+      'node16',
+      'node18',
+      'node20',
+    ]);
+  });
+
+  test('should name the configured runtime in the warning', () => {
+    checkForDeprecatedRuntime('node20');
+    expect(mocked(logger.warn).mock.calls[0][0]).toContain('node20');
+  });
+
+  test('should not warn for currently supported runtimes', () => {
     ['node22', 'node24'].forEach((runtime) => {
+      expect(checkForDeprecatedRuntime(runtime)).toEqual(true);
+    });
+    expect(logger.warn).not.toHaveBeenCalled();
+  });
+
+  test('should not warn for runtimes newer than this release knows about', () => {
+    // An older toolkit must not claim a future runtime is invalid.
+    ['node26', 'node28', 'node30'].forEach((runtime) => {
       expect(checkForDeprecatedRuntime(runtime)).toEqual(true);
     });
     expect(logger.warn).not.toHaveBeenCalled();
@@ -27,16 +64,9 @@ describe('checkForDeprecatedRuntime', () => {
     expect(logger.warn).not.toHaveBeenCalled();
   });
 
-  test('should warn for deprecated runtimes', () => {
-    expect(checkForDeprecatedRuntime('node20')).toEqual(false);
-    expect(logger.warn).toHaveBeenCalledTimes(1);
-    expect(mocked(logger.warn).mock.calls[0][0]).toContain('node20');
-  });
-
-  test('should warn for unknown runtime values', () => {
-    expect(checkForDeprecatedRuntime('node18')).toEqual(false);
-    expect(checkForDeprecatedRuntime('nope')).toEqual(false);
-    expect(logger.warn).toHaveBeenCalledTimes(2);
+  test('should leave unrecognised values to the platform', () => {
+    expect(checkForDeprecatedRuntime('nope')).toEqual(true);
+    expect(logger.warn).not.toHaveBeenCalled();
   });
 
   test('should not exit the process', () => {
