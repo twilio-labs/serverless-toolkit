@@ -1,5 +1,33 @@
 # Change Log
 
+## 5.1.0
+
+### Minor Changes
+
+- [#555](https://github.com/twilio-labs/serverless-toolkit/pull/555) [`8ab50b509bd7b1e525261aac1d3eb55142f74ac7`](https://github.com/twilio-labs/serverless-toolkit/commit/8ab50b509bd7b1e525261aac1d3eb55142f74ac7) Thanks [@jannoteelem](https://github.com/jannoteelem)! - feat: add node24 as supported runtime and update default from node22 to node24
+
+### Patch Changes
+
+- Updated dependencies [[`8ab50b509bd7b1e525261aac1d3eb55142f74ac7`](https://github.com/twilio-labs/serverless-toolkit/commit/8ab50b509bd7b1e525261aac1d3eb55142f74ac7)]:
+  - @twilio-labs/serverless-api@5.8.0
+
+## 5.0.1
+
+### Patch Changes
+
+- [#546](https://github.com/twilio-labs/serverless-toolkit/pull/546) [`fc67c4bef6bd80591bd5eb2790e0914904e84838`](https://github.com/twilio-labs/serverless-toolkit/commit/fc67c4bef6bd80591bd5eb2790e0914904e84838) Thanks [@deshartman](https://github.com/deshartman)! - Migrate from `ngrok@^3.3.0` to `@ngrok/ngrok@^1.7.0` (official ngrok package) for improved reliability and Apple Silicon support. This fixes spawn error -88 on Apple Silicon Macs through better cross-platform binary management that eliminates architecture-specific binary issues.
+
+  **Key improvements:**
+
+  - Updates to @ngrok/ngrok v1.7.0 (latest stable)
+  - Automatic authtoken detection from ngrok config files (now includes Windows support: `%USERPROFILE%\AppData\Local\ngrok\ngrok.yml`)
+  - Fixed domain detection to correctly identify ngrok domains using precise TLD matching (uses `.endsWith('.ngrok.io')`, `.endsWith('.ngrok.dev')`, `.endsWith('.ngrok-free.app')` instead of substring matching)
+  - Prevents false positives like "company.ngrokit.com" being treated as ngrok domains
+  - Fixed authtoken regex to ignore inline comments in config files
+  - Enhanced error messages with platform-specific troubleshooting guidance
+  - Backward compatible: `--ngrok=myapp` automatically converts to `myapp.ngrok.io`
+  - Supports all official ngrok TLDs: `.ngrok.io`, `.ngrok.dev`, `.ngrok-free.app`
+
 ## 5.0.0
 
 ### Major Changes
