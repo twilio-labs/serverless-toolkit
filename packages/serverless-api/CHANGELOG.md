@@ -1,5 +1,17 @@
 # Change Log
 
+## 5.8.0
+
+### Minor Changes
+
+- [#555](https://github.com/twilio-labs/serverless-toolkit/pull/555) [`8ab50b509bd7b1e525261aac1d3eb55142f74ac7`](https://github.com/twilio-labs/serverless-toolkit/commit/8ab50b509bd7b1e525261aac1d3eb55142f74ac7) Thanks [@jannoteelem](https://github.com/jannoteelem)! - feat: add node24 as supported runtime and update default from node22 to node24
+
+## 5.7.0
+
+### Minor Changes
+
+- [#540](https://github.com/twilio-labs/serverless-toolkit/pull/540) [`3c1149ce220900fb37c8bbbd56ef47fc6cd02838`](https://github.com/twilio-labs/serverless-toolkit/commit/3c1149ce220900fb37c8bbbd56ef47fc6cd02838) Thanks [@jannoteelem](https://github.com/jannoteelem)! - chore: update toolkit to default to node22
+
 ## 5.6.0
 
 ### Minor Changes

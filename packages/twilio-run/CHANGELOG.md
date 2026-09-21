@@ -1,5 +1,74 @@
 # Change Log
 
+## 6.0.0
+
+### Major Changes
+
+- [#565](https://github.com/twilio-labs/serverless-toolkit/pull/565) [`ee4cf89dc032bd795a127beba0a81c4afb824cd5`](https://github.com/twilio-labs/serverless-toolkit/commit/ee4cf89dc032bd795a127beba0a81c4afb824cd5) Thanks [@AndreLars](https://github.com/AndreLars)! - **WHAT**: Add Node.js 24 to supported versions and remove Node.js 20.
+
+  **ALSO**: `twilio-run deploy` now warns when a project is configured to deploy to a deprecated runtime such as `node20`, pointing at the `runtime` field in `.twilioserverlessrc`. It is a warning, not a failure — the deploy still proceeds and Twilio Serverless has the final say. Both this check and the local Node.js version check use a deny list of deprecated versions rather than an allow list of supported ones, so an older release of the toolkit never claims a newer Node.js version is invalid. `printVersionWarning` drops its unused `expectedVersion` parameter as part of this.
+
+  **WHY**: `node24` was added as a deploy runtime and made the default in #555, but `engines.node` was never widened, so the toolkit defaulted to deploying to node24 while refusing to declare support for running on Node 24 (#563). Node.js 20 is deprecated on Twilio Serverless and can no longer be used for new builds, so it is removed at the same time.
+
+  **BREAKING CHANGE**: Projects using `create-twilio-function`, `@twilio-labs/plugin-assets`, `@twilio-labs/plugin-serverless`, `@twilio-labs/serverless-twilio-runtime` or `twilio-run` will have to migrate to Node.js 22 or 24.
+
+### Patch Changes
+
+- [#558](https://github.com/twilio-labs/serverless-toolkit/pull/558) [`8df4cb6c658b07cfe95fa0b7c55dedfdc5b516b7`](https://github.com/twilio-labs/serverless-toolkit/commit/8df4cb6c658b07cfe95fa0b7c55dedfdc5b516b7) Thanks [@robinske](https://github.com/robinske)! - fix: align `@twilio/runtime-handler` dev dependency with the version scaffolded by `create-twilio-function`
+
+  `twilio-run` depended on `@twilio/runtime-handler@^2.1.0` while `create-twilio-function` pins `^2.0.3`. The two were inconsistent, and `2.1.0` — although published to npm as `latest` — is currently rejected by the Twilio Serverless platform at deploy time (`Error 20001: No matching version found for @twilio/runtime-handler@2.1.0`). Pinning `twilio-run` to `^2.0.3` keeps the monorepo internally consistent and avoids signalling a version that cannot be deployed. See #557.
+
+## 5.1.0
+
+### Minor Changes
+
+- [#555](https://github.com/twilio-labs/serverless-toolkit/pull/555) [`8ab50b509bd7b1e525261aac1d3eb55142f74ac7`](https://github.com/twilio-labs/serverless-toolkit/commit/8ab50b509bd7b1e525261aac1d3eb55142f74ac7) Thanks [@jannoteelem](https://github.com/jannoteelem)! - feat: add node24 as supported runtime and update default from node22 to node24
+
+### Patch Changes
+
+- Updated dependencies [[`8ab50b509bd7b1e525261aac1d3eb55142f74ac7`](https://github.com/twilio-labs/serverless-toolkit/commit/8ab50b509bd7b1e525261aac1d3eb55142f74ac7)]:
+  - @twilio-labs/serverless-api@5.8.0
+
+## 5.0.1
+
+### Patch Changes
+
+- [#546](https://github.com/twilio-labs/serverless-toolkit/pull/546) [`fc67c4bef6bd80591bd5eb2790e0914904e84838`](https://github.com/twilio-labs/serverless-toolkit/commit/fc67c4bef6bd80591bd5eb2790e0914904e84838) Thanks [@deshartman](https://github.com/deshartman)! - Migrate from `ngrok@^3.3.0` to `@ngrok/ngrok@^1.7.0` (official ngrok package) for improved reliability and Apple Silicon support. This fixes spawn error -88 on Apple Silicon Macs through better cross-platform binary management that eliminates architecture-specific binary issues.
+
+  **Key improvements:**
+
+  - Updates to @ngrok/ngrok v1.7.0 (latest stable)
+  - Automatic authtoken detection from ngrok config files (now includes Windows support: `%USERPROFILE%\AppData\Local\ngrok\ngrok.yml`)
+  - Fixed domain detection to correctly identify ngrok domains using precise TLD matching (uses `.endsWith('.ngrok.io')`, `.endsWith('.ngrok.dev')`, `.endsWith('.ngrok-free.app')` instead of substring matching)
+  - Prevents false positives like "company.ngrokit.com" being treated as ngrok domains
+  - Fixed authtoken regex to ignore inline comments in config files
+  - Enhanced error messages with platform-specific troubleshooting guidance
+  - Backward compatible: `--ngrok=myapp` automatically converts to `myapp.ngrok.io`
+  - Supports all official ngrok TLDs: `.ngrok.io`, `.ngrok.dev`, `.ngrok-free.app`
+
+## 5.0.0
+
+### Major Changes
+
+- [#544](https://github.com/twilio-labs/serverless-toolkit/pull/544) [`9f945cd79e89aaa00474c56a5ab3d6b41415b874`](https://github.com/twilio-labs/serverless-toolkit/commit/9f945cd79e89aaa00474c56a5ab3d6b41415b874) Thanks [@alfrol](https://github.com/alfrol)! - **WHAT**: Remove Node.js 18 from supported versions.
+
+  **WHY**: Node.js 18 is EOL and will not receive bug fixes or security upgrades. Users should migrate to Node.js 20 or 22.
+
+  **BREAKING CHANGE**: Projects using `create-twilio-function`, `@twilio-labs/plugin-asset`, `@twilio-labs/plugin-serverless`, `@twilio-labs/serverless-twilio-runtime` or `twilio-run` will have to migrate to Node.js 20 or 22.
+
+## 4.2.0
+
+### Minor Changes
+
+- [#540](https://github.com/twilio-labs/serverless-toolkit/pull/540) [`3c1149ce220900fb37c8bbbd56ef47fc6cd02838`](https://github.com/twilio-labs/serverless-toolkit/commit/3c1149ce220900fb37c8bbbd56ef47fc6cd02838) Thanks [@jannoteelem](https://github.com/jannoteelem)! - chore: update toolkit to default to node22
+
+### Patch Changes
+
+- [#535](https://github.com/twilio-labs/serverless-toolkit/pull/535) [`50eae0acaa3561c65c61326667a216650f3200c4`](https://github.com/twilio-labs/serverless-toolkit/commit/50eae0acaa3561c65c61326667a216650f3200c4) Thanks [@victoray](https://github.com/victoray)! - Display access visibility for public assets and functions on deploy.
+  Update links to route to regional console
+- Updated dependencies [[`3c1149ce220900fb37c8bbbd56ef47fc6cd02838`](https://github.com/twilio-labs/serverless-toolkit/commit/3c1149ce220900fb37c8bbbd56ef47fc6cd02838)]:
+  - @twilio-labs/serverless-api@5.7.0
+
 ## 4.1.0
 
 ### Minor Changes
