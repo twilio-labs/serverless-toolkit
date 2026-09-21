@@ -21,10 +21,10 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Setup Node.js 20
+      - name: Setup Node.js 22
         uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3
         with:
-          node-version: 20
+          node-version: 22
       - name: Update npm to 10.x
         run: |
           npm i -g npm@10
