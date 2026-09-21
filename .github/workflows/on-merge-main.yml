@@ -25,6 +25,10 @@ jobs:
         uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3
         with:
           node-version: 22
+          # Required for publishing: this is what writes an .npmrc wired up to
+          # NODE_AUTH_TOKEN. Without it npm has no credentials at all and every
+          # publish fails with ENEEDAUTH.
+          registry-url: 'https://registry.npmjs.org'
       - name: Update npm to 10.x
         run: |
           npm i -g npm@10
@@ -70,6 +74,10 @@ jobs:
           else
             # No changesets — publish any packages whose version exceeds what is on npm
             npm run npm:publish
+            # changeset publish creates a git tag per published package; push
+            # them so releases stay traceable from the repo. changesets/action
+            # used to do this before it was replaced in #559.
+            git push origin --follow-tags
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
