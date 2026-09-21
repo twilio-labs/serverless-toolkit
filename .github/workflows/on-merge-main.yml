@@ -10,10 +10,20 @@ jobs:
     name: Run tests
     uses: twilio-labs/serverless-toolkit/.github/workflows/nodejs.yml@main
 
+  # Opens or updates the version PR when changesets are pending. Never
+  # publishes: publishing lives in the `publish` job below so that the approval
+  # gate applies only to releases and not to every merge into main.
   release:
     name: Run release work
     needs: tests
     runs-on: ubuntu-latest-large
+    # An explicit permissions block replaces the repository defaults, so every
+    # scope this job needs has to be listed: it pushes a branch and opens a PR.
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      has_changesets: ${{ steps.changesets.outputs.has_changesets }}
 
     steps:
       - name: Checkout Repo
@@ -21,17 +31,10 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Setup Node.js 22
+      - name: Setup Node.js 24
         uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3
         with:
-          node-version: 22
-          # Required for publishing: this is what writes an .npmrc wired up to
-          # NODE_AUTH_TOKEN. Without it npm has no credentials at all and every
-          # publish fails with ENEEDAUTH.
-          registry-url: 'https://registry.npmjs.org'
-      - name: Update npm to 10.x
-        run: |
-          npm i -g npm@10
+          node-version: 24
       - name: Install Dependencies
         run: npm install
       - name: Setup CI Git User
@@ -50,36 +53,81 @@ jobs:
           else
             echo "has_changesets=false" >> $GITHUB_OUTPUT
           fi
-      - name: Create Pull Request or Publish to npm
+      - name: Create Pull Request
+        if: steps.changesets.outputs.has_changesets == 'true'
         run: |
-          if [ "${{ steps.changesets.outputs.has_changesets }}" = "true" ]; then
-            # Changesets exist — open/update a version PR
-            npm run version-packages
-            git add -A
-            git status
-            if git diff --cached --quiet; then
-              echo "No version changes to commit"
-            else
-              git commit -m "chore: version packages"
-              BRANCH="changeset-release/main"
-              git checkout -b "$BRANCH" 2>/dev/null || git checkout "$BRANCH"
-              git push origin "$BRANCH" --force
-              gh pr create \
-                --title "chore: version packages" \
-                --body "This PR was opened by the release workflow. Merge to publish to npm." \
-                --base main \
-                --head "$BRANCH" \
-              || gh pr edit "$BRANCH" --title "chore: version packages"
-            fi
+          npm run version-packages
+          git add -A
+          git status
+          if git diff --cached --quiet; then
+            echo "No version changes to commit"
           else
-            # No changesets — publish any packages whose version exceeds what is on npm
-            npm run npm:publish
-            # changeset publish creates a git tag per published package; push
-            # them so releases stay traceable from the repo. changesets/action
-            # used to do this before it was replaced in #559.
-            git push origin --follow-tags
+            git commit -m "chore: version packages"
+            BRANCH="changeset-release/main"
+            git checkout -b "$BRANCH" 2>/dev/null || git checkout "$BRANCH"
+            git push origin "$BRANCH" --force
+            gh pr create \
+              --title "chore: version packages" \
+              --body "This PR was opened by the release workflow. Merge to publish to npm." \
+              --base main \
+              --head "$BRANCH" \
+            || gh pr edit "$BRANCH" --title "chore: version packages"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  # Publishes any package whose version is ahead of npm. Runs only once the
+  # version PR has been merged and no changesets are left.
+  publish:
+    name: Publish to npm
+    needs: release
+    if: needs.release.outputs.has_changesets == 'false'
+    runs-on: ubuntu-latest-large
+    # The trusted-publisher entry on npmjs.org is bound to this workflow
+    # filename and this environment name, so both have to stay in step with it.
+    environment: production
+    permissions:
+      contents: write # pushes the release tags
+      id-token: write # required for npm OIDC trusted publishing
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      # No registry-url here on purpose. It would write an .npmrc containing an
+      # _authToken line, and npm would then try that credential instead of
+      # exchanging its OIDC token. Publishing goes to registry.npmjs.org, which
+      # is npm's default, and curated Artifactory is for resolving dependencies
+      # rather than a publish target.
+      - name: Setup Node.js 24
+        uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3
+        with:
+          node-version: 24
+      # OIDC trusted publishing needs npm 11.5.1 or newer. Node 24 does not
+      # bundle a new enough npm in every release, so the minimum is installed
+      # explicitly rather than assumed.
+      - name: Ensure npm supports trusted publishing
+        run: |
+          npm i -g npm@11
+          npm --version
+      - name: Install Dependencies
+        run: npm install
+      - name: Setup CI Git User
+        run: |
+          git config user.name twilio-labs-ci
+          git config user.email 65686990+twilio-labs-ci@users.noreply.github.com
+      - name: Create new build
+        run: |
+          npm run clean
+          npm run build
+      - name: Publish to npm
+        run: |
+          npm run npm:publish
+          # changeset publish creates a git tag per published package; push
+          # them so releases stay traceable from the repo. changesets/action
+          # used to do this before it was replaced in #559.
+          git push origin --follow-tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
