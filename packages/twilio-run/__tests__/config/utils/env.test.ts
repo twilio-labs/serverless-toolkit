@@ -1,5 +1,6 @@
 import { stripIndent } from 'common-tags';
-import mockFs from 'mock-fs';
+import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import {
   filterEnvVariablesForDeploy,
@@ -7,8 +8,19 @@ import {
 } from '../../../src/config/utils/env';
 import { EnvironmentVariablesWithAuth } from '../../../src/types/generic';
 
+// Real files in a throwaway directory: mock-fs patches Node's internal fs
+// bindings and breaks on newer Node releases.
+const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'twilio-run-env-'));
+
 function normalize(unixPath: string) {
-  return path.resolve('/', ...unixPath.split('/'));
+  return path.join(tmpRoot, ...unixPath.replace(/^\/tmp\//, '').split('/'));
+}
+
+function writeFiles(dir: string, files: Record<string, string>) {
+  fs.mkdirSync(dir, { recursive: true });
+  for (const [name, content] of Object.entries(files)) {
+    fs.writeFileSync(path.join(dir, name), content);
+  }
 }
 
 describe('filterEnvVariablesForDeploy', () => {
@@ -46,35 +58,33 @@ describe('readLocalEnvFile', () => {
   };
 
   beforeAll(() => {
-    mockFs({
-      '/tmp/project': {
-        '.env': stripIndent`
+    writeFiles(normalize('/tmp/project'), {
+      '.env': stripIndent`
         ACCOUNT_SID=ACxxxxxxx
         AUTH_TOKEN=123456789f
         MY_PHONE_NUMBER=+12345
         SECRET_API_KEY=abc
       `,
-        '.env.prod': stripIndent`
+      '.env.prod': stripIndent`
         ACCOUNT_SID=
         AUTH_TOKEN=
         MY_PHONE_NUMBER=+3333333
         SECRET_API_KEY=
       `,
-      },
-      '/tmp/project-two': {
-        '.env': stripIndent`
+    });
+    writeFiles(normalize('/tmp/project-two'), {
+      '.env': stripIndent`
         ACCOUNT_SID=ACyyyyyyyyy
         AUTH_TOKEN=a987654321
         MY_PHONE_NUMBER=+99999
         SECRET_API_KEY=ahoy
       `,
-        '.env.prod': stripIndent`
+      '.env.prod': stripIndent`
         ACCOUNT_SID=
         AUTH_TOKEN=
         MY_PHONE_NUMBER=+444444444
         SECRET_API_KEY=
       `,
-      },
     });
   });
 
@@ -83,7 +93,7 @@ describe('readLocalEnvFile', () => {
   });
 
   afterAll(() => {
-    mockFs.restore();
+    fs.rmSync(tmpRoot, { recursive: true, force: true });
   });
 
   afterEach(() => {
@@ -105,10 +115,13 @@ describe('readLocalEnvFile', () => {
 
   it('should throw an error if the specified file does not exist', async () => {
     expect(
-      readLocalEnvFile({ ...baseFlags, env: '/tmp/invalid-project/.env' })
+      readLocalEnvFile({
+        ...baseFlags,
+        env: normalize('/tmp/invalid-project/.env'),
+      })
     ).rejects.toEqual(
       new Error(
-        `Failed to find .env file at "${path.resolve(
+        `Failed to find .env file at "${normalize(
           '/tmp/invalid-project/.env'
         )}"`
       )
