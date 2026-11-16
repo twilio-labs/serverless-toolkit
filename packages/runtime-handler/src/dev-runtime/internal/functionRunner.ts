@@ -84,7 +84,13 @@ process.on(
         end: [0, 0],
       };
 
+      let callbackCalled = false;
       const callback: ServerlessCallback = (err, responseObject) => {
+        // async handlers may both call callback and resolve; only the first wins
+        if (callbackCalled) {
+          return;
+        }
+        callbackCalled = true;
         run_timings.end = process.hrtime();
         sendDebugMessage('Function execution %s finished', path);
         sendDebugMessage(
@@ -110,7 +116,14 @@ process.on(
           `Could not find a "handler" function in file ${functionPath}`
         );
       }
-      handler(context, event, callback);
+      const result = handler(context, event, callback);
+      // Support async handlers that return a value instead of using callback
+      if (result && typeof result.then === 'function') {
+        result.then(
+          (data: any) => callback(null, data),
+          (e: any) => callback(e)
+        );
+      }
     } catch (err) {
       if (process.send) {
         process.send({ err: serializeError(err) });
