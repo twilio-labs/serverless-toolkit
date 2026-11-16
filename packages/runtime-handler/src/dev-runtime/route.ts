@@ -351,6 +351,10 @@ export function functionPathToRoute(
   };
 }
 
+function isThenable(value: unknown): value is PromiseLike<unknown> {
+  return !!value && typeof (value as PromiseLike<unknown>).then === 'function';
+}
+
 export function functionToRoute(
   fn: ServerlessFunctionSignature,
   config: ServerConfig,
@@ -373,7 +377,13 @@ export function functionToRoute(
       end: [0, 0],
     };
 
+    let callbackCalled = false;
     const callback: ServerlessCallback = function callback(err, payload?) {
+      // async handlers may both call callback and resolve; only the first wins
+      if (callbackCalled) {
+        return;
+      }
+      callbackCalled = true;
       run_timings.end = process.hrtime();
       log('Function execution %s finished', req.path);
       log(
@@ -394,7 +404,14 @@ export function functionToRoute(
     log('Calling function for %s', req.path);
     try {
       run_timings.start = process.hrtime();
-      fn(context, event, callback);
+      const result: unknown = fn(context, event, callback);
+      // Support async handlers that return a value instead of using callback
+      if (isThenable(result)) {
+        result.then(
+          (data) => callback(null, data as any),
+          (e) => callback(e)
+        );
+      }
     } catch (err) {
       callback(err);
     }

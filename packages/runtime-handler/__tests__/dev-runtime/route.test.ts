@@ -24,6 +24,7 @@ import {
   constructEvent,
   constructHeaders,
   constructGlobalScope,
+  functionToRoute,
   handleError,
   handleSuccess,
   isTwiml,
@@ -536,5 +537,50 @@ describe('handleSuccess function', () => {
     expect(mockResponse.status).toHaveBeenCalledWith(200);
     expect(mockResponse.send).toHaveBeenCalledWith({ values: [1, 2, 3] });
     expect(mockResponse.type).not.toHaveBeenCalled();
+  });
+});
+
+describe('functionToRoute with async handlers', () => {
+  const config = {
+    baseDir: process.cwd(),
+    env: {},
+    url: 'http://localhost',
+  } as unknown as ServerConfig;
+
+  function run(fn: any) {
+    const res = new MockResponse() as unknown as ExpressResponse;
+    res.type = jest.fn(() => res);
+    const req = new MockRequest('/x') as unknown as ExpressRequest;
+    (req as any).query = {};
+    (req as any).body = {};
+    (req as any).rawHeaders = [];
+    (req as any).cookies = {};
+    functionToRoute(fn, config)(req, res, jest.fn());
+    return res;
+  }
+  const tick = () => new Promise((r) => setImmediate(r));
+
+  test('sends the resolved value of an async handler', async () => {
+    const res = run(async () => 'hello');
+    await tick();
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith('hello');
+  });
+
+  test('returns an error when an async handler rejects', async () => {
+    const res = run(async () => {
+      throw new Error('boom');
+    });
+    await tick();
+    expect(res.status).toHaveBeenCalledWith(500);
+  });
+
+  test('ignores the resolved value when callback was already called', async () => {
+    const res = run(async (_c: any, _e: any, cb: any) => {
+      cb(null, 'first');
+    });
+    await tick();
+    expect(res.send).toHaveBeenCalledTimes(1);
+    expect(res.send).toHaveBeenCalledWith('first');
   });
 });
