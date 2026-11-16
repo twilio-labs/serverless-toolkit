@@ -407,13 +407,22 @@ export function functionToRoute(
       const result: unknown = fn(context, event, callback);
       // Support async handlers that return a value instead of using callback
       if (isThenable(result)) {
-        result.then(
-          (data) => callback(null, data as any),
-          (e) => callback(e)
-        );
+        // .catch also covers errors thrown while sending the response, which
+        // would otherwise be an unhandled rejection
+        Promise.resolve(result)
+          .then((data) => callback(null, data as any))
+          .catch((e) => {
+            if (!res.headersSent) {
+              handleError(e, req, res, functionFilePath);
+            }
+          });
       }
     } catch (err) {
-      callback(err);
+      // callback may already be marked as called if handleSuccess threw, so
+      // report the error directly instead of going through it again
+      if (!res.headersSent) {
+        handleError(err, req, res, functionFilePath);
+      }
     }
   };
 }

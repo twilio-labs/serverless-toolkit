@@ -550,6 +550,11 @@ describe('functionToRoute with async handlers', () => {
   function run(fn: any) {
     const res = new MockResponse() as unknown as ExpressResponse;
     res.type = jest.fn(() => res);
+    // like express, throw when the body can't be serialized
+    const send = res.send as jest.Mock;
+    send.mockImplementation((body: unknown) => {
+      if (typeof body === 'object') JSON.stringify(body);
+    });
     const req = new MockRequest('/x') as unknown as ExpressRequest;
     (req as any).query = {};
     (req as any).body = {};
@@ -582,5 +587,21 @@ describe('functionToRoute with async handlers', () => {
     await tick();
     expect(res.send).toHaveBeenCalledTimes(1);
     expect(res.send).toHaveBeenCalledWith('first');
+  });
+
+  test('returns a 500 when a sync handler passes a value that cannot be sent', async () => {
+    const circular: any = {};
+    circular.self = circular;
+    const res = run((_c: any, _e: any, cb: any) => cb(null, circular));
+    await tick();
+    expect(res.status).toHaveBeenCalledWith(500);
+  });
+
+  test('returns a 500 when an async handler resolves a value that cannot be sent', async () => {
+    const circular: any = {};
+    circular.self = circular;
+    const res = run(async () => circular);
+    await tick();
+    expect(res.status).toHaveBeenCalledWith(500);
   });
 });
