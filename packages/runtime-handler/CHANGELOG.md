@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.1.2
+
+### Patch Changes
+
+- [#568](https://github.com/twilio-labs/serverless-toolkit/pull/568) [`a6f5fe2aba39f6f2f554d4449f35f58212f6da05`](https://github.com/twilio-labs/serverless-toolkit/commit/a6f5fe2aba39f6f2f554d4449f35f58212f6da05) Thanks [@AndreLars](https://github.com/AndreLars)! - Support async handlers that return a value or Promise instead of calling `callback`, and ignore duplicate callback invocations, matching the Node.js 24 runtime handler 2.1.2
+
 ## 2.1.0
 
 ### Minor Changes
